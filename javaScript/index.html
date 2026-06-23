@@ -1,0 +1,1939 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      الدليل الشامل للغة JavaScript — Eng. Osman Taher | AswaniStack
+    </title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=IBM+Plex+Mono:wght@400;500;700&family=Tajawal:wght@300;400;500;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --teal: #0d9488;
+        --teal-d: #0f766e;
+        --teal-dd: #134e4a;
+        --teal-l: #99f6e4;
+        --teal-p: #f0fdfa;
+        --amber: #d97706;
+        --amber-l: #fef3c7;
+        --amber-d: #92400e;
+        --slate: #1e293b;
+        --slate-l: #f1f5f9;
+        --slate-m: #64748b;
+        --purple: #7c3aed;
+        --purple-l: #f5f3ff;
+        --rose: #e11d48;
+        --rose-l: #fff1f2;
+        --blue: #1d4ed8;
+        --blue-l: #eff6ff;
+        --cb: #0f172a;
+        --br: #e2e8f0;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Cairo", "Tajawal", Arial, sans-serif;
+        font-size: 11pt;
+        color: #1e293b;
+        background: white;
+        direction: rtl;
+        line-height: 1.9;
+      }
+
+      /* ── COVER ─────────────────────────────────── */
+      .cover {
+        width: 100%;
+        min-height: 100vh;
+        background: linear-gradient(
+          145deg,
+          #022c22 0%,
+          #0f766e 35%,
+          #0d9488 65%,
+          #115e59 100%
+        );
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 55px 65px;
+        page-break-after: always;
+        position: relative;
+        overflow: hidden;
+      }
+      .cover-grid {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+        background-size: 40px 40px;
+      }
+      .cover-glow {
+        position: absolute;
+        width: 600px;
+        height: 600px;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          rgba(20, 184, 166, 0.25) 0%,
+          transparent 70%
+        );
+        top: -150px;
+        left: -150px;
+      }
+      .cover-accent {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 8px;
+        height: 100%;
+        background: linear-gradient(to bottom, #fde68a, #34d399, #fde68a);
+      }
+      .cbrand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        position: relative;
+        z-index: 2;
+      }
+      .clogo {
+        width: 52px;
+        height: 52px;
+        background: rgba(255, 255, 255, 0.12);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 20px;
+        font-weight: 700;
+        color: #fde68a;
+      }
+      .cbn {
+        font-size: 20px;
+        font-weight: 900;
+        color: #fde68a;
+        letter-spacing: 1px;
+      }
+      .cover-main {
+        position: relative;
+        z-index: 2;
+      }
+      .ctag {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 9pt;
+        color: #5eead4;
+        letter-spacing: 3px;
+        margin-bottom: 20px;
+      }
+      .ct1 {
+        font-size: 16pt;
+        font-weight: 700;
+        color: #99f6e4;
+        line-height: 1.3;
+        margin-bottom: 6px;
+      }
+      .ct2 {
+        font-size: 52pt;
+        font-weight: 900;
+        color: white;
+        line-height: 1.05;
+        margin-bottom: 6px;
+      }
+      .ct3 {
+        font-size: 52pt;
+        font-weight: 900;
+        color: #fde68a;
+        line-height: 1.05;
+        margin-bottom: 6px;
+      }
+      .ct4 {
+        font-size: 52pt;
+        font-weight: 900;
+        color: #34d399;
+        line-height: 1.05;
+        margin-bottom: 30px;
+      }
+      .cdiv {
+        width: 100px;
+        height: 4px;
+        background: linear-gradient(90deg, #fde68a, #34d399, #5eead4);
+        border-radius: 4px;
+        margin-bottom: 24px;
+      }
+      .cdesc {
+        font-size: 13pt;
+        color: rgba(255, 255, 255, 0.7);
+        max-width: 520px;
+        line-height: 1.9;
+      }
+      .cpills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 26px;
+      }
+      .cpill {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #ccfbf1;
+        border-radius: 50px;
+        padding: 5px 16px;
+        font-size: 10pt;
+        font-weight: 700;
+      }
+      .cpill.hot {
+        background: rgba(253, 230, 138, 0.15);
+        border-color: #fde68a;
+        color: #fde68a;
+      }
+      .cabox {
+        background: rgba(0, 0, 0, 0.35);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 16px;
+        padding: 20px 28px;
+        position: relative;
+        z-index: 2;
+      }
+      .calbl {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 8pt;
+        color: #34d399;
+        letter-spacing: 3px;
+        margin-bottom: 6px;
+      }
+      .caname {
+        font-size: 20pt;
+        font-weight: 900;
+        color: white;
+      }
+      .casub {
+        font-size: 10pt;
+        color: rgba(255, 255, 255, 0.45);
+        font-family: "IBM Plex Mono", monospace;
+      }
+
+      /* ── CONTENT PAGES ──────────────────────────── */
+      .cp {
+        padding: 48px 65px 68px;
+        page-break-after: always;
+        max-width: 900px;
+        margin: 0 auto;
+      }
+      .pgh {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 28px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid var(--teal-p);
+      }
+      .pgch {
+        font-size: 9pt;
+        color: var(--teal);
+        font-weight: 700;
+        letter-spacing: 1px;
+      }
+      .pgbr {
+        font-size: 9pt;
+        color: #94a3b8;
+        font-family: "IBM Plex Mono", monospace;
+      }
+      .cho {
+        background: linear-gradient(
+          135deg,
+          var(--teal-dd),
+          var(--teal-d),
+          var(--teal)
+        );
+        border-radius: 16px;
+        padding: 26px 28px;
+        margin-bottom: 26px;
+        position: relative;
+        overflow: hidden;
+      }
+      .cho::before {
+        content: "";
+        position: absolute;
+        top: -60px;
+        left: -60px;
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.04);
+      }
+      .chnum {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 9pt;
+        color: #5eead4;
+        letter-spacing: 3px;
+        margin-bottom: 7px;
+      }
+      .chtitle {
+        font-size: 22pt;
+        font-weight: 900;
+        color: white;
+        line-height: 1.2;
+        margin-bottom: 10px;
+      }
+      .chdesc {
+        font-size: 11pt;
+        color: rgba(255, 255, 255, 0.72);
+        line-height: 1.8;
+      }
+      h2.sec {
+        font-size: 15pt;
+        font-weight: 900;
+        color: var(--teal-dd);
+        border-bottom: 3px solid var(--teal-p);
+        padding-bottom: 5px;
+        margin: 32px 0 14px;
+        position: relative;
+      }
+      h2.sec::after {
+        content: "";
+        position: absolute;
+        bottom: -3px;
+        right: 0;
+        width: 55px;
+        height: 3px;
+        background: var(--amber);
+      }
+      h3.sub {
+        font-size: 12.5pt;
+        font-weight: 700;
+        color: var(--teal-d);
+        margin: 22px 0 10px;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+      }
+      h3.sub::before {
+        content: "◆";
+        color: var(--amber);
+        font-size: 9pt;
+      }
+      p.body {
+        font-size: 11pt;
+        line-height: 1.9;
+        color: #374151;
+        margin-bottom: 14px;
+      }
+
+      /* ── BOXES ──────────────────────────────────── */
+      .def {
+        background: var(--teal-p);
+        border-right: 5px solid var(--teal);
+        border-radius: 0 12px 12px 0;
+        padding: 14px 17px;
+        margin: 16px 0;
+        page-break-inside: avoid;
+      }
+      .def-t {
+        font-size: 10pt;
+        font-weight: 700;
+        color: var(--teal-d);
+        margin-bottom: 5px;
+      }
+      .note {
+        border-radius: 10px;
+        padding: 14px 18px;
+        margin: 16px 0;
+        display: flex;
+        align-items: flex-start;
+        gap: 9px;
+        page-break-inside: avoid;
+        font-size: 10.5pt;
+        line-height: 1.7;
+      }
+      .note.tip {
+        background: #f0fdf4;
+        border-right: 4px solid #16a34a;
+      }
+      .note.warn {
+        background: #fffbeb;
+        border-right: 4px solid var(--amber);
+      }
+      .note.info {
+        background: var(--blue-l);
+        border-right: 4px solid var(--blue);
+      }
+      .note.teal {
+        background: var(--teal-p);
+        border-right: 4px solid var(--teal);
+      }
+      .note.rose {
+        background: var(--rose-l);
+        border-right: 4px solid var(--rose);
+      }
+      .note.purple {
+        background: var(--purple-l);
+        border-right: 4px solid var(--purple);
+      }
+      .ni {
+        font-size: 14pt;
+        flex-shrink: 0;
+        margin-top: 1px;
+      }
+
+      /* ── PLANTUML CODE ──────────────────────────── */
+      .uml-wrap {
+        margin: 16px 0;
+        border-radius: 12px;
+        overflow: hidden;
+        page-break-inside: avoid;
+        border: 1px solid #0f766e;
+      }
+      .uml-header {
+        background: linear-gradient(90deg, #022c22, #0f766e);
+        padding: 8px 14px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .uml-lang {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 8pt;
+        color: #34d399;
+        font-weight: 700;
+        letter-spacing: 2px;
+      }
+      .uml-tool {
+        font-size: 8pt;
+        color: rgba(255, 255, 255, 0.45);
+        font-family: "IBM Plex Mono", monospace;
+      }
+      .uml-body {
+        background: #0a1628;
+        padding: 14px 18px;
+        direction: ltr;
+        text-align: left;
+        overflow-x: auto;
+      }
+      .uml-body pre {
+        font-family: "IBM Plex Mono", "Courier New", monospace;
+        font-size: 9.5pt;
+        color: #a5f3fc;
+        line-height: 1.8;
+        white-space: pre;
+      }
+      .uk {
+        color: #fde68a;
+        font-weight: 700;
+      }
+      .uc {
+        color: #6ee7b7;
+      }
+      .ua {
+        color: #fb923c;
+      }
+      .us {
+        color: #c084fc;
+      }
+      .ucm {
+        color: #64748b;
+        font-style: italic;
+      }
+      .kw {
+        color: #ff79c6;
+        font-weight: 700;
+      }
+      .str {
+        color: #f1fa8c;
+      }
+
+      /* ── UML DIAGRAM SVG WRAPPER ────────────────── */
+      .diagram {
+        background: white;
+        border: 2px solid var(--teal-p);
+        border-radius: 12px;
+        padding: 20px;
+        margin: 18px 0;
+        text-align: center;
+        page-break-inside: avoid;
+        box-shadow: 0 4px 12px rgba(13, 148, 136, 0.03);
+      }
+      .diagram-title {
+        font-size: 10pt;
+        font-weight: 700;
+        color: var(--teal-d);
+        margin-bottom: 14px;
+        font-family: "IBM Plex Mono", monospace;
+        letter-spacing: 1px;
+      }
+
+      /* UML Elements */
+      .uml-class {
+        fill: #f0fdfa;
+        stroke: #0d9488;
+        stroke-width: 2;
+      }
+      .uml-class-header {
+        fill: #0d9488;
+      }
+      .uml-class-title {
+        fill: white;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 11px;
+        font-weight: 700;
+      }
+      .uml-class-text {
+        fill: #1e293b;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 9px;
+      }
+      .uml-interface-header {
+        fill: #7c3aed;
+      }
+      .uml-abstract-header {
+        fill: #0f766e;
+      }
+      .uml-line {
+        stroke: #1e293b;
+        stroke-width: 1.5;
+        fill: none;
+      }
+      .uml-arrow {
+        fill: #1e293b;
+      }
+      .uml-dashed {
+        stroke: #1e293b;
+        stroke-width: 1.5;
+        stroke-dasharray: 6, 3;
+        fill: none;
+      }
+      .uml-inherit-arrow {
+        fill: white;
+        stroke: #1e293b;
+        stroke-width: 1.5;
+      }
+
+      /* ── TABLES ──────────────────────────────────── */
+      .tbl {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 18px 0;
+        font-size: 10pt;
+        direction: rtl;
+        page-break-inside: avoid;
+      }
+      .tbl th {
+        background: var(--teal-dd);
+        color: #fde68a;
+        padding: 10px 14px;
+        text-align: center;
+        font-weight: 700;
+      }
+      .tbl td {
+        padding: 9px 14px;
+        text-align: center;
+        border-bottom: 1px solid var(--br);
+      }
+      .tbl tr:nth-child(even) td {
+        background: var(--teal-p);
+      }
+      .g {
+        color: #065f46;
+        font-weight: 700;
+      }
+      .m {
+        color: #92400e;
+        font-weight: 700;
+      }
+      .b {
+        color: #991b1b;
+        font-weight: 700;
+      }
+
+      /* ── LAYOUT ──────────────────────────────────── */
+      .two {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        margin: 16px 0;
+      }
+      @media(max-width: 768px) {
+        .two, .three {
+          grid-template-columns: 1fr !important;
+        }
+      }
+      .three {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 11px;
+        margin: 16px 0;
+      }
+      .card {
+        background: #f8fafc;
+        border: 1.5px solid var(--br);
+        border-radius: 10px;
+        padding: 13px;
+        page-break-inside: avoid;
+      }
+      .card.teal {
+        background: var(--teal-p);
+        border-color: #5eead4;
+      }
+      .card.amber {
+        background: var(--amber-l);
+        border-color: #fcd34d;
+      }
+      .card.rose {
+        background: var(--rose-l);
+        border-color: #fecaca;
+      }
+      .card.purple {
+        background: var(--purple-l);
+        border-color: #c4b5fd;
+      }
+      .card.blue {
+        background: var(--blue-l);
+        border-color: #93c5fd;
+      }
+      .card.dark {
+        background: linear-gradient(135deg, var(--teal-dd), var(--teal-d));
+        border-color: var(--teal);
+      }
+      .card-t {
+        font-size: 11pt;
+        font-weight: 700;
+        color: var(--teal-dd);
+        margin-bottom: 7px;
+      }
+      .card.dark .card-t {
+        color: #fde68a;
+      }
+      .chk {
+        display: flex;
+        gap: 8px;
+        align-items: flex-start;
+        margin: 5px 0;
+        font-size: 10.5pt;
+      }
+      .chki {
+        color: var(--teal);
+        font-size: 11pt;
+        margin-top: 3px;
+        flex-shrink: 0;
+      }
+      .steps {
+        margin: 16px 0;
+      }
+      .step {
+        display: flex;
+        gap: 11px;
+        align-items: flex-start;
+        margin-bottom: 12px;
+        page-break-inside: avoid;
+      }
+      .sn {
+        min-width: 28px;
+        height: 28px;
+        background: var(--teal);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10pt;
+        font-weight: 900;
+        flex-shrink: 0;
+        margin-top: 2px;
+      }
+      .sb {
+        flex: 1;
+      }
+      .st2 {
+        font-size: 11pt;
+        font-weight: 700;
+        color: var(--teal-dd);
+      }
+      .sd {
+        font-size: 10.5pt;
+        color: #4b5563;
+        line-height: 1.7;
+      }
+
+      /* ── INTERVIEW/EXERCISE BOXES ───────────────── */
+      .ib {
+        background: linear-gradient(135deg, #022c22, #0f766e);
+        border-radius: 12px;
+        padding: 18px 21px;
+        margin: 18px 0;
+        page-break-inside: avoid;
+      }
+      .ibt {
+        font-size: 11pt;
+        font-weight: 700;
+        color: #fde68a;
+        margin-bottom: 9px;
+      }
+      .ibq {
+        font-size: 10.5pt;
+        color: #99f6e4;
+        margin: 5px 0;
+        padding-right: 11px;
+        border-right: 3px solid var(--teal);
+        line-height: 1.7;
+      }
+      .ex {
+        border: 2px solid var(--teal);
+        border-radius: 12px;
+        overflow: hidden;
+        margin: 18px 0;
+        page-break-inside: avoid;
+      }
+      .exh {
+        background: var(--teal);
+        padding: 8px 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .ext {
+        font-size: 11pt;
+        font-weight: 700;
+        color: white;
+      }
+      .exb {
+        padding: 13px 17px;
+      }
+      .diff {
+        display: inline-flex;
+        align-items: center;
+        padding: 2px 10px;
+        border-radius: 50px;
+        font-size: 8.5pt;
+        font-weight: 700;
+        margin-left: 7px;
+      }
+      .diff.easy {
+        background: #d1fae5;
+        color: #065f46;
+      }
+      .diff.med {
+        background: #fef3c7;
+        color: #78350f;
+      }
+      .diff.hard {
+        background: var(--rose-l);
+        color: #9f1239;
+      }
+      .scenario-box {
+        background: linear-gradient(135deg, #1e3a5f, #1d4ed8);
+        border-radius: 12px;
+        padding: 18px 20px;
+        margin: 16px 0;
+        page-break-inside: avoid;
+      }
+      .scenario-t {
+        font-size: 11pt;
+        font-weight: 700;
+        color: #93c5fd;
+        margin-bottom: 8px;
+      }
+      .scenario-text {
+        font-size: 10.5pt;
+        color: rgba(255, 255, 255, 0.85);
+        line-height: 1.8;
+      }
+
+      /* ── PATTERN CARD ───────────────────────────── */
+      .pattern-card {
+        border: 2px solid var(--teal);
+        border-radius: 14px;
+        overflow: hidden;
+        margin: 18px 0;
+        page-break-inside: avoid;
+      }
+      .pattern-header {
+        background: linear-gradient(135deg, var(--teal-dd), var(--teal));
+        padding: 12px 18px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .pattern-name {
+        font-size: 14pt;
+        font-weight: 900;
+        color: white;
+      }
+      .pattern-category {
+        font-size: 9pt;
+        color: #99f6e4;
+        font-family: "IBM Plex Mono", monospace;
+        letter-spacing: 1px;
+      }
+      .pattern-body {
+        padding: 16px 18px;
+      }
+      .pattern-meta {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 10px;
+        flex-wrap: wrap;
+      }
+      .pmeta {
+        background: var(--teal-p);
+        border: 1px solid #5eead4;
+        border-radius: 6px;
+        padding: 3px 10px;
+        font-size: 9pt;
+        font-weight: 700;
+        color: var(--teal-d);
+      }
+
+      /* ── FOOTER ──────────────────────────────────── */
+      .pgf {
+        margin-top: 38px;
+        padding-top: 9px;
+        border-top: 1.5px solid var(--teal-p);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .pga {
+        font-size: 8.5pt;
+        color: var(--amber);
+        font-weight: 700;
+      }
+      .pgn {
+        font-size: 8.5pt;
+        color: #94a3b8;
+        font-family: "IBM Plex Mono", monospace;
+      }
+      hr.dv {
+        border: none;
+        border-top: 1.5px solid var(--teal-p);
+        margin: 17px 0;
+      }
+
+      /* ── TOC ─────────────────────────────────────── */
+      .toc-pg {
+        padding: 55px 65px;
+        page-break-after: always;
+        max-width: 900px;
+        margin: 0 auto;
+      }
+      .toc-h {
+        text-align: center;
+        margin-bottom: 36px;
+      }
+      .toc-h h1 {
+        font-size: 26pt;
+        font-weight: 900;
+        color: var(--teal-dd);
+      }
+      .toc-h p {
+        font-size: 9pt;
+        color: #94a3b8;
+        font-family: "IBM Plex Mono", monospace;
+        letter-spacing: 2px;
+        margin-top: 5px;
+      }
+      .toc-pt {
+        font-size: 9pt;
+        font-weight: 700;
+        color: var(--teal);
+        letter-spacing: 2px;
+        border-bottom: 2px solid var(--teal-p);
+        padding-bottom: 4px;
+        margin-bottom: 7px;
+        margin-top: 20px;
+      }
+      .toc-i {
+        display: flex;
+        align-items: center;
+        padding: 5px 0;
+        border-bottom: 1px dashed #e2e8f0;
+        gap: 10px;
+      }
+      .toc-n {
+        background: var(--teal-dd);
+        color: #fde68a;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 8pt;
+        font-weight: 700;
+        padding: 2px 7px;
+        border-radius: 4px;
+        min-width: 34px;
+        text-align: center;
+      }
+      .toc-t {
+        flex: 1;
+        font-size: 11pt;
+        font-weight: 600;
+        color: #1e293b;
+        margin-right: 10px;
+      }
+      .toc-d {
+        flex: 1;
+        border-bottom: 2px dotted #cbd5e1;
+        margin: 0 6px;
+      }
+      .toc-p {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 10pt;
+        font-weight: 700;
+        color: var(--teal);
+      }
+
+      /* ── BACK COVER ──────────────────────────────── */
+      .bc {
+        width: 100%;
+        min-height: 100vh;
+        background: linear-gradient(145deg, #022c22, #0f766e 40%, #115e59);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 60px;
+        position: relative;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ══════════════════ COVER ══════════════════ -->
+    <div class="cover">
+      <div class="cover-grid"></div>
+      <div class="cover-glow"></div>
+      <div class="cover-accent"></div>
+
+      <div class="cbrand">
+        <div class="clogo">&lt;/&gt;</div>
+        <span class="cbn">AswaniStack</span>
+        <span
+          style="
+            margin-right: auto;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 9pt;
+            color: rgba(255, 255, 255, 0.3);
+            letter-spacing: 2px;
+          "
+          >ARABIC TECH SERIES · VOL. 3</span
+        >
+      </div>
+
+      <div class="cover-main">
+        <div class="ctag">
+          ● MODERN JAVASCRIPT · ES6+ · DOM · ASYNC · ADVANCED — ARABIC FIRST EDITION
+        </div>
+        <div class="ct1">الدليل الشامل لـ</div>
+        <div class="ct2">لغة JavaScript</div>
+        <div class="ct3">وهيكلية المتصفح</div>
+        <div class="ct4">وآلية عمل المحركات</div>
+        <div class="cdiv"></div>
+        <div class="cdesc">
+          من المتغيرات والأنواع الأساسية والـ DOM — إلى معالجة العمليات الوعود غير المتزامنة والـ Async/Await — وفك شفرة الـ Closure وPrototype وسياق This الخفي.
+        </div>
+        <div class="cpills">
+          <span class="cpill hot">🎯 JS Fundamentals</span>
+          <span class="cpill hot">⚡ ES6+ Features</span>
+          <span class="cpill hot">🏗️ DOM & Events</span>
+          <span class="cpill">🔄 Async / Await</span>
+          <span class="cpill">📦 Closures</span>
+          <span class="cpill">Prototype Chain</span>
+          <span class="cpill">The Event Loop</span>
+          <span class="cpill hot">Execution Context</span>
+        </div>
+      </div>
+
+      <div class="cabox">
+        <div class="calbl">AUTHOR — المؤلف</div>
+        <div class="caname">Eng. Osman Taher</div>
+        <div class="casub">✦ AswaniStack — Arabic Tech Books Series</div>
+      </div>
+    </div>
+
+    <!-- ══════════════════ TOC ══════════════════ -->
+    <div class="toc-pg">
+      <div class="toc-h">
+        <h1>فهرس المحتويات</h1>
+        <p>TABLE OF CONTENTS</p>
+      </div>
+
+      <div class="toc-pt">الجزء الأول — أساسيات لغة جافا سكريبت</div>
+      <div class="toc-i">
+        <span class="toc-n">01</span><span class="toc-t">المتغيرات وأنواع البيانات (let, const, Stack & Heap)</span><span class="toc-d"></span><span class="toc-p">5</span>
+      </div>
+      <div class="toc-i">
+        <span class="toc-n">02</span><span class="toc-t">العمليات والجمل الشرطية والحلقات التكرارية</span><span class="toc-d"></span><span class="toc-p">12</span>
+      </div>
+
+      <div class="toc-pt">الجزء الثاني — الدوال وهيكلة البيانات</div>
+      <div class="toc-i">
+        <span class="toc-n">03</span><span class="toc-t">الدوال بمختلف أنواعها (Arrow, Declarations)</span><span class="toc-d"></span><span class="toc-p">22</span>
+      </div>
+      <div class="toc-i">
+        <span class="toc-n">04</span><span class="toc-t">المصفوفات وهياكل الكائنات والتفكيك (Destructuring)</span><span class="toc-d"></span><span class="toc-p">30</span>
+      </div>
+
+      <div class="toc-pt">الجزء الثالث — تفاعل المتصفح والـ DOM</div>
+      <div class="toc-i">
+        <span class="toc-n">05</span><span class="toc-t">التعديل على شجرة الـ DOM وإدارة الأحداث (Events)</span><span class="toc-d"></span><span class="toc-p">42</span>
+      </div>
+
+      <div class="toc-pt">الجزء الرابع — البرمجة غير المتزامنة Async JS</div>
+      <div class="toc-i">
+        <span class="toc-n">06</span><span class="toc-t">الوعود (Promises) والـ Async / Await وتفاعل الـ APIs</span><span class="toc-d"></span><span class="toc-p">54</span>
+      </div>
+
+      <div class="toc-pt">الجزء الخامس — آليات عمل المحرك المتقدمة</div>
+      <div class="toc-i">
+        <span class="toc-n">07</span><span class="toc-t">نطاق المتغيرات والـ Closures وحقيقة الـ this</span><span class="toc-d"></span><span class="toc-p">68</span>
+      </div>
+      <div class="toc-i">
+        <span class="toc-n">08</span><span class="toc-t">الـ Prototypes والبرمجة كائنية التوجه (OOP) والـ Modules</span><span class="toc-d"></span><span class="toc-p">78</span>
+      </div>
+    </div>
+
+    <!-- ══════════════════ CH 1: FUNDAMENTALS ══════════════════ -->
+    <div class="cp">
+      <div class="pgh">
+        <span class="pgch">الفصل الأول ● أساسيات الذاكرة والأنواع</span>
+        <span class="pgbr">AswaniStack ✦ Eng. Osman Taher</span>
+      </div>
+      <div class="cho">
+        <div class="chnum">CHAPTER 01 — VARIABLES & DATA TYPES</div>
+        <div class="chtitle">المتغيرات وإدارة الذاكرة<br />Memory allocation in JavaScript</div>
+        <div class="chdesc">
+          الفهم الحقيقي لـ JavaScript يبدأ بالوعي بآلية تخزين البيانات. جافا سكريبت لا تخزن كل البيانات بنفس الطريقة، وفهمك للـ Stack والـ Heap سيوفر عليك ساعات طويلة من البحث عن ثغرات نسْخ الكائنات.
+        </div>
+      </div>
+
+      <h2 class="sec">1.1 المتغيرات: let مقابل const و var</h2>
+      <p class="body">
+        تطور الإعلان عن المتغيرات عبر الأجيال؛ من النطاق الوظيفي العشوائي لـ <code>var</code> إلى النطاق الكتلي المنضبط (Block Scope) للـ <code>let</code> والـ <code>const</code> في ES6.
+      </p>
+
+      <div class="two">
+        <div class="card teal">
+          <div class="card-t">🟢 let (محدودة النطاق)</div>
+          <div class="chk"><span>▸</span> <div>يمكن تعديل قيمتها لاحقاً في الكود.</div></div>
+          <div class="chk"><span>▸</span> <div>تتبع نطاق البلوك <code>{}</code> ولا تتسرب خارجه.</div></div>
+        </div>
+        <div class="card amber">
+          <div class="card-t" style="color: #92400e">🟡 const (الثوابت)</div>
+          <div class="chk"><span>▸</span> <div>لا يمكن إعادة تعيين قيمتها مباشرة.</div></div>
+          <div class="chk"><span>▸</span> <div>تخضع لنطاق البلوك وتحمي المرجع (Reference) من التغيير.</div></div>
+        </div>
+      </div>
+
+      <h2 class="sec">1.2 أنواع البيانات وأين يتم تخزينها؟</h2>
+      <div class="def">
+        <div class="def-t">💡 الفرق الجوهري في الذاكرة</div>
+        <p class="body">
+          الأنواع الأساسية <strong>(Primitive Types)</strong> مثل الأرقام والنصوص والقيم البولينية يتم تخزينها في الـ <strong>Stack Memory</strong> لسرعة الوصول إليها وتوفرها على قيم ثابتة الحجم. أما الأنواع المرجعية <strong>(Reference Types)</strong> مثل الكائنات والمصفوفات والدوال فيتم تخزين قيمها في الـ <strong>Heap Memory</strong>، بينما يخزن الـ Stack مؤشراً <code>Pointer</code> يدل على موقعها في الـ Heap.
+        </p>
+      </div>
+
+      <div class="diagram">
+        <div class="diagram-title">JAVASCRIPT MEMORY ALLOCATION (STACK VS HEAP)</div>
+        <svg width="600" height="180" viewBox="0 0 600 180" style="direction: ltr;">
+          <!-- Stack Frame -->
+          <rect x="20" y="20" width="220" height="140" rx="8" fill="#f0fdfa" stroke="#0d9488" stroke-width="2"/>
+          <text x="130" y="42" text-anchor="middle" font-family="Cairo" font-size="12" font-weight="900" fill="#0f766e">الذاكرة المؤقتة (Stack)</text>
+          <line x1="20" y1="50" x2="240" y2="50" stroke="#0d9488" stroke-width="1.5"/>
+          
+          <text x="30" y="75" font-family="IBM Plex Mono" font-size="10" fill="#1e293b">age = 26 (Value)</text>
+          <text x="30" y="105" font-family="IBM Plex Mono" font-size="10" fill="#1e293b">userPtr = 0xAA91 (Address)</text>
+
+          <!-- Heap Frame -->
+          <rect x="360" y="20" width="220" height="140" rx="8" fill="#fffbeb" stroke="#d97706" stroke-width="2"/>
+          <text x="470" y="42" text-anchor="middle" font-family="Cairo" font-size="12" font-weight="900" fill="#92400e">ذاكرة الكومة (Heap)</text>
+          <line x1="360" y1="50" x2="580" y2="50" stroke="#d97706" stroke-width="1.5"/>
+
+          <rect x="380" y="65" width="180" height="70" rx="4" fill="#fef3c7" stroke="#fbbf24" stroke-width="1"/>
+          <text x="390" y="90" font-family="IBM Plex Mono" font-size="10" fill="#78350f">{ name: "Osman",</text>
+          <text x="390" y="110" font-family="IBM Plex Mono" font-size="10" fill="#78350f">  role: "Author" }</text>
+
+          <!-- Pointer Arrow -->
+          <path d="M 220 100 L 375 100" fill="none" stroke="#7c3aed" stroke-width="2" stroke-dasharray="4,2"/>
+          <polygon points="375,100 365,95 365,105" fill="#7c3aed"/>
+          <text x="295" y="90" text-anchor="middle" font-family="Cairo" font-size="8" font-weight="700" fill="#7c3aed">يشير إلى</text>
+        </svg>
+      </div>
+
+      <div class="uml-wrap">
+        <div class="uml-header">
+          <span class="uml-lang">JavaScript Code</span>
+          <span class="uml-tool">Primitives vs Reference Types</span>
+        </div>
+        <div class="uml-body">
+          <pre><span class="kw">let</span> <span class="uc">age</span> = <span class="ua">26</span>; <span class="ucm">// يتم حفظ القيمة مباشرة في الـ Stack</span>
+<span class="kw">let</span> <span class="uc">newAge</span> = <span class="uc">age</span>; <span class="ucm">// يتم نسخ القيمة مباشرة</span>
+<span class="uc">newAge</span> = <span class="ua">27</span>; <span class="ucm">// تعديلها لا يؤثر على age الأصلي</span>
+
+<span class="kw">const</span> <span class="uc">user</span> = { <span class="str">name</span>: <span class="str">"Osman"</span> }; <span class="ucm">// يحفظ العنوان في الـ Stack، والكائن في الـ Heap</span>
+<span class="kw">const</span> <span class="uc">admin</span> = <span class="uc">user</span>; <span class="ucm">// يتم نسخ العنوان فقط! يشير كلاهما لنفس الكائن</span>
+<span class="uc">admin</span>.<span class="uc">name</span> = <span class="str">"Ali"</span>; 
+
+<span class="uc">console</span>.<span class="uc">log</span>(<span class="uc">user</span>.<span class="uc">name</span>); <span class="ucm">// Output: "Ali" (تأثر الكائن الأصلي لتشاركهما المرجع!)</span></pre>
+        </div>
+      </div>
+
+      <div class="pgf">
+        <span class="pga">Eng. Osman Taher — AswaniStack</span>
+        <span class="pgn">PAGE 05</span>
+      </div>
+    </div>
+
+    <!-- ══════════════════ CH 2: LOGIC & CONTROL FLOW ══════════════════ -->
+    <div class="cp">
+      <div class="pgh">
+        <span class="pgch">الفصل الثاني ● منطق البرمجة والتكرار</span>
+        <span class="pgbr">AswaniStack ✦ Eng. Osman Taher</span>
+      </div>
+      <div class="cho">
+        <div class="chnum">CHAPTER 02 — CONTROL FLOW & LOOPS</div>
+        <div class="chtitle">الجمل الشرطية والعمليات والحلقات<br />Operators, Conditionals & Loops</div>
+        <div class="chdesc">
+          التحكم بمسار الكود وكيفية معالجة الحالات المنطقية المعقدة بذكاء، مع استعراض شامل للفرق بين مقارنات القيمة والنوع ومختلف أنواع الحلقات البرمجية.
+        </div>
+      </div>
+
+      <h2 class="sec">2.1 العمليات ومقارنات التساوي (== vs ===)</h2>
+      <p class="body">
+        الوقوع في فخ التساوي السطحي <code>==</code> أمر شائع جداً بجافا سكريبت بسبب التحويل التلقائي للأنواع (Type Coercion).
+      </p>
+
+      <table class="tbl">
+        <thead>
+          <tr>
+            <th>العملية</th>
+            <th>الاسم</th>
+            <th>السلوك والتحويل</th>
+            <th>مثال</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>==</code></td>
+            <td>التحقق السطحي</td>
+            <td class="b">يحاول تحويل النوعين ليصبحا متشابهين قبل المقارنة</td>
+            <td><code>"5" == 5 // true</code></td>
+          </tr>
+          <tr>
+            <td><code>===</code></td>
+            <td>التحقق الدقيق</td>
+            <td class="g">يقارن القيمة والنوع معاً (الأكثر أماناً وموصى به دائماً)</td>
+            <td><code>"5" === 5 // false</code></td>
+          </tr>
+          <tr>
+            <td><code>??</code></td>
+            <td>Nullish Coalescing</td>
+            <td class="g">يرجع القيمة اليمنى فقط إذا كانت اليسرى <code>null</code> أو <code>undefined</code></td>
+            <td><code>null ?? "default" // "default"</code></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2 class="sec">2.2 الجمل الشرطية الحديثة</h2>
+      <p class="body">
+        بدلاً من بناء جدار من جمل <code>if-else</code> المتراكمة، نفضل تصفية الحالات باستخدام الـ Guard Clauses أو اللجوء للعمليات الثلاثية المختصرة.
+      </p>
+
+      <div class="uml-wrap">
+        <div class="uml-header">
+          <span class="uml-lang">JavaScript</span>
+          <span class="uml-tool">Clean Conditional Logic</span>
+        </div>
+        <div class="uml-body">
+          <pre><span class="ucm">// الطريقة غير المنظمة باستخدام if-else المتداخلة</span>
+<span class="kw">if</span> (<span class="uc">user</span>) {
+  <span class="kw">if</span> (<span class="uc">user</span>.<span class="uc">isVerified</span>) {
+    <span class="uc">grantAccess</span>();
+  } <span class="kw">else</span> {
+    <span class="uc">showVerificationError</span>();
+  }
+}
+
+<span class="ucm">// الطريقة الحديثة والاحترافية: استخدام الـ Guard Clauses</span>
+<span class="kw">if</span> (!<span class="uc">user</span>) <span class="kw">return</span> <span class="uc">showError</span>(<span class="str">"المستخدم غير موجود"</span>);
+<span class="kw">if</span> (!<span class="uc">user</span>.<span class="uc">isVerified</span>) <span class="kw">return</span> <span class="uc">showVerificationError</span>();
+
+<span class="uc">grantAccess</span>(); <span class="ucm">// الكود يتدفق بسلاسة بدون تداخل عميق</span></pre>
+        </div>
+      </div>
+
+      <h2 class="sec">2.3 الحلقات التكرارية (Loops) والفرق بين For-in و For-of</h2>
+      <div class="two">
+        <div class="card teal">
+          <div class="card-t">🔄 for...of Loop</div>
+          <p style="font-size: 10pt; color: #374151;">
+            تُستخدم للمرور على قيم (Values) كائنات قابلة للتكرار مثل <strong>المصفوفات والنصوص</strong>.
+          </p>
+          <div style="background: var(--teal-dd); border-radius: 6px; padding: 6px; font-size: 9pt; color: #99f6e4; font-family: 'IBM Plex Mono', monospace; margin-top: 8px;">
+            for (let val of [10, 20]) { console.log(val); } // 10, 20
+          </div>
+        </div>
+        <div class="card amber">
+          <div class="card-t" style="color: #92400e">🔑 for...in Loop</div>
+          <p style="font-size: 10pt; color: #374151;">
+            تُستخدم للمرور على مفاتيح/خصائص (Keys/Properties) <strong>الكائنات (Objects)</strong>.
+          </p>
+          <div style="background: #78350f; border-radius: 6px; padding: 6px; font-size: 9pt; color: #fde68a; font-family: 'IBM Plex Mono', monospace; margin-top: 8px;">
+            for (let key in {a: 1}) { console.log(key); } // "a"
+          </div>
+        </div>
+      </div>
+
+      <div class="pgf">
+        <span class="pga">Eng. Osman Taher — AswaniStack</span>
+        <span class="pgn">PAGE 12</span>
+      </div>
+    </div>
+
+    <!-- ══════════════════ CH 3: FUNCTIONS ══════════════════ -->
+    <div class="cp">
+      <div class="pgh">
+        <span class="pgch">الفصل الثالث ● بنية الدوال المتقدمة</span>
+        <span class="pgbr">AswaniStack ✦ Eng. Osman Taher</span>
+      </div>
+      <div class="cho">
+        <div class="chnum">CHAPTER 03 — FUNCTIONS MASTERCLASS</div>
+        <div class="chtitle">الدوال ومفهوم الرفع والـ Arrow Functions<br />Function expressions vs declarations</div>
+        <div class="chdesc">
+          الدوال في جافا سكريبت هي "كائنات من الدرجة الأولى" (First-Class Citizens). سنتعلم كيف تؤثر آلية تعريف الدالة على تصرفها في محيط العمل البرمجي وعلاقتها بالكلمة المحجوزة this.
+        </div>
+      </div>
+
+      <h2 class="sec">3.1 أنواع تعريف الدوال والـ Hoisting</h2>
+      <p class="body">
+        هناك طريقتان أساسيتان لتعريف الدوال التقليدية، وتختلفان جذرياً في سلوك الرفع (Hoisting):
+      </p>
+
+      <div class="two">
+        <div class="card teal">
+          <div class="card-t">📣 Function Declaration</div>
+          <p style="font-size: 10.5pt; color: #374151;">
+            يتم رفعها بالكامل مع جسدها لأعلى نطاق التشغيل. يمكنك استدعاؤها قبل كتابتها في الكود بأي سطر.
+          </p>
+          <div style="background: var(--teal-dd); border-radius: 6px; padding: 8px; font-size: 9pt; color: #99f6e4; font-family: 'IBM Plex Mono', monospace; margin-top: 6px; direction: ltr; text-align: left;">
+            function greet() { return "Hi!"; }
+          </div>
+        </div>
+        <div class="card rose">
+          <div class="card-t" style="color: #9f1239">🎭 Function Expression</div>
+          <p style="font-size: 10.5pt; color: #374151;">
+            تُعامل كمعامل للمتغير. لا تُرفع، لذا ستحصل على خطأ <code>ReferenceError</code> إذا حاولت استدعاءها قبل تعريفها.
+          </p>
+          <div style="background: #9f1239; border-radius: 6px; padding: 8px; font-size: 9pt; color: #fff1f2; font-family: 'IBM Plex Mono', monospace; margin-top: 6px; direction: ltr; text-align: left;">
+            const greet = function() { return "Hi!"; }
+          </div>
+        </div>
+      </div>
+
+      <h2 class="sec">3.2 الدوال السهمية (Arrow Functions) وحقيقة سياق This</h2>
+      <div class="def">
+        <div class="def-t">💡 الـ Lexical this الخفي</div>
+        <p class="body">
+          الدوال السهمية <code>() => {}</code> ليست مجرد شكل مختصر للدوال؛ بل تتمتع بسلوك مميز جداً: <strong>لا تمتلك سياق This خاصاً بها</strong>. هي تلتقط قيمة الكلمة <code>this</code> من النطاق الخارجي الذي عُرفت فيه (Lexical Scope)، على عكس الدوال العادية التي تنشئ سياق <code>this</code> جديداً يعتمد على كيفية ونقطة استدعائها.
+        </p>
+      </div>
+
+      <div class="uml-wrap">
+        <div class="uml-header">
+          <span class="uml-lang">JavaScript Arrow vs Normal Function</span>
+          <span class="uml-tool">Shorthand & Scope</span>
+        </div>
+        <div class="uml-body">
+          <pre><span class="kw">const</span> <span class="uc">userCard</span> = {
+  <span class="str">username</span>: <span class="str">"Osman"</span>,
+  <span class="uc">normalGreet</span>: <span class="kw">function</span>() {
+    <span class="uc">setTimeout</span>(<span class="kw">function</span>() {
+      <span class="uc">console</span>.<span class="uc">log</span>(<span class="str">"Normal:"</span>, <span class="kw">this</span>.<span class="uc">username</span>); <span class="ucm">// Output: undefined (setTimeout يغير سياق this إلى Window)</span>
+    }, <span class="ua">100</span>);
+  },
+  <span class="uc">arrowGreet</span>: <span class="kw">function</span>() {
+    <span class="uc">setTimeout</span>(() => {
+      <span class="uc">console</span>.<span class="uc">log</span>(<span class="str">"Arrow:"</span>, <span class="kw">this</span>.<span class="uc">username</span>); <span class="ucm">// Output: "Osman" (التقطت This من النطاق الخارجي للكارد)</span>
+    }, <span class="ua">100</span>);
+  }
+};
+
+<span class="uc">userCard</span>.<span class="uc">normalGreet</span>();
+<span class="uc">userCard</span>.<span class="uc">arrowGreet</span>();</pre>
+        </div>
+      </div>
+
+      <div class="pgf">
+        <span class="pga">Eng. Osman Taher — AswaniStack</span>
+        <span class="pgn">PAGE 22</span>
+      </div>
+    </div>
+
+    <!-- ══════════════════ CH 4: DATA STRUCTURES ══════════════════ -->
+    <div class="cp">
+      <div class="pgh">
+        <span class="pgch">الفصل الرابع ● المصفوفات ومعالجة البيانات</span>
+        <span class="pgbr">AswaniStack ✦ Eng. Osman Taher</span>
+      </div>
+      <div class="cho">
+        <div class="chnum">CHAPTER 04 — DATA STRUCTURES & MODERN ES6+</div>
+        <div class="chtitle">هياكل البيانات والعمليات المتسلسلة<br />Arrays, Objects, Destructuring & Rest</div>
+        <div class="chdesc">
+          التعامل الفعال مع هياكل البيانات والتحول نحو البرمجة الوظيفية عبر معالجة المصفوفات المتسلسلة وتفكيك العناصر بمرونة فائقة.
+        </div>
+      </div>
+
+      <h2 class="sec">4.1 عمليات معالجة المصفوفات الكبرى (Pipeline)</h2>
+      <p class="body">
+        بدلاً من استخدام الحلقات اليدوية، توفر جافا سكريبت دوال برمجية وظيفية راقية ومغلقة لتصفية وتحويل ودمج البيانات بشكل أنيق:
+      </p>
+
+      <div class="diagram">
+        <div class="diagram-title">ARRAY PROCESSING PIPELINE</div>
+        <svg width="600" height="100" viewBox="0 0 600 100" style="direction: ltr;">
+          <!-- Input -->
+          <rect x="10" y="25" width="80" height="50" rx="6" fill="#eff6ff" stroke="#1d4ed8" stroke-width="2"/>
+          <text x="50" y="55" text-anchor="middle" font-family="IBM Plex Mono" font-size="11" font-weight="700" fill="#1e3a8a">[1, 2, 3, 4]</text>
+
+          <!-- Filter -->
+          <polygon points="105,50 115,40 115,60" fill="#1d4ed8" />
+          <rect x="115" y="25" width="130" height="50" rx="6" fill="#f0fdfa" stroke="#0d9488" stroke-width="2"/>
+          <text x="180" y="47" text-anchor="middle" font-family="IBM Plex Mono" font-size="10" font-weight="700" fill="#0f766e">filter()</text>
+          <text x="180" y="62" text-anchor="middle" font-family="Cairo" font-size="8" fill="#52525b">تصفية الأعداد الزوجية</text>
+
+          <!-- Map -->
+          <polygon points="260,50 270,40 270,60" fill="#0d9488" />
+          <rect x="270" y="25" width="130" height="50" rx="6" fill="#f5f3ff" stroke="#7c3aed" stroke-width="2"/>
+          <text x="335" y="47" text-anchor="middle" font-family="IBM Plex Mono" font-size="10" font-weight="700" fill="#6d28d9">map()</text>
+          <text x="335" y="62" text-anchor="middle" font-family="Cairo" font-size="8" fill="#52525b">مضاعفة القيمة x2</text>
+
+          <!-- Output -->
+          <polygon points="415,50 425,40 425,60" fill="#7c3aed" />
+          <rect x="425" y="25" width="165" height="50" rx="6" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/>
+          <text x="507" y="47" text-anchor="middle" font-family="IBM Plex Mono" font-size="10" font-weight="700" fill="#15803d">reduce() / Final Output</text>
+          <text x="507" y="62" text-anchor="middle" font-family="IBM Plex Mono" font-size="10" font-weight="700" fill="#166534">[4, 8]</text>
+        </svg>
+      </div>
+
+      <div class="uml-wrap">
+        <div class="uml-header">
+          <span class="uml-lang">JavaScript</span>
+          <span class="uml-tool">Array Methods Chaining</span>
+        </div>
+        <div class="uml-body">
+          <pre><span class="kw">const</span> <span class="uc">numbers</span> = [<span class="ua">1</span>, <span class="ua">2</span>, <span class="ua">3</span>, <span class="ua">4</span>];
+
+<span class="ucm">// معالجة البيانات بسلسلة واحدة نظيفة</span>
+<span class="kw">const</span> <span class="uc">processed</span> = <span class="uc">numbers</span>
+  .<span class="uc">filter</span>(<span class="uc">n</span> => <span class="uc">n</span> % <span class="ua">2</span> === <span class="ua">0</span>)  <span class="ucm">// [2, 4]</span>
+  .<span class="uc">map</span>(<span class="uc">n</span> => <span class="uc">n</span> * <span class="ua">2</span>);         <span class="ucm">// [4, 8]</span>
+
+<span class="uc">console</span>.<span class="uc">log</span>(<span class="uc">processed</span>); <span class="ucm">// Output: [4, 8]</span>
+
+<span class="ucm">// دالة الاختزال لتجميع العناصر لعملية واحدة</span>
+<span class="kw">const</span> <span class="uc">sum</span> = <span class="uc">processed</span>.<span class="uc">reduce</span>((<span class="uc">acc</span>, <span class="uc">curr</span>) => <span class="uc">acc</span> + <span class="uc">curr</span>, <span class="ua">0</span>);
+<span class="uc">console</span>.<span class="uc">log</span>(<span class="uc">sum</span>); <span class="ucm">// Output: 12</span></pre>
+        </div>
+      </div>
+
+      <h2 class="sec">4.2 التفكيك (Destructuring) ومكرر النشر (Spread/Rest)</h2>
+      <p class="body">
+        يعتبر التفكيك أسرع وأسهل ميزة مستحدثة لاستخراج الخواص من الكائنات والمصفوفات بشكل مباشر ومقروء.
+      </p>
+
+      <div class="two">
+        <div class="card purple">
+          <div class="card-t" style="color: #5b21b6">📦 Object Destructuring</div>
+          <pre style="font-family: 'IBM Plex Mono', monospace; font-size: 8.5pt; direction: ltr; text-align: left; background: rgba(0,0,0,0.03); padding: 6px; border-radius: 6px;">
+const user = { name: "Osman", age: 26 };
+const { name, age } = user;
+console.log(name); // "Osman"</pre>
+        </div>
+        <div class="card blue">
+          <div class="card-t" style="color: #1e40af">⚡ Rest & Spread Operators (...)</div>
+          <pre style="font-family: 'IBM Plex Mono', monospace; font-size: 8.5pt; direction: ltr; text-align: left; background: rgba(0,0,0,0.03); padding: 6px; border-radius: 6px;">
+const arr1 = [1, 2];
+const arr2 = [...arr1, 3, 4]; // Spread
+const [first, ...rest] = arr2; // Rest</pre>
+        </div>
+      </div>
+
+      <div class="pgf">
+        <span class="pga">Eng. Osman Taher — AswaniStack</span>
+        <span class="pgn">PAGE 30</span>
+      </div>
+    </div>
+
+    <!-- ══════════════════ CH 5: THE DOM & EVENTS ══════════════════ -->
+    <div class="cp">
+      <div class="pgh">
+        <span class="pgch">الفصل الخامس ● التفاعل مع الـ DOM والأحداث</span>
+        <span class="pgbr">AswaniStack ✦ Eng. Osman Taher</span>
+      </div>
+      <div class="cho">
+        <div class="chnum">CHAPTER 05 — THE DOM & EVENETS</div>
+        <div class="chtitle">تطويع شجرة الصفحة وإدارة الأحداث<br />Selecting, Modifying & Event Handling</div>
+        <div class="chdesc">
+          الـ DOM هو الواجهة التفاعلية التي يرى منها المستخدم كودك الخاص. سنتعلم كيف نحدد العناصر ونتحكم بالأحداث مع الحفاظ على الأداء وسرعة الاستجابة.
+        </div>
+      </div>
+
+      <h2 class="sec">5.1 هيكلية شجرة الـ DOM (The Document Object Model)</h2>
+      <p class="body">
+        المتصفح يحول مستند HTML الخاص بك لشجرة هرمية تسمى الكائنات العقدية (Node Objects).
+      </p>
+
+      <div class="diagram">
+        <div class="diagram-title">DOM TREE HIERARCHY REPRESENTATION</div>
+        <svg width="600" height="150" viewBox="0 0 600 150" style="direction: ltr;">
+          <!-- Node document -->
+          <rect x="250" y="10" width="100" height="30" rx="4" fill="#0f766e" stroke="#042f2e" stroke-width="1.5"/>
+          <text x="300" y="29" text-anchor="middle" font-family="IBM Plex Mono" font-size="10" font-weight="700" fill="white">document</text>
+
+          <!-- Node html -->
+          <line x1="300" y1="40" x2="300" y2="60" stroke="#0f766e" stroke-width="1.5"/>
+          <rect x="250" y="60" width="100" height="30" rx="4" fill="#0d9488" stroke="#134e4a" stroke-width="1.5"/>
+          <text x="300" y="79" text-anchor="middle" font-family="IBM Plex Mono" font-size="10" font-weight="700" fill="white">&lt;html&gt;</text>
+
+          <!-- Head & Body Nodes -->
+          <line x1="300" y1="90" x2="150" y2="110" stroke="#0d9488" stroke-width="1.5"/>
+          <line x1="300" y1="90" x2="450" y2="110" stroke="#0d9488" stroke-width="1.5"/>
+
+          <rect x="100" y="110" width="100" height="30" rx="4" fill="#eff6ff" stroke="#1d4ed8" stroke-width="1.5"/>
+          <text x="150" y="129" text-anchor="middle" font-family="IBM Plex Mono" font-size="10" font-weight="700" fill="#1d4ed8">&lt;head&gt;</text>
+
+          <rect x="400" y="110" width="100" height="30" rx="4" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.5"/>
+          <text x="450" y="129" text-anchor="middle" font-family="IBM Plex Mono" font-size="10" font-weight="700" fill="#7c3aed">&lt;body&gt;</text>
+        </svg>
+      </div>
+
+      <h2 class="sec">5.2 آلية تفاعل الأحداث (Bubbling vs Capturing)</h2>
+      <div class="def">
+        <div class="def-t">⚙️ دورة حياة الحدث</div>
+        <p class="body">
+          عندما تضغط على زر داخل حاوية (Div)، لا يتأثر الزر فقط؛ بل ينتقل الحدث عبر 3 مراحل متتالية:
+          <br /><strong>1. Capturing:</strong> يتجه الحدث لأسفل الشجرة من الـ Document حتى العنصر المستهدف.
+          <br /><strong>2. Target:</strong> ينطلق الحدث عند العنصر الذي تم التفاعل معه (مثلاً الزر).
+          <br /><strong>3. Bubbling:</strong> يعود الحدث للصعود لأعلى من العنصر المستهدف وصولاً للجذر (وهي الحالة الافتراضية لالتقاط الأحداث).
+        </p>
+      </div>
+
+      <div class="uml-wrap">
+        <div class="uml-header">
+          <span class="uml-lang">JavaScript DOM</span>
+          <span class="uml-tool">Manipulations & delegation</span>
+        </div>
+        <div class="uml-body">
+          <pre><span class="ucm">// تحديد العناصر وتعديلها بأداء عالي</span>
+<span class="kw">const</span> <span class="uc">ctaButton</span> = <span class="uc">document</span>.<span class="uc">querySelector</span>(<span class="str">"#main-btn"</span>);
+<span class="uc">ctaButton</span>.<span class="uc">textContent</span> = <span class="str">"انقر للمتابعة ✨"</span>;
+<span class="uc">ctaButton</span>.<span class="uc">classList</span>.<span class="uc">add</span>(<span class="str">"bg-teal"</span>);
+
+<span class="ucm">// استخدام تفويض الأحداث (Event Delegation) لتسريع الأداء</span>
+<span class="kw">const</span> <span class="uc">listContainer</span> = <span class="uc">document</span>.<span class="uc">querySelector</span>(<span class="str">".item-list"</span>);
+<span class="uc">listContainer</span>.<span class="uc">addEventListener</span>(<span class="str">"click"</span>, (<span class="uc">event</span>) => {
+  <span class="ucm">// بدلاً من وضع مستمع لكل عنصر، نستمع للحاوية ونفلتر العنصر المنقور</span>
+  <span class="kw">if</span> (<span class="uc">event</span>.<span class="uc">target</span>.<span class="uc">matches</span>(<span class="str">"li"</span>)) {
+    <span class="uc">console</span>.<span class="uc">log</span>(<span class="str">"تم نقر العنصر:"</span>, <span class="uc">event</span>.<span class="uc">target</span>.<span class="uc">textContent</span>);
+    <span class="uc">event</span>.<span class="uc">stopPropagation</span>(); <span class="ucm">// إيقاف صعود الحدث (Prevent Bubbling) عند اللزوم</span>
+  }
+});</pre>
+        </div>
+      </div>
+
+      <div class="pgf">
+        <span class="pga">Eng. Osman Taher — AswaniStack</span>
+        <span class="pgn">PAGE 42</span>
+      </div>
+    </div>
+
+    <!-- ══════════════════ CH 6: ASYNC JAVASCRIPT ══════════════════ -->
+    <div class="cp">
+      <div class="pgh">
+        <span class="pgch">الفصل السادس ● البرمجة غير المتزامنة والمحرك</span>
+        <span class="pgbr">AswaniStack ✦ Eng. Osman Taher</span>
+      </div>
+      <div class="cho">
+        <div class="chnum">CHAPTER 06 — ASYNCHRONOUS JAVASCRIPT</div>
+        <div class="chtitle">الوعود وحلقة الأحداث وفك قيود التزامن<br />Promises, Async/Await & Event Loop</div>
+        <div class="chdesc">
+          جافا سكريبت لغة خيطية واحدة (Single Threaded)، لكنها قادرة على إدارة آلاف العمليات المتزامنة بكفاءة مذهلة دون تجميد الواجهة. سنكتشف السر الدفين وراء الـ Event Loop.
+        </div>
+      </div>
+
+      <h2 class="sec">6.1 لغز حلقة الأحداث (The Event Loop Explained)</h2>
+      <p class="body">
+        لكي نفهم الكود غير المتزامن، يجب أن ندرك دورة معالجة المهام بين الـ JavaScript Engine والـ Web APIs الموفرة من المتصفح.
+      </p>
+
+      <div class="diagram">
+        <div class="diagram-title">THE JAVASCRIPT RUNTIME ARCHITECTURE</div>
+        <svg width="600" height="200" viewBox="0 0 600 200" style="direction: ltr;">
+          <!-- Call Stack -->
+          <rect x="10" y="20" width="130" height="150" rx="6" fill="#f0fdfa" stroke="#0d9488" stroke-width="2"/>
+          <text x="75" y="42" text-anchor="middle" font-family="Cairo" font-size="10" font-weight="700" fill="#0f766e">مكدس الاستدعاء</text>
+          <line x1="10" y1="50" x2="140" y2="50" stroke="#0d9488" stroke-width="1"/>
+          <rect x="20" y="60" width="110" height="25" rx="3" fill="#34d399" stroke="#115e59" stroke-width="1"/>
+          <text x="75" y="76" text-anchor="middle" font-family="IBM Plex Mono" font-size="8" fill="#115e59">fetchData()</text>
+
+          <!-- Web APIs -->
+          <rect x="200" y="20" width="160" height="70" rx="6" fill="#eff6ff" stroke="#1d4ed8" stroke-width="2"/>
+          <text x="280" y="42" text-anchor="middle" font-family="Cairo" font-size="10" font-weight="700" fill="#1e3a8a">Web APIs (المتصفح)</text>
+          <line x1="200" y1="50" x2="360" y2="50" stroke="#1d4ed8" stroke-width="1"/>
+          <text x="210" y="64" font-family="IBM Plex Mono" font-size="8" fill="#1d4ed8">setTimeout | Fetch</text>
+
+          <!-- Callback/Task Queue -->
+          <rect x="420" y="20" width="160" height="150" rx="6" fill="#f5f3ff" stroke="#7c3aed" stroke-width="2"/>
+          <text x="500" y="42" text-anchor="middle" font-family="Cairo" font-size="10" font-weight="700" fill="#6d28d9">طابور المهام (Queues)</text>
+          <line x1="420" y1="50" x2="580" y2="50" stroke="#7c3aed" stroke-width="1"/>
+          <rect x="430" y="60" width="140" height="25" rx="3" fill="#c4b5fd" stroke="#5b21b6" stroke-width="1"/>
+          <text x="500" y="76" text-anchor="middle" font-family="IBM Plex Mono" font-size="8" fill="#5b21b6">Microtasks (Promises)</text>
+
+          <!-- Event Loop Circle -->
+          <path d="M 280 130 C 260 130, 260 170, 280 170 C 300 170, 300 130, 280 130" fill="none" stroke="#ca8a04" stroke-width="3" stroke-dasharray="4,2"/>
+          <polygon points="280,130 275,138 285,138" fill="#ca8a04"/>
+          <text x="280" y="185" text-anchor="middle" font-family="Cairo" font-size="9" font-weight="900" fill="#ca8a04">حلقة الأحداث Loop</text>
+        </svg>
+      </div>
+
+      <h2 class="sec">6.2 إدارة جلب البيانات باستخدام Promises و Async / Await</h2>
+      <p class="body">
+        الكتابة باستخدام <code>async / await</code> تقدم صياغة رائعة وسهلة القراءة تحول الأكواد المعقدة إلى شكل تتابعي متناسق ومريح للعين والذهن.
+      </p>
+
+      <div class="uml-wrap">
+        <div class="uml-header">
+          <span class="uml-lang">JavaScript Async API Fetch</span>
+          <span class="uml-tool">Modern Fetch & Error Handling</span>
+        </div>
+        <div class="uml-body">
+          <pre><span class="ucm">// الطريقة الحديثة والمحبذة باستخدام async/await والتحقق من الأخطاء</span>
+<span class="kw">async</span> <span class="kw">function</span> <span class="uc">fetchUserData</span>(<span class="uc">userId</span>) {
+  <span class="kw">try</span> {
+    <span class="kw">const</span> <span class="uc">response</span> = <span class="kw">await</span> <span class="uc">fetch</span>(<span class="str">`https://api.aswanistack.com/users/${userId}`</span>);
+    
+    <span class="ucm">// التحقق الفوري من حالة الاتصال (Guard Clause)</span>
+    <span class="kw">if</span> (!<span class="uc">response</span>.<span class="uc">ok</span>) {
+      <span class="kw">throw</span> <span class="kw">new</span> <span class="uc">Error</span>(<span class="str">`خطأ في جلب البيانات: ${response.status}`</span>);
+    }
+
+    <span class="kw">const</span> <span class="uc">data</span> = <span class="kw">await</span> <span class="uc">response</span>.<span class="uc">json</span>();
+    <span class="kw">return</span> <span class="uc">data</span>;
+  } <span class="kw">catch</span> (<span class="uc">error</span>) {
+    <span class="uc">console</span>.<span class="uc">error</span>(<span class="str">"حدث خلل أثناء الاتصال:"</span>, <span class="uc">error</span>.<span class="uc">message</span>);
+    <span class="kw">return</span> <span class="kw">null</span>;
+  }
+}
+
+<span class="ucm">// تجربة دمج البيانات غير المتزامنة</span>
+<span class="uc">fetchUserData</span>(<span class="ua">101</span>).<span class="uc">then</span>(<span class="uc">user</span> => <span class="uc">console</span>.<span class="uc">log</span>(<span class="str">"المستخدم المتزامن:"</span>, <span class="uc">user</span>));</pre>
+        </div>
+      </div>
+
+      <div class="pgf">
+        <span class="pga">Eng. Osman Taher — AswaniStack</span>
+        <span class="pgn">PAGE 54</span>
+      </div>
+    </div>
+
+    <!-- ══════════════════ CH 7: ADVANCED CONCEPTS ══════════════════ -->
+    <div class="cp">
+      <div class="pgh">
+        <span class="pgch">الفصل السابع ● آليات المحرك الخفية والـ Closures</span>
+        <span class="pgbr">AswaniStack ✦ Eng. Osman Taher</span>
+      </div>
+      <div class="cho">
+        <div class="chnum">CHAPTER 07 — ADVANCED ENGINE CONCEPTS</div>
+        <div class="chtitle">منطق إغلاق النطاق والتحكم بسياق العمل<br />Scope, Execution Context & Closures</div>
+        <div class="chdesc">
+          تحليل عميق لكيفية تخزين المحرك للمتغيرات داخل بيئات التشغيل، وشرح شامل ومبسط لأهم لغز ممتع في المقابلات التقنية: الـ Closures.
+        </div>
+      </div>
+
+      <h2 class="sec">7.1 ما هو الـ Closure وكيف ينشأ؟</h2>
+      <div class="def">
+        <div class="def-t">💡 التعريف الحاسم</div>
+        <p class="body">
+          الـ <strong>Closure</strong> هو قدرة الدالة الابنة على <strong>تذكر الوصول إلى نطاقها الخارجي (Lexical Scope)</strong> والبيانات المتواجدة فيه حتى بعد انتهاء تشغيل الدالة الأب وخروجها تماماً من الـ Call Stack.
+        </p>
+      </div>
+
+      <div class="uml-wrap">
+        <div class="uml-header">
+          <span class="uml-lang">JavaScript Scope Closure</span>
+          <span class="uml-tool">Encapsulation & Private State</span>
+        </div>
+        <div class="uml-body">
+          <pre><span class="kw">function</span> <span class="uc">createCounter</span>() {
+  <span class="kw">let</span> <span class="uc">count</span> = <span class="ua">0</span>; <span class="ucm">// متغير خاص (Encapsulated/Private)</span>
+
+  <span class="kw">return</span> {
+    <span class="uc">increment</span>: <span class="kw">function</span>() {
+      <span class="uc">count</span>++;
+      <span class="kw">return</span> <span class="uc">count</span>;
+    },
+    <span class="uc">decrement</span>: <span class="kw">function</span>() {
+      <span class="uc">count</span>--;
+      <span class="kw">return</span> <span class="uc">count</span>;
+    }
+  };
+}
+
+<span class="kw">const</span> <span class="uc">myCounter</span> = <span class="uc">createCounter</span>();
+<span class="uc">console</span>.<span class="uc">log</span>(<span class="uc">myCounter</span>.<span class="uc">increment</span>()); <span class="ucm">// Output: 1</span>
+<span class="uc">console</span>.<span class="uc">log</span>(<span class="uc">myCounter</span>.<span class="uc">increment</span>()); <span class="ucm">// Output: 2 (يتذكر قيمة count السابقة!)</span>
+<span class="ucm">// لا توجد طريقة لتعديل المتغير count مباشرة من الخارج. هذا هو الأمان!</span></pre>
+        </div>
+      </div>
+
+      <h2 class="sec">7.2 أساليب ربط سياق This يدوياً (call, apply, bind)</h2>
+      <p class="body">
+        إذا واجهتك مشاكل في تفكك مرجع <code>this</code>، تتيح لك اللغة الربط اليدوي والتحكم الكامل في تحديد السياق:
+      </p>
+
+      <div class="three">
+        <div class="card teal">
+          <div class="card-t">📍 .call()</div>
+          <p style="font-size: 10pt; color: #374151;">
+            تستدعي الدالة فوراً مع تمرير الكائن كـ <code>this</code> وتمرير المعاملات مفصولة بفواصل.
+          </p>
+          <div style="background: var(--teal-dd); border-radius: 4px; padding: 5px; font-size: 8.5pt; color: #ccfbf1; font-family: 'IBM Plex Mono', monospace; margin-top: 6px; direction: ltr; text-align: left;">
+            func.call(obj, arg1, arg2);
+          </div>
+        </div>
+        <div class="card amber">
+          <div class="card-t" style="color: #92400e">📍 .apply()</div>
+          <p style="font-size: 10pt; color: #374151;">
+            تستدعي الدالة فوراً مع تمرير الكائن كـ <code>this</code> ولكن تمرير المعاملات كـ <strong>مصفوفة [Array]</strong>.
+          </p>
+          <div style="background: #78350f; border-radius: 4px; padding: 5px; font-size: 8.5pt; color: #fde68a; font-family: 'IBM Plex Mono', monospace; margin-top: 6px; direction: ltr; text-align: left;">
+            func.apply(obj, [arg1, arg2]);
+          </div>
+        </div>
+        <div class="card purple">
+          <div class="card-t" style="color: #5b21b6">📍 .bind()</div>
+          <p style="font-size: 10pt; color: #374151;">
+            <strong>لا تستدعي الدالة</strong>؛ بل ترجع نسخة جديدة كلياً من الدالة مربوطة بسياق <code>this</code> المحدد للاستخدام لاحقاً.
+          </p>
+          <div style="background: #3f1259; border-radius: 4px; padding: 5px; font-size: 8.5pt; color: #f5f3ff; font-family: 'IBM Plex Mono', monospace; margin-top: 6px; direction: ltr; text-align: left;">
+            const newFunc = func.bind(obj);
+          </div>
+        </div>
+      </div>
+
+      <div class="pgf">
+        <span class="pga">Eng. Osman Taher — AswaniStack</span>
+        <span class="pgn">PAGE 68</span>
+      </div>
+    </div>
+
+    <!-- ══════════════════ CH 8: OOP & MODULES ══════════════════ -->
+    <div class="cp">
+      <div class="pgh">
+        <span class="pgch">الفصل الثامن ● البروتوتايب والكلاسات البرمجية</span>
+        <span class="pgbr">AswaniStack ✦ Eng. Osman Taher</span>
+      </div>
+      <div class="cho">
+        <div class="chnum">CHAPTER 08 — PROTOTYPES, OOP & MODULES</div>
+        <div class="chtitle">سلسلة البروتوتايب والبرمجة الكائنية والوحدات<br />The Prototype Chain & ES6 Modules</div>
+        <div class="chdesc">
+          السر الأعمق وراء الوراثة في جافا سكريبت: كيف تحاكي الكلاسات البرمجية الـ OOP التقليدي بينما تعتمد في خلفية المحرك كلياً على النماذج الأولية المترابطة (Prototypes).
+        </div>
+      </div>
+
+      <h2 class="sec">8.1 بنية وراثة النماذج (The Prototype Chain Diagram)</h2>
+      <p class="body">
+        عند استدعاء أي خاصية من كائن، يبحث المحرك في الكائن نفسه؛ فإذا لم يجدها يتجه للبروتوتايب الخاص به ويصعد في السلسلة حتى يصل إلى الكائن الأب الأكبر <code>Object.prototype</code>.
+      </p>
+
+      <div class="diagram">
+        <div class="diagram-title">THE PROTOTYPICAL INHERITANCE CHAIN</div>
+        <svg width="600" height="150" viewBox="0 0 600 150" style="direction: ltr;">
+          <!-- Node 1: myDog -->
+          <rect x="10" y="50" width="130" height="50" rx="6" fill="#f0fdfa" stroke="#0d9488" stroke-width="2"/>
+          <text x="75" y="75" text-anchor="middle" font-family="IBM Plex Mono" font-size="10" font-weight="700" fill="#0f766e">myDog Instance</text>
+          <text x="75" y="90" text-anchor="middle" font-family="Cairo" font-size="8" fill="#52525b">يبحث هنا أولاً</text>
+
+          <!-- Arrow 1 -->
+          <line x1="140" y1="75" x2="210" y2="75" stroke="#1e293b" stroke-width="1.5"/>
+          <polygon points="210,75 200,70 200,80" fill="#1e293b"/>
+          <text x="175" y="65" text-anchor="middle" font-family="IBM Plex Mono" font-size="8" fill="#94a3b8">__proto__</text>
+
+          <!-- Node 2: Dog.prototype -->
+          <rect x="210" y="50" width="140" height="50" rx="6" fill="#f5f3ff" stroke="#7c3aed" stroke-width="2"/>
+          <text x="280" y="75" text-anchor="middle" font-family="IBM Plex Mono" font-size="10" font-weight="700" fill="#5b21b6">Dog.prototype</text>
+          <text x="280" y="90" text-anchor="middle" font-family="Cairo" font-size="8" fill="#52525b">يبحث هنا ثانياً</text>
+
+          <!-- Arrow 2 -->
+          <line x1="350" y1="75" x2="420" y2="75" stroke="#1e293b" stroke-width="1.5"/>
+          <polygon points="420,75 410,70 410,80" fill="#1e293b"/>
+          <text x="385" y="65" text-anchor="middle" font-family="IBM Plex Mono" font-size="8" fill="#94a3b8">__proto__</text>
+
+          <!-- Node 3: Object.prototype -->
+          <rect x="420" y="50" width="160" height="50" rx="6" fill="#fff1f2" stroke="#e11d48" stroke-width="2"/>
+          <text x="500" y="75" text-anchor="middle" font-family="IBM Plex Mono" font-size="10" font-weight="700" fill="#b91c1c">Object.prototype</text>
+          <text x="500" y="90" text-anchor="middle" font-family="Cairo" font-size="8" fill="#52525b">المحطة الأخيرة أو null</text>
+        </svg>
+      </div>
+
+      <h2 class="sec">8.2 التعبير عن الكلاسات البرمجية وهيكلة ES6 Modules</h2>
+      <div class="uml-wrap">
+        <div class="uml-header">
+          <span class="uml-lang">JavaScript ES6+ OOP & Classes</span>
+          <span class="uml-tool">Object-Oriented Design & Modules</span>
+        </div>
+        <div class="uml-body">
+          <pre><span class="ucm">// تعريف الكلاس مع الوراثة الحديثة</span>
+<span class="kw">export</span> <span class="kw">class</span> <span class="uc">Animal</span> {
+  <span class="kw">constructor</span>(<span class="uc">name</span>) {
+    <span class="kw">this</span>.<span class="uc">name</span> = <span class="uc">name</span>;
+  }
+  <span class="uc">makeSound</span>() {
+    <span class="kw">return</span> <span class="str">"صوت غير محدد"</span>;
+  }
+}
+
+<span class="kw">export</span> <span class="kw">class</span> <span class="uc">Dog</span> <span class="kw">extends</span> <span class="uc">Animal</span> {
+  <span class="kw">constructor</span>(<span class="uc">name</span>, <span class="uc">breed</span>) {
+    <span class="kw">super</span>(<span class="uc">name</span>); <span class="ucm">// استدعاء الكونستركتور الأب</span>
+    <span class="kw">this</span>.<span class="uc">breed</span> = <span class="uc">breed</span>;
+  }
+  <span class="uc">makeSound</span>() {
+    <span class="kw">return</span> <span class="str">"هو هو! 🐾"</span>;
+  }
+}
+
+<span class="ucm">// في ملف آخر للاستخدام والاستيراد المنظم (ES6 Modules)</span>
+<span class="ucm">// import { Dog } from "./Animal.js";</span>
+<span class="kw">const</span> <span class="uc">myPup</span> = <span class="kw">new</span> <span class="uc">Dog</span>(<span class="str">"ركس"</span>, <span class="str">"هاسكي"</span>);
+<span class="uc">console</span>.<span class="uc">log</span>(<span class="uc">myPup</span>.<span class="uc">makeSound</span>()); <span class="ucm">// Output: "هو هو! 🐾"</span></pre>
+        </div>
+      </div>
+
+      <div class="ib">
+        <div class="ibt">💡 أسئلة مراجعة وتحديات المقابلات التقنية</div>
+        <div class="ibq">
+          تحدي: ماذا يحدث لو استبدلنا Arrow Function بـ Normal Function داخل مستمع حدث الـ Click؟ — الدالة السهمية ستجعل <code>this</code> تشير إلى سياق الكود الخارجي (ربما الـ Window)، بينما الدالة العادية ستجعل <code>this</code> تشير إلى الـ DOM Element نفسه الذي استقبل النقرة!
+        </div>
+        <div class="ibq">
+          لماذا نفضل ES6 Modules على الطرق القديمة مثل CommonJS؟ — لأنها تتيح عملية الـ Static Analysis والـ Tree Shaking لحذف الأكواد المهملة قبل النشر النهائي للمشروع مما يوفر مساحات تصفح هائلة.
+        </div>
+      </div>
+
+      <div class="pgf">
+        <span class="pga">Eng. Osman Taher — AswaniStack</span>
+        <span class="pgn">PAGE 88</span>
+      </div>
+    </div>
+
+    <!-- ══════════════════ BACK COVER ══════════════════ -->
+    <div class="bc">
+      <div
+        style="
+          position: absolute;
+          width: 600px;
+          height: 600px;
+          border-radius: 50%;
+          background: rgba(255, 255, 255, 0.03);
+          bottom: -200px;
+          right: -150px;
+        "
+      ></div>
+      <div
+        style="
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 8px;
+          height: 100%;
+          background: linear-gradient(to bottom, #fde68a, #34d399, #fde68a);
+        "
+      ></div>
+
+      <div
+        style="
+          width: 84px;
+          height: 84px;
+          background: rgba(255, 255, 255, 0.1);
+          border: 2px solid rgba(255, 255, 255, 0.2);
+          border-radius: 20px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-bottom: 22px;
+          box-shadow: 0 0 60px rgba(13, 148, 136, 0.4);
+        "
+      >
+        <span
+          style="
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 36px;
+            font-weight: 700;
+            color: #fde68a;
+          "
+          >&lt;/&gt;</span
+        >
+      </div>
+
+      <div
+        style="
+          font-size: 30pt;
+          font-weight: 900;
+          color: #fde68a;
+          letter-spacing: 2px;
+          margin-bottom: 6px;
+          font-family: 'Cairo', sans-serif;
+        "
+      >
+        AswaniStack
+      </div>
+      <div
+        style="
+          width: 70px;
+          height: 3px;
+          background: #34d399;
+          border-radius: 3px;
+          margin: 14px auto 20px;
+        "
+      ></div>
+      <div
+        style="
+          font-size: 18pt;
+          font-weight: 900;
+          color: white;
+          margin-bottom: 6px;
+          font-family: 'Cairo', sans-serif;
+        "
+      >
+        الأساسيات والـ DOM ومحركات الـ Async والـ Closures الخفية
+      </div>
+      <div
+        style="
+          font-size: 12pt;
+          color: #99f6e4;
+          margin-bottom: 36px;
+          font-family: 'Cairo', sans-serif;
+        "
+      >
+        دليلك العربي المنهجي الأعمق لاحتراف لغة العصر — Vol. 3
+      </div>
+
+      <div
+        style="
+          display: flex;
+          gap: 20px;
+          margin-bottom: 40px;
+          flex-wrap: wrap;
+          justify-content: center;
+        "
+      >
+        <div
+          style="
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            padding: 14px 22px;
+            text-align: center;
+          "
+        >
+          <div style="font-size: 24pt; font-weight: 900; color: #fde68a">
+            08
+          </div>
+          <div style="font-size: 9pt; color: rgba(255, 255, 255, 0.6)">
+            فصول دراسية كاملة
+          </div>
+        </div>
+        <div
+          style="
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            padding: 14px 22px;
+            text-align: center;
+          "
+        >
+          <div style="font-size: 24pt; font-weight: 900; color: #fde68a">
+            100%
+          </div>
+          <div style="font-size: 9pt; color: rgba(255, 255, 255, 0.6)">
+            أكواد ES6+ قياسية ومختبرة
+          </div>
+        </div>
+        <div
+          style="
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            padding: 14px 22px;
+            text-align: center;
+          "
+        >
+          <div style="font-size: 24pt; font-weight: 900; color: #fde68a">
+            05+
+          </div>
+          <div style="font-size: 9pt; color: rgba(255, 255, 255, 0.6)">
+            رسومات بيانية تفاعلية SVG
+          </div>
+        </div>
+      </div>
+
+      <div
+        style="
+          background: rgba(0, 0, 0, 0.3);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 16px;
+          padding: 24px 44px;
+          text-align: center;
+          margin-bottom: 24px;
+        "
+      >
+        <div
+          style="
+            font-size: 9pt;
+            color: #34d399;
+            letter-spacing: 3px;
+            font-family: 'IBM Plex Mono', monospace;
+            margin-bottom: 8px;
+          "
+        >
+          AUTHOR — المؤلف
+        </div>
+        <div
+          style="
+            font-size: 22pt;
+            font-weight: 900;
+            color: white;
+            font-family: 'Cairo', sans-serif;
+          "
+        >
+          Eng. Osman Taher
+        </div>
+        <div
+          style="
+            font-size: 10pt;
+            color: rgba(255, 255, 255, 0.4);
+            margin-top: 5px;
+            font-family: 'IBM Plex Mono', monospace;
+          "
+        >
+          ✦ AswaniStack — Arabic Tech Books Series
+        </div>
+      </div>
+
+      <div
+        style="
+          font-size: 10pt;
+          color: rgba(255, 255, 255, 0.25);
+          font-family: 'IBM Plex Mono', monospace;
+        "
+      >
+        © AswaniStack · Eng. Osman Taher · All Rights Reserved
+      </div>
+    </div>
+  </body>
+</html>

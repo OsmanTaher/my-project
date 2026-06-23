@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حاسبة الزكاة الذكية - Al-Zakat Calculator</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Cairo Font for Premium Arabic Typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: radial-gradient(circle at top right, #f4f7f5 0%, #e8efe9 100%);
+        }
+        /* Glassmorphism Soft Premium Cards */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(16, 185, 129, 0.08);
+        }
+        /* Custom Smooth Transitions */
+        .transition-300 {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    </style>
+</head>
+<body class="text-slate-800 min-h-screen py-6 px-4 md:py-12 md:px-8 flex flex-col justify-between">
+
+    <!-- Main Container -->
+    <div class="w-full max-w-5xl mx-auto space-y-8 flex-1">
+        
+        <!-- Header Branding -->
+        <header class="text-center space-y-3">
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-3xl bg-emerald-600/10 border border-emerald-500/20 text-emerald-600 text-3xl mb-1 shadow-inner">
+                🕌
+            </div>
+            <h1 class="text-3xl md:text-5xl font-black bg-gradient-to-l from-emerald-800 via-emerald-700 to-amber-600 bg-clip-text text-transparent">
+                حاسبة الزكاة الذكية
+            </h1>
+            <p class="text-xs md:text-sm text-slate-500 font-medium max-w-lg mx-auto leading-relaxed">
+                أداة فقهية وتقنية متقدمة لحساب زكاة المال والذهب بدقة متناهية وفقاً للقيم الديناميكية الحالية للسوق ومقارنتها بالنصاب الشرعي.
+            </p>
+        </header>
+
+        <!-- Dynamic Currency & Base Config Bar -->
+        <section class="glass-card rounded-2xl p-4 shadow-sm flex flex-wrap items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span class="text-xs font-bold text-slate-500">محدد العملة النشطة:</span>
+                <select id="currency-select" onchange="updateCurrencySymbols(this.value)" class="bg-emerald-50/50 border border-emerald-500/10 rounded-xl px-3 py-1.5 text-xs font-bold text-emerald-800 outline-none focus:border-emerald-500">
+                    <option value="EGP">الجنيه المصري (EGP)</option>
+                    <option value="SAR" selected>الريال السعودي (SAR)</option>
+                    <option value="AED">الدرهم الإماراتي (AED)</option>
+                    <option value="KWD">الدينار الكويتي (KWD)</option>
+                    <option value="USD">الدولار الأمريكي ($)</option>
+                </select>
+            </div>
+            
+            <div class="text-xs text-slate-400 font-bold">
+                النصاب الشرعي للذهب ثابت فقهياً = <span class="text-amber-600 font-extrabold">85 جراماً</span> من عيار 24 نقي
+            </div>
+        </section>
+
+        <!-- Main Layout Split -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            
+            <!-- Left Side: Inputs Panel (7 Columns) -->
+            <form id="zakat-form" onsubmit="event.preventDefault();" class="lg:col-span-7 space-y-6">
+                
+                <!-- Gold Valuation Block -->
+                <div class="glass-card rounded-[2rem] p-6 shadow-sm space-y-5 relative overflow-hidden">
+                    <div class="absolute -top-10 -left-10 w-24 h-24 bg-amber-500/5 rounded-full"></div>
+                    <h3 class="text-base font-extrabold text-emerald-900 border-b border-emerald-500/5 pb-2 flex items-center gap-2">
+                        ✨ مدخرات الذهب والزينة
+                    </h3>
+
+                    <!-- Market Price of 24K Gold -->
+                    <div class="space-y-2">
+                        <label class="text-xs font-bold text-slate-500 block">سعر جرام الذهب الحالي (عيار 24):</label>
+                        <div class="relative rounded-2xl shadow-inner">
+                            <input type="number" id="input-gold-price" min="0.1" step="any" placeholder="أدخل السعر الحالي للجرام عيار 24" value="280" required
+                                   class="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl py-3.5 pl-16 pr-5 text-sm font-bold text-slate-700 outline-none focus:border-emerald-500 focus:bg-white transition-300">
+                            <span class="currency-label absolute left-5 top-1/2 -translate-y-1/2 text-xs font-extrabold text-emerald-600">SAR</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <!-- Weight input -->
+                        <div class="space-y-2">
+                            <label class="text-xs font-bold text-slate-500 block">وزن الذهب الكلي المملوك:</label>
+                            <div class="relative rounded-2xl shadow-inner">
+                                <input type="number" id="input-gold-weight" min="0" step="any" placeholder="مثال: 120" value="0"
+                                       class="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl py-3.5 pl-14 pr-5 text-sm font-bold text-slate-700 outline-none focus:border-emerald-500 focus:bg-white transition-300">
+                                <span class="absolute left-5 top-1/2 -translate-y-1/2 text-xs font-extrabold text-slate-400">جرام</span>
+                            </div>
+                        </div>
+
+                        <!-- Carat selector -->
+                        <div class="space-y-2">
+                            <label class="text-xs font-bold text-slate-500 block">عيار/نقاوة الذهب المملوك:</label>
+                            <select id="select-gold-carat" class="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl py-3.5 px-5 text-sm font-bold text-slate-700 outline-none focus:border-emerald-500 focus:bg-white transition-300">
+                                <option value="24" selected>عيار 24 (نقي بنسبة 99.9%)</option>
+                                <option value="22">عيار 22 (نقاوة 91.6%)</option>
+                                <option value="21">عيار 21 (نقاوة 87.5%)</option>
+                                <option value="18">عيار 18 (نقاوة 75.0%)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cash & Liquid Assets Block -->
+                <div class="glass-card rounded-[2rem] p-6 shadow-sm space-y-5 relative overflow-hidden">
+                    <div class="absolute -top-10 -left-10 w-24 h-24 bg-emerald-500/5 rounded-full"></div>
+                    <h3 class="text-base font-extrabold text-emerald-900 border-b border-emerald-500/5 pb-2 flex items-center gap-2">
+                        💵 السيولة النقدية والمدخرات
+                    </h3>
+                    
+                    <div class="space-y-2">
+                        <label class="text-xs font-bold text-slate-500 block">إجمالي النقود السائلة والمدخرات البنكية:</label>
+                        <p class="text-[10px] text-slate-400 leading-relaxed mb-2">يشمل المبالغ النقدية في اليد، الحسابات الجارية والمستندات المالية القابلة للتسييل الفوري التي دار عليها الحول.</p>
+                        <div class="relative rounded-2xl shadow-inner">
+                            <input type="number" id="input-cash" min="0" step="any" placeholder="مثال: 35000" value="0"
+                                   class="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl py-3.5 pl-16 pr-5 text-sm font-bold text-slate-700 outline-none focus:border-emerald-500 focus:bg-white transition-300">
+                            <span class="currency-label absolute left-5 top-1/2 -translate-y-1/2 text-xs font-extrabold text-emerald-600">SAR</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive Trigger Calc Actions -->
+                <button onclick="calculateZakat()" class="w-full bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-500 hover:to-emerald-600 text-white font-extrabold py-4 px-6 rounded-2xl shadow-lg shadow-emerald-700/10 hover:scale-[1.01] active:scale-[0.99] transition-all-300 flex items-center justify-center gap-2 text-base">
+                    🧮 احسب نصاب وزكاة المال الآن
+                </button>
+
+            </form>
+
+            <!-- Right Side: Outputs & Realtime Dashboard (5 Columns) -->
+            <div class="lg:col-span-5 space-y-6">
+                
+                <!-- Main Status Banner -->
+                <div id="status-card" class="bg-gradient-to-br from-slate-900 to-slate-950 rounded-[2rem] p-6 text-center text-white shadow-xl relative overflow-hidden">
+                    <div class="absolute -top-12 -left-12 w-28 h-28 bg-emerald-500/10 rounded-full blur-xl"></div>
+                    
+                    <span id="badge-status" class="bg-slate-800 text-slate-400 border border-slate-700 text-[10px] font-black py-1 px-4 rounded-full tracking-widest uppercase">
+                        تحقق مفقود
+                    </span>
+
+                    <div class="my-6 space-y-1">
+                        <span class="text-xs text-slate-400 block font-medium">مقدار الزكاة الواجب إخراجها:</span>
+                        <div class="flex items-center justify-center gap-2">
+                            <span id="output-zakat-due" class="text-4xl md:text-5xl font-black tracking-tight text-emerald-400">0.00</span>
+                            <span class="currency-label text-base font-bold text-emerald-400">SAR</span>
+                        </div>
+                    </div>
+
+                    <div id="output-status-text" class="text-xs text-slate-300 leading-relaxed max-w-xs mx-auto">
+                        الرجاء تعبئة الحقول المطلوبة بشكل صحيح ثم الضغط على زر الحساب لعرض الحالة الشرعية والمالية.
+                    </div>
+                </div>
+
+                <!-- Live Secondary Stats Breakdown Grid -->
+                <div class="glass-card rounded-[2rem] p-6 shadow-sm space-y-4">
+                    <h4 class="text-xs font-black text-emerald-900 tracking-wider uppercase border-b border-emerald-500/5 pb-2">تفاصيل الوعاء الزكوي</h4>
+                    
+                    <div class="space-y-3 text-xs font-semibold">
+                        <!-- Converted Gold Weight -->
+                        <div class="flex items-center justify-between py-1.5 border-b border-slate-50">
+                            <span class="text-slate-500">وزن الذهب المعادل لعيار 24:</span>
+                            <span class="text-slate-800 font-bold"><span id="output-converted-weight">0.00</span> جرام</span>
+                        </div>
+                        <!-- Converted Gold Asset Value -->
+                        <div class="flex items-center justify-between py-1.5 border-b border-slate-50">
+                            <span class="text-slate-500">القيمة السوقية للذهب الزكوي:</span>
+                            <span class="text-slate-800 font-bold"><span id="output-gold-value">0.00</span> <span class="currency-label">SAR</span></span>
+                        </div>
+                        <!-- Total Liquid Wealth Pool -->
+                        <div class="flex items-center justify-between py-1.5 border-b border-slate-50">
+                            <span class="text-slate-500 font-bold text-emerald-800">مجموع الأصول الخاضعة للزكاة:</span>
+                            <span class="text-emerald-700 font-extrabold"><span id="output-total-assets">0.00</span> <span class="currency-label">SAR</span></span>
+                        </div>
+                        <!-- Dynamic calculated Nisab -->
+                        <div class="flex items-center justify-between py-1.5">
+                            <span class="text-slate-500">حد النصاب الحالي (قيمة 85g ذهب 24K):</span>
+                            <span class="text-amber-600 font-bold"><span id="output-nisab-value">0.00</span> <span class="currency-label">SAR</span></span>
+                        </div>
+                    </div>
+
+                    <!-- Trigger How It Works Modal -->
+                    <button onclick="toggleHowItWorksModal(true)" class="w-full mt-2 py-3 px-4 bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-bold rounded-xl transition-300 flex items-center justify-center gap-2">
+                        📖 كيف تم حساب هذه النتائج؟
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- How is this calculated - Educational Modal -->
+    <div id="modal-explanation" class="fixed inset-0 bg-slate-950/80 z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300 backdrop-blur-sm">
+        <div class="bg-white border border-emerald-500/10 rounded-[2.5rem] max-w-xl w-full p-6 md:p-8 space-y-6 text-right relative shadow-2xl overflow-y-auto max-h-[90vh]">
+            
+            <!-- Title -->
+            <div class="flex items-center justify-between border-b pb-3 border-slate-100">
+                <h3 class="text-lg font-black text-emerald-900 flex items-center gap-2">
+                    🕌 كيف تم حساب زكاتك؟
+                </h3>
+                <button onclick="toggleHowItWorksModal(false)" class="text-slate-400 hover:text-slate-600 text-lg font-bold p-1">✕</button>
+            </div>
+
+            <!-- Steps Detailed breakdown -->
+            <div class="space-y-4 text-xs md:text-sm text-slate-600 leading-relaxed">
+                
+                <!-- Step 1 -->
+                <div class="bg-emerald-50/40 p-4 rounded-2xl border border-emerald-500/5 space-y-1.5">
+                    <span class="text-xs font-black text-emerald-800 block">الخطوة 1: حساب النصاب الشرعي</span>
+                    <p>النصاب الشرعي لوجوب الزكاة هو قيمة <span class="font-bold text-slate-800">85 جراماً من الذهب الصافي (عيار 24)</span>.</p>
+                    <p class="font-bold text-emerald-700 font-mono text-center bg-white py-1.5 px-3 rounded-lg border mt-1">
+                        حد النصاب = 85 جرام × <span id="explain-gold-price">0</span> = <span id="explain-nisab">0</span> <span class="explain-currency">SAR</span>
+                    </p>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="bg-emerald-50/40 p-4 rounded-2xl border border-emerald-500/5 space-y-1.5">
+                    <span class="text-xs font-black text-emerald-800 block">الخطوة 2: تحويل وتقييم الذهب زكوياً</span>
+                    <p>تتم زكاة الذهب بتحويل العيار المدخل إلى معيار الذهب النقي (عيار 24) بواسطة المعادلة الشرعية المعتمدة:</p>
+                    <p class="font-bold text-slate-700 font-mono text-center bg-white py-1.5 px-3 rounded-lg border mt-1">
+                        الوزن عيار 24 = (<span id="explain-user-weight">0</span> جرام × <span id="explain-user-carat">0</span>) ÷ 24 = <span id="explain-converted-weight">0</span> جرام نقي
+                    </p>
+                    <p class="mt-2">وبالتالي تكون القيمة السوقية للذهب الخاضع للزكاة:</p>
+                    <p class="font-bold text-emerald-700 font-mono text-center bg-white py-1.5 px-3 rounded-lg border mt-1">
+                        قيمة الذهب المالي = <span id="explain-converted-weight-2">0</span> جرام × <span id="explain-gold-price-2">0</span> = <span id="explain-gold-value">0</span> <span class="explain-currency">SAR</span>
+                    </p>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="bg-emerald-50/40 p-4 rounded-2xl border border-emerald-500/5 space-y-1.5">
+                    <span class="text-xs font-black text-emerald-800 block">الخطوة 3: دمج الأصول ومقارنتها بالنصاب</span>
+                    <p>نقوم بجمع النقد السائل والمدخرات مع القيمة المالية للذهب للتحقق من بلوغ النصاب:</p>
+                    <p class="font-bold text-slate-700 font-mono text-center bg-white py-1.5 px-3 rounded-lg border mt-1">
+                        مجموع الأصول = <span id="explain-cash">0</span> (نقد) + <span id="explain-gold-value-2">0</span> (ذهب) = <span id="explain-total-assets">0</span> <span class="explain-currency">SAR</span>
+                    </p>
+                    <div id="explain-comparison-block" class="mt-2 py-1 px-2 rounded font-bold text-center">
+                        <!-- Filled Dynamically -->
+                    </div>
+                </div>
+
+                <!-- Step 4 -->
+                <div id="explain-step-4" class="bg-emerald-50/40 p-4 rounded-2xl border border-emerald-500/5 space-y-1.5">
+                    <span class="text-xs font-black text-emerald-800 block">الخطوة 4: حساب مقدار الزكاة الواجبة</span>
+                    <p>إذا بلغت أصولك الزكوية النصاب، يتم احتساب زكاة المال بنسبة <span class="font-bold text-slate-800">2.5%</span> (أو ربع العشر أي بالقسمة على 40):</p>
+                    <p class="font-bold text-emerald-700 font-mono text-center bg-white py-1.5 px-3 rounded-lg border mt-1">
+                        مقدار زكاتك = <span id="explain-total-assets-2">0</span> × 0.025 = <span id="explain-final-zakat">0</span> <span class="explain-currency">SAR</span>
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="pt-2 flex justify-end">
+                <button onclick="toggleHowItWorksModal(false)" class="bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs px-6 py-3 rounded-2xl transition-300">
+                    أدركت المعادلة الحسابية، شكراً لك!
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Global Footer -->
+    <footer class="text-center py-6 text-xs text-slate-400 font-semibold">
+        تطبيق حاسبة الزكاة الذكية • مصمم ومطور بأعلى المعايير البرمجية والحسابية © ٢٠٢٦ م
+    </footer>
+
+    <!-- Web Audio Synthesis Engine for Micro-feedback -->
+    <script>
+        let audioCtx = null;
+        
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        function playSfx(type) {
+            try {
+                initAudio();
+                const ctx = audioCtx;
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                const now = ctx.currentTime;
+
+                if (type === 'calc') {
+                    // Soft high tone positive chime
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(523.25, now); // C5
+                    osc.frequency.setValueAtTime(659.25, now + 0.08); // E5
+                    gain.gain.setValueAtTime(0.1, now);
+                    gain.gain.linearRampToValueAtTime(0.001, now + 0.25);
+                    osc.start(now);
+                    osc.stop(now + 0.25);
+                } else if (type === 'warn') {
+                    // Descending soft warning sound
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(300, now);
+                    osc.frequency.linearRampToValueAtTime(200, now + 0.2);
+                    gain.gain.setValueAtTime(0.08, now);
+                    gain.gain.linearRampToValueAtTime(0.001, now + 0.2);
+                    osc.start(now);
+                    osc.stop(now + 0.2);
+                }
+            } catch (e) {
+                console.warn('Audio feedback context safely bypassed:', e);
+            }
+        }
+
+        // --- Core Application Logic State & Configuration ---
+        let selectedCurrency = "SAR";
+        let calculationResultCache = null;
+
+        // Dynamic currency mapping values
+        const currencyLabels = {
+            "EGP": "جنيه مصري (EGP)",
+            "SAR": "ريال سعودي (SAR)",
+            "AED": "درهم إماراتي (AED)",
+            "KWD": "دينار كويتي (KWD)",
+            "USD": "دولار أمريكي ($)"
+        };
+
+        // Update active currency symbols across the DOM
+        function updateCurrencySymbols(val) {
+            selectedCurrency = val;
+            const labels = document.querySelectorAll('.currency-label');
+            labels.forEach(el => {
+                el.textContent = val;
+            });
+            // Auto re-calculate with updated symbols
+            calculateZakat();
+        }
+
+        // Secure floating-point precision helper
+        function cleanFloat(val) {
+            if (isNaN(val) || !isFinite(val)) return 0;
+            return parseFloat(val.toFixed(2));
+        }
+
+        // Main Calculation Module
+        function calculateZakat() {
+            initAudio();
+
+            // Pull DOM input values safely
+            const goldPrice = parseFloat(document.getElementById('input-gold-price').value) || 0;
+            const goldWeight = parseFloat(document.getElementById('input-gold-weight').value) || 0;
+            const goldCarat = parseInt(document.getElementById('select-gold-carat').value) || 24;
+            const cashAmount = parseFloat(document.getElementById('input-cash').value) || 0;
+
+            // Trigger warnings on zero price rates
+            if (goldPrice <= 0) {
+                playSfx('warn');
+                invalidateUI("الرجاء إدخال سعر جرام ذهب صالح أكبر من الصفر.");
+                return;
+            }
+
+            // Calculations Step 1: Calculate Dynamic Nisab
+            const nisabThreshold = cleanFloat(85 * goldPrice);
+
+            // Calculations Step 2: Convert gold weight to equivalent 24k weight
+            const equivalent24kWeight = cleanFloat((goldWeight * goldCarat) / 24);
+
+            // Calculations Step 3: Find market cash value of pure equivalent gold
+            const goldAssetValue = cleanFloat(equivalent24kWeight * goldPrice);
+
+            // Calculations Step 4: Aggregate Wealth pool
+            const totalAssets = cleanFloat(cashAmount + goldAssetValue);
+
+            // Check Nisab state and evaluate due zakat
+            let zakatDue = 0;
+            let reachesNisab = totalAssets >= nisabThreshold;
+
+            if (reachesNisab) {
+                playSfx('calc');
+                // Zakat flat rate: 2.5% (1/40th)
+                zakatDue = cleanFloat(totalAssets * 0.025);
+            } else {
+                playSfx('warn');
+            }
+
+            // Populate calculations cache for dynamic education modal
+            calculationResultCache = {
+                goldPrice,
+                goldWeight,
+                goldCarat,
+                cashAmount,
+                nisabThreshold,
+                equivalent24kWeight,
+                goldAssetValue,
+                totalAssets,
+                reachesNisab,
+                zakatDue
+            };
+
+            // Commit results to interface layout
+            renderResults(calculationResultCache);
+        }
+
+        // Render calculated statistics into Dashboard
+        function renderResults(data) {
+            const badge = document.getElementById('badge-status');
+            const statusCard = document.getElementById('status-card');
+            const statusText = document.getElementById('output-status-text');
+            const outputZakatDue = document.getElementById('output-zakat-due');
+
+            const outputConvertedWeight = document.getElementById('output-converted-weight');
+            const outputGoldValue = document.getElementById('output-gold-value');
+            const outputTotalAssets = document.getElementById('output-total-assets');
+            const outputNisabValue = document.getElementById('output-nisab-value');
+
+            // Set secondary metrics in view
+            outputConvertedWeight.textContent = data.equivalent24kWeight.toLocaleString();
+            outputGoldValue.textContent = data.goldAssetValue.toLocaleString();
+            outputTotalAssets.textContent = data.totalAssets.toLocaleString();
+            outputNisabValue.textContent = data.nisabThreshold.toLocaleString();
+
+            if (data.reachesNisab) {
+                // Positively charged Emerald glow
+                badge.textContent = "زكاة واجبة ●";
+                badge.className = "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px] font-black py-1 px-4 rounded-full tracking-widest uppercase";
+                statusCard.className = "bg-gradient-to-br from-emerald-950 to-slate-950 rounded-[2rem] p-6 text-center text-white shadow-xl relative overflow-hidden border border-emerald-500/20 transition-all duration-300";
+                
+                outputZakatDue.textContent = data.zakatDue.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                statusText.innerHTML = `مجموع الأصول بلغ النصاب الشرعي المقدر بـ <span class="font-bold text-amber-500">${data.nisabThreshold.toLocaleString()} ${selectedCurrency}</span>. تجب الزكاة بنسبة ربع العشر (2.5%).`;
+            } else {
+                // Soft warn dark gray state
+                badge.textContent = "لم يبلغ النصاب ●";
+                badge.className = "bg-amber-500/10 text-amber-500 border border-amber-500/20 text-[10px] font-black py-1 px-4 rounded-full tracking-widest uppercase";
+                statusCard.className = "bg-gradient-to-br from-slate-900 to-slate-950 rounded-[2rem] p-6 text-center text-white shadow-xl relative overflow-hidden transition-all duration-300";
+                
+                outputZakatDue.textContent = "0.00";
+                
+                const gap = cleanFloat(data.nisabThreshold - data.totalAssets);
+                statusText.innerHTML = `لم تبلغ أصولك النصاب الشرعي المقدر بـ <span class="font-bold text-amber-500">${data.nisabThreshold.toLocaleString()} ${selectedCurrency}</span>. يتبقى <span class="font-bold text-rose-400">${gap.toLocaleString()} ${selectedCurrency}</span> لبلوغ حد النصاب.`;
+            }
+        }
+
+        // Invalidate view interface when errors are thrown
+        function invalidateUI(errorMsg) {
+            const badge = document.getElementById('badge-status');
+            const statusCard = document.getElementById('status-card');
+            const statusText = document.getElementById('output-status-text');
+            const outputZakatDue = document.getElementById('output-zakat-due');
+
+            badge.textContent = "مدخلات خاطئة ●";
+            badge.className = "bg-rose-500/20 text-rose-400 border border-rose-500/30 text-[10px] font-black py-1 px-4 rounded-full tracking-widest uppercase";
+            statusCard.className = "bg-gradient-to-br from-slate-900 to-slate-950 rounded-[2rem] p-6 text-center text-white shadow-xl relative overflow-hidden";
+            
+            outputZakatDue.textContent = "---";
+            statusText.textContent = errorMsg;
+        }
+
+        // Modal Explanations controllers
+        function toggleHowItWorksModal(open) {
+            const modal = document.getElementById('modal-explanation');
+            if (open) {
+                // Fill modal explanation elements with custom calculations
+                populateEducationalModal();
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+            } else {
+                modal.classList.add('opacity-0', 'pointer-events-none');
+            }
+        }
+
+        // Construct mathematical details dynamically in modal view
+        function populateEducationalModal() {
+            if (!calculationResultCache) return;
+            
+            const data = calculationResultCache;
+
+            // Sync dynamic currency values in modal
+            const exCurrencies = document.querySelectorAll('.explain-currency');
+            exCurrencies.forEach(el => el.textContent = selectedCurrency);
+
+            document.getElementById('explain-gold-price').textContent = data.goldPrice.toLocaleString();
+            document.getElementById('explain-gold-price-2').textContent = data.goldPrice.toLocaleString();
+            document.getElementById('explain-nisab').textContent = data.nisabThreshold.toLocaleString();
+
+            document.getElementById('explain-user-weight').textContent = data.goldWeight.toLocaleString();
+            document.getElementById('explain-user-carat').textContent = data.goldCarat;
+            document.getElementById('explain-converted-weight').textContent = data.equivalent24kWeight.toLocaleString();
+            document.getElementById('explain-converted-weight-2').textContent = data.equivalent24kWeight.toLocaleString();
+            document.getElementById('explain-gold-value').textContent = data.goldAssetValue.toLocaleString();
+
+            document.getElementById('explain-cash').textContent = data.cashAmount.toLocaleString();
+            document.getElementById('explain-gold-value-2').textContent = data.goldAssetValue.toLocaleString();
+            document.getElementById('explain-total-assets').textContent = data.totalAssets.toLocaleString();
+
+            const compBlock = document.getElementById('explain-comparison-block');
+            const step4 = document.getElementById('explain-step-4');
+
+            if (data.reachesNisab) {
+                compBlock.className = "mt-2 py-2 px-3 rounded-xl bg-emerald-500/10 text-emerald-800 text-xs font-bold text-center border border-emerald-500/10";
+                compBlock.innerHTML = `بما أن مجموع أصولك (<span class="font-extrabold">${data.totalAssets.toLocaleString()}</span>) أكبر من أو يساوي حد النصاب الشرعي (<span class="font-extrabold">${data.nisabThreshold.toLocaleString()}</span>)، <span class="underline">فقد وجبت الزكاة شرعاً</span>.`;
+                step4.classList.remove('hidden');
+                
+                document.getElementById('explain-total-assets-2').textContent = data.totalAssets.toLocaleString();
+                document.getElementById('explain-final-zakat').textContent = data.zakatDue.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            } else {
+                compBlock.className = "mt-2 py-2 px-3 rounded-xl bg-amber-500/10 text-amber-800 text-xs font-bold text-center border border-amber-500/10";
+                compBlock.innerHTML = `بما أن مجموع أصولك (<span class="font-extrabold">${data.totalAssets.toLocaleString()}</span>) أقل من حد النصاب الشرعي المقدر بـ (<span class="font-extrabold">${data.nisabThreshold.toLocaleString()}</span>)، <span class="underline">فلا تجب عليك زكاة هذا العام</span>.`;
+                step4.classList.add('hidden');
+            }
+        }
+
+        // Initialize default view calculation loop on page startup
+        window.addEventListener('DOMContentLoaded', () => {
+            calculateZakat();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>البطاقات الاستذكارية الاحترافية - Memorize Master</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Cairo Google Font for supreme educational typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: radial-gradient(circle at top right, #0b0f19 0%, #030712 100%);
+        }
+
+        /* 3D Transform Classes for Realistic Flipping */
+        .perspective-1000 {
+            perspective: 1200px;
+        }
+
+        .preserve-3d {
+            transform-style: preserve-3d;
+        }
+
+        /* Ultimate fix for WebKit/Chrome 3D bleed-through shown in screenshot */
+        .backface-hidden {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            transform: translate3d(0, 0, 0); /* Forces GPU Acceleration & establishes 3D plane */
+        }
+
+        .rotate-y-180 {
+            transform: rotateY(180deg) translate3d(0, 0, 0);
+        }
+
+        /* Card flip transition smoothness */
+        .card-inner {
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Category Color Mappings dynamically applied */
+        .bg-gradient-programming {
+            background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%);
+            border-color: rgba(99, 102, 241, 0.25);
+        }
+        .bg-gradient-networking {
+            background: linear-gradient(135deg, #581c87 0%, #0f172a 100%);
+            border-color: rgba(168, 85, 247, 0.25);
+        }
+        .bg-gradient-vocabulary {
+            background: linear-gradient(135deg, #7c2d12 0%, #0f172a 100%);
+            border-color: rgba(249, 115, 22, 0.25);
+        }
+        .bg-gradient-grammar {
+            background: linear-gradient(135deg, #064e3b 0%, #0f172a 100%);
+            border-color: rgba(16, 185, 129, 0.25);
+        }
+        .bg-gradient-empty {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border-color: rgba(148, 163, 184, 0.15);
+        }
+
+        /* Glassmorphism containers */
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.55);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        /* Custom scrollbar */
+        .custom-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.01);
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 99px;
+        }
+    </style>
+</head>
+<body class="text-slate-100 min-h-screen py-6 px-4 md:py-12 md:px-8 flex flex-col justify-between overflow-x-hidden selection:bg-cyan-500/30">
+
+    <!-- App Container -->
+    <div class="w-full max-w-5xl mx-auto flex-1 flex flex-col justify-center space-y-6">
+        
+        <!-- Header Controls & Branding -->
+        <header class="flex flex-col md:flex-row items-center justify-between gap-4 glass-panel rounded-3xl p-5 shadow-xl">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-cyan-500 to-indigo-500 flex items-center justify-center text-2xl shadow-md">
+                    🧠
+                </div>
+                <div class="text-right">
+                    <h1 class="text-xl font-black bg-gradient-to-l from-cyan-400 to-indigo-400 bg-clip-text text-transparent">منصة الاستذكار الذكية</h1>
+                    <p class="text-[10px] text-slate-400 font-bold">تكرار متباعد وحفظ تفاعلي دائم</p>
+                </div>
+            </div>
+
+            <!-- Deck Filtering dropdown & control actions -->
+            <div class="flex items-center gap-2 flex-wrap justify-center">
+                <div class="flex items-center gap-1.5 bg-slate-900/60 border border-slate-800 rounded-xl px-3 py-1.5">
+                    <span class="text-[10px] font-bold text-slate-400">القسم:</span>
+                    <select id="deck-filter" onchange="filterDeck(this.value)" class="bg-transparent border-none text-xs font-bold text-slate-200 outline-none cursor-pointer">
+                        <option value="all" class="bg-slate-950 text-slate-200">الكل (شامل)</option>
+                        <option value="programming" class="bg-slate-950 text-slate-200">البرمجة (Programming)</option>
+                        <option value="networking" class="bg-slate-950 text-slate-200">الشبكات (Networking)</option>
+                        <option value="vocabulary" class="bg-slate-950 text-slate-200">مفردات إنجليزية (Vocabulary)</option>
+                        <option value="grammar" class="bg-slate-950 text-slate-200">قواعد اللغات (Grammar)</option>
+                    </select>
+                </div>
+
+                <!-- Add custom card modal button -->
+                <button onclick="toggleAddCardModal(true)" class="bg-slate-850 hover:bg-slate-800 border border-slate-700 hover:border-slate-600 text-slate-300 px-3.5 py-1.5 rounded-xl text-xs font-extrabold flex items-center gap-1.5 transition-all">
+                    <span>➕</span> بطاقة مخصصة
+                </button>
+
+                <!-- Shuffle button -->
+                <button onclick="shuffleDeck()" class="bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 border border-cyan-500/20 px-3.5 py-1.5 rounded-xl text-xs font-extrabold flex items-center gap-1.5 transition-all">
+                    <span>🔄</span> خلط عشوائي
+                </button>
+            </div>
+        </header>
+
+        <!-- Stats Panel & Card Interaction Grid (Responsive) -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+            
+            <!-- Left Grid: Statistics Overview (4 Columns) -->
+            <section class="lg:col-span-4 flex flex-col justify-between space-y-4">
+                
+                <!-- Live score tracker -->
+                <div class="glass-panel rounded-3xl p-5 shadow-xl space-y-4 flex-1 flex flex-col justify-center">
+                    <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest border-b border-slate-800 pb-2">لوحة الأداء والجلسة الحالية</h3>
+                    
+                    <div class="grid grid-cols-3 gap-3 text-center">
+                        <div class="bg-emerald-950/20 border border-emerald-500/10 rounded-2xl p-3">
+                            <span class="text-[10px] font-bold text-emerald-400 block mb-1">أعرفها</span>
+                            <span id="stat-known" class="text-2xl font-black text-emerald-300">0</span>
+                        </div>
+                        <div class="bg-rose-950/20 border border-rose-500/10 rounded-2xl p-3">
+                            <span class="text-[10px] font-bold text-rose-400 block mb-1">لم أعرفها</span>
+                            <span id="stat-unknown" class="text-2xl font-black text-rose-300">0</span>
+                        </div>
+                        <div class="bg-slate-900/40 border border-slate-800 rounded-2xl p-3">
+                            <span class="text-[10px] font-bold text-slate-400 block mb-1">المتبقي</span>
+                            <span id="stat-remaining" class="text-2xl font-black text-slate-300">0</span>
+                        </div>
+                    </div>
+
+                    <!-- Visual Progress Bar -->
+                    <div class="space-y-2 pt-2">
+                        <div class="flex items-center justify-between text-xs font-bold text-slate-400">
+                            <span>نسبة تقدم الحفظ</span>
+                            <span id="progress-text">0%</span>
+                        </div>
+                        <div class="w-full h-2.5 rounded-full bg-slate-900 overflow-hidden flex border border-slate-800">
+                            <div id="progress-bar-fill" class="h-full bg-gradient-to-r from-cyan-500 to-indigo-500 transition-all duration-300" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Keyboard shortcuts guide -->
+                <div class="glass-panel rounded-3xl p-5 shadow-xl space-y-3">
+                    <h4 class="text-xs font-black text-slate-400 uppercase tracking-widest">اختصارات لوحة المفاتيح ⌨️</h4>
+                    <div class="text-[11px] text-slate-400 space-y-2.5 leading-relaxed">
+                        <div class="flex items-center justify-between"><span class="font-bold">قلب البطاقة وعرض الإجابة</span> <kbd class="px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300 font-mono font-bold">Space</kbd></div>
+                        <div class="flex items-center justify-between"><span class="font-bold">البطاقة التالية</span> <kbd class="px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300 font-mono font-bold">⮕</kbd></div>
+                        <div class="flex items-center justify-between"><span class="font-bold">البطاقة السابقة</span> <kbd class="px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300 font-mono font-bold">⬅</kbd></div>
+                        <div class="flex items-center justify-between"><span class="font-bold">أعرف الإجابة مسبقاً</span> <kbd class="px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300 font-mono font-bold">⬆</kbd></div>
+                        <div class="flex items-center justify-between"><span class="font-bold">لم أعرف الإجابة بعد</span> <kbd class="px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300 font-mono font-bold">⬇</kbd></div>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- Right Grid: Core Interactive Flashcard Panel (8 Columns) -->
+            <section class="lg:col-span-8 flex flex-col justify-between space-y-4">
+                
+                <!-- Main Flashcard Render Frame with 3D Scene setup -->
+                <div class="perspective-1000 w-full h-96 cursor-pointer" onclick="toggleCardFlip()">
+                    
+                    <div id="card-inner-frame" class="card-inner preserve-3d relative w-full h-full rounded-[2.5rem]">
+                        
+                        <!-- FRONT OF CARD -->
+                        <div id="card-front-face" class="backface-hidden absolute inset-0 rounded-[2.5rem] border p-8 flex flex-col justify-between shadow-2xl overflow-hidden bg-gradient-empty transition-colors duration-300">
+                            <!-- Background decoration shapes -->
+                            <div class="absolute -top-12 -left-12 w-28 h-28 bg-white/5 rounded-full blur-xl"></div>
+                            
+                            <div class="flex items-center justify-between z-10">
+                                <span id="card-front-category" class="bg-white/10 text-slate-300 border border-white/10 text-[10px] font-black tracking-widest uppercase py-1 px-4 rounded-full">
+                                    أهلاً بك
+                                </span>
+                                <span id="card-front-counter" class="text-[11px] font-extrabold text-slate-500">
+                                    0 / 0
+                                </span>
+                            </div>
+
+                            <div class="text-center my-auto px-4 z-10">
+                                <h2 id="card-front-text" class="text-2xl md:text-3xl font-black text-white leading-relaxed tracking-wide">
+                                    البطاقات فارغة حالياً. اضغط على "بطاقة مخصصة" بالأعلى لإضافة أسئلتك الأولى!
+                                </h2>
+                            </div>
+
+                            <div class="flex items-center justify-between text-[11px] text-slate-400 font-bold z-10 border-t border-white/5 pt-3">
+                                <span class="flex items-center gap-1.5">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping"></span>
+                                    انقر على البطاقة لعرض الإجابة
+                                </span>
+                                <span class="font-mono">FRONT</span>
+                            </div>
+                        </div>
+
+                        <!-- BACK OF CARD -->
+                        <div id="card-back-face" class="backface-hidden rotate-y-180 absolute inset-0 rounded-[2.5rem] border p-8 flex flex-col justify-between shadow-2xl overflow-hidden bg-gradient-empty transition-colors duration-300">
+                            <!-- Background decoration shapes -->
+                            <div class="absolute -bottom-12 -right-12 w-28 h-28 bg-white/5 rounded-full blur-xl"></div>
+
+                            <div class="flex items-center justify-between z-10">
+                                <span id="card-back-category" class="bg-white/10 text-slate-300 border border-white/10 text-[10px] font-black tracking-widest uppercase py-1 px-4 rounded-full">
+                                    التعريف
+                                </span>
+                                <span class="text-[11px] font-extrabold text-slate-500">
+                                    الإجابة والتعريف
+                                </span>
+                            </div>
+
+                            <!-- Answer output area (scrollable if too long to prevent breaks) -->
+                            <div class="text-center my-auto px-4 z-10 overflow-y-auto max-h-56 custom-scroll pr-1">
+                                <p id="card-back-text" class="text-sm md:text-base font-bold text-slate-200 leading-relaxed">
+                                    قم بإضافة بطاقة مخصصة لعرض الإجابة هنا.
+                                </p>
+                            </div>
+
+                            <div class="flex items-center justify-between text-[11px] text-slate-400 font-bold z-10 border-t border-white/5 pt-3">
+                                <span class="flex items-center gap-1.5">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-indigo-400"></span>
+                                    اضغط على المسافة لقلب البطاقة ثانياً
+                                </span>
+                                <span class="font-mono text-indigo-400">BACK ANSWER</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Action Bar & Evaluation Controllers (Knew/Didn't know) -->
+                <div class="glass-panel rounded-3xl p-4 flex flex-col md:flex-row items-center justify-between gap-4">
+                    
+                    <!-- Prev/Next Navigation buttons -->
+                    <div class="flex items-center gap-2">
+                        <button onclick="navigateCard(-1)" class="w-10 h-10 bg-slate-900 hover:bg-slate-800 border border-slate-800 text-sm rounded-xl flex items-center justify-center hover:scale-105 transition-all" title="البطاقة السابقة">
+                            ⮕
+                        </button>
+                        <span id="nav-indicator" class="text-xs font-black text-slate-400 min-w-[50px] text-center">0 من 0</span>
+                        <button onclick="navigateCard(1)" class="w-10 h-10 bg-slate-900 hover:bg-slate-800 border border-slate-800 text-sm rounded-xl flex items-center justify-center hover:scale-105 transition-all" title="البطاقة التالية">
+                            ⬅
+                        </button>
+                    </div>
+
+                    <!-- Evaluation control buttons (Available only when card is flipped to the back!) -->
+                    <div class="flex items-center gap-2 w-full md:w-auto">
+                        <!-- Unknown -->
+                        <button id="btn-eval-no" onclick="evaluateCard(false)" disabled
+                                class="flex-1 md:flex-none bg-slate-100/10 text-slate-500 py-3 px-5 rounded-2xl text-xs font-black cursor-not-allowed transition-all flex items-center justify-center gap-2">
+                            ❌ لم أعرفها
+                        </button>
+                        <!-- Known -->
+                        <button id="btn-eval-yes" onclick="evaluateCard(true)" disabled
+                                class="flex-1 md:flex-none bg-slate-100/10 text-slate-500 py-3 px-5 rounded-2xl text-xs font-black cursor-not-allowed transition-all flex items-center justify-center gap-2">
+                            ✔️ عرفتها مسبقاً
+                        </button>
+                    </div>
+
+                    <!-- Reset Stats button -->
+                    <button onclick="resetStats()" class="text-xs font-bold text-slate-400 hover:text-rose-400 hover:underline transition-all">
+                        تصفير النتائج
+                    </button>
+                </div>
+
+            </section>
+
+        </div>
+
+    </div>
+
+    <!-- Modal Form overlay for adding Custom study cards -->
+    <div id="modal-add-card" class="fixed inset-0 bg-slate-950/85 z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300 backdrop-blur-sm">
+        <div class="bg-slate-900 border border-slate-800 rounded-[2.5rem] max-w-md w-full p-6 md:p-8 space-y-5 text-right relative shadow-2xl">
+            
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <h3 class="text-md font-black text-white flex items-center gap-2">
+                    ➕ إضافة بطاقة استذكار جديدة
+                </h3>
+                <button onclick="toggleAddCardModal(false)" class="text-slate-400 hover:text-white text-lg font-bold">✕</button>
+            </div>
+
+            <!-- Form fields -->
+            <form id="add-card-form" onsubmit="event.preventDefault(); submitCustomCard();" class="space-y-4 text-xs font-semibold">
+                
+                <div class="space-y-2">
+                    <label class="text-slate-400 block">عيّن القسم / تصنيف البطاقة:</label>
+                    <select id="form-category" class="w-full bg-slate-950 border-2 border-slate-850 rounded-xl py-3 px-4 text-slate-200 outline-none focus:border-cyan-500 transition-all">
+                        <option value="programming">البرمجة (Programming)</option>
+                        <option value="networking">الشبكات (Networking)</option>
+                        <option value="vocabulary">مفردات إنجليزية (Vocabulary)</option>
+                        <option value="grammar">قواعد اللغات (Grammar)</option>
+                    </select>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="text-slate-400 block">السؤال أو المفهوم (الوجه الأمامي للبطاقة):</label>
+                    <input type="text" id="form-front" required placeholder="مثال: ما هي خوارزمية الـ Quick Sort؟"
+                           class="w-full bg-slate-950 border-2 border-slate-850 rounded-xl py-3 px-4 text-slate-200 outline-none focus:border-cyan-500 transition-all">
+                </div>
+
+                <div class="space-y-2">
+                    <label class="text-slate-400 block">الإجابة والتعريف التفصيلي (الوجه الخلفي للبطاقة):</label>
+                    <textarea id="form-back" required rows="3" placeholder="أدخل تعريفاً مبسطاً ومكتوباً بدقة لمساعدتك على الحفظ..."
+                              class="w-full bg-slate-950 border-2 border-slate-850 rounded-xl py-3 px-4 text-slate-200 outline-none focus:border-cyan-500 transition-all custom-scroll resize-none"></textarea>
+                </div>
+
+                <button type="submit" class="w-full bg-gradient-to-l from-cyan-500 to-indigo-500 hover:from-cyan-400 hover:to-indigo-400 text-slate-950 font-black py-3.5 px-4 rounded-xl shadow-lg shadow-cyan-500/10 hover:scale-[1.01] active:scale-[0.99] transition-all text-xs">
+                    إدراج وحفظ البطاقة بالسجل المحلي
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Confirmation Dialogue Modal (Bypassing standard Browser alert modules) -->
+    <div id="modal-confirm" class="fixed inset-0 bg-slate-950/85 z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200 backdrop-blur-sm">
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-sm w-full p-6 space-y-4 text-slate-300 relative shadow-2xl text-right">
+            <h3 class="text-md font-black text-white flex items-center gap-2">
+                ⚠️ تأكيد الإجراء
+            </h3>
+            <p id="confirm-message" class="text-xs text-slate-400">هل أنت متأكد من تصفير إحصائيات الحفظ والعودة إلى البداية؟</p>
+            <div class="flex justify-end gap-2 pt-2">
+                <button id="btn-confirm-yes" class="bg-rose-500 hover:bg-rose-600 text-slate-950 font-bold text-xs px-4 py-2.5 rounded-xl transition-all">
+                    نعم، تصفير
+                </button>
+                <button onclick="closeConfirmModal()" class="bg-slate-850 hover:bg-slate-800 text-slate-200 font-bold text-xs px-4 py-2.5 rounded-xl transition-all">
+                    إلغاء
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Core Interactive Execution Logic -->
+    <script>
+        // Web Audio Synthesizer feedback engine
+        let audioCtx = null;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        // Generate dynamic sound effects on interaction
+        function playSfx(type) {
+            try {
+                initAudio();
+                const ctx = audioCtx;
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                const now = ctx.currentTime;
+
+                if (type === 'flip') {
+                    // Soft synthetic swipe sound (low-pass frequency sweep)
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(350, now);
+                    osc.frequency.exponentialRampToValueAtTime(120, now + 0.15);
+                    gain.gain.setValueAtTime(0.08, now);
+                    gain.gain.linearRampToValueAtTime(0.001, now + 0.15);
+                    osc.start(now);
+                    osc.stop(now + 0.15);
+                } else if (type === 'known') {
+                    // Uplifting musical positive ping
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(523.25, now); // C5
+                    osc.frequency.setValueAtTime(659.25, now + 0.08); // E5
+                    gain.gain.setValueAtTime(0.06, now);
+                    gain.gain.linearRampToValueAtTime(0.001, now + 0.25);
+                    osc.start(now);
+                    osc.stop(now + 0.25);
+                } else if (type === 'unknown') {
+                    // Mild descending alert tone
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(220, now); // A3
+                    osc.frequency.linearRampToValueAtTime(150, now + 0.2);
+                    gain.gain.setValueAtTime(0.06, now);
+                    gain.gain.linearRampToValueAtTime(0.001, now + 0.2);
+                    osc.start(now);
+                    osc.stop(now + 0.2);
+                } else if (type === 'click') {
+                    // Soft navigation button tick
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(600, now);
+                    osc.frequency.setValueAtTime(300, now + 0.04);
+                    gain.gain.setValueAtTime(0.05, now);
+                    gain.gain.linearRampToValueAtTime(0.001, now + 0.06);
+                    osc.start(now);
+                    osc.stop(now + 0.06);
+                }
+            } catch (e) {
+                console.warn('Audio micro-interactions safely bypassed:', e);
+            }
+        }
+
+        // --- Core Application State Machine ---
+        let cardsDeck = [];       // Master deck currently in session memory
+        let currentFilter = "all"; // Current active section category filter
+        let filteredDeck = [];    // Filtered reference deck subset array
+        let currentIdx = 0;       // Current view index tracker
+        let isFlipped = false;    // Flashcard flip tracker
+
+        let totalKnown = 0;       // Known count stat
+        let totalUnknown = 0;     // Unknown count stat
+
+        let confirmCallback = null;
+
+        // Custom Confirmation dialog handlers
+        function openConfirmModal(message, callback) {
+            document.getElementById('confirm-message').textContent = message;
+            confirmCallback = callback;
+            const modal = document.getElementById('modal-confirm');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+        }
+
+        function closeConfirmModal() {
+            const modal = document.getElementById('modal-confirm');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            confirmCallback = null;
+        }
+
+        document.getElementById('btn-confirm-yes').addEventListener('click', () => {
+            if (confirmCallback) confirmCallback();
+            closeConfirmModal();
+        });
+
+        // Application bootstrap
+        window.addEventListener('DOMContentLoaded', () => {
+            loadCardsFromDatabase();
+            startNewStudySession();
+            attachKeyboardListeners();
+        });
+
+        // Local Storage Utilities
+        function loadCardsFromDatabase() {
+            const savedCustom = localStorage.getItem('master_flashcards_logs');
+            if (savedCustom) {
+                cardsDeck = JSON.parse(savedCustom);
+            } else {
+                // Starts completely empty now!
+                cardsDeck = [];
+                saveCardsToDatabase();
+            }
+        }
+
+        function saveCardsToDatabase() {
+            localStorage.setItem('master_flashcards_logs', JSON.stringify(cardsDeck));
+        }
+
+        // Initialize / Reset Session Progress
+        function startNewStudySession() {
+            // Apply current deck filters
+            applyDeckFilter();
+            isFlipped = false;
+            currentIdx = 0;
+            
+            // Sync current deck counters dynamically
+            updateUI();
+        }
+
+        // Apply visual and categoric filters on deck list arrays
+        function applyDeckFilter() {
+            if (currentFilter === "all") {
+                filteredDeck = [...cardsDeck];
+            } else {
+                filteredDeck = cardsDeck.filter(card => card.category === currentFilter);
+            }
+        }
+
+        // Filter callback execution on dropdown changes
+        function filterDeck(val) {
+            playSfx('click');
+            currentFilter = val;
+            startNewStudySession();
+        }
+
+        // Shuffle deck dynamically (Fisher-Yates Shuffle)
+        function shuffleDeck() {
+            if (filteredDeck.length === 0) return;
+            playSfx('flip');
+            
+            // Execute shuffle logic on filtered collection only
+            for (let i = filteredDeck.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [filteredDeck[i], filteredDeck[j]] = [filteredDeck[j], filteredDeck[i]];
+            }
+            
+            // Reset flipped states and indexes
+            isFlipped = false;
+            currentIdx = 0;
+            
+            updateUI();
+        }
+
+        // Navigational logic switches (Prev/Next)
+        function navigateCard(direction) {
+            if (filteredDeck.length === 0) return;
+            playSfx('click');
+
+            // Set animation state back to front face when jumping cards
+            isFlipped = false;
+            const innerFrame = document.getElementById('card-inner-frame');
+            innerFrame.classList.remove('rotate-y-180');
+
+            setTimeout(() => {
+                currentIdx = (currentIdx + direction + filteredDeck.length) % filteredDeck.length;
+                updateUI();
+            }, 150); // Small delay to let card reset smoothly
+        }
+
+        // Interactive toggle card flip (3D turn action)
+        function toggleCardFlip() {
+            if (filteredDeck.length === 0) return;
+            playSfx('flip');
+
+            isFlipped = !isFlipped;
+            const innerFrame = document.getElementById('card-inner-frame');
+            
+            const btnYes = document.getElementById('btn-eval-yes');
+            const btnNo = document.getElementById('btn-eval-no');
+
+            if (isFlipped) {
+                innerFrame.classList.add('rotate-y-180');
+                
+                // Activate evaluations controls
+                btnYes.disabled = false;
+                btnYes.className = "flex-1 md:flex-none bg-emerald-600 hover:bg-emerald-700 text-white py-3 px-5 rounded-2xl text-xs font-black transition-all flex items-center justify-center gap-2 cursor-pointer shadow shadow-emerald-500/10";
+                
+                btnNo.disabled = false;
+                btnNo.className = "flex-1 md:flex-none bg-rose-600 hover:bg-rose-700 text-white py-3 px-5 rounded-2xl text-xs font-black transition-all flex items-center justify-center gap-2 cursor-pointer shadow shadow-rose-500/10";
+            } else {
+                innerFrame.classList.remove('rotate-y-180');
+                
+                // Disable evaluations controls
+                btnYes.disabled = true;
+                btnYes.className = "flex-1 md:flex-none bg-slate-100/10 text-slate-500 py-3 px-5 rounded-2xl text-xs font-black cursor-not-allowed transition-all flex items-center justify-center gap-2";
+                
+                btnNo.disabled = true;
+                btnNo.className = "flex-1 md:flex-none bg-slate-100/10 text-slate-500 py-3 px-5 rounded-2xl text-xs font-black cursor-not-allowed transition-all flex items-center justify-center gap-2";
+            }
+        }
+
+        // Memorize stats evaluations ('I Knew it' / 'I Didn't know')
+        function evaluateCard(isKnown) {
+            if (filteredDeck.length === 0 || !isFlipped) return;
+
+            if (isKnown) {
+                playSfx('known');
+                totalKnown++;
+            } else {
+                playSfx('unknown');
+                totalUnknown++;
+            }
+
+            // Move card state markers in session deck
+            const activeCard = filteredDeck[currentIdx];
+            activeCard.state = isKnown ? "known" : "unknown";
+
+            // Save evaluations back to global memory cards
+            const globalCard = cardsDeck.find(card => card.id === activeCard.id);
+            if (globalCard) {
+                globalCard.state = activeCard.state;
+                saveCardsToDatabase();
+            }
+
+            // Progress to next card automatically with smooth transition spacing
+            setTimeout(() => {
+                navigateCard(1);
+            }, 300);
+        }
+
+        // Render dynamic changes onto UI layout
+        function updateUI() {
+            const cardFront = document.getElementById('card-front-face');
+            const cardBack = document.getElementById('card-back-face');
+
+            const catFront = document.getElementById('card-front-category');
+            const catBack = document.getElementById('card-back-category');
+
+            const textFront = document.getElementById('card-front-text');
+            const textBack = document.getElementById('card-back-text');
+
+            const countFront = document.getElementById('card-front-counter');
+            const navIndicator = document.getElementById('nav-indicator');
+
+            const innerFrame = document.getElementById('card-inner-frame');
+
+            // Reset rotation styles initially
+            innerFrame.classList.remove('rotate-y-180');
+
+            // If empty state deck
+            if (filteredDeck.length === 0) {
+                catFront.textContent = "لا يوجد";
+                catBack.textContent = "لا يوجد";
+                textFront.textContent = "البطاقات فارغة حالياً. اضغط على 'بطاقة مخصصة' بالأعلى لتبدأ بإنشاء بطاقاتك المخصصة وحفظها في الـ Local Storage!";
+                textBack.textContent = "قم بإضافة بطاقات مخصصة لعرض إجاباتها وتعريفاتها هنا.";
+                countFront.textContent = "0 / 0";
+                navIndicator.textContent = "0 من 0";
+                
+                // Reset card classes to neutral empty state
+                cardFront.className = cardFront.className.replace(/bg-gradient-\w+/g, '').trim();
+                cardBack.className = cardBack.className.replace(/bg-gradient-\w+/g, '').trim();
+                cardFront.classList.add('bg-gradient-empty');
+                cardBack.classList.add('bg-gradient-empty');
+
+                // Update dynamic statistics values
+                updateStatsPanel(0);
+                return;
+            }
+
+            const card = filteredDeck[currentIdx];
+
+            // Resolve dynamic category text and label classes
+            catFront.textContent = card.category.toUpperCase();
+            catBack.textContent = card.category.toUpperCase();
+
+            textFront.textContent = card.front;
+            textBack.textContent = card.back;
+
+            countFront.textContent = `${currentIdx + 1} / ${filteredDeck.length}`;
+            navIndicator.textContent = `${currentIdx + 1} من ${filteredDeck.length}`;
+
+            // Reset evaluating control buttons
+            const btnYes = document.getElementById('btn-eval-yes');
+            const btnNo = document.getElementById('btn-eval-no');
+            
+            btnYes.disabled = true;
+            btnYes.className = "flex-1 md:flex-none bg-slate-100/10 text-slate-500 py-3 px-5 rounded-2xl text-xs font-black cursor-not-allowed transition-all flex items-center justify-center gap-2";
+            btnNo.disabled = true;
+            btnNo.className = "flex-1 md:flex-none bg-slate-100/10 text-slate-500 py-3 px-5 rounded-2xl text-xs font-black cursor-not-allowed transition-all flex items-center justify-center gap-2";
+
+            // Dynamically apply beautiful color gradients depending on active category values
+            const classMapping = {
+                programming: 'bg-gradient-programming',
+                networking: 'bg-gradient-networking',
+                vocabulary: 'bg-gradient-vocabulary',
+                grammar: 'bg-gradient-grammar'
+            };
+
+            const targetClass = classMapping[card.category] || 'bg-gradient-programming';
+
+            // Clean custom background classes
+            cardFront.className = cardFront.className.replace(/bg-gradient-\w+/g, '').trim();
+            cardBack.className = cardBack.className.replace(/bg-gradient-\w+/g, '').trim();
+
+            cardFront.classList.add(targetClass);
+            cardBack.classList.add(targetClass);
+
+            // Calculate progress and update stats panels
+            calculateProgress();
+        }
+
+        // Calculate progress stats
+        function calculateProgress() {
+            if (filteredDeck.length === 0) {
+                updateStatsPanel(0);
+                return;
+            }
+
+            // Find how many cards in active deck has been reviewed in this run
+            const studied = filteredDeck.filter(card => card.state !== "unseen").length;
+            const percentage = Math.round((studied / filteredDeck.length) * 100);
+
+            updateStatsPanel(percentage);
+        }
+
+        function updateStatsPanel(progressPct) {
+            document.getElementById('stat-known').textContent = totalKnown;
+            document.getElementById('stat-unknown').textContent = totalUnknown;
+            
+            // Remaining represents unstudied cards in current deck filter
+            const remaining = filteredDeck.filter(card => card.state === "unseen").length;
+            document.getElementById('stat-remaining').textContent = remaining;
+
+            // Update Progress fill
+            const fillEl = document.getElementById('progress-bar-fill');
+            const txtEl = document.getElementById('progress-text');
+
+            fillEl.style.width = `${progressPct}%`;
+            txtEl.textContent = `${progressPct}%`;
+        }
+
+        // Clear Session evaluations (Reset statistics)
+        function resetStats() {
+            if (cardsDeck.length === 0) return;
+            openConfirmModal("هل أنت متأكد من تصفير وإعادة تعيين إحصائيات الاستذكار بالكامل لجلسة العمل الحالية؟", () => {
+                totalKnown = 0;
+                totalUnknown = 0;
+
+                // Reset all states back to 'unseen'
+                cardsDeck.forEach(card => card.state = "unseen");
+                saveCardsToDatabase();
+                
+                startNewStudySession();
+            });
+        }
+
+        // Custom Add Cards Form handling
+        function toggleAddCardModal(open) {
+            initAudio();
+            const modal = document.getElementById('modal-add-card');
+            if (open) {
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+            } else {
+                modal.classList.add('opacity-0', 'pointer-events-none');
+            }
+        }
+
+        function closeConfirmModal() {
+            const modal = document.getElementById('modal-confirm');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+        }
+
+        // Submit custom card
+        function submitCustomCard() {
+            const category = document.getElementById('form-category').value;
+            const front = document.getElementById('form-front').value.trim();
+            const back = document.getElementById('form-back').value.trim();
+
+            if (!front || !back) return;
+
+            // Generate unique numerical key
+            const newCard = {
+                id: Date.now(),
+                category: category,
+                front: front,
+                back: back,
+                state: "unseen"
+            };
+
+            cardsDeck.push(newCard);
+            saveCardsToDatabase();
+
+            // Success feedback
+            playSfx('known');
+
+            // Reset form fields
+            document.getElementById('add-card-form').reset();
+            toggleAddCardModal(false);
+
+            // Re-bootstrap study deck views
+            startNewStudySession();
+        }
+
+        // Keyboard navigation integration
+        function attachKeyboardListeners() {
+            window.addEventListener('keydown', (e) => {
+                const modalAddOpen = !document.getElementById('modal-add-card').classList.contains('pointer-events-none');
+                const modalConfirmOpen = !document.getElementById('modal-confirm').classList.contains('pointer-events-none');
+
+                // Bypass keyboard listeners if modal overlays are visible
+                if (modalAddOpen || modalConfirmOpen) return;
+
+                switch (e.key) {
+                    case ' ':
+                        // Space flips the card
+                        e.preventDefault(); // Prevent standard page space scrolling
+                        toggleCardFlip();
+                        break;
+                    case 'ArrowRight':
+                        // Next card
+                        navigateCard(1);
+                        break;
+                    case 'ArrowLeft':
+                        // Prev card
+                        navigateCard(-1);
+                        break;
+                    case 'ArrowUp':
+                        // Known
+                        if (isFlipped) {
+                            e.preventDefault();
+                            evaluateCard(true);
+                        }
+                        break;
+                    case 'ArrowDown':
+                        // Unknown
+                        if (isFlipped) {
+                            e.preventDefault();
+                            evaluateCard(false);
+                        }
+                        break;
+                }
+            });
+        }
+    </script>
+</body>
+</html>

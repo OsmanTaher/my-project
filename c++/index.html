@@ -1,0 +1,1343 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>أساسيات C++ — Eng. Osman Taher | Aswany</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=IBM+Plex+Mono:wght@400;700&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --teal:#0d9488;--teal-d:#0f766e;--teal-dd:#134e4a;--teal-l:#99f6e4;--teal-p:#f0fdfa;
+  --amber:#d97706;--amber-l:#fef3c7;--amber-d:#92400e;
+  --slate:#1e293b;--slate-l:#f1f5f9;--slate-m:#64748b;
+  --purple:#7c3aed;--purple-l:#f5f3ff;
+  --rose:#e11d48;--rose-l:#fff1f2;
+  --blue:#1d4ed8;--blue-l:#eff6ff;
+  --cb:#0f172a;--br:#e2e8f0;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Cairo','Tajawal',Arial,sans-serif;font-size:11pt;color:#1e293b;background:white;direction:rtl;line-height:1.9;}
+
+/* ── COVER ─────────────────────────────────── */
+.cover{width:100%;min-height:100vh;background:linear-gradient(145deg,#042f2e 0%,#0f766e 35%,#0d9488 65%,#134e4a 100%);display:flex;flex-direction:column;justify-content:space-between;padding:55px 65px;page-break-after:always;position:relative;overflow:hidden;}
+.cover-grid{position:absolute;top:0;left:0;right:0;bottom:0;background-image:linear-gradient(rgba(255,255,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.04) 1px,transparent 1px);background-size:40px 40px;}
+.cover-glow{position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(20,184,166,0.25) 0%,transparent 70%);top:-150px;left:-150px;}
+.cover-accent{position:absolute;top:0;left:0;width:8px;height:100%;background:linear-gradient(to bottom,#fde68a,#34d399,#fde68a);}
+.cbrand{display:flex;align-items:center;gap:12px;position:relative;z-index:2;}
+.clogo{width:52px;height:52px;background:rgba(255,255,255,0.12);border:2px solid rgba(255,255,255,0.3);border-radius:14px;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:20px;font-weight:700;color:#fde68a;}
+.cbn{font-size:20px;font-weight:900;color:#fde68a;letter-spacing:1px;}
+.cover-main{position:relative;z-index:2;}
+.ctag{font-family:'IBM Plex Mono',monospace;font-size:9pt;color:#5eead4;letter-spacing:3px;margin-bottom:20px;}
+.ct1{font-size:16pt;font-weight:700;color:#99f6e4;line-height:1.3;margin-bottom:6px;}
+.ct2{font-size:52pt;font-weight:900;color:white;line-height:1.05;margin-bottom:6px;}
+.ct3{font-size:52pt;font-weight:900;color:#fde68a;line-height:1.05;margin-bottom:6px;}
+.ct4{font-size:52pt;font-weight:900;color:#34d399;line-height:1.05;margin-bottom:30px;}
+.cdiv{width:100px;height:4px;background:linear-gradient(90deg,#fde68a,#34d399,#5eead4);border-radius:4px;margin-bottom:24px;}
+.cdesc{font-size:13pt;color:rgba(255,255,255,0.7);max-width:520px;line-height:1.9;}
+.cpills{display:flex;flex-wrap:wrap;gap:8px;margin-top:26px;}
+.cpill{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:#ccfbf1;border-radius:50px;padding:5px 16px;font-size:10pt;font-weight:700;}
+.cpill.hot{background:rgba(253,230,138,0.15);border-color:#fde68a;color:#fde68a;}
+.cabox{background:rgba(0,0,0,0.35);border:1px solid rgba(255,255,255,0.12);border-radius:16px;padding:20px 28px;position:relative;z-index:2;}
+.calbl{font-family:'IBM Plex Mono',monospace;font-size:8pt;color:#34d399;letter-spacing:3px;margin-bottom:6px;}
+.caname{font-size:20pt;font-weight:900;color:white;}
+.casub{font-size:10pt;color:rgba(255,255,255,0.45);font-family:'IBM Plex Mono',monospace;}
+
+/* ── CONTENT PAGES ──────────────────────────── */
+.cp{padding:48px 65px 68px;page-break-after:always;}
+.pgh{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;padding-bottom:10px;border-bottom:2px solid var(--teal-p);}
+.pgch{font-size:9pt;color:var(--teal);font-weight:700;letter-spacing:1px;}
+.pgbr{font-size:9pt;color:#94a3b8;font-family:'IBM Plex Mono',monospace;}
+.cho{background:linear-gradient(135deg,var(--teal-dd),var(--teal-d),var(--teal));border-radius:16px;padding:26px 28px;margin-bottom:26px;position:relative;overflow:hidden;}
+.cho::before{content:'';position:absolute;top:-60px;left:-60px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,0.04);}
+.chnum{font-family:'IBM Plex Mono',monospace;font-size:9pt;color:#5eead4;letter-spacing:3px;margin-bottom:7px;}
+.chtitle{font-size:22pt;font-weight:900;color:white;line-height:1.2;margin-bottom:10px;}
+.chdesc{font-size:11pt;color:rgba(255,255,255,0.72);line-height:1.8;}
+h2.sec{font-size:15pt;font-weight:900;color:var(--teal-dd);border-bottom:3px solid var(--teal-p);padding-bottom:5px;margin:22px 0 10px;position:relative;}
+h2.sec::after{content:'';position:absolute;bottom:-3px;right:0;width:55px;height:3px;background:var(--amber);}
+h3.sub{font-size:12.5pt;font-weight:700;color:var(--teal-d);margin:16px 0 7px;display:flex;align-items:center;gap:7px;}
+h3.sub::before{content:'◆';color:var(--amber);font-size:9pt;}
+p.body{font-size:11pt;line-height:1.9;color:#374151;margin-bottom:10px;}
+
+/* ── BOXES ──────────────────────────────────── */
+.def{background:var(--teal-p);border-right:5px solid var(--teal);border-radius:0 12px 12px 0;padding:14px 17px;margin:12px 0;page-break-inside:avoid;}
+.def-t{font-size:10pt;font-weight:700;color:var(--teal-d);margin-bottom:5px;}
+.note{border-radius:10px;padding:11px 15px;margin:11px 0;display:flex;align-items:flex-start;gap:9px;page-break-inside:avoid;font-size:10.5pt;line-height:1.7;}
+.note.tip{background:#f0fdf4;border-right:4px solid #16a34a;}
+.note.warn{background:#fffbeb;border-right:4px solid var(--amber);}
+.note.info{background:var(--blue-l);border-right:4px solid var(--blue);}
+.note.teal{background:var(--teal-p);border-right:4px solid var(--teal);}
+.note.rose{background:var(--rose-l);border-right:4px solid var(--rose);}
+.note.purple{background:var(--purple-l);border-right:4px solid var(--purple);}
+.ni{font-size:14pt;flex-shrink:0;margin-top:1px;}
+
+/* ── CODE WRAPPER ──────────────────────────── */
+.uml-wrap{margin:12px 0;border-radius:12px;overflow:hidden;page-break-inside:avoid;border:1px solid #0f766e;}
+.uml-header{background:linear-gradient(90deg,#042f2e,#0f766e);padding:8px 14px;display:flex;justify-content:space-between;align-items:center;}
+.uml-lang{font-family:'IBM Plex Mono',monospace;font-size:8pt;color:#34d399;font-weight:700;letter-spacing:2px;}
+.uml-tool{font-size:8pt;color:rgba(255,255,255,0.45);font-family:'IBM Plex Mono',monospace;}
+.uml-body{background:#0a1628;padding:14px 18px;direction:ltr;text-align:left;}
+.uml-body pre{font-family:'IBM Plex Mono','Courier New',monospace;font-size:10pt;color:#a5f3fc;line-height:1.8;white-space:pre;overflow-x:auto;}
+.uk{color:#fde68a;font-weight:700;} /* Keyword */
+.uc{color:#6ee7b7;} /* Class/Type */
+.ua{color:#fb923c;} /* String/Attribute */
+.us{color:#c084fc;} /* Function/Method */
+.ucm{color:#64748b;font-style:italic;} /* Comment */
+.un{color:#38bdf8;} /* Number */
+
+/* ── TABLES ──────────────────────────────────── */
+.tbl{width:100%;border-collapse:collapse;margin:13px 0;font-size:10pt;direction:rtl;page-break-inside:avoid;}
+.tbl th{background:var(--teal-dd);color:#fde68a;padding:8px 11px;text-align:center;font-weight:700;}
+.tbl td{padding:7px 11px;text-align:center;border-bottom:1px solid var(--br);}
+.tbl tr:nth-child(even) td{background:var(--teal-p);}
+.g{color:#065f46;font-weight:700;}.m{color:#92400e;font-weight:700;}.b{color:#991b1b;font-weight:700;}
+
+/* ── LAYOUT ──────────────────────────────────── */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin:11px 0;}
+.three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:11px;margin:11px 0;}
+.card{background:#f8fafc;border:1.5px solid var(--br);border-radius:10px;padding:13px;page-break-inside:avoid;}
+.card.teal{background:var(--teal-p);border-color:#5eead4;}
+.card.amber{background:var(--amber-l);border-color:#fcd34d;}
+.card.rose{background:var(--rose-l);border-color:#fecaca;}
+.card.purple{background:var(--purple-l);border-color:#c4b5fd;}
+.card.blue{background:var(--blue-l);border-color:#93c5fd;}
+.card.dark{background:linear-gradient(135deg,var(--teal-dd),var(--teal-d));border-color:var(--teal);}
+.card-t{font-size:11pt;font-weight:700;color:var(--teal-dd);margin-bottom:7px;}
+.card.dark .card-t{color:#fde68a;}
+.chk{display:flex;gap:8px;align-items:flex-start;margin:5px 0;font-size:10.5pt;}
+.chki{color:var(--teal);font-size:11pt;margin-top:3px;flex-shrink:0;}
+.steps{margin:10px 0;}
+.step{display:flex;gap:11px;align-items:flex-start;margin-bottom:8px;page-break-inside:avoid;}
+.sn{min-width:28px;height:28px;background:var(--teal);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10pt;font-weight:900;flex-shrink:0;margin-top:2px;}
+.sb{flex:1;}
+.st2{font-size:11pt;font-weight:700;color:var(--teal-dd);}
+.sd{font-size:10.5pt;color:#4b5563;line-height:1.7;}
+
+/* ── FOOTER ──────────────────────────────────── */
+.pgf{margin-top:38px;padding-top:9px;border-top:1.5px solid var(--teal-p);display:flex;justify-content:space-between;align-items:center;}
+.pga{font-size:8.5pt;color:var(--amber);font-weight:700;}
+.pgn{font-size:8.5pt;color:#94a3b8;font-family:'IBM Plex Mono',monospace;}
+
+/* ── TOC ─────────────────────────────────────── */
+.toc-pg{padding:55px 65px;page-break-after:always;}
+.toc-h{text-align:center;margin-bottom:36px;}
+.toc-h h1{font-size:26pt;font-weight:900;color:var(--teal-dd);}
+.toc-h p{font-size:9pt;color:#94a3b8;font-family:'IBM Plex Mono',monospace;letter-spacing:2px;margin-top:5px;}
+.toc-pt{font-size:9pt;font-weight:700;color:var(--teal);letter-spacing:2px;border-bottom:2px solid var(--teal-p);padding-bottom:4px;margin-bottom:7px;margin-top:20px;}
+.toc-i{display:flex;align-items:center;padding:5px 0;border-bottom:1px dashed #e2e8f0;gap:10px;}
+.toc-n{background:var(--teal-dd);color:#fde68a;font-family:'IBM Plex Mono',monospace;font-size:8pt;font-weight:700;padding:2px 7px;border-radius:4px;min-width:34px;text-align:center;}
+.toc-t{flex:1;font-size:11pt;font-weight:600;color:#1e293b;margin-right:10px;}
+.toc-d{flex:1;border-bottom:2px dotted #cbd5e1;margin:0 6px;}
+.toc-p{font-family:'IBM Plex Mono',monospace;font-size:10pt;font-weight:700;color:var(--teal);}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════ COVER ══════════════════ -->
+<div class="cover">
+  <div class="cover-grid"></div>
+  <div class="cover-glow"></div>
+  <div class="cover-accent"></div>
+
+  <div class="cbrand">
+    <div class="clogo">&lt;/&gt;</div>
+    <span class="cbn">Aswany</span>
+    <span style="margin-right:auto;font-family:'IBM Plex Mono',monospace;font-size:9pt;color:rgba(255,255,255,0.3);letter-spacing:2px;">ARABIC TECH SERIES · VOL. 3</span>
+  </div>
+
+  <div class="cover-main">
+    <div class="ctag">● C++ FUNDAMENTALS · OOP · POINTERS · STL — ARABIC EDITION</div>
+    <div class="ct1">الدليل الشامل والمختصر لـ</div>
+    <div class="ct2">أساسيات</div>
+    <div class="ct3">لغة C++</div>
+    <div class="ct4">والبرمجة الكائنية</div>
+    <div class="cdiv"></div>
+    <div class="cdesc">مرجع تقني عملي يبدأ معك من الهيكل الأساسي للغة وإدارة الذاكرة والمؤشرات (Pointers)، وصولاً إلى البرمجة الكائنية (OOP) ومكتبة القوالب القياسية (STL).</div>
+    <div class="cpills">
+      <span class="cpill hot">🎯 C++17</span>
+      <span class="cpill hot">🧠 Memory Management</span>
+      <span class="cpill hot">📦 OOP</span>
+      <span class="cpill">Pointers</span>
+      <span class="cpill">References</span>
+      <span class="cpill">STL</span>
+      <span class="cpill">Vectors & Strings</span>
+      <span class="cpill hot">Best Practices</span>
+    </div>
+  </div>
+
+  <div class="cabox">
+    <div class="calbl">AUTHOR — المؤلف</div>
+    <div class="caname">Eng. Osman Taher</div>
+    <div class="casub">✦ Aswany — Arabic Tech Books Series</div>
+  </div>
+</div>
+
+<!-- ══════════════════ TOC ══════════════════ -->
+<div class="toc-pg">
+  <div class="toc-h"><h1>فهرس المحتويات</h1><p>TABLE OF CONTENTS</p></div>
+
+  <div class="toc-pt">الجزء الأول — أساسيات اللغة (Part 1 & 2)</div>
+  <div class="toc-i"><span class="toc-n">01</span><span class="toc-t">مقدمة في C++ والهيكل الأساسي للبرنامج</span><span class="toc-d"></span><span class="toc-p">5</span></div>
+  <div class="toc-i"><span class="toc-n">02</span><span class="toc-t">المتغيرات، أنواع البيانات، والإدخال/الإخراج</span><span class="toc-d"></span><span class="toc-p">10</span></div>
+  <div class="toc-i"><span class="toc-n">03</span><span class="toc-t">التحكم في التدفق (الشروط والحلقات التكرارية)</span><span class="toc-d"></span><span class="toc-p">16</span></div>
+
+  <div class="toc-pt">الجزء الثاني — الدوال والذاكرة (Part 3)</div>
+  <div class="toc-i"><span class="toc-n">04</span><span class="toc-t">الدوال (Functions) ونطاق المتغيرات</span><span class="toc-d"></span><span class="toc-p">24</span></div>
+  <div class="toc-i"><span class="toc-n">05</span><span class="toc-t">المؤشرات (Pointers) والمراجع (References)</span><span class="toc-d"></span><span class="toc-p">32</span></div>
+
+  <div class="toc-pt">الجزء الثالث — البرمجة المتقدمة (Part 4 & 5)</div>
+  <div class="toc-i"><span class="toc-n">06</span><span class="toc-t">البرمجة الكائنية (OOP) في C++</span><span class="toc-d"></span><span class="toc-p">40</span></div>
+  <div class="toc-i"><span class="toc-n">07</span><span class="toc-t">مكتبة القوالب القياسية (STL) — Vectors & Strings</span><span class="toc-d"></span><span class="toc-p">52</span></div>
+
+  <div style="margin-top:28px;background:linear-gradient(135deg,var(--teal-dd),var(--teal));border-radius:12px;padding:18px 20px;color:white;">
+    <div style="font-size:12pt;font-weight:700;color:#fde68a;margin-bottom:9px;">📌 منهجية هذا المرجع التقني</div>
+    <div class="chk" style="color:rgba(255,255,255,0.85);"><span style="color:#fde68a;">✦</span><span><strong>مختصر وعملي:</strong> الكود هو البطل، تقليل الحشو النظري والتركيز على الـ Syntax والممارسات.</span></div>
+    <div class="chk" style="color:rgba(255,255,255,0.85);"><span style="color:#fde68a;">✦</span><span><strong>قابل للتنفيذ:</strong> جميع الأكواد جاهزة للنسخ والتنفيذ مباشرة في أي Compiler.</span></div>
+    <div class="chk" style="color:rgba(255,255,255,0.85);"><span style="color:#fde68a;">✦</span><span><strong>Best Practices:</strong> التركيز على ما هو متعارف عليه بين المبرمجين المحترفين اليوم.</span></div>
+  </div>
+</div>
+
+<!-- ══════════════════ CH 1: INTRO & HELLO WORLD ══════════════════ -->
+<div class="cp">
+  <div class="pgh"><span class="pgch">الفصل الأول ● مقدمة في C++</span><span class="pgbr">Aswany ✦ Eng. Osman Taher</span></div>
+  <div class="cho">
+    <div class="chnum">CHAPTER 01 — INTRODUCTION TO C++</div>
+    <div class="chtitle">الهيكل الأساسي لبرنامج C++<br>Basic Anatomy & Hello World</div>
+    <div class="chdesc">لغة C++ هي لغة مترجمة (Compiled)، قوية جداً في التعامل المباشر مع الذاكرة، وتدعم البرمجة الإجرائية والكائنية (Multi-paradigm). تعتبر الخيار الأول في برمجة الألعاب، محركات البحث، والأنظمة المدمجة.</div>
+  </div>
+
+  <h2 class="sec">1.1 كود C++ الأول (Hello World)</h2>
+  <div class="def">
+    <div class="def-t">💡 ملاحظة فنية</div>
+    <p class="body">أي برنامج C++ يجب أن يحتوي على دالة رئيسية تُسمى <code style="font-family:monospace;color:var(--teal-dd);font-weight:bold;">main()</code>، وهي نقطة البداية (Entry Point) لتنفيذ الكود.</p>
+  </div>
+
+  <div class="uml-wrap">
+    <div class="uml-header">
+      <span class="uml-lang">C++ Code</span>
+      <span class="uml-tool">main.cpp</span>
+    </div>
+    <div class="uml-body"><pre>
+<span class="ucm">// 1. استدعاء مكتبة الإدخال والإخراج القياسية</span>
+<span class="uk">#include</span> <span class="ua">&lt;iostream&gt;</span>
+
+<span class="ucm">// 2. الدالة الرئيسية (نقطة بداية التنفيذ)</span>
+<span class="uk">int</span> <span class="us">main</span>() {
+    
+    <span class="ucm">// 3. طباعة نص على الشاشة ثم النزول لسطر جديد</span>
+    <span class="uc">std::cout</span> &lt;&lt; <span class="ua">"Hello, C++ Developers!"</span> &lt;&lt; <span class="uc">std::endl</span>;
+    
+    <span class="ucm">// 4. إرجاع 0 لنظام التشغيل (دليل على نجاح التنفيذ)</span>
+    <span class="uk">return</span> <span class="un">0</span>;
+}</pre>
+    </div>
+  </div>
+
+  <h2 class="sec">1.2 تشريح الكود (Code Anatomy)</h2>
+  <div class="two">
+    <div class="card teal">
+      <div class="card-t"><code style="font-family:monospace;">#include &lt;iostream&gt;</code></div>
+      <p style="font-size:10pt;color:#374151;">موجه للمعالج الأولي (Preprocessor Directive). يقوم بإدراج مكتبة <strong>i</strong>nput <strong>o</strong>utput <strong>stream</strong> التي تحتوي على أوامر الطباعة وإدخال البيانات.</p>
+    </div>
+    <div class="card amber">
+      <div class="card-t" style="color:#92400e;"><code style="font-family:monospace;">int main() { ... }</code></div>
+      <p style="font-size:10pt;color:#374151;">الدالة الرئيسية. الكلمة <code style="font-family:monospace;">int</code> تعني أن الدالة سترجع رقماً صحيحاً (Integer) عند انتهائها.</p>
+    </div>
+    <div class="card purple">
+      <div class="card-t" style="color:#5b21b6;"><code style="font-family:monospace;">std::cout &lt;&lt; ...</code></div>
+      <p style="font-size:10pt;color:#374151;">أمر الطباعة. <code>cout</code> تعني Character Output. الرمز <code>&lt;&lt;</code> هو عامل الإدراج (Insertion Operator). بادئة <code>std::</code> تعني أننا نستخدم مساحة الأسماء القياسية (Standard Namespace).</p>
+    </div>
+    <div class="card blue">
+      <div class="card-t" style="color:#1d4ed8;"><code style="font-family:monospace;">return 0;</code></div>
+      <p style="font-size:10pt;color:#374151;">تُخبر نظام التشغيل أن البرنامج انتهى بدون أي أخطاء. (في حالة حدوث خطأ كارثي نعيد رقم غير الصفر).</p>
+    </div>
+  </div>
+
+  <h2 class="sec">1.3 الممارسة المتعارف عليها: using namespace std</h2>
+  <p class="body">في المشاريع التعليمية والصغيرة، يفضل المبرمجون استخدام <code style="font-family:monospace;">using namespace std;</code> لتجنب تكرار كتابة <code style="font-family:monospace;">std::</code>، لكن في المشاريع الاحترافية الكبيرة يُنصح بتجنبها لمنع تعارض الأسماء (Name Clashes).</p>
+
+  <div class="uml-wrap">
+    <div class="uml-header">
+      <span class="uml-lang">C++ Code</span>
+      <span class="uml-tool">الممارسة المختصرة</span>
+    </div>
+    <div class="uml-body"><pre>
+<span class="uk">#include</span> <span class="ua">&lt;iostream&gt;</span>
+<span class="uk">using namespace</span> <span class="uc">std</span>; <span class="ucm">// إتاحة كل محتويات مكتبة std</span>
+
+<span class="uk">int</span> <span class="us">main</span>() {
+    <span class="us">cout</span> &lt;&lt; <span class="ua">"No need for std:: anymore!"</span> &lt;&lt; <span class="us">endl</span>;
+    <span class="uk">return</span> <span class="un">0</span>;
+}</pre>
+    </div>
+  </div>
+
+  <div class="pgf"><span class="pga">Eng. Osman Taher — Aswany</span><span class="pgn">PAGE 05</span></div>
+</div>
+
+<!-- ... existing code ... -->
+  <div class="pgf"><span class="pga">Eng. Osman Taher — Aswany</span><span class="pgn">PAGE 05</span></div>
+</div>
+
+<!-- STREAMING_CHUNK:Adding Chapter 2: Variables and Data Types... -->
+<!-- ══════════════════ CH 2: VARIABLES & IO ══════════════════ -->
+<div class="cp">
+  <div class="pgh"><span class="pgch">الفصل الثاني ● المتغيرات والإدخال/الإخراج</span><span class="pgbr">Aswany ✦ Eng. Osman Taher</span></div>
+  <div class="cho">
+    <div class="chnum">CHAPTER 02 — VARIABLES, DATA TYPES & I/O</div>
+    <div class="chtitle">المتغيرات، أنواع البيانات،<br>والإدخال والإخراج</div>
+    <div class="chdesc">C++ هي لغة "قوية التنميط" (Strongly Typed)، مما يعني أن كل متغير يجب أن يُعرّف بنوع بيانات محدد مسبقاً قبل استخدامه. هذا يعطي المترجم (Compiler) القدرة على تحسين أداء الذاكرة واكتشاف الأخطاء مبكراً.</div>
+  </div>
+
+  <h2 class="sec">2.1 أنواع البيانات الأساسية (Primitive Types)</h2>
+  <table class="tbl" style="margin-top:10px;">
+    <thead><tr><th>النوع (Type)</th><th>الوصف (Description)</th><th>الحجم بالذاكرة (عبر الأنظمة)</th><th>مثال</th></tr></thead>
+    <tbody>
+      <tr><td><strong class="g">int</strong></td><td>رقم صحيح (بدون كسور)</td><td>4 Bytes</td><td style="font-family:monospace;direction:ltr;">int age = 25;</td></tr>
+      <tr><td><strong class="g">double</strong></td><td>رقم عشري مزدوج الدقة</td><td>8 Bytes</td><td style="font-family:monospace;direction:ltr;">double price = 19.99;</td></tr>
+      <tr><td><strong class="g">float</strong></td><td>رقم عشري عادي (يُفضل double)</td><td>4 Bytes</td><td style="font-family:monospace;direction:ltr;">float pi = 3.14f;</td></tr>
+      <tr><td><strong class="g">char</strong></td><td>حرف واحد فقط (بين علامتي ' ')</td><td>1 Byte</td><td style="font-family:monospace;direction:ltr;">char grade = 'A';</td></tr>
+      <tr><td><strong class="g">bool</strong></td><td>قيمة منطقية (صواب/خطأ)</td><td>1 Byte</td><td style="font-family:monospace;direction:ltr;">bool isPassed = true;</td></tr>
+      <tr><td><strong class="g">std::string</strong></td><td>سلسلة نصية (نص كامل)</td><td>حسب طول النص</td><td style="font-family:monospace;direction:ltr;">string name = "Ali";</td></tr>
+    </tbody>
+  </table>
+
+  <!-- STREAMING_CHUNK:Adding I/O code examples... -->
+  <h2 class="sec">2.2 الإدخال والإخراج (cin & cout)</h2>
+  <div class="note info">
+    <span class="ni">💡</span>
+    <span>نستخدم <strong><code style="font-family:monospace;color:var(--blue-d);">cout</code></strong> (مع الرمز <code>&lt;&lt;</code>) لطباعة البيانات على الشاشة، ونستخدم <strong><code style="font-family:monospace;color:var(--blue-d);">cin</code></strong> (مع الرمز <code>&gt;&gt;</code>) لاستقبال البيانات من المستخدم.</span>
+  </div>
+
+  <div class="uml-wrap">
+    <div class="uml-header">
+      <span class="uml-lang">C++ Code</span>
+      <span class="uml-tool">io_example.cpp</span>
+    </div>
+    <div class="uml-body"><pre>
+<span class="uk">#include</span> <span class="ua">&lt;iostream&gt;</span>
+<span class="uk">#include</span> <span class="ua">&lt;string&gt;</span> <span class="ucm">// مكتبة النصوص</span>
+
+<span class="uk">using namespace</span> <span class="uc">std</span>;
+
+<span class="uk">int</span> <span class="us">main</span>() {
+    <span class="ucm">// 1. تعريف المتغيرات</span>
+    <span class="uk">string</span> userName;
+    <span class="uk">int</span> userAge;
+
+    <span class="ucm">// 2. طلب إدخال الاسم</span>
+    <span class="us">cout</span> &lt;&lt; <span class="ua">"Enter your name: "</span>;
+    <span class="us">cin</span> &gt;&gt; userName; <span class="ucm">// استقبال كلمة واحدة</span>
+
+    <span class="ucm">// 3. طلب إدخال العمر</span>
+    <span class="us">cout</span> &lt;&lt; <span class="ua">"Enter your age: "</span>;
+    <span class="us">cin</span> &gt;&gt; userAge;
+
+    <span class="ucm">// 4. طباعة النتيجة (دمج النصوص والمتغيرات)</span>
+    <span class="us">cout</span> &lt;&lt; <span class="ua">"Welcome "</span> &lt;&lt; userName &lt;&lt; <span class="ua">", you are "</span> &lt;&lt; userAge &lt;&lt; <span class="ua">" years old."</span> &lt;&lt; <span class="us">endl</span>;
+
+    <span class="uk">return</span> <span class="un">0</span>;
+}</pre>
+    </div>
+  </div>
+
+  <h2 class="sec">2.3 الثوابت (Constants)</h2>
+  <p class="body">إذا أردت حماية متغير من التعديل لاحقاً في الكود، استخدم الكلمة المفتاحية <code style="font-family:monospace;font-weight:bold;">const</code>.</p>
+  <div class="card dark" style="padding:15px; text-align:left; direction:ltr; margin-bottom: 20px;">
+    <code style="color:#99f6e4;font-family:'IBM Plex Mono',monospace;">
+      <span style="color:#fde68a;">const double</span> PI = <span style="color:#38bdf8;">3.14159</span>;<br>
+      <span style="color:#64748b;font-style:italic;">// PI = 3.14;  // ❌ Error: assignment of read-only variable</span>
+    </code>
+  </div>
+
+  <div class="pgf"><span class="pga">Eng. Osman Taher — Aswany</span><span class="pgn">PAGE 10</span></div>
+</div>
+
+<!-- STREAMING_CHUNK:Adding Chapter 3: Control Flow... -->
+<!-- ══════════════════ CH 3: CONTROL FLOW ══════════════════ -->
+<div class="cp">
+  <div class="pgh"><span class="pgch">الفصل الثالث ● التحكم في التدفق</span><span class="pgbr">Aswany ✦ Eng. Osman Taher</span></div>
+  <div class="cho">
+    <div class="chnum">CHAPTER 03 — CONTROL FLOW</div>
+    <div class="chtitle">الشروط والحلقات التكرارية<br>Conditions & Loops</div>
+    <div class="chdesc">البرنامج لا يسير دائماً في خط مستقيم. باستخدام جمل الشرط (if/switch) والحلقات التكرارية (for/while)، نمنح البرنامج القدرة على اتخاذ القرارات وتكرار المهام بناءً على البيانات.</div>
+  </div>
+
+  <h2 class="sec">3.1 الجمل الشرطية (If / Else If / Else)</h2>
+  <div class="two">
+    <div class="card teal">
+      <div class="card-t">✨ هيكل If الأساسي</div>
+      <p style="font-size:10pt;color:#374151;">يتم تقييم الشرط الموجود بين القوسين <code>()</code>. إذا كان <code>true</code> يُنفذ الكود، وإلا ينتقل للشرط الذي يليه.</p>
+    </div>
+    <div class="card amber">
+      <div class="card-t" style="color:#92400e;">⚡ المعاملات المنطقية</div>
+      <p style="font-size:10pt;color:#374151;">
+        <code>==</code> (يساوي) ، <code>!=</code> (لا يساوي)<br>
+        <code>&amp;&amp;</code> (و - AND) ، <code>||</code> (أو - OR)
+      </p>
+    </div>
+  </div>
+
+  <div class="uml-wrap">
+    <div class="uml-header">
+      <span class="uml-lang">C++ Code</span>
+      <span class="uml-tool">conditions.cpp</span>
+    </div>
+    <div class="uml-body"><pre>
+<span class="uk">int</span> grade = <span class="un">85</span>;
+
+<span class="uk">if</span> (grade &gt;= <span class="un">90</span>) {
+    <span class="us">cout</span> &lt;&lt; <span class="ua">"Excellent!"</span> &lt;&lt; <span class="us">endl</span>;
+} 
+<span class="uk">else if</span> (grade &gt;= <span class="un">75</span> &amp;&amp; grade &lt; <span class="un">90</span>) {
+    <span class="ucm">// سيتم تنفيذ هذا البلوك لأن 85 أكبر من 75 وأقل من 90</span>
+    <span class="us">cout</span> &lt;&lt; <span class="ua">"Very Good!"</span> &lt;&lt; <span class="us">endl</span>;
+} 
+<span class="uk">else</span> {
+    <span class="us">cout</span> &lt;&lt; <span class="ua">"Needs Improvement."</span> &lt;&lt; <span class="us">endl</span>;
+}</pre>
+    </div>
+  </div>
+
+  <!-- STREAMING_CHUNK:Adding loops explanations... -->
+  <h2 class="sec">3.2 الحلقات التكرارية (Loops)</h2>
+  <p class="body">تُستخدم لتكرار تنفيذ جزء من الكود عدة مرات دون الحاجة لكتابته مجدداً. لدينا 3 أنواع رئيسية في C++.</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="sn">1</div>
+      <div class="sb">
+        <div class="st2">حلقة (For Loop)</div>
+        <div class="sd">تُستخدم عندما نكون <strong>نعرف مسبقاً</strong> عدد مرات التكرار المطلوبة.<br>
+          <code style="font-family:monospace;direction:ltr;display:inline-block;margin-top:5px;background:#f1f5f9;padding:3px 8px;border-radius:4px;color:#1d4ed8;font-size:9.5pt;">for (initialization; condition; increment) { ... }</code>
+        </div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="sn">2</div>
+      <div class="sb">
+        <div class="st2">حلقة (While Loop)</div>
+        <div class="sd">تُستخدم عندما نكرر الكود <strong>بناءً على شرط معين</strong> (طالما الشرط متحقق). يتم فحص الشرط قبل الدخول للحلقة.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="sn">3</div>
+      <div class="sb">
+        <div class="st2">حلقة (Do-While Loop)</div>
+        <div class="sd">نفس فكرة While، ولكن يتم تنفيذ الكود <strong>مرة واحدة على الأقل</strong> قبل فحص الشرط.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="uml-wrap">
+    <div class="uml-header">
+      <span class="uml-lang">C++ Code</span>
+      <span class="uml-tool">loops.cpp</span>
+    </div>
+    <div class="uml-body"><pre>
+<span class="ucm">// 1. مثال For Loop (العد من 1 إلى 5)</span>
+<span class="uk">for</span> (<span class="uk">int</span> i = <span class="un">1</span>; i &lt;= <span class="un">5</span>; i++) {
+    <span class="us">cout</span> &lt;&lt; <span class="ua">"Count: "</span> &lt;&lt; i &lt;&lt; <span class="us">endl</span>;
+}
+
+<span class="us">cout</span> &lt;&lt; <span class="ua">"-------------------"</span> &lt;&lt; <span class="us">endl</span>;
+
+<span class="ucm">// 2. مثال While Loop (انتظار إدخال رقم موجب)</span>
+<span class="uk">int</span> number = -<span class="un">1</span>;
+<span class="uk">while</span> (number &lt; <span class="un">0</span>) {
+    <span class="us">cout</span> &lt;&lt; <span class="ua">"Enter a positive number: "</span>;
+    <span class="us">cin</span> &gt;&gt; number;
+}
+<span class="us">cout</span> &lt;&lt; <span class="ua">"Thank you! You entered: "</span> &lt;&lt; number &lt;&lt; <span class="us">endl</span>;</pre>
+    </div>
+  </div>
+
+  <div class="note warn">
+    <span class="ni">⚠️</span>
+    <span><strong>تحذير الـ Infinite Loop:</strong> في حلقات الـ <code>while</code> و <code>for</code> تأكد دائماً أن الشرط سيصل إلى نقطة الانتهاء (يصبح <code>false</code>)، وإلا سيعلق البرنامج في حلقة لانهائية ويتوقف عن الاستجابة.</span>
+  </div>
+
+  <div class="pgf"><span class="pga">Eng. Osman Taher — Aswany</span><span class="pgn">PAGE 16</span></div>
+</div>
+
+
+<!-- STREAMING_CHUNK:Adding Chapter 4: Functions... -->
+<!-- ══════════════════ CH 4: FUNCTIONS ══════════════════ -->
+<div class="cp">
+  <div class="pgh"><span class="pgch">الفصل الرابع ● الدوال ونطاق المتغيرات</span><span class="pgbr">Aswany ✦ Eng. Osman Taher</span></div>
+  <div class="cho">
+    <div class="chnum">CHAPTER 04 — FUNCTIONS & SCOPE</div>
+    <div class="chtitle">الدوال ونطاق المتغيرات<br>Functions & Variable Scope</div>
+    <div class="chdesc">الدوال (Functions) هي كتل من الأوامر البرمجية التي تؤدي مهمة محددة ويمكن إعادة استخدامها. هي التطبيق العملي الأول لمبدأ DRY (Don't Repeat Yourself) في البرمجة.</div>
+  </div>
+
+  <h2 class="sec">4.1 تشريح الدالة (Anatomy of a Function)</h2>
+  <div class="two">
+    <div class="card teal">
+      <div class="card-t">1️⃣ نوع الإرجاع (Return Type)</div>
+      <p style="font-size:10pt;color:#374151;">نوع البيانات الذي ستعيده الدالة (مثل <code>int</code>, <code>double</code>). إذا لم تكن ستعيد شيئاً نستخدم الكلمة <code>void</code>.</p>
+    </div>
+    <div class="card amber">
+      <div class="card-t" style="color:#92400e;">2️⃣ المعاملات (Parameters)</div>
+      <p style="font-size:10pt;color:#374151;">المدخلات التي تحتاجها الدالة لتعمل. توضع بين الأقواس <code>()</code>. يمكن أن تكون الدالة بدون معاملات.</p>
+    </div>
+  </div>
+
+  <div class="uml-wrap">
+    <div class="uml-header">
+      <span class="uml-lang">C++ Code</span>
+      <span class="uml-tool">functions.cpp</span>
+    </div>
+    <div class="uml-body"><pre>
+<span class="uk">#include</span> <span class="ua">&lt;iostream&gt;</span>
+<span class="uk">using namespace</span> <span class="uc">std</span>;
+
+<span class="ucm">// 1. دالة تعيد قيمة (تجمع رقمين)</span>
+<span class="uk">int</span> <span class="us">addNumbers</span>(<span class="uk">int</span> a, <span class="uk">int</span> b) {
+    <span class="uk">int</span> sum = a + b;
+    <span class="uk">return</span> sum; <span class="ucm">// إرجاع النتيجة</span>
+}
+
+<span class="ucm">// 2. دالة لا تعيد قيمة (Void Function)</span>
+<span class="uk">void</span> <span class="us">printGreeting</span>(<span class="uk">string</span> name) {
+    <span class="us">cout</span> &lt;&lt; <span class="ua">"Hello, "</span> &lt;&lt; name &lt;&lt; <span class="ua">"!"</span> &lt;&lt; <span class="us">endl</span>;
+}
+
+<span class="uk">int</span> <span class="us">main</span>() {
+    <span class="ucm">// استدعاء الدوال (Function Calls)</span>
+    <span class="uk">int</span> result = <span class="us">addNumbers</span>(<span class="un">10</span>, <span class="un">5</span>);
+    <span class="us">cout</span> &lt;&lt; <span class="ua">"Sum is: "</span> &lt;&lt; result &lt;&lt; <span class="us">endl</span>;
+
+    <span class="us">printGreeting</span>(<span class="ua">"Ali"</span>);
+    
+    <span class="uk">return</span> <span class="un">0</span>;
+}</pre>
+    </div>
+  </div>
+
+  <h2 class="sec">4.2 نطاق المتغيرات (Variable Scope)</h2>
+  <p class="body">المتغير المعرف داخل دالة يُسمى <strong>(Local Variable)</strong>، ولا يمكن استخدامه خارج هذه الدالة. بمجرد انتهاء الدالة، يتم مسح المتغير من الذاكرة.</p>
+
+  <div class="pgf"><span class="pga">Eng. Osman Taher — Aswany</span><span class="pgn">PAGE 24</span></div>
+</div>
+
+<!-- STREAMING_CHUNK:Adding Chapter 5: Pointers and References... -->
+<!-- ══════════════════ CH 5: POINTERS & REFERENCES ══════════════════ -->
+<div class="cp">
+  <div class="pgh"><span class="pgch">الفصل الخامس ● المؤشرات والمراجع</span><span class="pgbr">Aswany ✦ Eng. Osman Taher</span></div>
+  <div class="cho">
+    <div class="chnum">CHAPTER 05 — POINTERS & REFERENCES</div>
+    <div class="chtitle">المؤشرات والمراجع<br>Pointers & References</div>
+    <div class="chdesc">القوة العظمى للغة C++ تكمن هنا. المؤشرات تسمح لك بالوصول المباشر إلى عناوين الذاكرة (RAM) والتحكم فيها، مما يوفر أداءً خارقاً عند استخدامه بشكل صحيح.</div>
+  </div>
+
+  <h2 class="sec">5.1 ما هو المؤشر (Pointer)؟</h2>
+  <div class="def">
+    <div class="def-t">📍 المفهوم الأساسي</div>
+    <p class="body">المؤشر هو متغير وظيفته الوحيدة هي <strong>تخزين عنوان الذاكرة</strong> لمتغير آخر. نستخدم الرمز <code>&amp;</code> للحصول على العنوان، والرمز <code>*</code> لتعريف المؤشر أو قراءة قيمته.</p>
+  </div>
+
+  <div class="uml-wrap">
+    <div class="uml-header">
+      <span class="uml-lang">C++ Code</span>
+      <span class="uml-tool">pointers.cpp</span>
+    </div>
+    <div class="uml-body"><pre>
+<span class="uk">int</span> age = <span class="un">25</span>;
+<span class="uk">int</span>* ptr = &amp;age; <span class="ucm">// المؤشر يخزن عنوان الذاكرة الخاص بمتغير age</span>
+
+<span class="us">cout</span> &lt;&lt; age &lt;&lt; <span class="us">endl</span>;    <span class="ucm">// تطبع: 25</span>
+<span class="us">cout</span> &lt;&lt; ptr &lt;&lt; <span class="us">endl</span>;    <span class="ucm">// تطبع عنوان الذاكرة (مثل: 0x7ffe102a...)</span>
+<span class="us">cout</span> &lt;&lt; *ptr &lt;&lt; <span class="us">endl</span>;   <span class="ucm">// تطبع القيمة الموجودة داخل العنوان: 25 (Dereferencing)</span>
+
+*ptr = <span class="un">30</span>;              <span class="ucm">// تعديل القيمة من خلال المؤشر</span>
+<span class="us">cout</span> &lt;&lt; age &lt;&lt; <span class="us">endl</span>;    <span class="ucm">// تطبع: 30 (تغيرت لأن المؤشر عدل في الذاكرة مباشرة)</span></pre>
+    </div>
+  </div>
+
+  <h2 class="sec">5.2 المراجع (References) وتمرير البيانات</h2>
+  <p class="body">المرجع (Reference) هو ببساطة <strong>اسم مستعار (Alias)</strong> لمتغير موجود. الفرق بينه وبين المؤشر أنه أسهل في الاستخدام (لا يحتاج <code>*</code>)، ولا يمكن تغييره ليشير لمتغير آخر بعد تعريفه.</p>
+
+  <div class="three">
+    <div class="card rose">
+      <div class="card-t" style="color:#9f1239;">❌ Pass by Value</div>
+      <p style="font-size:9.5pt;color:#374151;">يتم أخذ نسخة كاملة من البيانات في الذاكرة. بطيء جداً مع البيانات الكبيرة كالنصوص.</p>
+    </div>
+    <div class="card teal">
+      <div class="card-t">✅ Pass by Reference</div>
+      <p style="font-size:9.5pt;color:#374151;">نمرر عنوان المتغير باستخدام <code>&amp;</code>. سريع جداً ولا يستهلك ذاكرة إضافية.</p>
+    </div>
+    <div class="card purple">
+      <div class="card-t" style="color:#5b21b6;">🛡️ Pass by Const Ref</div>
+      <p style="font-size:9.5pt;color:#374151;">نمرر بالمرجعية للسرعة، ونضع <code>const</code> لمنع التعديل (أفضل ممارسة Best Practice).</p>
+    </div>
+  </div>
+
+  <div class="uml-wrap">
+    <div class="uml-header">
+      <span class="uml-lang">C++ Code</span>
+      <span class="uml-tool">best_practices_ref.cpp</span>
+    </div>
+    <div class="uml-body"><pre>
+<span class="uk">#include</span> <span class="ua">&lt;iostream&gt;</span>
+<span class="uk">using namespace</span> <span class="uc">std</span>;
+
+<span class="ucm">// استخدام المرجعية لتبديل قيمتين في الذاكرة مباشرة</span>
+<span class="uk">void</span> <span class="us">swapNumbers</span>(<span class="uk">int</span>&amp; a, <span class="uk">int</span>&amp; b) {
+    <span class="uk">int</span> temp = a;
+    a = b;
+    b = temp;
+}
+
+<span class="ucm">// الممارسة الأفضل: تمرير النصوص الكبيرة كـ Const Reference</span>
+<span class="uk">void</span> <span class="us">printLargeData</span>(<span class="uk">const string</span>&amp; data) {
+    <span class="us">cout</span> &lt;&lt; data &lt;&lt; <span class="us">endl</span>;
+    <span class="ucm">// data = "new"; // ❌ خطأ برمجي: Const تمنع التعديل</span>
+}
+
+<span class="uk">int</span> <span class="us">main</span>() {
+    <span class="uk">int</span> x = <span class="un">10</span>, y = <span class="un">20</span>;
+    <span class="us">swapNumbers</span>(x, y);
+    <span class="us">cout</span> &lt;&lt; <span class="ua">"x="</span> &lt;&lt; x &lt;&lt; <span class="ua">" y="</span> &lt;&lt; y &lt;&lt; <span class="us">endl</span>; <span class="ucm">// النتيجة: x=20 y=10</span>
+
+    <span class="uk">string</span> hugeText = <span class="ua">"Huge data..."</span>;
+    <span class="us">printLargeData</span>(hugeText);
+    
+    <span class="uk">return</span> <span class="un">0</span>;
+}</pre>
+    </div>
+  </div>
+  
+  <div class="note tip">
+    <span class="ni">💡</span>
+    <span><strong>قاعدة المبرمج المحترف:</strong> إذا كان حجم المتغير أكبر من المؤشر (أكبر من 8 Bytes مثل الـ `string` أو الـ `classes`)، قم بتمريره دائماً بالمرجعية `const type&amp;` لتحسين الأداء.</span>
+  </div>
+
+  <div class="pgf"><span class="pga">Eng. Osman Taher — Aswany</span><span class="pgn">PAGE 32</span></div>
+</div>
+
+
+<!-- STREAMING_CHUNK:Adding Chapter 4: Functions... -->
+<!-- ══════════════════ CH 4: FUNCTIONS ══════════════════ -->
+<div class="cp">
+  <div class="pgh"><span class="pgch">الفصل الرابع ● الدوال ونطاق المتغيرات</span><span class="pgbr">Aswany ✦ Eng. Osman Taher</span></div>
+  <div class="cho">
+    <div class="chnum">CHAPTER 04 — FUNCTIONS & SCOPE</div>
+    <div class="chtitle">الدوال ونطاق المتغيرات<br>Functions & Variable Scope</div>
+    <div class="chdesc">الدوال (Functions) هي كتل من الأوامر البرمجية التي تؤدي مهمة محددة ويمكن إعادة استخدامها. هي التطبيق العملي الأول لمبدأ DRY (Don't Repeat Yourself) في البرمجة.</div>
+  </div>
+
+  <h2 class="sec">4.1 تشريح الدالة (Anatomy of a Function)</h2>
+  <div class="two">
+    <div class="card teal">
+      <div class="card-t">1️⃣ نوع الإرجاع (Return Type)</div>
+      <p style="font-size:10pt;color:#374151;">نوع البيانات الذي ستعيده الدالة (مثل <code>int</code>, <code>double</code>). إذا لم تكن ستعيد شيئاً نستخدم الكلمة <code>void</code>.</p>
+    </div>
+    <div class="card amber">
+      <div class="card-t" style="color:#92400e;">2️⃣ المعاملات (Parameters)</div>
+      <p style="font-size:10pt;color:#374151;">المدخلات التي تحتاجها الدالة لتعمل. توضع بين الأقواس <code>()</code>. يمكن أن تكون الدالة بدون معاملات.</p>
+    </div>
+  </div>
+
+  <div class="uml-wrap">
+    <div class="uml-header">
+      <span class="uml-lang">C++ Code</span>
+      <span class="uml-tool">functions.cpp</span>
+    </div>
+    <div class="uml-body"><pre>
+<span class="uk">#include</span> <span class="ua">&lt;iostream&gt;</span>
+<span class="uk">using namespace</span> <span class="uc">std</span>;
+
+<span class="ucm">// 1. دالة تعيد قيمة (تجمع رقمين)</span>
+<span class="uk">int</span> <span class="us">addNumbers</span>(<span class="uk">int</span> a, <span class="uk">int</span> b) {
+    <span class="uk">int</span> sum = a + b;
+    <span class="uk">return</span> sum; <span class="ucm">// إرجاع النتيجة</span>
+}
+
+<span class="ucm">// 2. دالة لا تعيد قيمة (Void Function)</span>
+<span class="uk">void</span> <span class="us">printGreeting</span>(<span class="uk">string</span> name) {
+    <span class="us">cout</span> &lt;&lt; <span class="ua">"Hello, "</span> &lt;&lt; name &lt;&lt; <span class="ua">"!"</span> &lt;&lt; <span class="us">endl</span>;
+}
+
+<span class="uk">int</span> <span class="us">main</span>() {
+    <span class="ucm">// استدعاء الدوال (Function Calls)</span>
+    <span class="uk">int</span> result = <span class="us">addNumbers</span>(<span class="un">10</span>, <span class="un">5</span>);
+    <span class="us">cout</span> &lt;&lt; <span class="ua">"Sum is: "</span> &lt;&lt; result &lt;&lt; <span class="us">endl</span>;
+
+    <span class="us">printGreeting</span>(<span class="ua">"Ali"</span>);
+    
+    <span class="uk">return</span> <span class="un">0</span>;
+}</pre>
+    </div>
+  </div>
+
+  <h2 class="sec">4.2 نطاق المتغيرات (Variable Scope)</h2>
+  <p class="body">المتغير المعرف داخل دالة يُسمى <strong>(Local Variable)</strong>، ولا يمكن استخدامه خارج هذه الدالة. بمجرد انتهاء الدالة، يتم مسح المتغير من الذاكرة.</p>
+
+  <div class="pgf"><span class="pga">Eng. Osman Taher — Aswany</span><span class="pgn">PAGE 24</span></div>
+</div>
+
+<!-- STREAMING_CHUNK:Adding Chapter 5: Pointers and References... -->
+<!-- ══════════════════ CH 5: POINTERS & REFERENCES ══════════════════ -->
+<div class="cp">
+  <div class="pgh"><span class="pgch">الفصل الخامس ● المؤشرات والمراجع</span><span class="pgbr">Aswany ✦ Eng. Osman Taher</span></div>
+  <div class="cho">
+    <div class="chnum">CHAPTER 05 — POINTERS & REFERENCES</div>
+    <div class="chtitle">المؤشرات والمراجع<br>Pointers & References</div>
+    <div class="chdesc">القوة العظمى للغة C++ تكمن هنا. المؤشرات تسمح لك بالوصول المباشر إلى عناوين الذاكرة (RAM) والتحكم فيها، مما يوفر أداءً خارقاً عند استخدامه بشكل صحيح.</div>
+  </div>
+
+  <h2 class="sec">5.1 ما هو المؤشر (Pointer)؟</h2>
+  <div class="def">
+    <div class="def-t">📍 المفهوم الأساسي</div>
+    <p class="body">المؤشر هو متغير وظيفته الوحيدة هي <strong>تخزين عنوان الذاكرة</strong> لمتغير آخر. نستخدم الرمز <code>&amp;</code> للحصول على العنوان، والرمز <code>*</code> لتعريف المؤشر أو قراءة قيمته.</p>
+  </div>
+
+  <div class="uml-wrap">
+    <div class="uml-header">
+      <span class="uml-lang">C++ Code</span>
+      <span class="uml-tool">pointers.cpp</span>
+    </div>
+    <div class="uml-body"><pre>
+<span class="uk">int</span> age = <span class="un">25</span>;
+<span class="uk">int</span>* ptr = &amp;age; <span class="ucm">// المؤشر يخزن عنوان الذاكرة الخاص بمتغير age</span>
+
+<span class="us">cout</span> &lt;&lt; age &lt;&lt; <span class="us">endl</span>;    <span class="ucm">// تطبع: 25</span>
+<span class="us">cout</span> &lt;&lt; ptr &lt;&lt; <span class="us">endl</span>;    <span class="ucm">// تطبع عنوان الذاكرة (مثل: 0x7ffe102a...)</span>
+<span class="us">cout</span> &lt;&lt; *ptr &lt;&lt; <span class="us">endl</span>;   <span class="ucm">// تطبع القيمة الموجودة داخل العنوان: 25 (Dereferencing)</span>
+
+*ptr = <span class="un">30</span>;              <span class="ucm">// تعديل القيمة من خلال المؤشر</span>
+<span class="us">cout</span> &lt;&lt; age &lt;&lt; <span class="us">endl</span>;    <span class="ucm">// تطبع: 30 (تغيرت لأن المؤشر عدل في الذاكرة مباشرة)</span></pre>
+    </div>
+  </div>
+
+  <h2 class="sec">5.2 المراجع (References) وتمرير البيانات</h2>
+  <p class="body">المرجع (Reference) هو ببساطة <strong>اسم مستعار (Alias)</strong> لمتغير موجود. الفرق بينه وبين المؤشر أنه أسهل في الاستخدام (لا يحتاج <code>*</code>)، ولا يمكن تغييره ليشير لمتغير آخر بعد تعريفه.</p>
+
+  <div class="three">
+    <div class="card rose">
+      <div class="card-t" style="color:#9f1239;">❌ Pass by Value</div>
+      <p style="font-size:9.5pt;color:#374151;">يتم أخذ نسخة كاملة من البيانات في الذاكرة. بطيء جداً مع البيانات الكبيرة كالنصوص.</p>
+    </div>
+    <div class="card teal">
+      <div class="card-t">✅ Pass by Reference</div>
+      <p style="font-size:9.5pt;color:#374151;">نمرر عنوان المتغير باستخدام <code>&amp;</code>. سريع جداً ولا يستهلك ذاكرة إضافية.</p>
+    </div>
+    <div class="card purple">
+      <div class="card-t" style="color:#5b21b6;">🛡️ Pass by Const Ref</div>
+      <p style="font-size:9.5pt;color:#374151;">نمرر بالمرجعية للسرعة، ونضع <code>const</code> لمنع التعديل (أفضل ممارسة Best Practice).</p>
+    </div>
+  </div>
+
+  <div class="uml-wrap">
+    <div class="uml-header">
+      <span class="uml-lang">C++ Code</span>
+      <span class="uml-tool">best_practices_ref.cpp</span>
+    </div>
+    <div class="uml-body"><pre>
+<span class="uk">#include</span> <span class="ua">&lt;iostream&gt;</span>
+<span class="uk">using namespace</span> <span class="uc">std</span>;
+
+<span class="ucm">// استخدام المرجعية لتبديل قيمتين في الذاكرة مباشرة</span>
+<span class="uk">void</span> <span class="us">swapNumbers</span>(<span class="uk">int</span>&amp; a, <span class="uk">int</span>&amp; b) {
+    <span class="uk">int</span> temp = a;
+    a = b;
+    b = temp;
+}
+
+<span class="ucm">// الممارسة الأفضل: تمرير النصوص الكبيرة كـ Const Reference</span>
+<span class="uk">void</span> <span class="us">printLargeData</span>(<span class="uk">const string</span>&amp; data) {
+    <span class="us">cout</span> &lt;&lt; data &lt;&lt; <span class="us">endl</span>;
+    <span class="ucm">// data = "new"; // ❌ خطأ برمجي: Const تمنع التعديل</span>
+}
+
+<span class="uk">int</span> <span class="us">main</span>() {
+    <span class="uk">int</span> x = <span class="un">10</span>, y = <span class="un">20</span>;
+    <span class="us">swapNumbers</span>(x, y);
+    <span class="us">cout</span> &lt;&lt; <span class="ua">"x="</span> &lt;&lt; x &lt;&lt; <span class="ua">" y="</span> &lt;&lt; y &lt;&lt; <span class="us">endl</span>; <span class="ucm">// النتيجة: x=20 y=10</span>
+
+    <span class="uk">string</span> hugeText = <span class="ua">"Huge data..."</span>;
+    <span class="us">printLargeData</span>(hugeText);
+    
+    <span class="uk">return</span> <span class="un">0</span>;
+}</pre>
+    </div>
+  </div>
+  
+  <div class="note tip">
+    <span class="ni">💡</span>
+    <span><strong>قاعدة المبرمج المحترف:</strong> إذا كان حجم المتغير أكبر من المؤشر (أكبر من 8 Bytes مثل الـ `string` أو الـ `classes`)، قم بتمريره دائماً بالمرجعية `const type&amp;` لتحسين الأداء.</span>
+  </div>
+
+  <div class="pgf"><span class="pga">Eng. Osman Taher — Aswany</span><span class="pgn">PAGE 32</span></div>
+</div>
+
+<!-- STREAMING_CHUNK:Adding Chapter 6: Object-Oriented Programming (OOP)... -->
+<!-- ══════════════════ CH 6: OOP IN C++ ══════════════════ -->
+<div class="cp">
+  <div class="pgh"><span class="pgch">الفصل السادس ● البرمجة الكائنية (OOP)</span><span class="pgbr">Aswany ✦ Eng. Osman Taher</span></div>
+  <div class="cho">
+    <div class="chnum">CHAPTER 06 — OBJECT-ORIENTED PROGRAMMING</div>
+    <div class="chtitle">البرمجة الكائنية (OOP)<br>Classes, Objects & Inheritance</div>
+    <div class="chdesc">البرمجة الكائنية هي نموذج برمجي يعتمد على تمثيل الأشياء الحقيقية كـ "كائنات" (Objects) تمتلك خصائص (Attributes) وسلوكيات (Methods). هذا النموذج يسهل صيانة الكود وتطوير الأنظمة المعقدة.</div>
+  </div>
+
+  <h2 class="sec">6.1 الفئات (Classes) والكائنات (Objects)</h2>
+  <div class="def">
+    <div class="def-t">📐 المفهوم الأساسي</div>
+    <p class="body">الـ <strong>Class (الفئة)</strong> هو المخطط الهندسي (Blueprint). بينما الـ <strong>Object (الكائن)</strong> هو النسخة الحقيقية المصنوعة من هذا المخطط. <br>مثال: "السيارة" هي Class، بينما "سيارتك التويوتا السوداء" هي Object.</p>
+  </div>
+
+  <div class="two">
+    <div class="card teal">
+      <div class="card-t">🔒 محددات الوصول (Access Specifiers)</div>
+      <div class="chk"><span class="chki">✦</span><div><code style="color:var(--teal-dd);font-weight:bold;">private:</code> لا يمكن الوصول إليها إلا من داخل الكلاس (الوضع الافتراضي).</div></div>
+      <div class="chk"><span class="chki">✦</span><div><code style="color:var(--teal-dd);font-weight:bold;">public:</code> يمكن الوصول إليها من أي مكان في البرنامج.</div></div>
+      <div class="chk"><span class="chki">✦</span><div><code style="color:var(--teal-dd);font-weight:bold;">protected:</code> مثل private لكن يمكن للـ Classes الوارثة الوصول إليها.</div></div>
+    </div>
+    <div class="card amber">
+      <div class="card-t" style="color:#92400e;">🏗️ الباني (Constructor)</div>
+      <p style="font-size:10pt;color:#374151;">دالة خاصة تحمل نفس اسم الـ Class ولا تُرجع قيمة. تُستدعى تلقائياً <strong>مرة واحدة فقط</strong> عند إنشاء الكائن (Object) لتهيئة المتغيرات الأولية.</p>
+    </div>
+  </div>
+
+  <h2 class="sec">6.2 مثال عملي: التغليف (Encapsulation)</h2>
+  <div class="note info">
+    <span class="ni">💡</span>
+    <span><strong>Best Practice:</strong> اجعل جميع المتغيرات (Attributes) من النوع <code>private</code> لحمايتها، ووفر دوال <code>public</code> (Getters & Setters) للتعامل معها. هذا هو جوهر مبدأ "التغليف".</span>
+  </div>
+
+  <div class="uml-wrap">
+    <div class="uml-header">
+      <span class="uml-lang">C++ Code</span>
+      <span class="uml-tool">BankAccount.cpp</span>
+    </div>
+    <div class="uml-body"><pre>
+<span class="uk">#include</span> <span class="ua">&lt;iostream&gt;</span>
+<span class="uk">using namespace</span> <span class="uc">std</span>;
+
+<span class="uk">class</span> <span class="uc">BankAccount</span> {
+<span class="uk">private</span>:
+    <span class="ucm">// المتغيرات محمية لا يمكن تعديلها من الخارج مباشرة</span>
+    <span class="uk">string</span> ownerName;
+    <span class="uk">double</span> balance;
+
+<span class="uk">public</span>:
+    <span class="ucm">// Constructor: يُهيئ الحساب عند إنشائه</span>
+    <span class="us">BankAccount</span>(<span class="uk">string</span> name, <span class="uk">double</span> initialBalance) {
+        ownerName = name;
+        balance = initialBalance;
+    }
+
+    <span class="ucm">// Setter: طريقة آمنة لإيداع المال</span>
+    <span class="uk">void</span> <span class="us">deposit</span>(<span class="uk">double</span> amount) {
+        <span class="uk">if</span> (amount &gt; <span class="un">0</span>) {
+            balance += amount;
+        }
+    }
+
+    <span class="ucm">// Getter: لقراءة الرصيد فقط دون تعديله</span>
+    <span class="uk">double</span> <span class="us">getBalance</span>() <span class="uk">const</span> { 
+        <span class="uk">return</span> balance; 
+    }
+};
+
+<span class="uk">int</span> <span class="us">main</span>() {
+    <span class="ucm">// إنشاء كائن (Object) من الفئة BankAccount</span>
+    <span class="uc">BankAccount</span> myAccount(<span class="ua">"Ezzeldin"</span>, <span class="un">1000.0</span>);
+
+    myAccount.<span class="us">deposit</span>(<span class="un">500.0</span>); <span class="ucm">// إيداع آمن عبر الدالة</span>
+    <span class="us">cout</span> &lt;&lt; <span class="ua">"Balance: $"</span> &lt;&lt; myAccount.<span class="us">getBalance</span>() &lt;&lt; <span class="us">endl</span>;
+    
+    <span class="ucm">// myAccount.balance = 5000; // ❌ خطأ برمجي: balance هو private</span>
+
+    <span class="uk">return</span> <span class="un">0</span>;
+}</pre>
+    </div>
+  </div>
+
+  <h2 class="sec">6.3 الوراثة (Inheritance) وتعدد الأشكال (Polymorphism)</h2>
+  <p class="body">الوراثة تسمح لك بإنشاء فئة جديدة (Derived Class) تأخذ كل خصائص فئة موجودة (Base Class) وتضيف عليها. هذا يقلل تكرار الكود بشكل هائل.</p>
+
+  <div class="uml-wrap">
+    <div class="uml-header">
+      <span class="uml-lang">C++ Code</span>
+      <span class="uml-tool">inheritance.cpp</span>
+    </div>
+    <div class="uml-body"><pre>
+<span class="ucm">// الفئة الأساسية (الأب)</span>
+<span class="uk">class</span> <span class="uc">Animal</span> {
+<span class="uk">public</span>:
+    <span class="uk">string</span> name;
+    
+    <span class="us">Animal</span>(<span class="uk">string</span> n) { name = n; }
+    
+    <span class="ucm">// كلمة virtual تسمح للفئات الأبناء بإعادة كتابة الدالة (Overriding)</span>
+    <span class="uk">virtual void</span> <span class="us">makeSound</span>() <span class="uk">const</span> {
+        <span class="us">cout</span> &lt;&lt; <span class="ua">"Some generic animal sound"</span> &lt;&lt; <span class="us">endl</span>;
+    }
+};
+
+<span class="ucm">// الفئة المشتقة (الابن) ترث من Animal</span>
+<span class="uk">class</span> <span class="uc">Dog</span> : <span class="uk">public</span> <span class="uc">Animal</span> {
+<span class="uk">public</span>:
+    <span class="ucm">// استدعاء باني الأب</span>
+    <span class="us">Dog</span>(<span class="uk">string</span> n) : <span class="us">Animal</span>(n) {}
+
+    <span class="ucm">// إعادة تعريف السلوك (Polymorphism)</span>
+    <span class="uk">void</span> <span class="us">makeSound</span>() <span class="uk">const override</span> {
+        <span class="us">cout</span> &lt;&lt; name &lt;&lt; <span class="ua">" says: Woof! Woof!"</span> &lt;&lt; <span class="us">endl</span>;
+    }
+};
+
+<span class="uk">int</span> <span class="us">main</span>() {
+    <span class="uc">Dog</span> myDog(<span class="ua">"Rex"</span>);
+    myDog.<span class="us">makeSound</span>(); <span class="ucm">// النتيجة: Rex says: Woof! Woof!</span>
+    
+    <span class="uk">return</span> <span class="un">0</span>;
+}</pre>
+    </div>
+  </div>
+
+  <div class="note warn">
+    <span class="ni">⚠️</span>
+    <span><strong>تحذير الذاكرة:</strong> إذا استخدمت <code>virtual functions</code> في كلاس، يجب دائماً أن تجعل الـ <code>Destructor (الهادم)</code> من النوع <code>virtual</code> لتجنب تسرب الذاكرة (Memory Leaks) عند حذف الكائنات المشتقة.</span>
+  </div>
+
+  <div class="pgf"><span class="pga">Eng. Osman Taher — Aswany</span><span class="pgn">PAGE 40</span></div>
+</div>
+
+<!-- STREAMING_CHUNK:Adding Chapter 4: Functions... -->
+<!-- ══════════════════ CH 4: FUNCTIONS ══════════════════ -->
+<div class="cp">
+  <div class="pgh"><span class="pgch">الفصل الرابع ● الدوال ونطاق المتغيرات</span><span class="pgbr">Aswany ✦ Eng. Osman Taher</span></div>
+  <div class="cho">
+    <div class="chnum">CHAPTER 04 — FUNCTIONS & SCOPE</div>
+    <div class="chtitle">الدوال ونطاق المتغيرات<br>Functions & Variable Scope</div>
+    <div class="chdesc">الدوال (Functions) هي كتل من الأوامر البرمجية التي تؤدي مهمة محددة ويمكن إعادة استخدامها. هي التطبيق العملي الأول لمبدأ DRY (Don't Repeat Yourself) في البرمجة.</div>
+  </div>
+
+  <h2 class="sec">4.1 تشريح الدالة (Anatomy of a Function)</h2>
+  <div class="two">
+    <div class="card teal">
+      <div class="card-t">1️⃣ نوع الإرجاع (Return Type)</div>
+      <p style="font-size:10pt;color:#374151;">نوع البيانات الذي ستعيده الدالة (مثل <code>int</code>, <code>double</code>). إذا لم تكن ستعيد شيئاً نستخدم الكلمة <code>void</code>.</p>
+    </div>
+    <div class="card amber">
+      <div class="card-t" style="color:#92400e;">2️⃣ المعاملات (Parameters)</div>
+      <p style="font-size:10pt;color:#374151;">المدخلات التي تحتاجها الدالة لتعمل. توضع بين الأقواس <code>()</code>. يمكن أن تكون الدالة بدون معاملات.</p>
+    </div>
+  </div>
+
+  <div class="uml-wrap">
+    <div class="uml-header">
+      <span class="uml-lang">C++ Code</span>
+      <span class="uml-tool">functions.cpp</span>
+    </div>
+    <div class="uml-body"><pre>
+<span class="uk">#include</span> <span class="ua">&lt;iostream&gt;</span>
+<span class="uk">using namespace</span> <span class="uc">std</span>;
+
+<span class="ucm">// 1. دالة تعيد قيمة (تجمع رقمين)</span>
+<span class="uk">int</span> <span class="us">addNumbers</span>(<span class="uk">int</span> a, <span class="uk">int</span> b) {
+    <span class="uk">int</span> sum = a + b;
+    <span class="uk">return</span> sum; <span class="ucm">// إرجاع النتيجة</span>
+}
+
+<span class="ucm">// 2. دالة لا تعيد قيمة (Void Function)</span>
+<span class="uk">void</span> <span class="us">printGreeting</span>(<span class="uk">string</span> name) {
+    <span class="us">cout</span> &lt;&lt; <span class="ua">"Hello, "</span> &lt;&lt; name &lt;&lt; <span class="ua">"!"</span> &lt;&lt; <span class="us">endl</span>;
+}
+
+<span class="uk">int</span> <span class="us">main</span>() {
+    <span class="ucm">// استدعاء الدوال (Function Calls)</span>
+    <span class="uk">int</span> result = <span class="us">addNumbers</span>(<span class="un">10</span>, <span class="un">5</span>);
+    <span class="us">cout</span> &lt;&lt; <span class="ua">"Sum is: "</span> &lt;&lt; result &lt;&lt; <span class="us">endl</span>;
+
+    <span class="us">printGreeting</span>(<span class="ua">"Ali"</span>);
+    
+    <span class="uk">return</span> <span class="un">0</span>;
+}</pre>
+    </div>
+  </div>
+
+  <h2 class="sec">4.2 نطاق المتغيرات (Variable Scope)</h2>
+  <p class="body">المتغير المعرف داخل دالة يُسمى <strong>(Local Variable)</strong>، ولا يمكن استخدامه خارج هذه الدالة. بمجرد انتهاء الدالة، يتم مسح المتغير من الذاكرة.</p>
+
+  <div class="pgf"><span class="pga">Eng. Osman Taher — Aswany</span><span class="pgn">PAGE 24</span></div>
+</div>
+
+<!-- STREAMING_CHUNK:Adding Chapter 5: Pointers and References... -->
+<!-- ══════════════════ CH 5: POINTERS & REFERENCES ══════════════════ -->
+<div class="cp">
+  <div class="pgh"><span class="pgch">الفصل الخامس ● المؤشرات والمراجع</span><span class="pgbr">Aswany ✦ Eng. Osman Taher</span></div>
+  <div class="cho">
+    <div class="chnum">CHAPTER 05 — POINTERS & REFERENCES</div>
+    <div class="chtitle">المؤشرات والمراجع<br>Pointers & References</div>
+    <div class="chdesc">القوة العظمى للغة C++ تكمن هنا. المؤشرات تسمح لك بالوصول المباشر إلى عناوين الذاكرة (RAM) والتحكم فيها، مما يوفر أداءً خارقاً عند استخدامه بشكل صحيح.</div>
+  </div>
+
+  <h2 class="sec">5.1 ما هو المؤشر (Pointer)؟</h2>
+  <div class="def">
+    <div class="def-t">📍 المفهوم الأساسي</div>
+    <p class="body">المؤشر هو متغير وظيفته الوحيدة هي <strong>تخزين عنوان الذاكرة</strong> لمتغير آخر. نستخدم الرمز <code>&amp;</code> للحصول على العنوان، والرمز <code>*</code> لتعريف المؤشر أو قراءة قيمته.</p>
+  </div>
+
+  <div class="uml-wrap">
+    <div class="uml-header">
+      <span class="uml-lang">C++ Code</span>
+      <span class="uml-tool">pointers.cpp</span>
+    </div>
+    <div class="uml-body"><pre>
+<span class="uk">int</span> age = <span class="un">25</span>;
+<span class="uk">int</span>* ptr = &amp;age; <span class="ucm">// المؤشر يخزن عنوان الذاكرة الخاص بمتغير age</span>
+
+<span class="us">cout</span> &lt;&lt; age &lt;&lt; <span class="us">endl</span>;    <span class="ucm">// تطبع: 25</span>
+<span class="us">cout</span> &lt;&lt; ptr &lt;&lt; <span class="us">endl</span>;    <span class="ucm">// تطبع عنوان الذاكرة (مثل: 0x7ffe102a...)</span>
+<span class="us">cout</span> &lt;&lt; *ptr &lt;&lt; <span class="us">endl</span>;   <span class="ucm">// تطبع القيمة الموجودة داخل العنوان: 25 (Dereferencing)</span>
+
+*ptr = <span class="un">30</span>;              <span class="ucm">// تعديل القيمة من خلال المؤشر</span>
+<span class="us">cout</span> &lt;&lt; age &lt;&lt; <span class="us">endl</span>;    <span class="ucm">// تطبع: 30 (تغيرت لأن المؤشر عدل في الذاكرة مباشرة)</span></pre>
+    </div>
+  </div>
+
+  <h2 class="sec">5.2 المراجع (References) وتمرير البيانات</h2>
+  <p class="body">المرجع (Reference) هو ببساطة <strong>اسم مستعار (Alias)</strong> لمتغير موجود. الفرق بينه وبين المؤشر أنه أسهل في الاستخدام (لا يحتاج <code>*</code>)، ولا يمكن تغييره ليشير لمتغير آخر بعد تعريفه.</p>
+
+  <div class="three">
+    <div class="card rose">
+      <div class="card-t" style="color:#9f1239;">❌ Pass by Value</div>
+      <p style="font-size:9.5pt;color:#374151;">يتم أخذ نسخة كاملة من البيانات في الذاكرة. بطيء جداً مع البيانات الكبيرة كالنصوص.</p>
+    </div>
+    <div class="card teal">
+      <div class="card-t">✅ Pass by Reference</div>
+      <p style="font-size:9.5pt;color:#374151;">نمرر عنوان المتغير باستخدام <code>&amp;</code>. سريع جداً ولا يستهلك ذاكرة إضافية.</p>
+    </div>
+    <div class="card purple">
+      <div class="card-t" style="color:#5b21b6;">🛡️ Pass by Const Ref</div>
+      <p style="font-size:9.5pt;color:#374151;">نمرر بالمرجعية للسرعة، ونضع <code>const</code> لمنع التعديل (أفضل ممارسة Best Practice).</p>
+    </div>
+  </div>
+
+  <div class="uml-wrap">
+    <div class="uml-header">
+      <span class="uml-lang">C++ Code</span>
+      <span class="uml-tool">best_practices_ref.cpp</span>
+    </div>
+    <div class="uml-body"><pre>
+<span class="uk">#include</span> <span class="ua">&lt;iostream&gt;</span>
+<span class="uk">using namespace</span> <span class="uc">std</span>;
+
+<span class="ucm">// استخدام المرجعية لتبديل قيمتين في الذاكرة مباشرة</span>
+<span class="uk">void</span> <span class="us">swapNumbers</span>(<span class="uk">int</span>&amp; a, <span class="uk">int</span>&amp; b) {
+    <span class="uk">int</span> temp = a;
+    a = b;
+    b = temp;
+}
+
+<span class="ucm">// الممارسة الأفضل: تمرير النصوص الكبيرة كـ Const Reference</span>
+<span class="uk">void</span> <span class="us">printLargeData</span>(<span class="uk">const string</span>&amp; data) {
+    <span class="us">cout</span> &lt;&lt; data &lt;&lt; <span class="us">endl</span>;
+    <span class="ucm">// data = "new"; // ❌ خطأ برمجي: Const تمنع التعديل</span>
+}
+
+<span class="uk">int</span> <span class="us">main</span>() {
+    <span class="uk">int</span> x = <span class="un">10</span>, y = <span class="un">20</span>;
+    <span class="us">swapNumbers</span>(x, y);
+    <span class="us">cout</span> &lt;&lt; <span class="ua">"x="</span> &lt;&lt; x &lt;&lt; <span class="ua">" y="</span> &lt;&lt; y &lt;&lt; <span class="us">endl</span>; <span class="ucm">// النتيجة: x=20 y=10</span>
+
+    <span class="uk">string</span> hugeText = <span class="ua">"Huge data..."</span>;
+    <span class="us">printLargeData</span>(hugeText);
+    
+    <span class="uk">return</span> <span class="un">0</span>;
+}</pre>
+    </div>
+  </div>
+  
+  <div class="note tip">
+    <span class="ni">💡</span>
+    <span><strong>قاعدة المبرمج المحترف:</strong> إذا كان حجم المتغير أكبر من المؤشر (أكبر من 8 Bytes مثل الـ `string` أو الـ `classes`)، قم بتمريره دائماً بالمرجعية `const type&amp;` لتحسين الأداء.</span>
+  </div>
+
+  <div class="pgf"><span class="pga">Eng. Osman Taher — Aswany</span><span class="pgn">PAGE 32</span></div>
+</div>
+
+<!-- STREAMING_CHUNK:Adding Chapter 6: Object-Oriented Programming (OOP)... -->
+<!-- ══════════════════ CH 6: OOP IN C++ ══════════════════ -->
+<div class="cp">
+  <div class="pgh"><span class="pgch">الفصل السادس ● البرمجة الكائنية (OOP)</span><span class="pgbr">Aswany ✦ Eng. Osman Taher</span></div>
+  <div class="cho">
+    <div class="chnum">CHAPTER 06 — OBJECT-ORIENTED PROGRAMMING</div>
+    <div class="chtitle">البرمجة الكائنية (OOP)<br>Classes, Objects & Inheritance</div>
+    <div class="chdesc">البرمجة الكائنية هي نموذج برمجي يعتمد على تمثيل الأشياء الحقيقية كـ "كائنات" (Objects) تمتلك خصائص (Attributes) وسلوكيات (Methods). هذا النموذج يسهل صيانة الكود وتطوير الأنظمة المعقدة.</div>
+  </div>
+
+  <h2 class="sec">6.1 الفئات (Classes) والكائنات (Objects)</h2>
+  <div class="def">
+    <div class="def-t">📐 المفهوم الأساسي</div>
+    <p class="body">الـ <strong>Class (الفئة)</strong> هو المخطط الهندسي (Blueprint). بينما الـ <strong>Object (الكائن)</strong> هو النسخة الحقيقية المصنوعة من هذا المخطط. <br>مثال: "السيارة" هي Class، بينما "سيارتك التويوتا السوداء" هي Object.</p>
+  </div>
+
+  <div class="two">
+    <div class="card teal">
+      <div class="card-t">🔒 محددات الوصول (Access Specifiers)</div>
+      <div class="chk"><span class="chki">✦</span><div><code style="color:var(--teal-dd);font-weight:bold;">private:</code> لا يمكن الوصول إليها إلا من داخل الكلاس (الوضع الافتراضي).</div></div>
+      <div class="chk"><span class="chki">✦</span><div><code style="color:var(--teal-dd);font-weight:bold;">public:</code> يمكن الوصول إليها من أي مكان في البرنامج.</div></div>
+      <div class="chk"><span class="chki">✦</span><div><code style="color:var(--teal-dd);font-weight:bold;">protected:</code> مثل private لكن يمكن للـ Classes الوارثة الوصول إليها.</div></div>
+    </div>
+    <div class="card amber">
+      <div class="card-t" style="color:#92400e;">🏗️ الباني (Constructor)</div>
+      <p style="font-size:10pt;color:#374151;">دالة خاصة تحمل نفس اسم الـ Class ولا تُرجع قيمة. تُستدعى تلقائياً <strong>مرة واحدة فقط</strong> عند إنشاء الكائن (Object) لتهيئة المتغيرات الأولية.</p>
+    </div>
+  </div>
+
+  <h2 class="sec">6.2 مثال عملي: التغليف (Encapsulation)</h2>
+  <div class="note info">
+    <span class="ni">💡</span>
+    <span><strong>Best Practice:</strong> اجعل جميع المتغيرات (Attributes) من النوع <code>private</code> لحمايتها، ووفر دوال <code>public</code> (Getters & Setters) للتعامل معها. هذا هو جوهر مبدأ "التغليف".</span>
+  </div>
+
+  <div class="uml-wrap">
+    <div class="uml-header">
+      <span class="uml-lang">C++ Code</span>
+      <span class="uml-tool">BankAccount.cpp</span>
+    </div>
+    <div class="uml-body"><pre>
+<span class="uk">#include</span> <span class="ua">&lt;iostream&gt;</span>
+<span class="uk">using namespace</span> <span class="uc">std</span>;
+
+<span class="uk">class</span> <span class="uc">BankAccount</span> {
+<span class="uk">private</span>:
+    <span class="ucm">// المتغيرات محمية لا يمكن تعديلها من الخارج مباشرة</span>
+    <span class="uk">string</span> ownerName;
+    <span class="uk">double</span> balance;
+
+<span class="uk">public</span>:
+    <span class="ucm">// Constructor: يُهيئ الحساب عند إنشائه</span>
+    <span class="us">BankAccount</span>(<span class="uk">string</span> name, <span class="uk">double</span> initialBalance) {
+        ownerName = name;
+        balance = initialBalance;
+    }
+
+    <span class="ucm">// Setter: طريقة آمنة لإيداع المال</span>
+    <span class="uk">void</span> <span class="us">deposit</span>(<span class="uk">double</span> amount) {
+        <span class="uk">if</span> (amount &gt; <span class="un">0</span>) {
+            balance += amount;
+        }
+    }
+
+    <span class="ucm">// Getter: لقراءة الرصيد فقط دون تعديله</span>
+    <span class="uk">double</span> <span class="us">getBalance</span>() <span class="uk">const</span> { 
+        <span class="uk">return</span> balance; 
+    }
+};
+
+<span class="uk">int</span> <span class="us">main</span>() {
+    <span class="ucm">// إنشاء كائن (Object) من الفئة BankAccount</span>
+    <span class="uc">BankAccount</span> myAccount(<span class="ua">"Ezzeldin"</span>, <span class="un">1000.0</span>);
+
+    myAccount.<span class="us">deposit</span>(<span class="un">500.0</span>); <span class="ucm">// إيداع آمن عبر الدالة</span>
+    <span class="us">cout</span> &lt;&lt; <span class="ua">"Balance: $"</span> &lt;&lt; myAccount.<span class="us">getBalance</span>() &lt;&lt; <span class="us">endl</span>;
+    
+    <span class="ucm">// myAccount.balance = 5000; // ❌ خطأ برمجي: balance هو private</span>
+
+    <span class="uk">return</span> <span class="un">0</span>;
+}</pre>
+    </div>
+  </div>
+
+  <h2 class="sec">6.3 الوراثة (Inheritance) وتعدد الأشكال (Polymorphism)</h2>
+  <p class="body">الوراثة تسمح لك بإنشاء فئة جديدة (Derived Class) تأخذ كل خصائص فئة موجودة (Base Class) وتضيف عليها. هذا يقلل تكرار الكود بشكل هائل.</p>
+
+  <div class="uml-wrap">
+    <div class="uml-header">
+      <span class="uml-lang">C++ Code</span>
+      <span class="uml-tool">inheritance.cpp</span>
+    </div>
+    <div class="uml-body"><pre>
+<span class="ucm">// الفئة الأساسية (الأب)</span>
+<span class="uk">class</span> <span class="uc">Animal</span> {
+<span class="uk">public</span>:
+    <span class="uk">string</span> name;
+    
+    <span class="us">Animal</span>(<span class="uk">string</span> n) { name = n; }
+    
+    <span class="ucm">// كلمة virtual تسمح للفئات الأبناء بإعادة كتابة الدالة (Overriding)</span>
+    <span class="uk">virtual void</span> <span class="us">makeSound</span>() <span class="uk">const</span> {
+        <span class="us">cout</span> &lt;&lt; <span class="ua">"Some generic animal sound"</span> &lt;&lt; <span class="us">endl</span>;
+    }
+};
+
+<span class="ucm">// الفئة المشتقة (الابن) ترث من Animal</span>
+<span class="uk">class</span> <span class="uc">Dog</span> : <span class="uk">public</span> <span class="uc">Animal</span> {
+<span class="uk">public</span>:
+    <span class="ucm">// استدعاء باني الأب</span>
+    <span class="us">Dog</span>(<span class="uk">string</span> n) : <span class="us">Animal</span>(n) {}
+
+    <span class="ucm">// إعادة تعريف السلوك (Polymorphism)</span>
+    <span class="uk">void</span> <span class="us">makeSound</span>() <span class="uk">const override</span> {
+        <span class="us">cout</span> &lt;&lt; name &lt;&lt; <span class="ua">" says: Woof! Woof!"</span> &lt;&lt; <span class="us">endl</span>;
+    }
+};
+
+<span class="uk">int</span> <span class="us">main</span>() {
+    <span class="uc">Dog</span> myDog(<span class="ua">"Rex"</span>);
+    myDog.<span class="us">makeSound</span>(); <span class="ucm">// النتيجة: Rex says: Woof! Woof!</span>
+    
+    <span class="uk">return</span> <span class="un">0</span>;
+}</pre>
+    </div>
+  </div>
+
+  <div class="note warn">
+    <span class="ni">⚠️</span>
+    <span><strong>تحذير الذاكرة:</strong> إذا استخدمت <code>virtual functions</code> في كلاس، يجب دائماً أن تجعل الـ <code>Destructor (الهادم)</code> من النوع <code>virtual</code> لتجنب تسرب الذاكرة (Memory Leaks) عند حذف الكائنات المشتقة.</span>
+  </div>
+
+  <div class="pgf"><span class="pga">Eng. Osman Taher — Aswany</span><span class="pgn">PAGE 40</span></div>
+</div>
+
+<!-- STREAMING_CHUNK:Adding Chapter 7: STL and Back Cover... -->
+<!-- ══════════════════ CH 7: STL (VECTORS & STRINGS) ══════════════════ -->
+<div class="cp">
+  <div class="pgh"><span class="pgch">الفصل السابع ● مكتبة القوالب القياسية (STL)</span><span class="pgbr">Aswany ✦ Eng. Osman Taher</span></div>
+  <div class="cho">
+    <div class="chnum">CHAPTER 07 — STANDARD TEMPLATE LIBRARY</div>
+    <div class="chtitle">مكتبة القوالب القياسية<br>STL: Vectors & Strings</div>
+    <div class="chdesc">الـ STL هي الكنز الحقيقي لمبرمجي C++. توفر هياكل بيانات (Containers) وخوارزميات جاهزة ومحسنة للأداء، مما يغنيك عن "إعادة اختراع العجلة" وإدارة الذاكرة يدوياً بالطرق القديمة.</div>
+  </div>
+
+  <h2 class="sec">7.1 المصفوفات الديناميكية (std::vector)</h2>
+  <div class="two">
+    <div class="card rose">
+      <div class="card-t" style="color:#9f1239;">❌ المصفوفات القديمة (C-Arrays)</div>
+      <p style="font-size:10pt;color:#374151;">حجمها ثابت لا يتغير بعد الإنشاء، وتمريرها للدوال معقد، ولا تحمي من أخطاء تجاوز الحدود (Buffer Overflow).</p>
+    </div>
+    <div class="card teal">
+      <div class="card-t">✅ الـ Vector (C++ الحديثة)</div>
+      <p style="font-size:10pt;color:#374151;">مصفوفة ديناميكية تتمدد وتتقلص تلقائياً. تدير الذاكرة بنفسها، وتأتي مع دوال جاهزة لمعرفة الحجم وإضافة/حذف العناصر.</p>
+    </div>
+  </div>
+
+  <div class="uml-wrap">
+    <div class="uml-header">
+      <span class="uml-lang">C++ Code</span>
+      <span class="uml-tool">vectors.cpp</span>
+    </div>
+    <div class="uml-body"><pre>
+<span class="uk">#include</span> <span class="ua">&lt;iostream&gt;</span>
+<span class="uk">#include</span> <span class="ua">&lt;vector&gt;</span> <span class="ucm">// استدعاء مكتبة الفيكتور</span>
+<span class="uk">using namespace</span> <span class="uc">std</span>;
+
+<span class="uk">int</span> <span class="us">main</span>() {
+    <span class="ucm">// 1. تعريف Vector من الأرقام الصحيحة</span>
+    <span class="uc">vector</span>&lt;<span class="uk">int</span>&gt; numbers = {<span class="un">10</span>, <span class="un">20</span>, <span class="un">30</span>};
+
+    <span class="ucm">// 2. إضافة عناصر جديدة في النهاية (ديناميكياً)</span>
+    numbers.<span class="us">push_back</span>(<span class="un">40</span>);
+    numbers.<span class="us">push_back</span>(<span class="un">50</span>);
+
+    <span class="us">cout</span> &lt;&lt; <span class="ua">"Size: "</span> &lt;&lt; numbers.<span class="us">size</span>() &lt;&lt; <span class="us">endl</span>; <span class="ucm">// النتيجة: 5</span>
+
+    <span class="ucm">// 3. الممارسة الأفضل (Best Practice) للدوران على العناصر</span>
+    <span class="ucm">// استخدام Range-based for loop مع المرجعية الثابتة (const reference) لمنع النسخ البطيء</span>
+    <span class="us">cout</span> &lt;&lt; <span class="ua">"Elements: "</span>;
+    <span class="uk">for</span> (<span class="uk">const auto</span>&amp; num : numbers) {
+        <span class="us">cout</span> &lt;&lt; num &lt;&lt; <span class="ua">" "</span>;
+    }
+    <span class="us">cout</span> &lt;&lt; <span class="us">endl</span>;
+
+    <span class="uk">return</span> <span class="un">0</span>;
+}</pre>
+    </div>
+  </div>
+
+  <h2 class="sec">7.2 التعامل الآمن مع النصوص (std::string)</h2>
+  <p class="body">انسَ أمر الـ <code>char arrays</code> المعقدة في لغة C. فئة <code>std::string</code> في C++ هي كائن (Object) يدير ذاكرة النص تلقائياً ويوفر طرقاً سهلة للدمج، البحث، والقص.</p>
+
+  <div class="uml-wrap">
+    <div class="uml-header">
+      <span class="uml-lang">C++ Code</span>
+      <span class="uml-tool">strings.cpp</span>
+    </div>
+    <div class="uml-body"><pre>
+<span class="uk">#include</span> <span class="ua">&lt;iostream&gt;</span>
+<span class="uk">#include</span> <span class="ua">&lt;string&gt;</span>
+<span class="uk">using namespace</span> <span class="uc">std</span>;
+
+<span class="uk">int</span> <span class="us">main</span>() {
+    <span class="uk">string</span> firstName = <span class="ua">"Ezzeldin"</span>;
+    <span class="uk">string</span> lastName = <span class="ua">"Muhammed"</span>;
+
+    <span class="ucm">// 1. الدمج المباشر بـ (+) بدلاً من دوال strcat القديمة</span>
+    <span class="uk">string</span> fullName = firstName + <span class="ua">" "</span> + lastName;
+    
+    <span class="us">cout</span> &lt;&lt; <span class="ua">"Name: "</span> &lt;&lt; fullName &lt;&lt; <span class="us">endl</span>;
+    <span class="us">cout</span> &lt;&lt; <span class="ua">"Length: "</span> &lt;&lt; fullName.<span class="us">length</span>() &lt;&lt; <span class="ua">" chars"</span> &lt;&lt; <span class="us">endl</span>;
+
+    <span class="ucm">// 2. الحصول على جزء من النص (Substring)</span>
+    <span class="ucm">// اقتطاع 8 حروف ابتداءً من الدليل (Index) رقم 0</span>
+    <span class="uk">string</span> firstOnly = fullName.<span class="us">substr</span>(<span class="un">0</span>, <span class="un">8</span>); 
+    <span class="us">cout</span> &lt;&lt; <span class="ua">"First Name extracted: "</span> &lt;&lt; firstOnly &lt;&lt; <span class="us">endl</span>;
+
+    <span class="uk">return</span> <span class="un">0</span>;
+}</pre>
+    </div>
+  </div>
+
+  <div class="note tip">
+    <span class="ni">🎯</span>
+    <span><strong>قاعدة ذهبية في Modern C++:</strong> استخدم دائماً <code>std::vector</code> للمصفوفات، و <code>std::string</code> للنصوص. لا تلجأ للـ Raw Arrays أو المؤشرات التقليدية <code>*char</code> إلا إذا كنت تبرمج أنظمة مدمجة (Embedded) بذاكرة محدودة جداً وتعرف تماماً ما تفعله.</span>
+  </div>
+
+  <div class="pgf"><span class="pga">Eng. Osman Taher — Aswany</span><span class="pgn">PAGE 52</span></div>
+</div>
+
+<!-- ══════════════════ BACK COVER ══════════════════ -->
+<div class="bc">
+  <div style="position:absolute;width:600px;height:600px;border-radius:50%;background:rgba(255,255,255,0.03);bottom:-200px;right:-150px;"></div>
+  <div style="position:absolute;top:0;left:0;width:8px;height:100%;background:linear-gradient(to bottom,#fde68a,#34d399,#fde68a);"></div>
+
+  <div style="width:84px;height:84px;background:rgba(255,255,255,0.1);border:2px solid rgba(255,255,255,0.2);border-radius:20px;display:flex;align-items:center;justify-content:center;margin-bottom:22px;box-shadow:0 0 60px rgba(13,148,136,0.4);">
+    <span style="font-family:'IBM Plex Mono',monospace;font-size:36px;font-weight:700;color:#fde68a;">&lt;/&gt;</span>
+  </div>
+
+  <div style="font-size:30pt;font-weight:900;color:#fde68a;letter-spacing:2px;margin-bottom:6px;font-family:'Cairo',sans-serif;">Aswany</div>
+  <div style="width:70px;height:3px;background:#34d399;border-radius:3px;margin:14px auto 20px;"></div>
+  <div style="font-size:18pt;font-weight:900;color:white;margin-bottom:6px;font-family:'Cairo',sans-serif;">أساسيات C++ · OOP · STL</div>
+  <div style="font-size:12pt;color:#99f6e4;margin-bottom:36px;font-family:'Cairo',sans-serif;">الدليل العربي الشامل — Arabic Series Vol. 3</div>
+
+  <div style="display:flex;gap:20px;margin-bottom:40px;flex-wrap:wrap;justify-content:center;">
+    <div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-radius:12px;padding:14px 22px;text-align:center;">
+      <div style="font-size:24pt;font-weight:900;color:#fde68a;">07</div>
+      <div style="font-size:9pt;color:rgba(255,255,255,0.6);">فصول مكثفة</div>
+    </div>
+    <div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-radius:12px;padding:14px 22px;text-align:center;">
+      <div style="font-size:24pt;font-weight:900;color:#fde68a;">OOP</div>
+      <div style="font-size:9pt;color:rgba(255,255,255,0.6);">البرمجة الكائنية</div>
+    </div>
+    <div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-radius:12px;padding:14px 22px;text-align:center;">
+      <div style="font-size:24pt;font-weight:900;color:#fde68a;">STL</div>
+      <div style="font-size:9pt;color:rgba(255,255,255,0.6);">القوالب القياسية</div>
+    </div>
+    <div style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-radius:12px;padding:14px 22px;text-align:center;">
+      <div style="font-size:24pt;font-weight:900;color:#fde68a;">C++17</div>
+      <div style="font-size:9pt;color:rgba(255,255,255,0.6);">Best Practices</div>
+    </div>
+  </div>
+
+  <div style="background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:24px 44px;text-align:center;margin-bottom:24px;max-width: 600px;">
+    <div style="font-size:12pt;color:white;line-height:1.8;margin-bottom:15px;font-family:'Cairo',sans-serif;">
+      "إتقان C++ لا يأتي من حفظ الأكواد، بل من فهم كيفية إدارة الذاكرة والتفكير بمنطقية. هذا المرجع وضع قدمك على بداية الطريق الاحترافي."
+    </div>
+    <div style="font-size:9pt;color:#34d399;letter-spacing:3px;font-family:'IBM Plex Mono',monospace;margin-bottom:8px;">AUTHOR — المؤلف</div>
+    <div style="font-size:22pt;font-weight:900;color:white;font-family:'Cairo',sans-serif;">Eng. Osman Taher</div>
+    <div style="font-size:10pt;color:rgba(255,255,255,0.4);margin-top:5px;font-family:'IBM Plex Mono',monospace;">✦ Aswany — Arabic Tech Books Series</div>
+  </div>
+
+  <div style="font-size:10pt;color:rgba(255,255,255,0.25);font-family:'IBM Plex Mono',monospace;">
+    © Aswany · Eng. Osman Taher · All Rights Reserved
+  </div>
+</div>
+
+</body>
+</html>

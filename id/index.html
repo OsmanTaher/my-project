@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>محلل الرقم القومي المصري - واجهة احترافية</title>
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Cairo Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            font-family: 'Cairo', sans-serif; 
+            background: radial-gradient(circle at top right, #f1f5f9 0%, #f8fafc 100%);
+        }
+        /* Custom smooth transition */
+        .transition-all-300 {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    </style>
+</head>
+<body class="text-slate-800 min-h-screen p-4 md:p-8 flex items-center justify-center">
+
+    <div class="max-w-6xl w-full mx-auto space-y-6">
+        
+        <!-- Main Grid Layout -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            
+            <!-- Left Side: ID Mockup & Stats (7 Columns) -->
+            <div class="lg:col-span-7 space-y-6">
+                
+                <!-- Premium ID Card Mockup (Exact representation of image_2568ea) -->
+                <div class="relative bg-gradient-to-l from-[#e2f1ee] via-[#fbf9eb] to-[#e4f2f5] border border-[#d2e7e4] rounded-[2rem] p-6 shadow-md shadow-teal-900/5 overflow-hidden h-72 flex flex-col justify-between transition-all-300 hover:shadow-lg">
+                    
+                    <!-- Top Left Coin Watermark Circle -->
+                    <div class="absolute top-6 left-6 w-14 h-14 rounded-full border border-white/60 bg-gradient-to-br from-white/30 to-white/5 flex items-center justify-center shadow-inner">
+                        <div class="w-10 h-10 rounded-full border border-white/40 bg-white/10"></div>
+                    </div>
+                    
+                    <!-- Top Right Official Ministry Text Header -->
+                    <div class="text-right leading-tight z-10">
+                        <p class="font-extrabold text-[#0f172a] text-base tracking-wide">جمهورية مصر العربية</p>
+                        <p class="text-[11px] text-[#475569] font-semibold mt-1">وزارة الداخلية</p>
+                        <p class="text-[11px] text-[#475569] font-semibold">قطاع الأحوال المدنية</p>
+                    </div>
+
+                    <!-- Lower Fields Section & Portrait Box -->
+                    <div class="relative grid grid-cols-12 gap-2 items-end z-10 h-full mt-2">
+                        
+                        <!-- Left & Center: Extracted Fields Area -->
+                        <div class="col-span-8 flex flex-col justify-end space-y-4 h-full pr-2 text-right">
+                            
+                            <!-- First Row: Gender on Left, DOB on Right -->
+                            <div class="grid grid-cols-2 gap-4">
+                                <!-- Gender Column -->
+                                <div>
+                                    <span class="text-[#64748b] text-[11px] font-bold block mb-1">النوع (الجنس):</span>
+                                    <span id="card-gender" class="font-extrabold text-slate-800 text-sm tracking-wide">--</span>
+                                </div>
+                                <!-- Birth Date Column -->
+                                <div>
+                                    <span class="text-[#64748b] text-[11px] font-bold block mb-1">تاريخ الميلاد:</span>
+                                    <span id="card-dob" class="font-extrabold text-slate-800 text-sm tracking-widest">---- / -- / --</span>
+                                </div>
+                            </div>
+
+                            <!-- Second Row: Governorate of Birth -->
+                            <div>
+                                <span class="text-[#64748b] text-[11px] font-bold block mb-1">محل الميلاد (المحافظة):</span>
+                                <span id="card-gov" class="font-extrabold text-slate-800 text-sm tracking-wide">--</span>
+                            </div>
+                        </div>
+
+                        <!-- Right: Avatar Image Container -->
+                        <div class="col-span-4 flex justify-end">
+                            <div class="w-28 h-36 bg-white/60 border border-slate-200/80 rounded-2xl flex items-center justify-center shadow-inner overflow-hidden backdrop-blur-sm">
+                                <svg class="w-16 h-16 text-slate-400/80" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5-4-8-4z"/>
+                                </svg>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Exact Representation of Statistics Panel (image_2568ea) -->
+                <div class="bg-white border border-slate-100 rounded-[2rem] p-6 shadow-sm shadow-slate-200/50">
+                    <h3 class="text-base font-extrabold text-[#0f172a] mb-5 border-b border-slate-100 pb-3">الإحصائيات المستخرجة والبيانات الحسابية</h3>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                        
+                        <!-- Real-time Precise Age -->
+                        <div class="bg-[#f8fafc] p-4 rounded-2xl text-center border border-slate-100/80 transition-all duration-200 hover:shadow-md hover:shadow-slate-100">
+                            <span class="text-xs text-[#64748b] font-bold block mb-2">العمر الدقيق</span>
+                            <span id="stat-age" class="text-xs font-black text-emerald-600 tracking-wide block h-5">--</span>
+                        </div>
+                        
+                        <!-- Century of Birth -->
+                        <div class="bg-[#f8fafc] p-4 rounded-2xl text-center border border-slate-100/80 transition-all duration-200 hover:shadow-md hover:shadow-slate-100">
+                            <span class="text-xs text-[#64748b] font-bold block mb-2">قرن الميلاد</span>
+                            <span id="stat-century" class="text-sm font-black text-slate-700 block h-5">--</span>
+                        </div>
+                        
+                        <!-- Serial Counter Sequence -->
+                        <div class="bg-[#f8fafc] p-4 rounded-2xl text-center border border-slate-100/80 transition-all duration-200 hover:shadow-md hover:shadow-slate-100">
+                            <span class="text-xs text-[#64748b] font-bold block mb-2">التسلسل الرقمي</span>
+                            <span id="stat-sequence" class="text-sm font-black text-slate-700 block h-5">--</span>
+                        </div>
+                        
+                        <!-- Structural Validity Validation Indicator -->
+                        <div class="bg-[#f8fafc] p-4 rounded-2xl text-center border border-slate-100/80 transition-all duration-200 hover:shadow-md hover:shadow-slate-100">
+                            <span class="text-xs text-[#64748b] font-bold block mb-2">صلاحية الصيغة</span>
+                            <span id="stat-validity" class="text-xs font-black text-rose-500 block h-5">تحقق مفقود</span>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Right Side: Controller panel & Guide (5 Columns) -->
+            <div class="lg:col-span-5 space-y-6">
+                
+                <!-- Input Panel -->
+                <div class="bg-white border border-slate-100 rounded-[2rem] p-6 shadow-sm shadow-slate-200/50 space-y-5">
+                    <div>
+                        <h3 class="text-base font-extrabold text-[#0f172a] mb-1">أدخل الرقم القومي</h3>
+                        <p class="text-xs text-slate-400 leading-relaxed">اكتب الرقم القومي المكون من 14 رقماً بدقة (من اليسار إلى اليمين) لبدء التفكيك الفوري.</p>
+                    </div>
+                    
+                    <!-- Text input and counter -->
+                    <div class="relative">
+                        <input type="text" id="national-id-input" maxlength="14" placeholder="29504150102546" 
+                               class="w-full tracking-[0.2em] text-left border-2 border-slate-100 bg-[#f8fafc] rounded-2xl py-4 pl-6 pr-16 text-xl font-bold focus:outline-none focus:border-teal-500 focus:bg-white transition-all duration-200 shadow-inner text-slate-700">
+                        <span id="digit-counter" class="absolute top-1/2 -translate-y-1/2 right-4 text-[10px] font-extrabold bg-slate-200 text-slate-600 px-2.5 py-1 rounded-full">0 / 14</span>
+                    </div>
+
+                    <!-- Action buttons -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <!-- Magic Random Generator Button -->
+                        <button id="btn-generate-random" 
+                                class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3.5 px-4 rounded-2xl flex items-center justify-center gap-2 transition-all duration-200 border border-slate-200/60 text-sm">
+                            <svg class="w-4 h-4 text-amber-500" fill="currentColor" viewBox="0 0 20 20"><path d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 11-2 0v-1a1 1 0 112 0v1zM5.05 6.464a1 1 0 10-1.414-1.414l-.707.707a1 1 0 101.414 1.414l.707-.707zM10 14a4 4 0 100-8 4 4 0 000 8z"/></svg>
+                            رقم تجريبي عشوائي
+                        </button>
+
+                        <!-- Save Record Button -->
+                        <button id="btn-save" disabled
+                                class="w-full bg-slate-100 text-slate-400 font-bold py-3.5 px-4 rounded-2xl flex items-center justify-center gap-2 transition-all duration-200 cursor-not-allowed text-sm">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/></svg>
+                            حفظ بالسجل المحلي
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Guidance Guidelines Panel -->
+                <div class="bg-white border border-slate-100 rounded-[2rem] p-6 shadow-sm shadow-slate-200/50 space-y-3">
+                    <h4 class="text-sm font-bold text-[#0f172a] flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 bg-teal-500 rounded-full"></span> كيف يتم قراءة الرقم القومي؟
+                    </h4>
+                    <ul class="text-xs text-slate-500 space-y-3 leading-relaxed pr-1">
+                        <li><span class="font-extrabold text-rose-500">الرقم 1 (من اليسار):</span> القرن (2 للمواليد 1900-1999، 3 للمواليد 2000-2099).</li>
+                        <li><span class="font-extrabold text-emerald-500">الأرقام 2-7:</span> تاريخ الميلاد بالكامل (سنة، شهر، يوم).</li>
+                        <li><span class="font-extrabold text-blue-500">الأرقام 8-9:</span> كود محافظة الميلاد (مثل: 01 القاهرة، 21 الجيزة).</li>
+                        <li><span class="font-extrabold text-purple-500">الأرقام 10-13:</span> الرقم المسلسل بالمحافظة (الرقم 13 فردي للذكور وزوجي للإناث).</li>
+                        <li><span class="font-extrabold text-amber-500">الرقم 14:</span> رقم التحقق الذكي للحماية من الأخطاء والتزوير.</li>
+                    </ul>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Saved Archives Database Logs Section -->
+        <div class="bg-white border border-slate-100 rounded-[2rem] p-6 shadow-sm shadow-slate-200/50">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-4 mb-4">
+                <h3 class="text-base font-extrabold text-[#0f172a] flex items-center gap-2">
+                    <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    سجل الاستعلامات والأرقام المحفوظة
+                </h3>
+                <button id="btn-clear-history" class="text-xs font-bold text-rose-500 hover:text-rose-700 transition-colors hidden">حذف السجل بالكامل</button>
+            </div>
+            
+            <!-- Empty state element -->
+            <div id="history-empty" class="text-center py-12 space-y-3">
+                <div class="w-16 h-16 bg-[#f8fafc] border rounded-2xl flex items-center justify-center mx-auto shadow-inner">
+                    <svg class="w-8 h-8 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.89 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.89 8-4M4 7c0-2.21 3.582-4 8-4s8 1.89 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.89-8-4"/></svg>
+                </div>
+                <p class="text-sm font-bold text-slate-500">سجل البحث فارغ تماماً</p>
+                <p class="text-xs text-slate-400">عند قيامك بالتحقق من أي رقم وحفظه، سيظهر هنا كأرشيف دائم.</p>
+            </div>
+
+            <!-- Table Logs Container -->
+            <div id="history-table-container" class="overflow-x-auto hidden rounded-xl border border-slate-100">
+                <table class="w-full text-sm text-right text-slate-600">
+                    <thead class="text-xs text-[#64748b] bg-[#f8fafc] border-b border-slate-100">
+                        <tr>
+                            <th class="px-6 py-4 font-bold">الرقم القومي</th>
+                            <th class="px-6 py-4 font-bold">تاريخ الميلاد</th>
+                            <th class="px-6 py-4 font-bold">المحافظة</th>
+                            <th class="px-6 py-4 font-bold">النوع</th>
+                            <th class="px-6 py-4 font-bold text-center">إجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="history-rows" class="divide-y divide-slate-50">
+                        <!-- Dynamic Records Insertion -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Core Parsing Logic Script -->
+    <script>
+        // Official Governorate Mapping Table
+        const governorates = {
+            "01": "القاهرة", "02": "الإسكندرية", "03": "بورسعيد", "04": "السويس",
+            "11": "دمياط", "12": "الدقهلية", "13": "الشرقية", "14": "القليوبية",
+            "15": "كفر الشيخ", "16": "الغربية", "17": "المنوفية", "18": "البحيرة",
+            "19": "الإسماعيلية", "21": "الجيزة", "22": "بني سويف", "23": "الفيوم",
+            "24": "المنيا", "25": "أسيوط", "26": "سوهاج", "27": "قنا",
+            "28": "أسوان", "29": "الأقصر", "31": "البحر الأحمر", "32": "الوادي الجديد",
+            "33": "مطروح", "34": "شمال سيناء", "35": "جنوب سيناء", "88": "خارج الجمهورية"
+        };
+
+        // DOM elements cache
+        const inputEl = document.getElementById('national-id-input');
+        const counterEl = document.getElementById('digit-counter');
+        const btnSave = document.getElementById('btn-save');
+        const btnRandom = document.getElementById('btn-generate-random');
+        
+        const cardDob = document.getElementById('card-dob');
+        const cardGender = document.getElementById('card-gender');
+        const cardGov = document.getElementById('card-gov');
+
+        const statAge = document.getElementById('stat-age');
+        const statCentury = document.getElementById('stat-century');
+        const statSequence = document.getElementById('stat-sequence');
+        const statValidity = document.getElementById('stat-validity');
+
+        const historyEmpty = document.getElementById('history-empty');
+        const historyContainer = document.getElementById('history-table-container');
+        const historyRows = document.getElementById('history-rows');
+        const btnClearAll = document.getElementById('btn-clear-history');
+
+        let parsedDataCache = null;
+
+        // Init Application
+        window.addEventListener('DOMContentLoaded', () => {
+            loadHistory();
+            inputEl.addEventListener('input', handleIdInput);
+            btnSave.addEventListener('click', saveToLocalStorage);
+            btnRandom.addEventListener('click', generateRandomID);
+            btnClearAll.addEventListener('click', clearAllHistory);
+        });
+
+        // Trigger input validation and state
+        function handleIdInput(e) {
+            let val = e.target.value.replace(/\D/g, ''); // Numbers only
+            if (val.length > 14) val = val.substring(0, 14);
+            e.target.value = val;
+
+            counterEl.textContent = `${val.length} / 14`;
+
+            if (val.length === 14) {
+                const evaluation = parseEgyptianID(val);
+                if (evaluation.isValid) {
+                    updateUI(evaluation.data);
+                    enableSaveButton(true);
+                    parsedDataCache = evaluation.data;
+                } else {
+                    invalidateUI(evaluation.error);
+                    enableSaveButton(false);
+                }
+            } else {
+                resetUI();
+                enableSaveButton(false);
+            }
+        }
+
+        // Generate dynamic mock National ID for immediate testing
+        function generateRandomID() {
+            const centuryOption = Math.random() > 0.5 ? '2' : '3';
+            
+            // Generate valid random date values
+            const year = String(Math.floor(Math.random() * 100)).padStart(2, '0');
+            const month = String(Math.floor(Math.random() * 12) + 1).padStart(2, '0');
+            const day = String(Math.floor(Math.random() * 28) + 1).padStart(2, '0'); // Safe day range
+            
+            // Random valid Governorate key
+            const govKeys = Object.keys(governorates);
+            const randomGov = govKeys[Math.floor(Math.random() * govKeys.length)];
+            
+            // Random sequence & control digits
+            const sequenceNum = String(Math.floor(Math.random() * 9999) + 1).padStart(4, '0');
+            const checkDigit = String(Math.floor(Math.random() * 10));
+
+            const generatedID = `${centuryOption}${year}${month}${day}${randomGov}${sequenceNum}${checkDigit}`;
+            
+            inputEl.value = generatedID;
+            inputEl.dispatchEvent(new Event('input'));
+        }
+
+        // Full Parsing and Age Calculation Algorithm (Context: year 2026)
+        function parseEgyptianID(idStr) {
+            const centuryDigit = idStr[0];
+            if (centuryDigit !== '2' && centuryDigit !== '3') {
+                return { isValid: false, error: 'القرن غير مدعوم' };
+            }
+
+            const century = centuryDigit === '2' ? 1900 : 2000;
+            const year = parseInt(idStr.substring(1, 3));
+            const month = parseInt(idStr.substring(3, 5));
+            const day = parseInt(idStr.substring(5, 7));
+            
+            const fullYear = century + year;
+            
+            // Date Integrity Check
+            const birthDate = new Date(fullYear, month - 1, day);
+            if (birthDate.getFullYear() !== fullYear || birthDate.getMonth() !== (month - 1) || birthDate.getDate() !== day) {
+                return { isValid: false, error: 'تاريخ غير صالح' };
+            }
+
+            // Governorate Integrity Check
+            const govCode = idStr.substring(7, 9);
+            const govName = governorates[govCode];
+            if (!govName) {
+                return { isValid: false, error: 'محافظة غير صالحة' };
+            }
+
+            // Gender Check (13th digit index 12)
+            const genderDigit = parseInt(idStr[12]);
+            const gender = (genderDigit % 2 === 0) ? 'أنثى' : 'ذكر';
+
+            // Sequence digit extraction
+            const sequenceNum = idStr.substring(9, 13);
+
+            // Real-time Age Calculation with exact 2026 baseline context
+            const currentDate2026 = new Date(2026, 5, 23); // Today is June 23, 2026
+            let ageY = currentDate2026.getFullYear() - birthDate.getFullYear();
+            let ageM = currentDate2026.getMonth() - birthDate.getMonth();
+            let ageD = currentDate2026.getDate() - birthDate.getDate();
+
+            if (ageD < 0) {
+                ageM--;
+                const prevMonth = new Date(currentDate2026.getFullYear(), currentDate2026.getMonth(), 0).getDate();
+                ageD += prevMonth;
+            }
+            if (ageM < 0) {
+                ageY--;
+                ageM += 12;
+            }
+
+            let ageString = '';
+            if (ageY > 0) ageString += `${ageY} سنة `;
+            if (ageM > 0) ageString += `و${ageM} شهر `;
+            if (ageD > 0 && ageY === 0) ageString += `و${ageD} يوم`;
+            if (ageString === '') ageString = 'مولود اليوم';
+
+            return {
+                isValid: true,
+                data: {
+                    id: idStr,
+                    dobStr: `${fullYear} / ${String(month).padStart(2,'0')} / ${String(day).padStart(2,'0')}`,
+                    centuryStr: centuryDigit === '2' ? '1900' : '2000',
+                    gov: govName,
+                    gender: gender,
+                    sequence: sequenceNum,
+                    ageText: ageString
+                }
+            };
+        }
+
+        // Update UI View Components
+        function updateUI(data) {
+            cardDob.textContent = data.dobStr;
+            cardGender.textContent = data.gender;
+            cardGov.textContent = data.gov;
+
+            statAge.textContent = data.ageText;
+            statCentury.textContent = data.centuryStr;
+            statSequence.textContent = data.sequence;
+            
+            statValidity.textContent = 'صيغة صحيحة';
+            statValidity.className = 'text-xs font-black text-emerald-600 block h-5';
+        }
+
+        // Invalidate UI components on wrong inputs
+        function invalidateUI(errorMsg) {
+            resetUI();
+            statValidity.textContent = errorMsg || 'رقم غير صالح';
+            statValidity.className = 'text-xs font-black text-rose-500 block h-5';
+        }
+
+        // Reset elements back to placeholder states
+        function resetUI() {
+            cardDob.textContent = "---- / -- / --";
+            cardGender.textContent = "--";
+            cardGov.textContent = "--";
+
+            statAge.textContent = "--";
+            statCentury.textContent = "--";
+            statSequence.textContent = "--";
+            statValidity.textContent = "تحقق مفقود";
+            statValidity.className = "text-xs font-black text-rose-500 block h-5";
+        }
+
+        // Toggle state of save button
+        function enableSaveButton(enable) {
+            if (enable) {
+                btnSave.disabled = false;
+                btnSave.className = "w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-3.5 px-4 rounded-2xl flex items-center justify-center gap-2 transition-all duration-200 shadow-md shadow-teal-700/10 cursor-pointer text-sm";
+            } else {
+                btnSave.disabled = true;
+                btnSave.className = "w-full bg-slate-100 text-slate-400 font-bold py-3.5 px-4 rounded-2xl flex items-center justify-center gap-2 transition-all duration-200 cursor-not-allowed text-sm";
+            }
+        }
+
+        // Save records to LocalStorage 
+        function saveToLocalStorage() {
+            if (!parsedDataCache) return;
+            let currentLogs = JSON.parse(localStorage.getItem('eg_id_logs')) || [];
+            
+            if (!currentLogs.some(item => item.id === parsedDataCache.id)) {
+                currentLogs.unshift(parsedDataCache);
+                localStorage.setItem('eg_id_logs', JSON.stringify(currentLogs));
+                loadHistory();
+            }
+            
+            // Clean slate state
+            inputEl.value = '';
+            counterEl.textContent = '0 / 14';
+            resetUI();
+            enableSaveButton(false);
+            parsedDataCache = null;
+        }
+
+        // Pull and display list from LocalStorage
+        function loadHistory() {
+            let currentLogs = JSON.parse(localStorage.getItem('eg_id_logs')) || [];
+            if (currentLogs.length === 0) {
+                historyEmpty.classList.remove('hidden');
+                historyContainer.classList.add('hidden');
+                btnClearAll.classList.add('hidden');
+                return;
+            }
+
+            historyEmpty.classList.add('hidden');
+            historyContainer.classList.remove('hidden');
+            btnClearAll.classList.remove('hidden');
+
+            historyRows.innerHTML = '';
+            currentLogs.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                tr.className = "border-b border-slate-100 hover:bg-slate-50/80 transition-colors";
+                tr.innerHTML = `
+                    <td class="px-6 py-4 font-mono font-bold text-slate-800">${item.id}</td>
+                    <td class="px-6 py-4 text-xs font-semibold text-slate-600">${item.dobStr}</td>
+                    <td class="px-6 py-4 text-xs font-semibold text-slate-600">${item.gov}</td>
+                    <td class="px-6 py-4 text-xs font-semibold text-slate-600">${item.gender}</td>
+                    <td class="px-6 py-4 text-center">
+                        <button onclick="deleteRecord(${index})" class="text-rose-500 hover:text-rose-700 p-2 rounded-xl hover:bg-rose-50 transition-all">
+                            <svg class="w-4 h-4 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-4v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                        </button>
+                    </td>
+                `;
+                historyRows.appendChild(tr);
+            });
+        }
+
+        // Delete entry callback function
+        window.deleteRecord = function(index) {
+            let currentLogs = JSON.parse(localStorage.getItem('eg_id_logs')) || [];
+            currentLogs.splice(index, 1);
+            localStorage.setItem('eg_id_logs', JSON.stringify(currentLogs));
+            loadHistory();
+        };
+
+        // Clear all entries callback function
+        function clearAllHistory() {
+            if (confirm("هل أنت متأكد من رغبتك في حذف جميع السجلات المحفوظة؟")) {
+                localStorage.removeItem('eg_id_logs');
+                loadHistory();
+            }
+        }
+    </script>
+</body>
+</html>

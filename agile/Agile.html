@@ -1,0 +1,1277 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دليل الأجايل التفاعلي ومهندسي البرمجيات</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Tajawal -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Tajawal', sans-serif;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.05);
+        }
+        .dark ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.6);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #6366f1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4f46e5;
+        }
+        /* Card Flip Animation Styles */
+        .flip-card {
+            perspective: 1000px;
+        }
+        .flip-card-inner {
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        .flip-card:hover .flip-card-inner, .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+        .flip-card-front, .flip-card-back {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+        .flip-card-back {
+            transform: rotateY(180deg);
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f5f3ff',
+                            100: '#ede9fe',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            900: '#312e81',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300">
+
+    <!-- Top Reading Progress Bar -->
+    <div id="progress-bar" class="fixed top-0 right-0 h-1.5 bg-brand-500 z-50 transition-all duration-100" style="width: 0%;"></div>
+
+    <!-- Header Navigation -->
+    <header class="sticky top-0 z-40 w-full backdrop-blur-md bg-white/80 dark:bg-slate-900/80 border-b border-slate-200 dark:border-slate-800 transition-colors">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3 space-x-reverse">
+                <span class="p-2 bg-brand-500 text-white rounded-xl shadow-md shadow-brand-500/20">
+                    <svg class="w-6 h-6 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                </span>
+                <div>
+                    <h1 class="font-bold text-lg tracking-tight bg-gradient-to-r from-brand-600 to-indigo-500 bg-clip-text text-transparent dark:from-brand-400 dark:to-indigo-300">أجايل هب | Agile Hub</h1>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">الدليل التفاعلي الشامل لهندسة وإدارة المشاريع</p>
+                </div>
+            </div>
+
+            <!-- Theme Switcher and Quick Tools -->
+            <div class="flex items-center space-x-2 space-x-reverse">
+                <button onclick="toggleDarkMode()" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors" title="تبديل المظهر">
+                    <!-- Sun Icon (shown in dark mode) -->
+                    <svg id="sun-icon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 9h-1m14.072-3.072l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z" />
+                    </svg>
+                    <!-- Moon Icon (shown in light mode) -->
+                    <svg id="moon-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                    </svg>
+                </button>
+                <a href="#assessment-section" class="hidden md:inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-brand-600 hover:bg-brand-700 rounded-xl transition-all shadow-md shadow-brand-500/10">
+                    قيم معرفتك الآن
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- App Container -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            
+            <!-- Right Navigation Sidebar (Desktop sticky) -->
+            <aside class="lg:col-span-1 lg:sticky lg:top-24 h-fit space-y-4 hidden lg:block">
+                <div class="bg-white dark:bg-slate-900 rounded-2xl p-5 border border-slate-200 dark:border-slate-800 shadow-sm">
+                    <h3 class="font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                        فهرس المسار التفاعلي
+                    </h3>
+                    <nav class="space-y-1">
+                        <a href="#intro" class="sidebar-link active flex items-center px-3 py-2.5 rounded-xl text-sm font-medium transition-colors text-brand-600 bg-brand-50 dark:text-brand-400 dark:bg-brand-950/50">
+                            1. المقدمة والأزمة الهندسية
+                        </a>
+                        <a href="#what-is-agile" class="sidebar-link flex items-center px-3 py-2.5 rounded-xl text-sm font-medium transition-colors text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                            2. ما هو الأجايل (محاكاة الـ Sprint)
+                        </a>
+                        <a href="#mindset" class="sidebar-link flex items-center px-3 py-2.5 rounded-xl text-sm font-medium transition-colors text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                            3. عقلية الأجايل وتطبيق "زاد"
+                        </a>
+                        <a href="#manifesto" class="sidebar-link flex items-center px-3 py-2.5 rounded-xl text-sm font-medium transition-colors text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                            4. وثيقة الأجايل وقيمها الأربعة
+                        </a>
+                        <a href="#principles" class="sidebar-link flex items-center px-3 py-2.5 rounded-xl text-sm font-medium transition-colors text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                            5. المبادئ الـ 12 التفصيلية
+                        </a>
+                        <a href="#modern-agile" class="sidebar-link flex items-center px-3 py-2.5 rounded-xl text-sm font-medium transition-colors text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                            6. الأدوار، المصطلحات والـ DevOps
+                        </a>
+                        <a href="#scope-management" class="sidebar-link flex items-center px-3 py-2.5 rounded-xl text-sm font-medium transition-colors text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                            7. زحف النطاق والطلاء بالذهب
+                        </a>
+                        <a href="#assessment-section" class="sidebar-link flex items-center px-3 py-2.5 rounded-xl text-sm font-medium transition-colors text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                            8. التقييم التفاعلي الذاتي
+                        </a>
+                    </nav>
+                </div>
+
+                <!-- Small Info Widget -->
+                <div class="bg-gradient-to-br from-brand-600 to-indigo-700 text-white rounded-2xl p-5 shadow-lg shadow-brand-500/20">
+                    <h4 class="font-bold text-base mb-2">💡 نصيحة مهندس</h4>
+                    <p class="text-xs text-brand-100 leading-relaxed">
+                        الأجايل ليس مجرد منهج تتبعه، بل هو عقلية مرنة تتوقع التغيير في كل مرحلة برمجية وتستفيد منه لصنع منتج أفضل للمستخدم.
+                    </p>
+                </div>
+            </aside>
+
+            <!-- Main Content Area -->
+            <main class="lg:col-span-3 space-y-12">
+                
+                <!-- SECTION 1: INTRODUCTION -->
+                <section id="intro" class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-sm transition-all">
+                    <div class="flex items-center gap-3 mb-6">
+                        <span class="p-2.5 bg-orange-100 dark:bg-orange-950/40 text-orange-600 dark:text-orange-400 rounded-2xl">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                            </svg>
+                        </span>
+                        <div>
+                            <span class="text-xs font-bold text-brand-600 dark:text-brand-400 uppercase tracking-widest">01 / البدايات</span>
+                            <h2 class="text-2xl font-black text-slate-900 dark:text-white">المقدمة والأزمة التي واجهت المطورين</h2>
+                        </div>
+                    </div>
+
+                    <div class="prose prose-slate dark:prose-invert max-w-none space-y-6 leading-relaxed">
+                        <p class="text-slate-600 dark:text-slate-300">
+                            في الماضي، كانت أغلب المشاريع البرمجية والهندسية تُدار بأسلوب صارم وتقليدي يُعرف بنموذج <span class="font-bold text-slate-900 dark:text-white">الشلال (Waterfall Model)</span>. في هذا النموذج، يسير المشروع في خط مستقيم غير قابل للرجوع بسهولة:
+                        </p>
+
+                        <!-- Waterfall Flow Visualization -->
+                        <div class="grid grid-cols-2 md:grid-cols-5 gap-3 my-6">
+                            <div class="bg-slate-100 dark:bg-slate-800 p-3 rounded-xl text-center border border-slate-200 dark:border-slate-700">
+                                <span class="block text-xs text-slate-500 font-mono mb-1">01</span>
+                                <span class="font-bold text-sm text-slate-800 dark:text-slate-200">جمع المتطلبات</span>
+                            </div>
+                            <div class="bg-slate-100 dark:bg-slate-800 p-3 rounded-xl text-center border border-slate-200 dark:border-slate-700">
+                                <span class="block text-xs text-slate-500 font-mono mb-1">02</span>
+                                <span class="font-bold text-sm text-slate-800 dark:text-slate-200">التصميم العريض</span>
+                            </div>
+                            <div class="bg-slate-100 dark:bg-slate-800 p-3 rounded-xl text-center border border-slate-200 dark:border-slate-700">
+                                <span class="block text-xs text-slate-500 font-mono mb-1">03</span>
+                                <span class="font-bold text-sm text-slate-800 dark:text-slate-200">التطوير والبرمجة</span>
+                            </div>
+                            <div class="bg-slate-100 dark:bg-slate-800 p-3 rounded-xl text-center border border-slate-200 dark:border-slate-700">
+                                <span class="block text-xs text-slate-500 font-mono mb-1">04</span>
+                                <span class="font-bold text-sm text-slate-800 dark:text-slate-200">الاختبار والجودة</span>
+                            </div>
+                            <div class="bg-slate-100 dark:bg-slate-800 p-3 rounded-xl text-center border border-slate-200 dark:border-slate-700 col-span-2 md:col-span-1">
+                                <span class="block text-xs text-slate-500 font-mono mb-1">05</span>
+                                <span class="font-bold text-sm text-slate-800 dark:text-slate-200">التسليم النهائي</span>
+                            </div>
+                        </div>
+
+                        <!-- The Crisis Box -->
+                        <div class="bg-red-50 dark:bg-red-950/20 border-r-4 border-red-500 p-5 rounded-2xl space-y-3">
+                            <h4 class="font-bold text-red-800 dark:text-red-400 flex items-center gap-2">
+                                <svg class="w-5 h-5 text-red-500 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                </svg>
+                                الأزمة الحقيقية التي واجهت صناع التكنولوجيا:
+                            </h4>
+                            <p class="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+                                تخيل أنك تبني متجراً إلكترونياً ضخماً. قضيت 6 أشهر في كتابة المتطلبات والتصميم، و 6 أشهر أخرى في البرمجة الصامتة خلف الأبواب المغلقة. وعندما قمت بتسليم المتجر للعميل بعد سنة كاملة، اكتشفت الصدمة الرهيبة:
+                            </p>
+                            <ul class="list-disc list-inside text-sm text-slate-600 dark:text-slate-400 space-y-1 mr-4">
+                                <li>السوق قد تغير تماماً وظهر منافسون جدد بتقنيات أحدث.</li>
+                                <li>عندما عاين العميل البرمجية على أرض الواقع، اكتشف أن فكرته الأصلية لم تكن دقيقة هندسياً وطلب تعديلات جذرية تنسف الكود الذي كتبته بالكامل.</li>
+                            </ul>
+                        </div>
+
+                        <p class="text-slate-600 dark:text-slate-300">
+                            من قلب هذه المعاناة، وفي عام 2001، اجتمع <span class="font-bold text-slate-900 dark:text-white">17 مطوراً وخبيراً برمجياً</span> في منتجع ثلجي في يوتا، وخرجوا بأسلوب فكري جديد لإدارة المشاريع يعالج هذه الفجوة الزمنية والبصرية، وأطلقوا عليه اسم <span class="px-2 py-1 bg-brand-100 dark:bg-brand-950 text-brand-700 dark:text-brand-300 rounded font-bold">Agile (الإدارة المرنة)</span>.
+                        </p>
+                    </div>
+                </section>
+
+                <!-- SECTION 2: WHAT IS AGILE (WITH SIMULATION) -->
+                <section id="what-is-agile" class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-sm transition-all">
+                    <div class="flex items-center gap-3 mb-6">
+                        <span class="p-2.5 bg-brand-100 dark:bg-brand-950/40 text-brand-600 dark:text-brand-400 rounded-2xl">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 8H17m-.5 1c.22 1.31.22 2.62 0 3.93m-1.22-5.15C15 5.5 13.5 5 12 5c-1.5 0-3 .5-4.28 1.42L5 9" />
+                            </svg>
+                        </span>
+                        <div>
+                            <span class="text-xs font-bold text-brand-600 dark:text-brand-400 uppercase tracking-widest">02 / التعريف المنهجي</span>
+                            <h2 class="text-2xl font-black text-slate-900 dark:text-white">ما هو الأجايل (What is Agile؟) وكيف يعمل؟</h2>
+                        </div>
+                    </div>
+
+                    <div class="space-y-6">
+                        <p class="text-slate-600 dark:text-slate-300 leading-relaxed">
+                            الأجايل ليس أداة برمجية محددة أو منهجية بيروقراطية صارمة، بل هو <span class="font-bold text-brand-600 dark:text-brand-400">فلسفة وإطار عمل فكري (Mindset)</span> يدعو إلى تقسيم المشروع المعقد إلى أجزاء صغيرة تُسلم على فترات زمنية قصيرة ومستمرة. يعتمد على مفهوم <span class="font-bold text-slate-900 dark:text-white">التطوير التدريجي والتكراري (Iterative and Incremental)</span>.
+                        </p>
+
+                        <!-- Sprints Concept Cards -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
+                            <div class="p-5 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-200 dark:border-slate-700/60">
+                                <h4 class="font-bold text-slate-900 dark:text-white mb-2 flex items-center gap-2">
+                                    <span class="w-2 h-2 bg-indigo-500 rounded-full"></span>
+                                    دورة الـ Sprint
+                                </h4>
+                                <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                                    يتم تقسيم الوقت إلى دورات زمنية قصيرة وثابتة تُسمى Sprints (تتراوح عادة بين أسبوع إلى 4 أسابيع).
+                                </p>
+                            </div>
+                            <div class="p-5 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-200 dark:border-slate-700/60">
+                                <h4 class="font-bold text-slate-900 dark:text-white mb-2 flex items-center gap-2">
+                                    <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+                                    برمجية حقيقية قابلة للتشغيل
+                                </h4>
+                                <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                                    في نهاية كل Sprint، يلتزم الفريق بتسليم برمجية قابلة للتشغيل الفعلي والتجربة <span class="font-mono text-xs">(Working Software)</span> حتى لو احتوت على ميزة واحدة فقط.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- INTERACTIVE INTERFACE: SPRINT WORKSPACE SIMULATOR -->
+                        <div class="bg-indigo-50/50 dark:bg-indigo-950/20 border border-brand-100 dark:border-brand-900/60 rounded-3xl p-6">
+                            <h3 class="font-bold text-lg text-brand-900 dark:text-indigo-300 mb-2">🚀 محاكي بناء مشروع متجر إلكتروني بطريقتين</h3>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mb-6">اضغط لمعاينة الفرق بين تخطيط الشلال وتخطيط الأجايل على الـ Sprints</p>
+                            
+                            <!-- Toggle buttons -->
+                            <div class="flex p-1 bg-slate-200 dark:bg-slate-800 rounded-xl max-w-sm mb-6">
+                                <button onclick="switchSim('agile')" id="btn-sim-agile" class="flex-1 py-2 text-xs font-bold rounded-lg text-center transition-all bg-brand-600 text-white">
+                                    طريقة الأجايل (Agile)
+                                </button>
+                                <button onclick="switchSim('waterfall')" id="btn-sim-waterfall" class="flex-1 py-2 text-xs font-bold rounded-lg text-center transition-all text-slate-700 dark:text-slate-300">
+                                    طريقة الشلال (Waterfall)
+                                </button>
+                            </div>
+
+                            <!-- Waterfall Simulation view -->
+                            <div id="waterfall-view" class="hidden space-y-4">
+                                <div class="p-4 bg-red-100/50 dark:bg-red-950/20 border border-red-200 dark:border-red-900/50 rounded-xl">
+                                    <span class="inline-block px-2.5 py-1 text-xs font-bold bg-red-200 text-red-800 dark:bg-red-900 dark:text-red-200 rounded-md mb-2">الشهور 1 - 10</span>
+                                    <h4 class="font-bold text-sm text-slate-900 dark:text-white">تصميم وبرمجة مغلقة ومكثفة</h4>
+                                    <p class="text-xs text-slate-600 dark:text-slate-400 mt-1">كتابة الكود بالكامل، لا يوجد منتج حقيقي يمكن تجربته حتى الآن. العميل ينتظر والمهندسون تحت الضغط.</p>
+                                </div>
+                                <div class="p-4 bg-orange-100/50 dark:bg-orange-950/20 border border-orange-200 dark:border-orange-900/50 rounded-xl">
+                                    <span class="inline-block px-2.5 py-1 text-xs font-bold bg-orange-200 text-orange-800 dark:bg-orange-900 dark:text-orange-200 rounded-md mb-2">الشهر 11 - 12</span>
+                                    <h4 class="font-bold text-sm text-slate-900 dark:text-white">التسليم النهائي والمفاجأة الكارثية</h4>
+                                    <p class="text-xs text-slate-600 dark:text-slate-400 mt-1">عند تسليم المتجر، يتفاجأ العميل بمشاكل في تجربة المستخدم وتغير متطلبات السوق، وتكون التكلفة لنسف وتغيير الكود هائلة وكارثية!</p>
+                                </div>
+                            </div>
+
+                            <!-- Agile Simulation view -->
+                            <div id="agile-view" class="space-y-4">
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                    <div onclick="selectSprint(1)" id="sprint-card-1" class="cursor-pointer p-4 rounded-xl border-2 border-brand-500 bg-white dark:bg-slate-900 transition-all shadow-md">
+                                        <div class="flex justify-between items-center mb-2">
+                                            <span class="text-xs font-bold text-brand-600 dark:text-brand-400">Sprint 1</span>
+                                            <span class="w-2.5 h-2.5 bg-green-500 rounded-full animate-ping"></span>
+                                        </div>
+                                        <h4 class="font-bold text-xs text-slate-800 dark:text-slate-200">ميزة عرض المنتجات</h4>
+                                        <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">الأسبوع 1-2: إظهار المنتجات فوراً</p>
+                                    </div>
+                                    <div onclick="selectSprint(2)" id="sprint-card-2" class="cursor-pointer p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-800/40 opacity-70 transition-all">
+                                        <div class="flex justify-between items-center mb-2">
+                                            <span class="text-xs font-bold text-slate-500">Sprint 2</span>
+                                            <span class="w-2.5 h-2.5 bg-slate-400 rounded-full"></span>
+                                        </div>
+                                        <h4 class="font-bold text-xs text-slate-800 dark:text-slate-200">سلة المشتريات التفاعلية</h4>
+                                        <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">الأسبوع 3-4: الإضافة والتعديل بالسلة</p>
+                                    </div>
+                                    <div onclick="selectSprint(3)" id="sprint-card-3" class="cursor-pointer p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-800/40 opacity-70 transition-all">
+                                        <div class="flex justify-between items-center mb-2">
+                                            <span class="text-xs font-bold text-slate-500">Sprint 3</span>
+                                            <span class="w-2.5 h-2.5 bg-slate-400 rounded-full"></span>
+                                        </div>
+                                        <h4 class="font-bold text-xs text-slate-800 dark:text-slate-200">بوابة الدفع الإلكتروني</h4>
+                                        <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1">الأسبوع 5-6: معالجة المدفوعات وربطها</p>
+                                    </div>
+                                </div>
+                                <div id="sprint-desc-box" class="p-4 bg-white dark:bg-slate-900 rounded-xl border border-brand-100 dark:border-brand-900/40 mt-3">
+                                    <h5 class="font-bold text-xs text-brand-600 dark:text-brand-400" id="sprint-title-display">تفاصيل الدورة الأولى (Sprint 1):</h5>
+                                    <p class="text-xs text-slate-600 dark:text-slate-300 mt-1 leading-relaxed" id="sprint-desc-display">
+                                        نركز فقط على تصميم وبرمجة "صفحة عرض المنتجات". في نهاية الأسبوعين، يشاهدها العميل ويضغط على الأزرار ويعطينا رأيه (Feedback) فوراً، مما يضمن توافق المشروع مع رغبته بأقل تكلفة ممكنة وتعديل المسار مبكراً.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+                <!-- SECTION 3: AGILE MINDSET (WITH "ZAD" APPLICATION EXAMPLES) -->
+                <section id="mindset" class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-sm transition-all">
+                    <div class="flex items-center gap-3 mb-6">
+                        <span class="p-2.5 bg-violet-100 dark:bg-violet-950/40 text-violet-600 dark:text-violet-400 rounded-2xl">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                            </svg>
+                        </span>
+                        <div>
+                            <span class="text-xs font-bold text-violet-600 dark:text-violet-400 uppercase tracking-widest">03 / طريقة التفكير</span>
+                            <h2 class="text-2xl font-black text-slate-900 dark:text-white">عقلية الأجايل (Agile Mindset) وتطبيق "زاد (Zad)"</h2>
+                        </div>
+                    </div>
+
+                    <div class="space-y-6">
+                        <p class="text-slate-600 dark:text-slate-300 leading-relaxed">
+                            <span class="font-bold text-slate-900 dark:text-white">عقلية الأجايل (Agile Mindset)</span> هي النظرة والطريقة الفكرية التي يتبناها فريق العمل تجاه المشكلات والتحديات والتغييرات أثناء بناء المنتج البرمجي، وهي قائمة على 3 ركائز رئيسية:
+                        </p>
+
+                        <!-- Pillars Grid -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="p-4 bg-slate-50 dark:bg-slate-800/40 rounded-xl border border-slate-100 dark:border-slate-800">
+                                <span class="text-2xl mb-2 block">🎯</span>
+                                <h4 class="font-bold text-sm text-slate-900 dark:text-white mb-1">التركيز على القيمة الفعلية للمستخدم</h4>
+                                <p class="text-xs text-slate-500 dark:text-slate-400">العقلية المرنة لا تهتم بكمية الأكواد المكتوبة بل بمدى نفعها وحلها لمشاكل المستخدم الحقيقية.</p>
+                            </div>
+                            <div class="p-4 bg-slate-50 dark:bg-slate-800/40 rounded-xl border border-slate-100 dark:border-slate-800">
+                                <span class="text-2xl mb-2 block">📉</span>
+                                <h4 class="font-bold text-sm text-slate-900 dark:text-white mb-1">الفشل السريع والتعلم الأسرع</h4>
+                                <p class="text-xs text-slate-500 dark:text-slate-400">اختبار الميزات فوراً مع المستخدم، وإذا فشلت ميزة نعدلها بأقل الخسائر الزمنية والمادية.</p>
+                            </div>
+                            <div class="p-4 bg-slate-50 dark:bg-slate-800/40 rounded-xl border border-slate-100 dark:border-slate-800">
+                                <span class="text-2xl mb-2 block">🤝</span>
+                                <h4 class="font-bold text-sm text-slate-900 dark:text-white mb-1">التعاون وإلغاء الجزر المنعزلة</h4>
+                                <p class="text-xs text-slate-500 dark:text-slate-400">الدمج الكامل بين المطور والمصمم وصاحب العمل للتواصل اليومي الفعّال وحل العقبات فوراً.</p>
+                            </div>
+                        </div>
+
+                        <!-- "Zad" Real Case Study Card -->
+                        <div class="bg-violet-50 dark:bg-violet-950/20 rounded-2xl p-6 border border-violet-100 dark:border-violet-900/40">
+                            <h4 class="font-bold text-violet-900 dark:text-violet-400 flex items-center gap-2 mb-4">
+                                📱 مثال تطبيقي على تطبيق "زاد (Zad)" للتلخيص بالذكاء الاصطناعي:
+                            </h4>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="p-4 bg-white dark:bg-slate-900 rounded-xl border border-red-100 dark:border-red-950/50">
+                                    <h5 class="font-bold text-xs text-red-600 mb-2 flex items-center gap-1">
+                                        ❌ التخطيط التقليدي (WaterFall) لتطبيق "زاد":
+                                    </h5>
+                                    <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                                        ستقرر عدم إطلاق التطبيق على المتجر إلا بعد بناء وتطوير نظام تلخيص متكامل فائق القوة، وتوفير نظام مدفوعات دولي، ونظام لوحة تحكم ومشاركة، وتظل تعمل طيلة 8 أشهر بدون إصدار واحد، لتكتشف لاحقاً أن الطلاب يفضلون تجربة أبسط بكثير.
+                                    </p>
+                                </div>
+                                <div class="p-4 bg-white dark:bg-slate-900 rounded-xl border border-green-100 dark:border-green-950/50">
+                                    <h5 class="font-bold text-xs text-green-600 mb-2 flex items-center gap-1">
+                                        ✅ تخطيط الأجايل (Agile) لتطبيق "زاد":
+                                    </h5>
+                                    <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                                        ستقوم ببناء وإصدار نسخة أولية (MVP) في غضون 3 أسابيع تحتوي فقط على ميزة أساسية واحدة وهي (رفع ملف PDF وتلخيصه بشكل مبدئي)، تطلقها للطلاب لتجمع آراءهم وتكتشف الميزات الأهم التي يطلبونها وتطورها بالتكرار.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 4: AGILE MANIFESTO (FLIP CARDS) -->
+                <section id="manifesto" class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-sm transition-all">
+                    <div class="flex items-center gap-3 mb-6">
+                        <span class="p-2.5 bg-blue-100 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 rounded-2xl">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                        </span>
+                        <div>
+                            <span class="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-widest">04 / دستور المنهجية</span>
+                            <h2 class="text-2xl font-black text-slate-900 dark:text-white">وثيقة الأجايل (Agile Manifesto) وقيمها الأربعة</h2>
+                        </div>
+                    </div>
+
+                    <p class="text-slate-600 dark:text-slate-300 leading-relaxed mb-6">
+                        في عام 2001، صاغ خبراء البرمجيات "دستور الأجايل" المكون من 4 قيم أساسية. الوثيقة لا تلغي الجانب الأيسر بالكامل، بل تنص وتؤكد أن <span class="font-bold text-brand-600">القيمة الأيمن (باللون البنفسجي) لها وزن وتقدير أعلى بكثير</span> لتسهيل حركة وتدفق المشروع.
+                    </p>
+
+                    <div class="text-center text-xs text-slate-500 mb-4 animate-pulse">💡 مرر مؤشر الماوس فوق البطاقات لرؤية "التطبيق العملي" لكل قيمة</div>
+
+                    <!-- Flip Cards Container -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        
+                        <!-- Value 1 -->
+                        <div class="flip-card h-48 w-full group">
+                            <div class="flip-card-inner relative w-full h-full text-center transition-transform duration-500 transform">
+                                <!-- Front -->
+                                <div class="flip-card-front absolute w-full h-full bg-slate-50 dark:bg-slate-800/80 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 flex flex-col justify-between">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-xs font-bold text-brand-600">القيمة الأولى</span>
+                                        <span class="text-xl">👥</span>
+                                    </div>
+                                    <div class="my-auto">
+                                        <h4 class="font-bold text-sm text-slate-900 dark:text-white">الأفراد والتعامل بينهم فوق الأدوات والعمليات</h4>
+                                        <p class="text-[11px] text-slate-400 dark:text-slate-500 mt-1">Individuals & interactions over processes & tools</p>
+                                    </div>
+                                    <span class="text-[10px] text-brand-500 underline">اضغط لرؤية التطبيق</span>
+                                </div>
+                                <!-- Back -->
+                                <div class="flip-card-back absolute w-full h-full bg-brand-600 text-white p-5 rounded-2xl flex flex-col justify-center">
+                                    <h5 class="font-bold text-sm mb-2">التطبيق العملي 🛠️</h5>
+                                    <p class="text-xs text-brand-100 leading-relaxed">
+                                        بدلاً من انتظار المطور لأيام للحصول على موافقات عبر البريد الإلكتروني لتعديل بسيط، يجتمع المطور والمصمم في اجتماع سريع مدته 5 دقائق لحل المشكلة فوراً.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Value 2 -->
+                        <div class="flip-card h-48 w-full group">
+                            <div class="flip-card-inner relative w-full h-full text-center transition-transform duration-500 transform">
+                                <!-- Front -->
+                                <div class="flip-card-front absolute w-full h-full bg-slate-50 dark:bg-slate-800/80 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 flex flex-col justify-between">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-xs font-bold text-brand-600">القيمة الثانية</span>
+                                        <span class="text-xl">💻</span>
+                                    </div>
+                                    <div class="my-auto">
+                                        <h4 class="font-bold text-sm text-slate-900 dark:text-white">برمجيات صالحة للاستعمال فوق التوثيق الشامل</h4>
+                                        <p class="text-[11px] text-slate-400 dark:text-slate-500 mt-1">Working software over comprehensive documentation</p>
+                                    </div>
+                                    <span class="text-[10px] text-brand-500 underline">اضغط لرؤية التطبيق</span>
+                                </div>
+                                <!-- Back -->
+                                <div class="flip-card-back absolute w-full h-full bg-indigo-600 text-white p-5 rounded-2xl flex flex-col justify-center">
+                                    <h5 class="font-bold text-sm mb-2">التطبيق العملي 🛠️</h5>
+                                    <p class="text-xs text-brand-100 leading-relaxed">
+                                        كتابة برمجيات تعمل وتسمح للعميل بتجربتها على أرض الواقع والتحقق من صلاحيتها، أهم وأجدى بكثير من قضاء شهور في كتابة وثائق نظرية طويلة لمنتج لم يُصنع بعد.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Value 3 -->
+                        <div class="flip-card h-48 w-full group">
+                            <div class="flip-card-inner relative w-full h-full text-center transition-transform duration-500 transform">
+                                <!-- Front -->
+                                <div class="flip-card-front absolute w-full h-full bg-slate-50 dark:bg-slate-800/80 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 flex flex-col justify-between">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-xs font-bold text-brand-600">القيمة الثالثة</span>
+                                        <span class="text-xl">🤝</span>
+                                    </div>
+                                    <div class="my-auto">
+                                        <h4 class="font-bold text-sm text-slate-900 dark:text-white">تعاون العميل وفهمه فوق تفاوض العقود الصارمة</h4>
+                                        <p class="text-[11px] text-slate-400 dark:text-slate-500 mt-1">Customer collaboration over contract negotiation</p>
+                                    </div>
+                                    <span class="text-[10px] text-brand-500 underline">اضغط لرؤية التطبيق</span>
+                                </div>
+                                <!-- Back -->
+                                <div class="flip-card-back absolute w-full h-full bg-violet-600 text-white p-5 rounded-2xl flex flex-col justify-center">
+                                    <h5 class="font-bold text-sm mb-2">التطبيق العملي 🛠️</h5>
+                                    <p class="text-xs text-brand-100 leading-relaxed">
+                                        العميل ليس خصماً بل شريك متصل ومستمر يحضر اجتماعات عرض الـ Sprints ويوجه الفريق أسبوعياً لتنفيذ الميزات الأكثر فائدة وتجنب الخلافات حول العقود المكتوبة قديماً.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Value 4 -->
+                        <div class="flip-card h-48 w-full group">
+                            <div class="flip-card-inner relative w-full h-full text-center transition-transform duration-500 transform">
+                                <!-- Front -->
+                                <div class="flip-card-front absolute w-full h-full bg-slate-50 dark:bg-slate-800/80 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 flex flex-col justify-between">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-xs font-bold text-brand-600">القيمة الرابعة</span>
+                                        <span class="text-xl">⚡</span>
+                                    </div>
+                                    <div class="my-auto">
+                                        <h4 class="font-bold text-sm text-slate-900 dark:text-white">الاستجابة الفورية للتغيير فوق اتباع الخطة المسبقة</h4>
+                                        <p class="text-[11px] text-slate-400 dark:text-slate-500 mt-1">Responding to change over following a plan</p>
+                                    </div>
+                                    <span class="text-[10px] text-brand-500 underline">اضغط لرؤية التطبيق</span>
+                                </div>
+                                <!-- Back -->
+                                <div class="flip-card-back absolute w-full h-full bg-emerald-600 text-white p-5 rounded-2xl flex flex-col justify-center">
+                                    <h5 class="font-bold text-sm mb-2">التطبيق العملي 🛠️</h5>
+                                    <p class="text-xs text-brand-100 leading-relaxed">
+                                        تخيل لو ظهرت شروط دفع محلية جديدة في مشروعك مثل "إستبرق (istabriq)"، الاستجابة السريعة وتعديل كود الـ Sprint القادم تمكنك من السيطرة والتفوق، بدلاً من السير الأعمى خلف الخطة المكتوبة قبل عام.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+                <!-- SECTION 5: THE 12 AGILE PRINCIPLES (INTERACTIVE ACCORDION) -->
+                <section id="principles" class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-sm transition-all">
+                    <div class="flex items-center gap-3 mb-6">
+                        <span class="p-2.5 bg-emerald-100 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 rounded-2xl">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                            </svg>
+                        </span>
+                        <div>
+                            <span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest">05 / المبادئ التشغيلية</span>
+                            <h2 class="text-2xl font-black text-slate-900 dark:text-white">المبادئ الاثنا عشر لـ Agile (The 12 Principles)</h2>
+                        </div>
+                    </div>
+
+                    <p class="text-slate-600 dark:text-slate-300 leading-relaxed mb-6">
+                        هذه المبادئ الـ 12 هي القواعد التشغيلية التي تترجم الفلسفة النظرية للأجايل إلى آليات حقيقية للتطبيق والعمل البرمجي اليومي:
+                    </p>
+
+                    <!-- Accordion Sections -->
+                    <div class="space-y-3">
+                        
+                        <!-- Pillar 1 Accordion -->
+                        <div class="border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden">
+                            <button onclick="toggleAccordion(1)" class="w-full flex items-center justify-between p-5 bg-slate-50 dark:bg-slate-800/40 text-right font-bold text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                                <span class="flex items-center gap-2">
+                                    <span class="px-2.5 py-1 text-xs bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-400 rounded-lg">المجموعة 1</span>
+                                    إرضاء العميل والتسليم المستمر للميزات
+                                </span>
+                                <svg id="acc-icon-1" class="w-5 h-5 text-slate-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </button>
+                            <div id="acc-content-1" class="hidden p-5 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 space-y-4 text-sm text-slate-600 dark:text-slate-400">
+                                <div class="flex gap-3">
+                                    <span class="font-mono text-brand-500 font-bold">01.</span>
+                                    <p><strong class="text-slate-900 dark:text-white">الأولوية القصوى لإرضاء العميل:</strong> عبر تسليم برمجيات ذات قيمة عالية وبشكل مستمر وسريع في المراحل المبكرة.</p>
+                                </div>
+                                <div class="flex gap-3">
+                                    <span class="font-mono text-brand-500 font-bold">02.</span>
+                                    <p><strong class="text-slate-900 dark:text-white">الترحيب بتغيير المتطلبات:</strong> حتى في المراحل المتأخرة والنهائية من التطوير، لتأمين الميزة التنافسية للعميل.</p>
+                                </div>
+                                <div class="flex gap-3">
+                                    <span class="font-mono text-brand-500 font-bold">03.</span>
+                                    <p><strong class="text-slate-900 dark:text-white">تسليم برمجيات صالحة للاستعمال بفترات قصيرة:</strong> تتراوح بين أسبوعين لشهرين، مع تفضيل الجدول الزمني الأقصر.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pillar 2 Accordion -->
+                        <div class="border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden">
+                            <button onclick="toggleAccordion(2)" class="w-full flex items-center justify-between p-5 bg-slate-50 dark:bg-slate-800/40 text-right font-bold text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                                <span class="flex items-center gap-2">
+                                    <span class="px-2.5 py-1 text-xs bg-violet-100 dark:bg-violet-950 text-violet-700 dark:text-violet-400 rounded-lg">المجموعة 2</span>
+                                    بيئة العمل الصحية والتعاون المشترك
+                                </span>
+                                <svg id="acc-icon-2" class="w-5 h-5 text-slate-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </button>
+                            <div id="acc-content-2" class="hidden p-5 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 space-y-4 text-sm text-slate-600 dark:text-slate-400">
+                                <div class="flex gap-3">
+                                    <span class="font-mono text-brand-500 font-bold">04.</span>
+                                    <p><strong class="text-slate-900 dark:text-white">العمل والتعاون المشترك اليومي:</strong> يجب أن يعمل مطورو البرمجيات والمستثمرون/أصحاب العمل معاً بشكل مستمر ويومي لإغلاق فجوة التوقعات.</p>
+                                </div>
+                                <div class="flex gap-3">
+                                    <span class="font-mono text-brand-500 font-bold">05.</span>
+                                    <p><strong class="text-slate-900 dark:text-white">بناء المشاريع حول أفراد متحمسين:</strong> توفير البيئة الداعمة، والثقة بهم لإنجاز المهام دون تعقب دقيق أو خنق للمسؤولية الذاتية.</p>
+                                </div>
+                                <div class="flex gap-3">
+                                    <span class="font-mono text-brand-500 font-bold">06.</span>
+                                    <p><strong class="text-slate-900 dark:text-white">التواصل وجهاً لوجه:</strong> هو أفضل وأسرع قنوات نقل وتبادل الأفكار الفنية داخل فريق البرمجة.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pillar 3 Accordion -->
+                        <div class="border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden">
+                            <button onclick="toggleAccordion(3)" class="w-full flex items-center justify-between p-5 bg-slate-50 dark:bg-slate-800/40 text-right font-bold text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                                <span class="flex items-center gap-2">
+                                    <span class="px-2.5 py-1 text-xs bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400 rounded-lg">المجموعة 3</span>
+                                    جودة المنتج النهائي واستمرارية هندسته
+                                </span>
+                                <svg id="acc-icon-3" class="w-5 h-5 text-slate-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </button>
+                            <div id="acc-content-3" class="hidden p-5 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 space-y-4 text-sm text-slate-600 dark:text-slate-400">
+                                <div class="flex gap-3">
+                                    <span class="font-mono text-brand-500 font-bold">07.</span>
+                                    <p><strong class="text-slate-900 dark:text-white">البرمجيات الشغالة هي المقياس للتقدم:</strong> بدلاً من قول "أنجزنا 90% من المهام"، المقياس الوحيد الصادق هو "الميزة البرمجية تعمل فعلياً بدون أخطاء".</p>
+                                </div>
+                                <div class="flex gap-3">
+                                    <span class="font-mono text-brand-500 font-bold">08.</span>
+                                    <p><strong class="text-slate-900 dark:text-white">التطوير المستدام وبوتيرة ثابتة:</strong> المحافظة على زخم عمل طبيعي ومستقر ومستمر لمنع الضغط والاحتراق المهني (Burnout).</p>
+                                </div>
+                                <div class="flex gap-3">
+                                    <span class="font-mono text-brand-500 font-bold">09.</span>
+                                    <p><strong class="text-slate-900 dark:text-white">الاهتمام بالتميز التقني والتصميم النظيف:</strong> كتابة كود برميجي معياري <span class="font-mono text-xs">(Clean Code)</span> يضمن تيسير التحديث وسلاسة مراجعة البنية مستقبلاً.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pillar 4 Accordion -->
+                        <div class="border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden">
+                            <button onclick="toggleAccordion(4)" class="w-full flex items-center justify-between p-5 bg-slate-50 dark:bg-slate-800/40 text-right font-bold text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                                <span class="flex items-center gap-2">
+                                    <span class="px-2.5 py-1 text-xs bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-400 rounded-lg">المجموعة 4</span>
+                                    البساطة والتنظيم الذاتي ومراجعة الأداء
+                                </span>
+                                <svg id="acc-icon-4" class="w-5 h-5 text-slate-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </button>
+                            <div id="acc-content-4" class="hidden p-5 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 space-y-4 text-sm text-slate-600 dark:text-slate-400">
+                                <div class="flex gap-3">
+                                    <span class="font-mono text-brand-500 font-bold">10.</span>
+                                    <p><strong class="text-slate-900 dark:text-white">البساطة جوهرية (Simplicity):</strong> فن تقليص حجم الأعمال غير الهامة والتركيز فقط على ما هو مطلوب بالحد الأدنى والذكي.</p>
+                                </div>
+                                <div class="flex gap-3">
+                                    <span class="font-mono text-brand-500 font-bold">11.</span>
+                                    <p><strong class="text-slate-900 dark:text-white">فرق العمل ذاتية التنظيم:</strong> أفضل التصاميم والأكواد والحلول الهندسية تصدر من الفرق التي تنظم وتوزع المهام ذاتياً وفقاً لخبرات أفرادها.</p>
+                                </div>
+                                <div class="flex gap-3">
+                                    <span class="font-mono text-brand-500 font-bold">12.</span>
+                                    <p><strong class="text-slate-900 dark:text-white">التأمل والتقويم الدوري:</strong> مراجعة سلوك وأداء الفريق باستمرار وتعديله (Retrospective) في نهاية كل Sprint لترقية الكفاءة وسرعة الإنتاج.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+                <!-- SECTION 6: MODERN AGILE, ROLES & CEREMONIES -->
+                <section id="modern-agile" class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-sm transition-all">
+                    <div class="flex items-center gap-3 mb-6">
+                        <span class="p-2.5 bg-sky-100 dark:bg-sky-950/40 text-sky-600 dark:text-sky-400 rounded-2xl">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                            </svg>
+                        </span>
+                        <div>
+                            <span class="text-xs font-bold text-sky-600 dark:text-sky-400 uppercase tracking-widest">06 / الهيكلة الحديثة</span>
+                            <h2 class="text-2xl font-black text-slate-900 dark:text-white">الأجايل الحديث، الأدوار والاجتماعات البرمجية</h2>
+                        </div>
+                    </div>
+
+                    <div class="prose prose-slate dark:prose-invert max-w-none space-y-6">
+                        <p class="text-slate-600 dark:text-slate-300">
+                            مع تمدد السوق، لم يعد الأجايل محصوراً في الفرق الصغيرة، بل امتد لشركات ضخمة مثل (Spotify و Netflix) عبر أطر برمجية موسعة مثل <span class="font-bold">SAFe</span>، والدمج مع ثقافة <span class="font-bold text-brand-600">DevOps</span> لرفع الكود واختباره وتمريره للسيرفر فوراً وبأمان كامل من خلال <span class="font-mono text-xs">(CI/CD)</span>.
+                        </p>
+
+                        <!-- Roles Section -->
+                        <h3 class="font-bold text-lg text-slate-900 dark:text-white mt-8 mb-4">👤 أدوار فريق الأجايل الأساسية (Agile Roles)</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="p-5 bg-slate-50 dark:bg-slate-800/30 rounded-2xl border border-slate-200 dark:border-slate-800">
+                                <span class="text-xs font-bold text-brand-600 dark:text-brand-400 font-mono">Role 01</span>
+                                <h4 class="font-bold text-sm text-slate-900 dark:text-white mt-1">مالك المنتج (Product Owner - PO)</h4>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 mt-2">هو ممثل العميل في الفريق، يحدد "ماذا" سنبني ويقوم بترتيب وتنظيم الأولويات في الـ Backlog.</p>
+                            </div>
+                            <div class="p-5 bg-slate-50 dark:bg-slate-800/30 rounded-2xl border border-slate-200 dark:border-slate-800">
+                                <span class="text-xs font-bold text-brand-600 dark:text-brand-400 font-mono">Role 02</span>
+                                <h4 class="font-bold text-sm text-slate-900 dark:text-white mt-1">قائد السكرام (Scrum Master - SM)</h4>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 mt-2">القائد الخدمي (Servant Leader)، يزيل أي عثرات تنظيمية أو برمجية تعطل وتعيق عمل المطورين.</p>
+                            </div>
+                            <div class="p-5 bg-slate-50 dark:bg-slate-800/30 rounded-2xl border border-slate-200 dark:border-slate-800">
+                                <span class="text-xs font-bold text-brand-600 dark:text-brand-400 font-mono">Role 03</span>
+                                <h4 class="font-bold text-sm text-slate-900 dark:text-white mt-1">فريق التطوير (Dev Team)</h4>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 mt-2">المطورون، مهندسو التصميم واختبار الجودة (QA) المنفذون الفعليون للكود والمنتج الرقمي.</p>
+                            </div>
+                        </div>
+
+                        <!-- Artifacts & Ceremonies Accordion-style layout -->
+                        <h3 class="font-bold text-lg text-slate-900 dark:text-white mt-8 mb-4">📅 الأدوات والاجتماعات الدورية (Agile Rituals & Artifacts)</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="p-5 bg-indigo-50/40 dark:bg-slate-900 border border-indigo-100 dark:border-slate-800 rounded-2xl">
+                                <h4 class="font-bold text-sm text-brand-700 dark:text-indigo-400 mb-3">🛠️ المصطلحات والأدوات الهامة:</h4>
+                                <ul class="space-y-3 text-xs text-slate-600 dark:text-slate-400">
+                                    <li><strong class="text-slate-800 dark:text-slate-200">Product Backlog:</strong> المستودع الكبير الذي يحتوي كافة الميزات والتعديلات المستقبلية للمشروع مرتبة بدقة.</li>
+                                    <li><strong class="text-slate-800 dark:text-slate-200">Sprint Backlog:</strong> المهام المنتقاة بعناية ليتعهد الفريق ببرمجتها وإنجازها بالكامل في الـ Sprint الحالي.</li>
+                                    <li><strong class="text-slate-800 dark:text-slate-200">User Story (قصة المستخدم):</strong> صياغة رغبات العميل بلسان المستخدم (مثلاً: "كمستخدم، أود القدرة على استرجاع كلمة مروري...").</li>
+                                </ul>
+                            </div>
+                            <div class="p-5 bg-indigo-50/40 dark:bg-slate-900 border border-indigo-100 dark:border-slate-800 rounded-2xl">
+                                <h4 class="font-bold text-sm text-brand-700 dark:text-indigo-400 mb-3">🕒 الاجتماعات الدورية للفريق:</h4>
+                                <ul class="space-y-3 text-xs text-slate-600 dark:text-slate-400">
+                                    <li><strong class="text-slate-800 dark:text-slate-200">Sprint Planning (التخطيط):</strong> بداية الـ Sprint لتوزيع المهام على المبرمجين.</li>
+                                    <li><strong class="text-slate-800 dark:text-slate-200">Daily Standup (الوقوف اليومي):</strong> اجتماع سريع مدته 15 دقيقة لتحديد المعوقات وما تم إنجازه.</li>
+                                    <li><strong class="text-slate-800 dark:text-slate-200">Sprint Review (الاستعراض):</strong> نهاية الـ Sprint لعرض المنتج الشغال على العميل ونيل الـ Feedback.</li>
+                                    <li><strong class="text-slate-800 dark:text-slate-200">Sprint Retrospective (المراجعة الذاتية):</strong> مناقشة ما سار جيداً وسلبياً وتطوير الكود وطريقة العمل للدورات القادمة.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 7: SCOPE CREEP VS GOLD PLATING (INTERACTIVE GAME/SELECTOR) -->
+                <section id="scope-management" class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200 dark:border-slate-800 shadow-sm transition-all">
+                    <div class="flex items-center gap-3 mb-6">
+                        <span class="p-2.5 bg-rose-100 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 rounded-2xl">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                            </svg>
+                        </span>
+                        <div>
+                            <span class="text-xs font-bold text-rose-600 dark:text-rose-400 uppercase tracking-widest">07 / إدارة نطاق العمل</span>
+                            <h2 class="text-2xl font-black text-slate-900 dark:text-white">زحف النطاق (Scope Creep) والطلاء بالذهب (Gold Plating)</h2>
+                        </div>
+                    </div>
+
+                    <p class="text-slate-600 dark:text-slate-300 leading-relaxed mb-6">
+                        في هندسة وإدارة مشاريع البرمجيات، يكثر حدوث ظواهر خطيرة تهدد بتأخر المنتج وزيادة تكلفته دون فائدة حقيقية. إليك تعريفهما والمفارقة الهندسية الدقيقة بينهما:
+                    </p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                        <!-- Scope Creep Detail -->
+                        <div class="p-5 bg-rose-50/50 dark:bg-rose-950/10 border border-rose-100 dark:border-rose-900/40 rounded-2xl">
+                            <div class="flex items-center gap-2 mb-2">
+                                <span class="text-xl">⚠️</span>
+                                <h4 class="font-bold text-base text-rose-800 dark:text-rose-400">زحف النطاق (Scope Creep)</h4>
+                            </div>
+                            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                                هو التوسع التدريجي وغير المنضبط في متطلبات المشروع دون إجراء أي تعديل رسمي على الميزانية أو الجدول الزمني للمشروع.
+                                <br><strong class="text-slate-800 dark:text-slate-200 mt-2 block">من المتسبب؟</strong> العميل أو مالك المشروع بطلباته وإضافاته الصغيرة والمتكررة أثناء البناء الفعلي.
+                            </p>
+                        </div>
+                        <!-- Gold Plating Detail -->
+                        <div class="p-5 bg-amber-50/50 dark:bg-amber-950/10 border border-amber-100 dark:border-amber-900/40 rounded-2xl">
+                            <div class="flex items-center gap-2 mb-2">
+                                <span class="text-xl">✨</span>
+                                <h4 class="font-bold text-base text-amber-800 dark:text-amber-400">الطلاء بالذهب (Gold Plating)</h4>
+                            </div>
+                            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                                هو إضافة الفريق البرمجي أو المطور لميزات وتحسينات جمالية إضافية لم يطلبها العميل مطلقاً، ظناً منهم بأنهم سيبهرون العميل.
+                                <br><strong class="text-slate-800 dark:text-slate-200 mt-2 block">من المتسبب؟</strong> المطور أو المصمم من تلقاء نفسه، مما يستنزف الوقت والموارد في غير مكانها الأصلي.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- INTERACTIVE TOOL: SCENARIO TESTER -->
+                    <div class="bg-slate-100 dark:bg-slate-800/60 rounded-3xl p-6 border border-slate-200 dark:border-slate-700">
+                        <h3 class="font-bold text-lg text-slate-950 dark:text-white mb-2 flex items-center gap-2">
+                            🎮 لوحة تمييز الحالات الهندسية والبرمجية التفاعلية
+                        </h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mb-6">اقرأ السيناريو التالي، ثم حدد التشخيص الهندسي الصحيح له لنرى دقة تحليلك:</p>
+
+                        <!-- Scenario Card Display -->
+                        <div class="p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-850 shadow-sm mb-6">
+                            <span class="inline-block px-2 py-0.5 text-[10px] font-bold bg-slate-100 dark:bg-slate-800 text-brand-600 rounded mb-2" id="scen-num">السيناريو 1 من 4</span>
+                            <p class="text-sm font-medium text-slate-800 dark:text-slate-200" id="scen-text">
+                                "العميل يطلب إضافة زر مشاركة عبر واتساب في منتصف الـ Sprint دون تعديل الوقت أو التكلفة."
+                            </p>
+                        </div>
+
+                        <!-- Multi Choices Buttons -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+                            <button onclick="checkScenario('scope')" class="py-3 px-4 text-xs font-bold text-right bg-slate-50 dark:bg-slate-800 hover:bg-brand-50 hover:text-brand-700 dark:hover:bg-brand-950/40 border border-slate-200 dark:border-slate-700 rounded-xl transition-all">
+                                ⚠️ زحف النطاق (Scope Creep)
+                            </button>
+                            <button onclick="checkScenario('gold')" class="py-3 px-4 text-xs font-bold text-right bg-slate-50 dark:bg-slate-800 hover:bg-brand-50 hover:text-brand-700 dark:hover:bg-brand-950/40 border border-slate-200 dark:border-slate-700 rounded-xl transition-all">
+                                ✨ طلاء بالذهب (Gold Plating)
+                            </button>
+                            <button onclick="checkScenario('agile')" class="py-3 px-4 text-xs font-bold text-right bg-slate-50 dark:bg-slate-800 hover:bg-brand-50 hover:text-brand-700 dark:hover:bg-brand-950/40 border border-slate-200 dark:border-slate-700 rounded-xl transition-all">
+                                🚀 عقلية الأجايل (Agile Mindset)
+                            </button>
+                            <button onclick="checkScenario('paralysis')" class="py-3 px-4 text-xs font-bold text-right bg-slate-50 dark:bg-slate-800 hover:bg-brand-50 hover:text-brand-700 dark:hover:bg-brand-950/40 border border-slate-200 dark:border-slate-700 rounded-xl transition-all">
+                                🛑 شلل التحليل (Analysis Paralysis)
+                            </button>
+                        </div>
+
+                        <!-- Feedback Message Area -->
+                        <div id="scen-feedback" class="hidden p-4 rounded-xl text-xs font-medium transition-all"></div>
+
+                        <!-- Next Button -->
+                        <div class="flex justify-end mt-4">
+                            <button onclick="nextScenario()" id="btn-next-scen" class="hidden px-5 py-2 bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs rounded-lg transition-all">
+                                السيناريو التالي ➜
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Glossary of terms in scope management -->
+                    <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="p-4 bg-slate-50 dark:bg-slate-800/30 rounded-xl border border-slate-200 dark:border-slate-800">
+                            <h4 class="font-bold text-sm text-slate-900 dark:text-white">🛑 شلل التحليل (Analysis Paralysis):</h4>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">حالة تصيب الفريق عند الإفراط والتمادي في كتابة التصاميم والتحليل المسبق، مما يمنعهم من البدء الفعلي في كتابة الكود وبناء المنتج.</p>
+                        </div>
+                        <div class="p-4 bg-slate-50 dark:bg-slate-800/30 rounded-xl border border-slate-200 dark:border-slate-800">
+                            <h4 class="font-bold text-sm text-slate-900 dark:text-white">📊 قانون بروكس (Brooks' Law):</h4>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">"قانون برمجيات شهير ينص على: إضافة مبرمجين جدد لمشروع برمجي متأخر، سيزيده تأخراً"؛ نظراً للوقت المستغرق في التدريب والاندماج على حساب الفريق الأصلي.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 8: SELF-ASSESSMENT INTERACTIVE QUIZ -->
+                <section id="assessment-section" class="bg-gradient-to-br from-brand-900 to-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-xl shadow-brand-500/10">
+                    <div class="flex items-center gap-3 mb-6">
+                        <span class="p-2.5 bg-brand-500/20 text-brand-300 rounded-2xl">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                            </svg>
+                        </span>
+                        <div>
+                            <span class="text-xs font-bold text-brand-400 uppercase tracking-widest">08 / اختبار التقدم</span>
+                            <h2 class="text-2xl font-black">اختبار الأجايل الهندسي التفاعلي</h2>
+                        </div>
+                    </div>
+
+                    <!-- Welcome Screen to Quiz -->
+                    <div id="quiz-start-view" class="space-y-4">
+                        <p class="text-sm text-brand-200 leading-relaxed">
+                            هل أنت مستعد لاختبار مهاراتك الهندسية وفهمك الحقيقي لمبادئ الأجايل؟ لقد أعددنا لك اختباراً تفاعلياً من 5 أسئلة برمجية واقعية للتحقق من جاهزيتك للاندماج في فرق العمل الاحترافية.
+                        </p>
+                        <button onclick="startQuiz()" class="px-6 py-3 bg-brand-500 hover:bg-brand-600 font-bold text-sm rounded-xl shadow-lg transition-all inline-flex items-center gap-2">
+                            ابدأ الاختبار التقييمي الآن ➜
+                        </button>
+                    </div>
+
+                    <!-- Quiz Content View -->
+                    <div id="quiz-content-view" class="hidden space-y-6">
+                        <!-- Progress indicator inside quiz -->
+                        <div class="flex justify-between items-center text-xs text-brand-200">
+                            <span id="quiz-progress-text">السؤال 1 من 5</span>
+                            <span id="quiz-score-live">النتيجة: 0</span>
+                        </div>
+                        <div class="w-full bg-slate-800 rounded-full h-2">
+                            <div id="quiz-progress-bar" class="bg-brand-500 h-2 rounded-full transition-all duration-300" style="width: 20%;"></div>
+                        </div>
+
+                        <!-- Question Statement -->
+                        <div class="bg-slate-800/50 p-5 rounded-2xl border border-slate-700">
+                            <h4 id="quiz-question" class="font-bold text-base text-slate-100">تحميل السؤال...</h4>
+                        </div>
+
+                        <!-- Answers Choices Grid -->
+                        <div class="grid grid-cols-1 gap-3" id="quiz-choices">
+                            <!-- Dynamically loaded -->
+                        </div>
+
+                        <!-- Custom Alert message inside quiz instead of window.alert -->
+                        <div id="quiz-feedback-box" class="hidden p-4 rounded-xl text-xs font-semibold"></div>
+
+                        <!-- Next Question Button -->
+                        <div class="flex justify-end">
+                            <button id="btn-quiz-next" onclick="nextQuizQuestion()" class="hidden px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-lg transition-all">
+                                السؤال التالي ➜
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Quiz Final Score Screen -->
+                    <div id="quiz-result-view" class="hidden text-center space-y-6 py-8">
+                        <div class="inline-block p-4 bg-slate-800/80 rounded-full mb-2">
+                            <span class="text-4xl" id="result-emoji">🏆</span>
+                        </div>
+                        <h3 class="font-black text-2xl">تهانينا! أكملت الاختبار بالكامل</h3>
+                        <p class="text-brand-200 text-sm max-w-md mx-auto" id="result-text-desc">
+                            لقد أظهرت فهماً وافياً لأصول ومفاهيم الأجايل وإدارة النطاق الهندسي للمشاريع.
+                        </p>
+                        <div class="text-4xl font-extrabold text-emerald-400" id="result-score-display">
+                            5 / 5
+                        </div>
+                        <button onclick="restartQuiz()" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-xs font-bold rounded-xl transition-all border border-slate-700">
+                            إعادة المحاولة من جديد
+                        </button>
+                    </div>
+
+                </section>
+
+                <!-- Footer Section -->
+                <footer class="text-center py-6 border-t border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 text-xs">
+                    <p>© 2026 جميع الحقوق محفوظة لـ Agile Hub - دليل مهندس البرمجيات العربي.</p>
+                </footer>
+
+            </main>
+
+        </div>
+    </div>
+
+    <!-- SCRIPT LOGIC FOR INTERACTIVITY -->
+    <script>
+        // DARK MODE TOGGLE
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            const sunIcon = document.getElementById('sun-icon');
+            const moonIcon = document.getElementById('moon-icon');
+            
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                sunIcon.classList.add('hidden');
+                moonIcon.classList.remove('hidden');
+            } else {
+                html.classList.add('dark');
+                sunIcon.classList.remove('hidden');
+                moonIcon.classList.add('hidden');
+            }
+        }
+
+        // READING PROGRESS BAR
+        window.onscroll = function() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById("progress-bar").style.width = scrolled + "%";
+            
+            // Sidebar active link update highlight
+            const sections = ['intro', 'what-is-agile', 'mindset', 'manifesto', 'principles', 'modern-agile', 'scope-management', 'assessment-section'];
+            const sidebarLinks = document.querySelectorAll('.sidebar-link');
+            
+            let currentSec = '';
+            sections.forEach(sec => {
+                const element = document.getElementById(sec);
+                if (element) {
+                    const rect = element.getBoundingClientRect();
+                    if (rect.top <= 160) {
+                        currentSec = sec;
+                    }
+                }
+            });
+
+            if (currentSec) {
+                sidebarLinks.forEach(link => {
+                    link.classList.remove('text-brand-600', 'bg-brand-50', 'dark:text-brand-400', 'dark:bg-brand-950/50');
+                    link.classList.add('text-slate-600', 'dark:text-slate-400');
+                    if (link.getAttribute('href') === `#${currentSec}`) {
+                        link.classList.add('text-brand-600', 'bg-brand-50', 'dark:text-brand-400', 'dark:bg-brand-950/50');
+                        link.classList.remove('text-slate-600', 'dark:text-slate-400');
+                    }
+                });
+            }
+        };
+
+        // ACCORDION TOGGLE
+        function toggleAccordion(id) {
+            const content = document.getElementById(`acc-content-${id}`);
+            const icon = document.getElementById(`acc-icon-${id}`);
+            
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                icon.classList.add('rotate-180');
+            } else {
+                content.classList.add('hidden');
+                icon.classList.remove('rotate-180');
+            }
+        }
+
+        // SIMULATION SWITCHER (AGILE VS WATERFALL)
+        function switchSim(type) {
+            const agileView = document.getElementById('agile-view');
+            const waterfallView = document.getElementById('waterfall-view');
+            const btnAgile = document.getElementById('btn-sim-agile');
+            const btnWaterfall = document.getElementById('btn-sim-waterfall');
+            
+            if (type === 'agile') {
+                agileView.classList.remove('hidden');
+                waterfallView.classList.add('hidden');
+                btnAgile.className = "flex-1 py-2 text-xs font-bold rounded-lg text-center transition-all bg-brand-600 text-white";
+                btnWaterfall.className = "flex-1 py-2 text-xs font-bold rounded-lg text-center transition-all text-slate-700 dark:text-slate-300";
+            } else {
+                agileView.classList.add('hidden');
+                waterfallView.classList.remove('hidden');
+                btnWaterfall.className = "flex-1 py-2 text-xs font-bold rounded-lg text-center transition-all bg-brand-600 text-white";
+                btnAgile.className = "flex-1 py-2 text-xs font-bold rounded-lg text-center transition-all text-slate-700 dark:text-slate-300";
+            }
+        }
+
+        // SPRINT SELECTOR DETAILS
+        const sprintData = {
+            1: {
+                title: "تفاصيل الدورة الأولى (Sprint 1):",
+                desc: "نركز فقط على تصميم وبرمجة 'صفحة عرض المنتجات'. في نهاية الأسبوعين، يشاهدها العميل ويضغط على الأزرار ويعطينا رأيه (Feedback) فوراً، مما يضمن توافق المشروع مع رغبته بأقل تكلفة ممكنة وتعديل المسار مبكراً."
+            },
+            2: {
+                title: "تفاصيل الدورة الثانية (Sprint 2):",
+                desc: "نأخذ تعليقات وملاحظات العميل من الدورة الأولى في الحسبان (مثل تكبير صور المنتجات)، ونبدأ فوراً في بناء وبرمجة 'سلة المشتريات التفاعلية' لتجربتها."
+            },
+            3: {
+                title: "تفاصيل الدورة الثالثة (Sprint 3):",
+                desc: "نقوم ببناء وتكامل 'نظام الدفع الإلكتروني' وتأمين المعاملات المالية وربطها التام بسلة المشتريات والطلبات السابقة، ليصبح لدينا متجر أساسي شغال تماماً في 6 أسابيع فقط."
+            }
+        };
+
+        function selectSprint(id) {
+            // Highlight card
+            for (let i = 1; i <= 3; i++) {
+                const card = document.getElementById(`sprint-card-${i}`);
+                if (i === id) {
+                    card.className = "cursor-pointer p-4 rounded-xl border-2 border-brand-500 bg-white dark:bg-slate-900 transition-all shadow-md";
+                } else {
+                    card.className = "cursor-pointer p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-800/40 opacity-70 transition-all";
+                }
+            }
+            // Update display box text
+            document.getElementById('sprint-title-display').innerText = sprintData[id].title;
+            document.getElementById('sprint-desc-display').innerText = sprintData[id].desc;
+        }
+
+        // MOBILE TACTILE SUPPORT FOR FLIP CARDS
+        document.querySelectorAll('.flip-card').forEach(card => {
+            card.addEventListener('click', () => {
+                card.classList.toggle('flipped');
+            });
+        });
+
+        // SCENARIO TESTER LOGIC
+        const scenarios = [
+            {
+                text: '"العميل يطلب إضافة زر مشاركة عبر واتساب في منتصف الـ Sprint دون إجراء أي تعديل رسمي على الميزانية أو الجدول الزمني للمشروع."',
+                answer: 'scope',
+                explanation: 'أحسنت! هذا زحف للنطاق (Scope Creep) لأنه توسيع وتعديل تدريجي يأتي بطلب خارجي من العميل دون مراعاة لتكلفة المشروع ووقت التسليم.'
+            },
+            {
+                text: '"المطور يقوم من تلقاء نفسه بتصميم قاعدة بيانات معقدة وضخمة تتحمل مليار مستخدم وتطبيقنا مازال في نسخته التجريبية الأولى لفهم حاجة المستخدم."',
+                answer: 'gold',
+                explanation: 'صحيح! هذا طلاء بالذهب (Gold Plating) حيث يضيف الفريق مميزات إضافية ذاتية لم تطلب رسمياً، مما يعطل ويستنزف موارد المشروع الأصلية دون داعٍ.'
+            },
+            {
+                text: '"بناء نسخة أولية (MVP) لتطبيق زاد تحتوي فقط على ميزة أساسية واحدة وهي رفع الملف وتلخيصه لإطلاقها وجمع آراء الطلاب سريعاً."',
+                answer: 'agile',
+                explanation: 'ممتاز! هذه هي عقلية الأجايل (Agile Mindset) المثالية التي تدعو للفشل والتعلم السريع وبناء القيمة الأكثر أهمية للمستخدم مبكراً.'
+            },
+            {
+                text: '"قضاء الفريق لثلاثة أشهر كاملة في كتابة وتعديل مستندات المتطلبات وتصميم الواجهات الكلية بالتفصيل وتعديل التصميمات قبل برمجة زر واحد."',
+                answer: 'paralysis',
+                explanation: 'دقيق جداً! هذا شلل التحليل (Analysis Paralysis) حيث يفرط الفريق في التخطيط والدراسة النظرية المكثفة مما يصيب المشروع بالجمود ويؤخر البناء الفعلي.'
+            }
+        ];
+
+        let currentScenIdx = 0;
+
+        function checkScenario(selectedAnswer) {
+            const scenario = scenarios[currentScenIdx];
+            const feedbackBox = document.getElementById('scen-feedback');
+            const nextBtn = document.getElementById('btn-next-scen');
+            
+            feedbackBox.classList.remove('hidden', 'bg-red-100', 'text-red-800', 'dark:bg-red-950/20', 'dark:text-red-400', 'bg-green-100', 'text-green-800', 'dark:bg-green-950/20', 'dark:text-green-400');
+            
+            if (selectedAnswer === scenario.answer) {
+                feedbackBox.classList.add('bg-green-100', 'text-green-800', 'dark:bg-green-950/20', 'dark:text-green-400');
+                feedbackBox.innerHTML = `<strong>🎉 تشخيص دقيق وممتاز!</strong><br>${scenario.explanation}`;
+            } else {
+                feedbackBox.classList.add('bg-red-100', 'text-red-800', 'dark:bg-red-950/20', 'dark:text-red-400');
+                feedbackBox.innerHTML = `<strong>⚠️ إجابة غير دقيقة.</strong><br>${scenario.explanation}`;
+            }
+            feedbackBox.classList.remove('hidden');
+            nextBtn.classList.remove('hidden');
+        }
+
+        function nextScenario() {
+            currentScenIdx++;
+            const feedbackBox = document.getElementById('scen-feedback');
+            const nextBtn = document.getElementById('btn-next-scen');
+            
+            if (currentScenIdx < scenarios.length) {
+                document.getElementById('scen-num').innerText = `السيناريو ${currentScenIdx + 1} من ${scenarios.length}`;
+                document.getElementById('scen-text').innerText = scenarios[currentScenIdx].text;
+                feedbackBox.classList.add('hidden');
+                nextBtn.classList.add('hidden');
+            } else {
+                // Done all scenarios
+                document.getElementById('scen-num').innerText = `تم الانتهاء!`;
+                document.getElementById('scen-text').innerText = "رائع! لقد مررت على كافة السيناريوهات واكتسبت القدرة البرمجية على تقييم مخاطر المشروع وتحديدها بدقة عالية.";
+                feedbackBox.classList.add('hidden');
+                nextBtn.classList.add('hidden');
+            }
+        }
+
+        // ASSESSMENT QUIZ DATA & LOGIC
+        const quizData = [
+            {
+                question: "ما هو المقياس الرئيسي والصادق لإثبات التقدم والتطور في منهجيات الأجايل؟",
+                choices: [
+                    "عدد أسطر الكود البرمجي المكتوبة شهرياً.",
+                    "كتابة وثائق هندسية كاملة وشاملة قبل كل إصدار.",
+                    "وجود برمجية شريحة شغالة فعلياً ومستقرة بدون أخطاء.",
+                    "الانتهاء من تصميم واجهات التطبيق الكلية مسبقاً."
+                ],
+                correct: 2,
+                explain: "وفقاً لمبادئ الأجايل، البرمجيات الشغالة والمستقرة في بيئة الإنتاج هي المقياس الرئيسي لتقدم المشروع."
+            },
+            {
+                question: "قام مطور برمجيات بإضافة ميزة تحكم جمالية وتأثيرات بصرية جذابة للغاية لم يطلبها العميل أصلاً في المتطلبات، ما هو التقييم الهندسي الدقيق لهذا الفعل؟",
+                choices: [
+                    "أداء احترافي ممتاز يبهر العميل دون عواقب.",
+                    "طلاء بالذهب (Gold Plating) ويصنف خطأً تقنياً لأنه يستنزف الوقت والموارد المخططة للمشروع.",
+                    "زحف النطاق (Scope Creep) لأن العميل سيستفيد من ذلك.",
+                    "تطبيق عملي لعقلية الـ DevOps الحديثة."
+                ],
+                correct: 1,
+                explain: "هذا طلاء بالذهب (Gold Plating)؛ لأنه استهلاك غير مخطط للموارد والوقت على ميزات لم تطلب، مما قد يؤثر على استقرار وموعد تسليم المهام الحيوية الأخرى."
+            },
+            {
+                question: "من هو الشخص المسؤول بالكامل عن تمثيل رغبات العملاء والمستخدمين وتحديد 'ماذا' سنبني وترتيب الـ Product Backlog؟",
+                choices: [
+                    "قائد السكرام (Scrum Master - SM)",
+                    "فريق الجودة والاختبار (QA Team)",
+                    "مالك المنتج (Product Owner - PO)",
+                    "المهندس المعماري الرئيسي للبنية التحتية"
+                ],
+                correct: 2,
+                explain: "مالك المنتج (Product Owner) هو حلقة الوصل وممثل مصلحة العميل وصاحب القرار في أولويات المهام البرمجية في مستودع الـ Backlog."
+            },
+            {
+                question: "إذا كنت تبني تطبيقاً برمجياً جديداً، كيف تنصحك عقلية الأجايل (Agile Mindset) بالبدء به والتوجه نحو السوق؟",
+                choices: [
+                    "الانتظار عدة شهور حتى ينتهي بناء التطبيق بجميع الميزات الممكنة ليكون خالياً من النواقص.",
+                    "بناء نسخة أولية (MVP) بميزة واحدة أساسية ورفعها للمتجر لاستقبال مراجعات المستخدمين وتطويرها تدريجياً.",
+                    "طلب ميزانية ومطورين إضافيين لتسريع التطوير الشامل من اليوم الأول.",
+                    "التخلي عن التوثيق والأمان من أجل زيادة سرعة كتابة الأكواد."
+                ],
+                correct: 1,
+                explain: "عقلية الأجايل ترحب بالـ Fail Fast, Learn Faster وذلك عن طريق إطلاق ميزات بسيطة ذات قيمة عالية وجمع الآراء والتكرار."
+            },
+            {
+                question: "ينص قانون بروكس (Brooks' Law) البرمجي الهام على أن:",
+                choices: [
+                    "إضافة مبرمجين جدد لمشروع متأخر، سيزيده تأخراً وتكلفة مؤقتاً.",
+                    "تطوير البرمجيات يتم بأفضل جودة عندما يعمل الجميع في جزر منعزلة.",
+                    "التوثيق الشامل هو صمام الأمان الوحيد لتلافي التعديلات المفاجئة.",
+                    "جودة البرمجية تتناسب طردياً مع عدد الساعات اليومية التي يقضيها الفريق."
+                ],
+                correct: 0,
+                explain: "قانون بروكس يثبت أن إضافة كوادر جديدة لمشروع متأخر يؤخر تسليمه أكثر لضياع وقت الفريق الحالي في الشرح والتدريب."
+            }
+        ];
+
+        let quizIndex = 0;
+        let quizScore = 0;
+
+        function startQuiz() {
+            document.getElementById('quiz-start-view').classList.add('hidden');
+            document.getElementById('quiz-content-view').classList.remove('hidden');
+            quizIndex = 0;
+            quizScore = 0;
+            loadQuizQuestion();
+        }
+
+        function loadQuizQuestion() {
+            const currentQ = quizData[quizIndex];
+            document.getElementById('quiz-progress-text').innerText = `السؤال ${quizIndex + 1} من ${quizData.length}`;
+            document.getElementById('quiz-score-live').innerText = `النتيجة الحالية: ${quizScore}`;
+            
+            // Progress Bar update
+            const percentage = ((quizIndex + 1) / quizData.length) * 100;
+            document.getElementById('quiz-progress-bar').style.width = `${percentage}%`;
+            
+            document.getElementById('quiz-question').innerText = currentQ.question;
+            
+            // Clear feedback
+            const feedbackBox = document.getElementById('quiz-feedback-box');
+            feedbackBox.classList.add('hidden');
+            document.getElementById('btn-quiz-next').classList.add('hidden');
+            
+            // Load Choices
+            const choicesContainer = document.getElementById('quiz-choices');
+            choicesContainer.innerHTML = '';
+            
+            currentQ.choices.forEach((choice, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-right p-4 rounded-xl bg-slate-800 hover:bg-slate-700/80 border border-slate-700 transition-colors text-xs font-medium flex items-center justify-between group";
+                btn.onclick = () => submitQuizAnswer(idx);
+                btn.id = `choice-btn-${idx}`;
+                btn.innerHTML = `
+                    <span>${choice}</span>
+                    <span class="w-5 h-5 rounded-full border border-slate-600 flex items-center justify-center group-hover:border-brand-400 font-mono text-[9px] text-slate-400">
+                        ${String.fromCharCode(65 + idx)}
+                    </span>
+                `;
+                choicesContainer.appendChild(btn);
+            });
+        }
+
+        function submitQuizAnswer(selectedIdx) {
+            const currentQ = quizData[quizIndex];
+            const feedbackBox = document.getElementById('quiz-feedback-box');
+            const nextBtn = document.getElementById('btn-quiz-next');
+            
+            // Disable all choices
+            currentQ.choices.forEach((_, idx) => {
+                const btn = document.getElementById(`choice-btn-${idx}`);
+                btn.disabled = true;
+                if (idx === currentQ.correct) {
+                    btn.className = "w-full text-right p-4 rounded-xl bg-emerald-950/40 text-emerald-300 border border-emerald-500 transition-colors text-xs font-bold flex items-center justify-between";
+                } else if (idx === selectedIdx) {
+                    btn.className = "w-full text-right p-4 rounded-xl bg-rose-950/40 text-rose-300 border border-rose-500 transition-colors text-xs font-bold flex items-center justify-between";
+                } else {
+                    btn.className = "w-full text-right p-4 rounded-xl bg-slate-800/20 text-slate-500 border border-slate-800 transition-colors text-xs flex items-center justify-between opacity-50";
+                }
+            });
+
+            feedbackBox.classList.remove('hidden', 'bg-red-500/10', 'text-red-300', 'bg-emerald-500/10', 'text-emerald-300');
+
+            if (selectedIdx === currentQ.correct) {
+                quizScore++;
+                feedbackBox.classList.add('bg-emerald-500/10', 'text-emerald-300');
+                feedbackBox.innerHTML = `🎉 إجابة صحيحة وممتازة!<br><span class="text-[11px] font-normal text-slate-200">${currentQ.explain}</span>`;
+            } else {
+                feedbackBox.classList.add('bg-red-500/10', 'text-red-300');
+                feedbackBox.innerHTML = `⚠️ إجابة غير صحيحة.<br><span class="text-[11px] font-normal text-slate-200">${currentQ.explain}</span>`;
+            }
+            
+            document.getElementById('quiz-score-live').innerText = `النتيجة الحالية: ${quizScore}`;
+            feedbackBox.classList.remove('hidden');
+            nextBtn.classList.remove('hidden');
+        }
+
+        function nextQuizQuestion() {
+            quizIndex++;
+            if (quizIndex < quizData.length) {
+                loadQuizQuestion();
+            } else {
+                showQuizResult();
+            }
+        }
+
+        function showQuizResult() {
+            document.getElementById('quiz-content-view').classList.add('hidden');
+            const resultView = document.getElementById('quiz-result-view');
+            const scoreDisplay = document.getElementById('result-score-display');
+            const resultEmoji = document.getElementById('result-emoji');
+            const resultText = document.getElementById('result-text-desc');
+            
+            scoreDisplay.innerText = `${quizScore} / ${quizData.length}`;
+            
+            if (quizScore === quizData.length) {
+                resultEmoji.innerText = "🏆";
+                resultText.innerText = "أداء هندسي استثنائي خارق! لقد حصلت على الدرجة الكاملة وأثبت تفوقك المطلق في عقلية وممارسات الأجايل الاحترافية.";
+            } else if (quizScore >= 3) {
+                resultEmoji.innerText = "🥈";
+                resultText.innerText = "رائع جداً! لديك فهم عميق وقوي لمصطلحات الأجايل وإدارة المشاريع، وبإمكانك ممارسة قيادة وإدارة العمليات بكفاءة.";
+            } else {
+                resultEmoji.innerText = "📚";
+                resultText.innerText = "بداية جيدة! ننصحك بإعادة مراجعة الأقسام وتجربة المحاكي مرة أخرى لتثبيت وتدعيم مفاهيم الأجايل والـ scope management.";
+            }
+            
+            resultView.classList.remove('hidden');
+        }
+
+        function restartQuiz() {
+            document.getElementById('quiz-result-view').classList.add('hidden');
+            startQuiz();
+        }
+    </script>
+</body>
+</html>

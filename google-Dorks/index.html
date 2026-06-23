@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>موسوعة محرك البحث | لوحة الحيل المتقدمة</title>
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: #151f32;
+            --text-main: #f1f5f9;
+            --text-muted: #64748b;
+            --accent: #38bdf8;
+            --accent-hover: #0ea5e9;
+            --success: #10b981;
+            --border: #223249;
+            --code-bg: #090d16;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            background-image: 
+                linear-gradient(rgba(34, 50, 73, 0.2) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(34, 50, 73, 0.2) 1px, transparent 1px);
+            background-size: 30px 30px;
+            color: var(--text-main);
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 1100px;
+            width: 100%;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .header h1 svg {
+            fill: var(--accent);
+            width: 36px;
+            height: 36px;
+        }
+
+        .header p {
+            color: var(--text-muted);
+            font-size: 16px;
+            margin: 0;
+        }
+
+        /* -----------------------------------------
+           تنسيق لوحة المولد والمحرك المتقدم الجديد
+        -------------------------------------------- */
+        .search-engine-box {
+            background: linear-gradient(145deg, #18253c, #131c2d);
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 45px;
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7), 0 0 50px 0 rgba(56, 189, 248, 0.03);
+        }
+
+        .engine-title {
+            font-size: 18px;
+            color: var(--text-main);
+            margin-top: 0;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .engine-title .material-icons {
+            color: var(--accent);
+            font-size: 24px;
+        }
+
+        .engine-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .engine-form {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .input-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .input-wrapper label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .input-wrapper label .material-icons {
+            font-size: 16px;
+        }
+
+        .engine-form select, .engine-form input[type="text"] {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--border);
+            background-color: var(--code-bg);
+            color: var(--text-main);
+            border-radius: 8px;
+            font-size: 15px;
+            box-sizing: border-box;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .engine-form select:focus, .engine-form input[type="text"]:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+        }
+
+        .engine-form select option {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+        }
+
+        .engine-btn {
+            background-color: var(--accent);
+            color: #0b0f19;
+            border: none;
+            padding: 14px 28px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 4px 14px 0 rgba(56, 189, 248, 0.3);
+            transition: all 0.2s ease;
+        }
+
+        .engine-btn:hover {
+            background-color: var(--accent-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px 0 rgba(56, 189, 248, 0.4);
+        }
+
+        .engine-btn .material-icons {
+            font-size: 20px;
+        }
+
+        /* ----------------------------------------- */
+
+        /* شبكة الكروت وتقسيم الأقسام */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 0 20px 0 rgba(56, 189, 248, 0.05);
+            border-color: var(--accent);
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--accent);
+            margin-top: 0;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 10px;
+        }
+
+        .operator-item {
+            margin-bottom: 20px;
+        }
+
+        .operator-name {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--text-main);
+            background: rgba(56, 189, 248, 0.1);
+            padding: 2px 8px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 6px;
+        }
+
+        .operator-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin: 0 0 8px 0;
+            line-height: 1.5;
+        }
+
+        /* كود البحث الجاهز للنسخ */
+        .code-block {
+            background: var(--code-bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 10px 12px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 13px;
+            color: var(--success);
+            direction: ltr;
+            text-align: left;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .copy-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 3px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            font-family: 'Segoe UI', sans-serif;
+            transition: all 0.2s;
+        }
+
+        .copy-btn:hover {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>
+            <svg viewBox="0 0 24 24">
+                <path d="M12 11c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 2c0-3.31-2.69-6-6-6s-6 2.69-6 6c0 2.22 1.21 4.15 3 5.19l1-1.74c-1.19-.69-2-1.97-2-3.45 0-2.21 1.79-4 4-4s4 1.79 4 4c0 1.48-.81 2.76-2 3.45l1 1.74c1.79-1.04 3-2.97 3-5.19zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+            </svg>
+            موسوعة حيل وأوامر البحث المتقدم (Google Dorks)
+        </h1>
+        <p>دليل تفاعلي سريع وشامل لمسوقي المبيعات، المبرمجين، والباحثين عن البيانات</p>
+    </div>
+
+    <!-- 🌟 صندوق البحث والمحرك المتقدم المطور 🌟 -->
+    <div class="search-engine-box">
+        <h3 class="engine-title">
+            <span class="material-icons">rocket_launch</span>
+            منصة إطلاق الاستعلامات الذكية والمباشرة
+        </h3>
+        
+        <div class="engine-form">
+            <!-- الصندوق الأول: اختيار نوع التصفية والمجال -->
+            <div class="input-wrapper">
+                <label for="searchStyle">
+                    <span class="material-icons">tune</span> نوع آلية الفلترة
+                </label>
+                <select id="searchStyle" onchange="updatePlaceholder()">
+                    <option value="quotes">البحث اللفظي المطابق الكامل [ "الكلمة" ]</option>
+                    <option value="site">حصر النتائج داخل موقع أو نطاق دولة معين [ site: ]</option>
+                    <option value="intitle">استهداف المقالات والعناوين الرئيسية [ intitle: ]</option>
+                    <option value="inurl">البحث البرمي في بنية المسارات والروابط [ inurl: ]</option>
+                    <option value="filetype">صيد وتحميل الكتب والمستندات المباشرة [ filetype: ]</option>
+                    <option value="indexof">اختراق الواجهات وفحص المجلدات والسيرفرات [ Index of ]</option>
+                    <option value="exclude">البحث مع استبعاد منصات أو كلمات مضللة [ - ]</option>
+                    <option value="range">الفحص وتحديث النتائج عبر نطاق زمني محدد [ .. ]</option>
+                    <option value="whatsapp_keyword">كشط مجموعات واتساب بواسطة كلمة دلالية ومجال</option>
+                    <option value="whatsapp_phone">كشط المجموعات التي يديرها شخص (بواسطة رقم هاتفه)</option>
+                    <option value="emails_open">التنقيب عن قوائم ملفات الـ Excel المفتوحة للإيميلات</option>
+                </select>
+            </div>
+
+            <!-- الصندوق الثاني: المدخلات الذكية مع Placeholder متغير ديناميكياً -->
+            <div class="input-wrapper">
+                <label for="engineQuery">
+                    <span class="material-icons">edit_note</span> البيانات المستهدفة أو الكلمات المفتاحية
+                </label>
+                <input type="text" id="engineQuery" placeholder='اكتب الجملة بدقة، مثال: node.js developer'>
+            </div>
+        </div>
+
+        <button class="engine-btn" onclick="fireGoogleSearch()">
+            <span class="material-icons">search</span>
+            تشغيل وفحص الاستعلام فوراً في Google
+        </button>
+    </div>
+
+    <div class="grid">
+        
+        <div class="card">
+            <h3 class="card-title">📌 فلاتر الاستهداف الأساسية</h3>
+            
+            <div class="operator-item">
+                <span class="operator-name">علامات التنصيص ""</span>
+                <p class="operator-desc">البحث عن الجملة بالترتيب الحرفي الدقيق دون أي تغيير أو تبديل في الكلمات.</p>
+                <div class="code-block">
+                    <span>"node.js developer"</span>
+                    <button class="copy-btn" onclick="copyText(this)">نسخ</button>
+                </div>
+            </div>
+
+            <div class="operator-item">
+                <span class="operator-name">تحديد الموقع site:</span>
+                <p class="operator-desc">حصر نتائج البحث داخل موقع إلكتروني محدد أو نطاق دولة بالكامل.</p>
+                <div class="code-block">
+                    <span>site:linkedin.com "sales manager"</span>
+                    <button class="copy-btn" onclick="copyText(this)">نسخ</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3 class="card-title">🔍 فلاتر كشط المحتوى الدقيق</h3>
+            
+            <div class="operator-item">
+                <span class="operator-name">البحث في العناوين intitle:</span>
+                <p class="operator-desc">إجبار جوجل على إظهار الصفحات التي تحتوي على الكلمة في عنوانها الرئيسي (Title) فقط.</p>
+                <div class="code-block">
+                    <span>intitle:"كورس تسويق رقمي"</span>
+                    <button class="copy-btn" onclick="copyText(this)">نسخ</button>
+                </div>
+            </div>
+
+            <div class="operator-item">
+                <span class="operator-name">البحث في الروابط inurl:</span>
+                <p class="operator-desc">البحث عن صفحات تحتوي روابطها الـ URL على كلمة معينة (ممتازة للبحث عن لوحات التحكم أو السكربتات).</p>
+                <div class="code-block">
+                    <span>inurl:wp-content/uploads</span>
+                    <button class="copy-btn" onclick="copyText(this)">نسخ</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3 class="card-title">📂 صيد الملفات والكتب الإلكترونية</h3>
+            
+            <div class="operator-item">
+                <span class="operator-name">نوع الملف filetype:</span>
+                <p class="operator-desc">الوصول المباشر للمستندات والملفات الجاهزة للتحميل (pdf, epub, xlsx, docx).</p>
+                <div class="code-block">
+                    <span>"growth hacking" filetype:pdf</span>
+                    <button class="copy-btn" onclick="copyText(this)">نسخ</button>
+                </div>
+            </div>
+
+            <div class="operator-item">
+                <span class="operator-name">استخراج الأدلة المفتوحة Index of</span>
+                <p class="operator-desc">اختراق واجهات المواقع والوصول المباشر لسيرفرات الملفات المفتوحة والمجلدات المنظمة.</p>
+                <div class="code-block">
+                    <span>"Index of" / "books"</span>
+                    <button class="copy-btn" onclick="copyText(this)">نسخ</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3 class="card-title">⚡ الاستبعاد والربط المنطقي</h3>
+            
+            <div class="operator-item">
+                <span class="operator-name">علامة الناقص - (الاستبعاد)</span>
+                <p class="operator-desc">حذف الكلمات المضللة أو المنصات التي لا تريد أن تظهر في نتائجك تماماً.</p>
+                <div class="code-block">
+                    <span>كورسات برمجة -youtube -udemy</span>
+                    <button class="copy-btn" onclick="copyText(this)">نسخ</button>
+                </div>
+            </div>
+
+            <div class="operator-item">
+                <span class="operator-name">النطاق الزمني والعددي ..</span>
+                <p class="operator-desc">البحث بين فترتين زمنيتين (أعوام) أو نطاق أسعار محدد لحصر النتائج الحديثة.</p>
+                <div class="code-block">
+                    <span>"next.js" 2025..2026</span>
+                    <button class="copy-btn" onclick="copyText(this)">نسخ</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3 class="card-title">🚀 حيل الكشط والتسويق الرقمي</h3>
+            
+            <div class="operator-item">
+                <span class="operator-name">كشط مجموعات الواتساب العكسي</span>
+                <p class="operator-desc">البحث عن روابط مجموعات الواتساب العامة المرتبطة بمجال أو رقم هاتف معين داخل منصة معينة.</p>
+                <div class="code-block">
+                    <span>site:facebook.com "عقارات" "chat.whatsapp.com"</span>
+                    <button class="copy-btn" onclick="copyText(this)">نسخ</button>
+                </div>
+            </div>
+
+            <div class="operator-item">
+                <span class="operator-name">البحث عن قوائم الإيميلات المفتوحة</span>
+                <p class="operator-desc">البحث عن ملفات Excel تحتوي على داتا إيميلات مستهدفة تم رفعها للعامة بالخطأ.</p>
+                <div class="code-block">
+                    <span>filetype:xlsx "gmail.com" "عقارات مصر"</span>
+                    <button class="copy-btn" onclick="copyText(this)">نسخ</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3 class="card-title">🧩 الرموز البديلة التكيفية</h3>
+            
+            <div class="operator-item">
+                <span class="operator-name">النجمة * (الكلمة المفقودة)</span>
+                <p class="operator-desc">تُستخدم كبديل ل كلمة منسية أو متغيرة في منتصف الجمل ليدمجها جوجل تلقائياً.</p>
+                <div class="code-block">
+                    <span>"how to build a * in typescript"</span>
+                    <button class="copy-btn" onclick="copyText(this)">نسخ</button>
+                </div>
+            </div>
+
+            <div class="operator-item">
+                <span class="operator-name">الخيار المنطقي OR / |</span>
+                <p class="operator-desc">البحث عن إحدى الكلمتين أو كلاهما معاً لتوسيع دائرة البحث المتقارب.</p>
+                <div class="code-block">
+                    <span>"whatsapp bot" (python | nodejs)</span>
+                    <button class="copy-btn" onclick="copyText(this)">نسخ</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+// تحديد نصوص الإرشاد التفاعلية لخانة الإدخال حسب طبيعة البحث المختار
+function updatePlaceholder() {
+    const style = document.getElementById('searchStyle').value;
+    const input = document.getElementById('engineQuery');
+    
+    switch(style) {
+        case 'quotes':
+            input.placeholder = 'اكتب الجملة بدقة، مثال: node.js developer';
+            break;
+        case 'site':
+            input.placeholder = 'اكتب الموقع والنطاق، مثال: linkedin.com "sales manager"';
+            break;
+        case 'intitle':
+            input.placeholder = 'اكتب الكلمة المطلوب تواجدها بالعنوان، مثال: كورس تسويق رقمي';
+            break;
+        case 'inurl':
+            input.placeholder = 'اكتب بنية الرابط، مثال: wp-content/uploads';
+            break;
+        case 'filetype':
+            input.placeholder = 'اسم الكتاب ونوعه، مثال: "growth hacking" filetype:pdf';
+            break;
+        case 'indexof':
+            input.placeholder = 'اسم السيرفر أو المجلد، مثال: "books" أو "python"';
+            break;
+        case 'exclude':
+            input.placeholder = 'الكلمات المراد نفيها مسبوقة بناقص، مثال: كورسات برمجة -youtube';
+            break;
+        case 'range':
+            input.placeholder = 'الكلمة متبوعة بمدى السنوات، مثال: "next.js" 2025..2026';
+            break;
+        case 'whatsapp_keyword':
+            input.placeholder = 'اكتب مجال المجموعات، مثال: عقارات دبي أو تجار ملابس';
+            break;
+        case 'whatsapp_phone':
+            input.placeholder = 'أدخل رقم هاتف الأدمن المستهدف، مثال: 01554379981';
+            break;
+        case 'emails_open':
+            input.placeholder = 'اكتب النطاق والمجال المستهدف، مثال: "عقارات مصر"';
+            break;
+        default:
+            input.placeholder = 'أدخل عبارة البحث هنا...';
+    }
+}
+
+// معالجة وتركيب الـ Google Dorks تلقائياً بناء على مدخلات واختيارات المستخدم
+function fireGoogleSearch() {
+    const style = document.getElementById('searchStyle').value;
+    let query = document.getElementById('engineQuery').value.trim();
+    
+    if(!query) {
+        alert('من فضلك قم بإدخال الكلمات المفتاحية أو البيانات المطلوبة لبدء الإطلاق!');
+        return;
+    }
+
+    let finalDork = '';
+
+    switch(style) {
+        case 'quotes':
+            finalDork = `"${query}"`;
+            break;
+        case 'site':
+            // للتأكد من صياغتها بشكل برمي سليم إذا لم يكتب المستخدم أمر site بنفسه
+            finalDork = query.startsWith('site:') ? query : `site:${query}`;
+            break;
+        case 'intitle':
+            finalDork = `intitle:"${query}"`;
+            break;
+        case 'inurl':
+            finalDork = `inurl:${query}`;
+            break;
+        case 'filetype':
+            // إذا لم يدخل تعبير filetype يدوياً نقوم بدمجه افتراضياً للسهولة
+            finalDork = query.includes('filetype:') ? query : `"${query}" filetype:pdf`;
+            break;
+        case 'indexof':
+            finalDork = `"Index of" / "${query}"`;
+            break;
+        case 'exclude':
+            finalDork = query;
+            break;
+        case 'range':
+            finalDork = query;
+            break;
+        case 'whatsapp_keyword':
+            finalDork = `site:facebook.com "${query}" "chat.whatsapp.com"`;
+            break;
+        case 'whatsapp_phone':
+            // تنظيف رقم الهاتف المدخل تلقائياً من المسافات لضمان الفلترة العكسية الدقيقة لحساب الأدمن
+            let cleanPhone = query.replace(/[\s\-\(\)]/g, '');
+            finalDork = `site:facebook.com "${cleanPhone}" "chat.whatsapp.com"`;
+            break;
+        case 'emails_open':
+            finalDork = `filetype:xlsx "gmail.com" "${query}"`;
+            break;
+        default:
+            finalDork = query;
+    }
+
+    // تشغيل الرادار وفتح علامة تبويب جديدة مباشرة على جوجل بالـ URL المرمز
+    window.open(`https://www.google.com/search?q=${encodeURIComponent(finalDork)}`, '_blank');
+}
+
+// سكربت نسخ الأكواد التفاعلي لبطاقات الموسوعة بالأسفل
+function copyText(button) {
+    let code = button.previousElementSibling.innerText;
+    navigator.clipboard.writeText(code).then(() => {
+        let originalText = button.innerText;
+        button.innerText = "تم النسخ!";
+        button.style.backgroundColor = "var(--success)";
+        button.style.color = "white";
+        
+        setTimeout(() => {
+            button.innerText = originalText;
+            button.style.backgroundColor = "transparent";
+            button.style.color = "var(--text-muted)";
+        }, 1200);
+    });
+}
+</script>
+
+</body>
+</html>

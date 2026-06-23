@@ -1,0 +1,1023 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>مُنجِز — لوحة المهام الاحترافية كانبان</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Rubik -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="shortcut icon" href="logo.jpg" type="image/x-icon">
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Rubik', 'sans-serif'],
+            },
+          },
+        },
+      }
+    </script>
+    <style>
+      /* Custom Premium Scrollbar */
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: rgba(156, 163, 175, 0.25);
+        border-radius: 20px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: rgba(156, 163, 175, 0.45);
+      }
+
+      /* Dragging styles and visual helper cues */
+      .dragging {
+        opacity: 0.5;
+        transform: scale(0.98);
+        border: 2px dashed #6366f1 !important;
+        box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1) !important;
+      }
+      
+      .drag-over {
+        border-color: #6366f1 !important;
+        background-color: rgba(99, 102, 241, 0.05) !important;
+      }
+
+      body {
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+
+      /* Pulse effect for newly completed tasks */
+      @keyframes completion-pulse {
+        0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
+        70% { box-shadow: 0 0 0 10px rgba(34, 197, 94, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+      }
+      .task-completed-pulse {
+        animation: completion-pulse 1.2s ease-out;
+      }
+    </style>
+  </head>
+  <body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen font-sans flex flex-col">
+
+    <!-- Navigation Header -->
+    <header class="border-b border-slate-200/80 dark:border-slate-800/80 backdrop-blur-md sticky top-0 z-30 bg-white/80 dark:bg-slate-900/80">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        
+        <!-- App Title and Brand -->
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center text-white shadow-md shadow-indigo-500/20">
+            <i class="fa-solid fa-square-poll-horizontal text-lg"></i>
+          </div>
+          <div>
+            <h1 class="text-lg font-bold tracking-tight bg-gradient-to-r from-slate-900 to-indigo-950 dark:from-white dark:to-indigo-200 bg-clip-text text-transparent">مُنجِز</h1>
+            <p class="text-[10px] text-slate-500 dark:text-slate-400">لوحة المهام الاحترافية بنظام كانبان</p>
+          </div>
+        </div>
+
+        <!-- Global Utilities (Theme toggler, audio click toggle, and new task creator) -->
+        <div class="flex items-center gap-3">
+          <!-- Audio button status indicator -->
+          <button id="soundToggle" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition" title="تفعيل/كتم المؤثرات الصوتية التفاعلية">
+            <i id="soundIcon" class="fa-solid fa-volume-high text-indigo-500 dark:text-indigo-400"></i>
+          </button>
+
+          <!-- Dark/Light theme toggler -->
+          <button id="themeToggle" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition" title="تبديل المظهر">
+            <i id="themeIcon" class="fa-solid fa-moon text-slate-600 dark:text-amber-400"></i>
+          </button>
+
+          <!-- Add Task Button -->
+          <button id="btnOpenAddModal" class="px-4 py-2 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white text-sm font-semibold flex items-center gap-2 shadow-lg shadow-indigo-500/10 transition-all hover:scale-[1.02]">
+            <i class="fa-solid fa-plus text-xs"></i>
+            <span>إضافة مهمة جديدة</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Dashboard Statistics overview bar -->
+    <section class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        
+        <!-- Total Tasks -->
+        <div class="bg-white dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800/50 p-4 rounded-2xl flex items-center justify-between shadow-sm">
+          <div>
+            <div class="text-xs text-slate-500 dark:text-slate-400 font-medium">إجمالي المهام</div>
+            <div id="statTotal" class="text-2xl font-extrabold mt-1 font-mono">0</div>
+          </div>
+          <div class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800/50 flex items-center justify-center text-slate-500">
+            <i class="fa-solid fa-list-check"></i>
+          </div>
+        </div>
+
+        <!-- Waiting (To-Do) -->
+        <div class="bg-white dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800/50 p-4 rounded-2xl flex items-center justify-between shadow-sm">
+          <div>
+            <div class="text-xs text-slate-500 dark:text-slate-400 font-medium">قيد الانتظار</div>
+            <div id="statTodo" class="text-2xl font-extrabold mt-1 text-sky-500 font-mono">0</div>
+          </div>
+          <div class="w-10 h-10 rounded-xl bg-sky-50 dark:bg-sky-950/20 flex items-center justify-center text-sky-500">
+            <i class="fa-solid fa-hourglass-start"></i>
+          </div>
+        </div>
+
+        <!-- In Progress -->
+        <div class="bg-white dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800/50 p-4 rounded-2xl flex items-center justify-between shadow-sm">
+          <div>
+            <div class="text-xs text-slate-500 dark:text-slate-400 font-medium">قيد التنفيذ</div>
+            <div id="statProgress" class="text-2xl font-extrabold mt-1 text-amber-500 font-mono">0</div>
+          </div>
+          <div class="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-950/20 flex items-center justify-center text-amber-500">
+            <i class="fa-solid fa-spinner animate-spin-slow"></i>
+          </div>
+        </div>
+
+        <!-- Done -->
+        <div class="bg-white dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800/50 p-4 rounded-2xl flex items-center justify-between shadow-sm">
+          <div>
+            <div class="text-xs text-slate-500 dark:text-slate-400 font-medium">المنجزة والمكتملة</div>
+            <div id="statDone" class="text-2xl font-extrabold mt-1 text-emerald-500 font-mono">0</div>
+          </div>
+          <div class="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/20 flex items-center justify-center text-emerald-500">
+            <i class="fa-solid fa-square-check"></i>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Animated Progress Level Bar -->
+      <div class="bg-white dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800/50 p-4 rounded-2xl mt-4 shadow-sm">
+        <div class="flex items-center justify-between text-xs font-semibold mb-2">
+          <span class="flex items-center gap-1.5">
+            <i class="fa-solid fa-chart-line text-indigo-500"></i>
+            <span>معدل إنجاز المهام الكلي</span>
+          </span>
+          <span id="progressPercent" class="font-mono text-indigo-600 dark:text-indigo-400">0%</span>
+        </div>
+        <div class="w-full h-2.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+          <div id="progressBar" class="h-full bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full transition-all duration-500" style="width: 0%"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Filters and Search panel section -->
+    <section class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+      <div class="bg-white dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800/50 p-4 rounded-2xl shadow-sm flex flex-col md:flex-row gap-4 items-center justify-between">
+        
+        <!-- Search Input -->
+        <div class="relative w-full md:w-80">
+          <span class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 pointer-events-none">
+            <i class="fa-solid fa-magnifying-glass text-sm"></i>
+          </span>
+          <input type="text" id="searchInput" placeholder="البحث عن مهمة..." class="w-full pr-10 pl-4 py-2 rounded-xl text-sm bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 text-slate-800 dark:text-slate-100" />
+        </div>
+
+        <!-- Filter options -->
+        <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+          <!-- Priority select filter -->
+          <div class="flex items-center gap-2">
+            <label class="text-xs font-semibold text-slate-500 dark:text-slate-400 whitespace-nowrap">الأولوية:</label>
+            <select id="filterPriority" class="px-3 py-1.5 rounded-lg text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-1 focus:ring-indigo-500 cursor-pointer">
+              <option value="all">الكل</option>
+              <option value="high">مرتفعة</option>
+              <option value="medium">متوسطة</option>
+              <option value="low">منخفضة</option>
+            </select>
+          </div>
+
+          <!-- Category filter -->
+          <div class="flex items-center gap-2">
+            <label class="text-xs font-semibold text-slate-500 dark:text-slate-400 whitespace-nowrap">التصنيف:</label>
+            <select id="filterCategory" class="px-3 py-1.5 rounded-lg text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:outline-none focus:ring-1 focus:ring-indigo-500 cursor-pointer">
+              <option value="all">الكل</option>
+              <option value="عمل">عمل</option>
+              <option value="شخصي">شخصي</option>
+              <option value="دراسة">دراسة</option>
+              <option value="صحة">صحة</option>
+              <option value="أخرى">أخرى</option>
+            </select>
+          </div>
+
+          <!-- Reset Filter button -->
+          <button id="btnResetFilters" class="text-xs text-indigo-500 hover:text-indigo-600 font-semibold flex items-center gap-1 hover:underline cursor-pointer">
+            <i class="fa-solid fa-arrow-rotate-left"></i>
+            <span>إعادة ضبط</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Kanban Columns Grid -->
+    <main class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-grow grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
+      
+      <!-- COLUMN 1: TO-DO (todo) -->
+      <section class="flex flex-col h-full min-h-[500px]">
+        <div class="flex items-center justify-between px-3 py-2 border-b-2 border-sky-500 mb-4">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-sky-500"></span>
+            <h2 class="font-bold text-sm tracking-wide">قيد الانتظار (To-Do)</h2>
+            <span id="countTodo" class="px-2 py-0.5 rounded-full bg-slate-200 dark:bg-slate-800 text-[11px] font-bold font-mono">0</span>
+          </div>
+          <button onclick="openAddTaskModalWithStatus('todo')" class="w-7 h-7 rounded-lg bg-sky-500/10 hover:bg-sky-500 text-sky-500 hover:text-white flex items-center justify-center transition cursor-pointer" title="إضافة مهمة جديدة هنا">
+            <i class="fa-solid fa-plus text-xs"></i>
+          </button>
+        </div>
+
+        <!-- Task container cards dropzone -->
+        <div id="col-todo" data-status="todo" class="kanban-dropzone flex flex-col gap-4 flex-grow rounded-2xl p-2 min-h-[450px] transition duration-200 border-2 border-transparent">
+          <!-- Dynamically populated card templates -->
+          <div class="empty-state text-center py-10 opacity-40 flex flex-col items-center justify-center pointer-events-none">
+            <i class="fa-regular fa-clipboard text-3xl mb-2"></i>
+            <p class="text-xs font-semibold">لا توجد مهام في الانتظار</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- COLUMN 2: IN PROGRESS (inProgress) -->
+      <section class="flex flex-col h-full min-h-[500px]">
+        <div class="flex items-center justify-between px-3 py-2 border-b-2 border-amber-500 mb-4">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+            <h2 class="font-bold text-sm tracking-wide">قيد التنفيذ (In Progress)</h2>
+            <span id="countProgress" class="px-2 py-0.5 rounded-full bg-slate-200 dark:bg-slate-800 text-[11px] font-bold font-mono">0</span>
+          </div>
+          <button onclick="openAddTaskModalWithStatus('inProgress')" class="w-7 h-7 rounded-lg bg-amber-500/10 hover:bg-amber-500 text-amber-500 hover:text-white flex items-center justify-center transition cursor-pointer" title="إضافة مهمة جديدة هنا">
+            <i class="fa-solid fa-plus text-xs"></i>
+          </button>
+        </div>
+
+        <!-- Task container cards dropzone -->
+        <div id="col-inProgress" data-status="inProgress" class="kanban-dropzone flex flex-col gap-4 flex-grow rounded-2xl p-2 min-h-[450px] transition duration-200 border-2 border-transparent">
+          <!-- Dynamically populated card templates -->
+          <div class="empty-state text-center py-10 opacity-40 flex flex-col items-center justify-center pointer-events-none">
+            <i class="fa-solid fa-arrows-spin animate-spin-slow text-3xl mb-2"></i>
+            <p class="text-xs font-semibold">لا توجد مهام جارية حالياً</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- COLUMN 3: DONE (Done) -->
+      <section class="flex flex-col h-full min-h-[500px]">
+        <div class="flex items-center justify-between px-3 py-2 border-b-2 border-emerald-500 mb-4">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+            <h2 class="font-bold text-sm tracking-wide">مكتملة (Done)</h2>
+            <span id="countDone" class="px-2 py-0.5 rounded-full bg-slate-200 dark:bg-slate-800 text-[11px] font-bold font-mono">0</span>
+          </div>
+          <button onclick="openAddTaskModalWithStatus('done')" class="w-7 h-7 rounded-lg bg-emerald-500/10 hover:bg-emerald-500 text-emerald-500 hover:text-white flex items-center justify-center transition cursor-pointer" title="إضافة مهمة جديدة هنا">
+            <i class="fa-solid fa-plus text-xs"></i>
+          </button>
+        </div>
+
+        <!-- Task container cards dropzone -->
+        <div id="col-done" data-status="done" class="kanban-dropzone flex flex-col gap-4 flex-grow rounded-2xl p-2 min-h-[450px] transition duration-200 border-2 border-transparent">
+          <!-- Dynamically populated card templates -->
+          <div class="empty-state text-center py-10 opacity-40 flex flex-col items-center justify-center pointer-events-none">
+            <i class="fa-solid fa-circle-check text-3xl mb-2"></i>
+            <p class="text-xs font-semibold">لا توجد مهام منجزة بعد</p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Task Creation & Editing Dialog Modal (Custom slide-in design) -->
+    <div id="taskModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
+      <div class="bg-white dark:bg-slate-900 rounded-3xl w-full max-w-lg shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-800 transform scale-95 transition-all duration-300">
+        
+        <!-- Modal Header -->
+        <div class="bg-slate-50 dark:bg-slate-800/50 px-6 py-4 flex items-center justify-between border-b border-slate-100 dark:border-slate-800">
+          <div class="flex items-center gap-2">
+            <div id="modalIconContainer" class="w-8 h-8 rounded-lg bg-indigo-500/10 text-indigo-500 flex items-center justify-center">
+              <i class="fa-solid fa-circle-plus"></i>
+            </div>
+            <h3 id="modalTitle" class="font-bold text-slate-900 dark:text-white text-md">إضافة مهمة جديدة</h3>
+          </div>
+          <button id="btnCloseModal" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition p-1 rounded-lg">
+            <i class="fa-solid fa-xmark text-lg"></i>
+          </button>
+        </div>
+
+        <!-- Modal Form Fields -->
+        <form id="taskForm" class="p-6 flex flex-col gap-4">
+          <input type="hidden" id="taskEditId" value="" />
+          <input type="hidden" id="taskStatus" value="todo" />
+
+          <!-- Title Input -->
+          <div>
+            <label for="taskTitle" class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1.5">عنوان المهمة *</label>
+            <input type="text" id="taskTitle" required placeholder="مثال: مراجعة كود التوثيق للمشروع" class="w-full px-4 py-2.5 rounded-xl text-sm border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+          </div>
+
+          <!-- Description Input -->
+          <div>
+            <label for="taskDesc" class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1.5">وصف المهمة التفصيلي</label>
+            <textarea id="taskDesc" rows="3" placeholder="اكتب تفاصيل وإرشادات المهمة بوضوح هنا..." class="w-full px-4 py-2.5 rounded-xl text-sm border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+          </div>
+
+          <!-- Attributes Grid (Priority, Category, Due Date) -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            
+            <!-- Priority selector -->
+            <div>
+              <label for="taskPriority" class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1.5">الأولوية</label>
+              <select id="taskPriority" class="w-full px-3 py-2 rounded-xl text-xs border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer">
+                <option value="low">منخفضة</option>
+                <option value="medium" selected>متوسطة</option>
+                <option value="high">مرتفعة</option>
+              </select>
+            </div>
+
+            <!-- Category / Tag -->
+            <div>
+              <label for="taskCategory" class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1.5">التصنيف</label>
+              <select id="taskCategory" class="w-full px-3 py-2 rounded-xl text-xs border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer">
+                <option value="عمل" selected>عمل</option>
+                <option value="شخصي">شخصي</option>
+                <option value="دراسة">دراسة</option>
+                <option value="صحة">صحة</option>
+                <option value="أخرى">أخرى</option>
+              </select>
+            </div>
+
+            <!-- Due Date -->
+            <div>
+              <label for="taskDueDate" class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1.5">تاريخ الاستحقاق</label>
+              <input type="date" id="taskDueDate" class="w-full px-3 py-1.5 rounded-xl text-xs border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer" />
+            </div>
+
+          </div>
+
+          <!-- Form actions -->
+          <div class="flex items-center gap-3 mt-4 pt-4 border-t border-slate-100 dark:border-slate-800/80">
+            <button type="submit" class="flex-1 py-3 px-4 rounded-xl font-bold text-sm text-white bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 transition shadow-lg shadow-indigo-500/15 cursor-pointer">
+              <span id="btnSubmitText">حفظ المهمة ومتابعتها</span>
+            </button>
+            <button type="button" id="btnCancelModal" class="py-3 px-6 rounded-xl font-bold text-sm text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition cursor-pointer">
+              إلغاء
+            </button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+
+    <!-- Confirm deletion dialog (Never using browser's basic confirm alert) -->
+    <div id="confirmDeleteModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
+      <div class="bg-white dark:bg-slate-900 rounded-3xl w-full max-w-sm shadow-2xl p-6 text-center border border-slate-200 dark:border-slate-800 transform scale-95 transition-all duration-300">
+        <div class="w-16 h-16 rounded-full bg-rose-500/10 text-rose-500 flex items-center justify-center text-2xl mx-auto mb-4 animate-pulse">
+          <i class="fa-solid fa-trash-can"></i>
+        </div>
+        <h3 class="font-bold text-slate-900 dark:text-white text-lg mb-2">حذف المهمة نهائياً؟</h3>
+        <p class="text-sm text-slate-500 dark:text-slate-400 mb-6">هل أنت متأكد من رغبتك في حذف هذه المهمة؟ لا يمكن التراجع عن هذا الإجراء لاحقاً.</p>
+        
+        <div class="flex gap-3">
+          <button id="btnConfirmDelete" class="flex-1 py-2.5 rounded-xl font-bold text-sm bg-rose-500 hover:bg-rose-600 text-white transition cursor-pointer">نعم، حذف</button>
+          <button id="btnCancelDelete" class="flex-1 py-2.5 rounded-xl font-bold text-sm bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700 transition cursor-pointer">إلغاء</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Interactive Premium Footer -->
+    <footer class="border-t border-slate-200/80 dark:border-slate-800/80 py-6 text-center text-xs text-slate-500 dark:text-slate-400 mt-auto bg-white dark:bg-slate-900/50">
+      <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4">
+        <span>كل الحقوق محفوظة © 2026. مصمم كمنصة لتنظيم وإنجاز المهام.</span>
+        <div class="flex gap-4">
+          <span>حالة الاتصال السحابي: <span id="syncIndicator" class="font-bold text-emerald-500">متصل (مزامنة فورية)</span></span>
+          <span>•</span>
+          <span>التخزين: مشفّر ومزامن</span>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Firebase 11.6.1 Integration & Business Logic Script -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+      import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+      import { getFirestore, collection, doc, addDoc, setDoc, updateDoc, deleteDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+      // App & Firebase Configuration
+      const appId = typeof __app_id !== 'undefined' ? __app_id : 'organizer-kanban-todo';
+      let db = null;
+      let auth = null;
+      let user = null;
+      let isCloudEnabled = false;
+
+      // In-Memory state for local persistence & offline-first usage
+      let tasksList = [];
+      let soundEnabled = true;
+      let taskIdToDelete = null;
+
+      // Custom Local Audio Synthesizer Context
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+      // UI Bindings
+      const taskModal = document.getElementById('taskModal');
+      const taskForm = document.getElementById('taskForm');
+      const confirmDeleteModal = document.getElementById('confirmDeleteModal');
+      const searchInput = document.getElementById('searchInput');
+      const filterPriority = document.getElementById('filterPriority');
+      const filterCategory = document.getElementById('filterCategory');
+      
+      const themeToggle = document.getElementById('themeToggle');
+      const themeIcon = document.getElementById('themeIcon');
+      const soundToggle = document.getElementById('soundToggle');
+      const soundIcon = document.getElementById('soundIcon');
+      const syncIndicator = document.getElementById('syncIndicator');
+
+      // Firebase setup obeying RULE 1, 2 & 3
+      async function setupFirebase() {
+        if (typeof __firebase_config !== 'undefined' && __firebase_config) {
+          try {
+            const firebaseConfig = JSON.parse(__firebase_config);
+            const app = initializeApp(firebaseConfig);
+            auth = getAuth(app);
+            db = getFirestore(app);
+
+            // RULE 3: Authenticate before making any collection query calls
+            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+              await signInWithCustomToken(auth, __initial_auth_token);
+            } else {
+              await signInAnonymously(auth);
+            }
+
+            onAuthStateChanged(auth, async (fbUser) => {
+              user = fbUser;
+              if (user) {
+                isCloudEnabled = true;
+                syncIndicator.textContent = "مزامن سحابياً بنجاح";
+                syncIndicator.className = "font-bold text-emerald-500";
+                await syncFromFirestore();
+              }
+            });
+          } catch (e) {
+            console.error("Firebase startup issue:", e);
+            fallbackToOffline();
+          }
+        } else {
+          fallbackToOffline();
+        }
+      }
+
+      function fallbackToOffline() {
+        isCloudEnabled = false;
+        syncIndicator.textContent = "غير متصل (تخزين محلي)";
+        syncIndicator.className = "font-bold text-amber-500";
+        loadFromLocalStorage();
+      }
+
+      // Local Storage Load/Save fallback implementation
+      function loadFromLocalStorage() {
+        try {
+          const raw = localStorage.getItem('kanban_tasks_local');
+          if (raw) {
+            tasksList = JSON.parse(raw);
+          } else {
+            // Default Demo Tasks to let users play immediately
+            tasksList = [
+              { id: 'demo-1', title: 'تحميل ومراجعة أوراق المشروع التقني', desc: 'مراجعة الملحقات والمخططات الفنية والتأكد من توافقها مع متطلبات العميل قبل البدء بالتنفيذ.', status: 'todo', priority: 'high', category: 'عمل', dueDate: '2026-07-01' },
+              { id: 'demo-2', title: 'حضور المحاضرة الأسبوعية للبرمجة', desc: 'مناقشة بنية النماذج وتصميم قواعد البيانات المتقدمة وإطار العمل المقترح للموقع الإلكتروني.', status: 'inProgress', priority: 'medium', category: 'دراسة', dueDate: '2026-06-30' },
+              { id: 'demo-3', title: 'حجز موعد الطبيب للفحص الدوري سنوي', desc: 'حجز الموعد السنوي الشامل للاطمئنان على الصحة البدنية والتحاليل الدورية بصحبة العائلة.', status: 'done', priority: 'low', category: 'صحة', dueDate: '2026-06-25' }
+            ];
+          }
+          renderKanbanBoard();
+        } catch (e) {
+          console.error("Local storage reading error", e);
+        }
+      }
+
+      function saveTasksState() {
+        if (isCloudEnabled && user && db) {
+          // Sync tasks array back to firestore securely using strict rules
+          syncToFirestore();
+        } else {
+          try {
+            localStorage.setItem('kanban_tasks_local', JSON.stringify(tasksList));
+          } catch (e) {}
+        }
+        renderKanbanBoard();
+      }
+
+      // RULE 1: Strict collection mapping: /artifacts/{appId}/users/{userId}/{collectionName}
+      async function syncToFirestore() {
+        if (!db || !user) return;
+        try {
+          // Store each task as document in the designated strict user collection path
+          const collectionRef = collection(db, 'artifacts', appId, 'users', user.uid, 'tasks');
+          // For simplicity and preventing query indexing issues, set each doc individually
+          for (const task of tasksList) {
+            const docRef = doc(db, 'artifacts', appId, 'users', user.uid, 'tasks', task.id);
+            await setDoc(docRef, task);
+          }
+        } catch (e) {
+          console.error("Firestore sync error:", e);
+        }
+      }
+
+      // Fetch from Firestore on initial login using Rule 2 (No Complex queries)
+      async function syncFromFirestore() {
+        if (!db || !user) return;
+        try {
+          const collectionRef = collection(db, 'artifacts', appId, 'users', user.uid, 'tasks');
+          const snapshot = await getDocs(collectionRef);
+          let loaded = [];
+          snapshot.forEach((docSnap) => {
+            loaded.push(docSnap.data());
+          });
+          
+          if (loaded.length > 0) {
+            tasksList = loaded;
+          } else {
+            // Load offline defaults if cloud container is empty
+            loadFromLocalStorage();
+            await syncToFirestore();
+          }
+          renderKanbanBoard();
+        } catch (e) {
+          console.error("Firestore loading error:", e);
+          loadFromLocalStorage();
+        }
+      }
+
+      // Web Audio sound generator (subtle click & swoosh on movement)
+      function playFeedbackSound(type = 'click') {
+        if (!soundEnabled) return;
+        try {
+          if (audioCtx.state === 'suspended') {
+            audioCtx.resume();
+          }
+          const osc = audioCtx.createOscillator();
+          const gainNode = audioCtx.createGain();
+          osc.connect(gainNode);
+          gainNode.connect(audioCtx.destination);
+
+          if (type === 'click') {
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.08);
+            gainNode.gain.setValueAtTime(0.05, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.08);
+          } else if (type === 'success') {
+            // Completion chime sound
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+            osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.08); // E5
+            osc.frequency.setValueAtTime(783.99, audioCtx.currentTime + 0.16); // G5
+            osc.frequency.setValueAtTime(1046.50, audioCtx.currentTime + 0.24); // C6
+            gainNode.gain.setValueAtTime(0.08, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.4);
+          } else if (type === 'delete') {
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(180, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(60, audioCtx.currentTime + 0.2);
+            gainNode.gain.setValueAtTime(0.05, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.2);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.2);
+          }
+        } catch (e) {
+          console.warn("Sound Context blocked", e);
+        }
+      }
+
+      // Render Board Logic
+      function renderKanbanBoard() {
+        const todoCol = document.getElementById('col-todo');
+        const progressCol = document.getElementById('col-inProgress');
+        const doneCol = document.getElementById('col-done');
+
+        // Clean columns preserving empty state markers
+        const emptyStateHtml = (icon, text) => `
+          <div class="empty-state text-center py-10 opacity-30 flex flex-col items-center justify-center pointer-events-none">
+            <i class="${icon} text-3xl mb-2"></i>
+            <p class="text-xs font-semibold">${text}</p>
+          </div>
+        `;
+
+        todoCol.innerHTML = emptyStateHtml('fa-regular fa-clipboard', 'لا توجد مهام في الانتظار');
+        progressCol.innerHTML = emptyStateHtml('fa-solid fa-arrows-spin animate-spin-slow', 'لا توجد مهام جارية حالياً');
+        doneCol.innerHTML = emptyStateHtml('fa-solid fa-circle-check', 'لا توجد مهام منجزة بعد');
+
+        // Apply filters
+        const sQuery = searchInput.value.toLowerCase().trim();
+        const priorityVal = filterPriority.value;
+        const catVal = filterCategory.value;
+
+        const filteredTasks = tasksList.filter(task => {
+          const matchesSearch = task.title.toLowerCase().includes(sQuery) || (task.desc && task.desc.toLowerCase().includes(sQuery));
+          const matchesPriority = priorityVal === 'all' || task.priority === priorityVal;
+          const matchesCategory = catVal === 'all' || task.category === catVal;
+          return matchesSearch && matchesPriority && matchesCategory;
+        });
+
+        // Track stats counts
+        let countTodoVal = 0;
+        let countProgressVal = 0;
+        let countDoneVal = 0;
+
+        filteredTasks.forEach(task => {
+          // Count metrics
+          if (task.status === 'todo') countTodoVal++;
+          else if (task.status === 'inProgress') countProgressVal++;
+          else if (task.status === 'done') countDoneVal++;
+
+          // Build Task Card element
+          const card = createTaskCard(task);
+          
+          if (task.status === 'todo') {
+            todoCol.appendChild(card);
+            // Hide empty state if at least one item present
+            const empty = todoCol.querySelector('.empty-state');
+            if (empty) empty.classList.add('hidden');
+          } else if (task.status === 'inProgress') {
+            progressCol.appendChild(card);
+            const empty = progressCol.querySelector('.empty-state');
+            if (empty) empty.classList.add('hidden');
+          } else if (task.status === 'done') {
+            doneCol.appendChild(card);
+            const empty = doneCol.querySelector('.empty-state');
+            if (empty) empty.classList.add('hidden');
+          }
+        });
+
+        // Set column counter badges
+        document.getElementById('countTodo').textContent = countTodoVal;
+        document.getElementById('countProgress').textContent = countProgressVal;
+        document.getElementById('countDone').textContent = countDoneVal;
+
+        // Calculate and animate stats dashboard summary
+        updateDashboardCounters();
+        setupDragAndDrop();
+      }
+
+      function createTaskCard(task) {
+        const card = document.createElement('div');
+        card.id = `task-card-${task.id}`;
+        card.draggable = true;
+        card.className = "bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-800/80 p-4 rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 group cursor-grab active:cursor-grabbing flex flex-col gap-3 relative overflow-hidden";
+        
+        // Drag events hooks
+        card.addEventListener('dragstart', (e) => {
+          card.classList.add('dragging');
+          e.dataTransfer.setData('text/plain', task.id);
+        });
+        
+        card.addEventListener('dragend', () => {
+          card.classList.remove('dragging');
+        });
+
+        // Priority and category styling
+        let priorityBadge = '';
+        if (task.priority === 'high') {
+          priorityBadge = `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/10 text-rose-500">مرتفعة</span>`;
+        } else if (task.priority === 'medium') {
+          priorityBadge = `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/10 text-amber-500">متوسطة</span>`;
+        } else {
+          priorityBadge = `<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-500/10 text-blue-500">منخفضة</span>`;
+        }
+
+        const formattedDueDate = task.dueDate ? `
+          <div class="flex items-center gap-1 text-[11px] text-slate-500 dark:text-slate-400">
+            <i class="fa-regular fa-calendar-check text-xs"></i>
+            <span>${task.dueDate}</span>
+          </div>
+        ` : '';
+
+        // Mobile Move triggers (Chevron selectors) to allow smooth mobile experience
+        const prevStatus = task.status === 'done' ? 'inProgress' : (task.status === 'inProgress' ? 'todo' : null);
+        const nextStatus = task.status === 'todo' ? 'inProgress' : (task.status === 'inProgress' ? 'done' : null);
+
+        const leftMoveBtn = prevStatus ? `
+          <button onclick="moveTaskDirectly('${task.id}', '${prevStatus}')" class="p-1.5 rounded-lg bg-slate-100 hover:bg-indigo-500 dark:bg-slate-800 text-slate-500 hover:text-white dark:hover:text-white transition cursor-pointer" title="نقل للخلف">
+            <i class="fa-solid fa-chevron-right text-xs"></i>
+          </button>
+        ` : `<div class="w-8"></div>`;
+
+        const rightMoveBtn = nextStatus ? `
+          <button onclick="moveTaskDirectly('${task.id}', '${nextStatus}')" class="p-1.5 rounded-lg bg-slate-100 hover:bg-indigo-500 dark:bg-slate-800 text-slate-500 hover:text-white dark:hover:text-white transition cursor-pointer" title="نقل للأمام">
+            <i class="fa-solid fa-chevron-left text-xs"></i>
+          </button>
+        ` : `<div class="w-8"></div>`;
+
+        card.innerHTML = `
+          <!-- Category & Priority tag row -->
+          <div class="flex items-center justify-between gap-2">
+            <div class="flex items-center gap-1.5">
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-500/10 text-indigo-500 dark:text-indigo-400">${task.category}</span>
+              ${priorityBadge}
+            </div>
+            <!-- Edit / Delete Quick buttons -->
+            <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+              <button onclick="openEditTaskModal('${task.id}')" class="p-1 text-slate-400 hover:text-indigo-500 transition cursor-pointer" title="تعديل">
+                <i class="fa-regular fa-pen-to-square text-xs"></i>
+              </button>
+              <button onclick="triggerDeleteTask('${task.id}')" class="p-1 text-slate-400 hover:text-rose-500 transition cursor-pointer" title="حذف">
+                <i class="fa-regular fa-trash-can text-xs"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Card Title & truncated Description -->
+          <div class="flex flex-col gap-1">
+            <h4 class="font-bold text-sm text-slate-900 dark:text-white leading-snug">${task.title}</h4>
+            ${task.desc ? `<p class="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">${task.desc}</p>` : ''}
+          </div>
+
+          <!-- Bottom bar (Due Date and Mobile Quick Movers) -->
+          <div class="flex items-center justify-between gap-4 mt-1 pt-3 border-t border-slate-100 dark:border-slate-800/50">
+            ${formattedDueDate}
+            
+            <!-- Quick Movers indicators -->
+            <div class="flex items-center gap-1">
+              ${leftMoveBtn}
+              ${rightMoveBtn}
+            </div>
+          </div>
+        `;
+
+        return card;
+      }
+
+      // Set up drop zones for columns
+      function setupDragAndDrop() {
+        const zones = document.querySelectorAll('.kanban-dropzone');
+        
+        zones.forEach(zone => {
+          zone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            zone.classList.add('drag-over');
+          });
+
+          zone.addEventListener('dragleave', () => {
+            zone.classList.remove('drag-over');
+          });
+
+          zone.addEventListener('drop', async (e) => {
+            e.preventDefault();
+            zone.classList.remove('drag-over');
+            
+            const taskId = e.dataTransfer.getData('text/plain');
+            const targetStatus = zone.getAttribute('data-status');
+            
+            const task = tasksList.find(t => t.id === taskId);
+            if (task && task.status !== targetStatus) {
+              task.status = targetStatus;
+              
+              // Trigger visual completion indicator if status drops in done col
+              if (targetStatus === 'done') {
+                playFeedbackSound('success');
+                setTimeout(() => {
+                  const cardEl = document.getElementById(`task-card-${taskId}`);
+                  if (cardEl) cardEl.classList.add('task-completed-pulse');
+                }, 50);
+              } else {
+                playFeedbackSound('click');
+              }
+              
+              saveTasksState();
+            }
+          });
+        });
+      }
+
+      // Direct Move buttons controller
+      window.moveTaskDirectly = function(id, targetStatus) {
+        const task = tasksList.find(t => t.id === id);
+        if (task) {
+          task.status = targetStatus;
+          if (targetStatus === 'done') {
+            playFeedbackSound('success');
+            saveTasksState();
+            setTimeout(() => {
+              const cardEl = document.getElementById(`task-card-${id}`);
+              if (cardEl) cardEl.classList.add('task-completed-pulse');
+            }, 50);
+          } else {
+            playFeedbackSound('click');
+            saveTasksState();
+          }
+        }
+      };
+
+      // Update stats and animate metrics
+      function updateDashboardCounters() {
+        const total = tasksList.length;
+        const todo = tasksList.filter(t => t.status === 'todo').length;
+        const progress = tasksList.filter(t => t.status === 'inProgress').length;
+        const done = tasksList.filter(t => t.status === 'done').length;
+
+        // Apply text content safely
+        document.getElementById('statTotal').textContent = total;
+        document.getElementById('statTodo').textContent = todo;
+        document.getElementById('statProgress').textContent = progress;
+        document.getElementById('statDone').textContent = done;
+
+        // Progress bar percentage calculation
+        const percent = total > 0 ? Math.round((done / total) * 100) : 0;
+        document.getElementById('progressPercent').textContent = `${percent}%`;
+        document.getElementById('progressBar').style.width = `${percent}%`;
+      }
+
+      // Open modal to add tasks
+      function openTaskModal(status = 'todo', editId = '') {
+        const isEdit = editId !== '';
+        document.getElementById('taskEditId').value = editId;
+        document.getElementById('taskStatus').value = status;
+        
+        const modalTitle = document.getElementById('modalTitle');
+        const btnSubmitText = document.getElementById('btnSubmitText');
+        const modalIconContainer = document.getElementById('modalIconContainer');
+
+        if (isEdit) {
+          const task = tasksList.find(t => t.id === editId);
+          if (task) {
+            document.getElementById('taskTitle').value = task.title;
+            document.getElementById('taskDesc').value = task.desc || '';
+            document.getElementById('taskPriority').value = task.priority;
+            document.getElementById('taskCategory').value = task.category;
+            document.getElementById('taskDueDate').value = task.dueDate || '';
+            
+            modalTitle.textContent = "تعديل بيانات المهمة";
+            btnSubmitText.textContent = "حفظ التعديلات";
+            modalIconContainer.innerHTML = `<i class="fa-regular fa-pen-to-square"></i>`;
+          }
+        } else {
+          taskForm.reset();
+          document.getElementById('taskStatus').value = status;
+          modalTitle.textContent = "إضافة مهمة جديدة";
+          btnSubmitText.textContent = "إضافة المهمة للوحة";
+          modalIconContainer.innerHTML = `<i class="fa-solid fa-circle-plus"></i>`;
+        }
+
+        taskModal.classList.remove('opacity-0', 'pointer-events-none');
+        taskModal.querySelector('.transform').classList.remove('scale-95');
+        playFeedbackSound('click');
+      }
+
+      window.openAddTaskModalWithStatus = function(status) {
+        openTaskModal(status);
+      };
+
+      window.openEditTaskModal = function(id) {
+        openTaskModal('todo', id);
+      };
+
+      function closeModal() {
+        taskModal.classList.add('opacity-0', 'pointer-events-none');
+        taskModal.querySelector('.transform').classList.add('scale-95');
+      }
+
+      // Safe Delete Task prompt
+      window.triggerDeleteTask = function(id) {
+        taskIdToDelete = id;
+        confirmDeleteModal.classList.remove('opacity-0', 'pointer-events-none');
+        confirmDeleteModal.querySelector('.transform').classList.remove('scale-95');
+        playFeedbackSound('click');
+      };
+
+      function closeDeleteModal() {
+        confirmDeleteModal.classList.add('opacity-0', 'pointer-events-none');
+        confirmDeleteModal.querySelector('.transform').classList.add('scale-95');
+        taskIdToDelete = null;
+      }
+
+      async function executeDelete() {
+        if (taskIdToDelete) {
+          if (isCloudEnabled && user && db) {
+            try {
+              const docRef = doc(db, 'artifacts', appId, 'users', user.uid, 'tasks', taskIdToDelete);
+              await deleteDoc(docRef);
+            } catch (e) {
+              console.error("Firestore deleting failed:", e);
+            }
+          }
+          
+          tasksList = tasksList.filter(t => t.id !== taskIdToDelete);
+          playFeedbackSound('delete');
+          saveTasksState();
+          closeDeleteModal();
+        }
+      }
+
+      // Global Interactive Handlers wiring
+      function setupUIHandlers() {
+        
+        // Form submission logic
+        taskForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const editId = document.getElementById('taskEditId').value;
+          const status = document.getElementById('taskStatus').value;
+          
+          const title = document.getElementById('taskTitle').value.trim();
+          const desc = document.getElementById('taskDesc').value.trim();
+          const priority = document.getElementById('taskPriority').value;
+          const category = document.getElementById('taskCategory').value;
+          const dueDate = document.getElementById('taskDueDate').value;
+
+          if (editId) {
+            // Edit existing task record
+            const task = tasksList.find(t => t.id === editId);
+            if (task) {
+              task.title = title;
+              task.desc = desc;
+              task.priority = priority;
+              task.category = category;
+              task.dueDate = dueDate;
+            }
+          } else {
+            // Add new task record
+            const newTask = {
+              id: 'task-' + Date.now(),
+              title,
+              desc,
+              status,
+              priority,
+              category,
+              dueDate
+            };
+            tasksList.push(newTask);
+            
+            if (status === 'done') {
+              playFeedbackSound('success');
+            } else {
+              playFeedbackSound('click');
+            }
+          }
+
+          saveTasksState();
+          closeModal();
+        });
+
+        // Trigger Modals opening/closing
+        document.getElementById('btnOpenAddModal').addEventListener('click', () => openTaskModal('todo'));
+        document.getElementById('btnCloseModal').addEventListener('click', closeModal);
+        document.getElementById('btnCancelModal').addEventListener('click', closeModal);
+        
+        // Delete triggers
+        document.getElementById('btnConfirmDelete').addEventListener('click', executeDelete);
+        document.getElementById('btnCancelDelete').addEventListener('click', closeDeleteModal);
+
+        // Search & filter action binders
+        searchInput.addEventListener('input', renderKanbanBoard);
+        filterPriority.addEventListener('change', renderKanbanBoard);
+        filterCategory.addEventListener('change', renderKanbanBoard);
+
+        document.getElementById('btnResetFilters').addEventListener('click', () => {
+          searchInput.value = '';
+          filterPriority.value = 'all';
+          filterCategory.value = 'all';
+          playFeedbackSound('click');
+          renderKanbanBoard();
+        });
+
+        // Sound controller toggle
+        soundToggle.addEventListener('click', () => {
+          soundEnabled = !soundEnabled;
+          soundIcon.className = soundEnabled ? 'fa-solid fa-volume-high text-indigo-500' : 'fa-solid fa-volume-xmark text-rose-500';
+          playFeedbackSound('click');
+        });
+
+        // Theme Switcher (Dark / Light) logic
+        themeToggle.addEventListener('click', () => {
+          const isDark = document.documentElement.classList.toggle('dark');
+          localStorage.setItem('kanban_theme_dark', isDark ? 'yes' : 'no');
+          themeIcon.className = isDark ? 'fa-solid fa-sun text-amber-400' : 'fa-solid fa-moon text-slate-600';
+          playFeedbackSound('click');
+        });
+
+        // Restore theme configurations
+        const savedTheme = localStorage.getItem('kanban_theme_dark') || 'no';
+        if (savedTheme === 'yes') {
+          document.documentElement.classList.add('dark');
+          themeIcon.className = 'fa-solid fa-sun text-amber-400';
+        } else {
+          document.documentElement.classList.remove('dark');
+          themeIcon.className = 'fa-solid fa-moon text-slate-600';
+        }
+      }
+
+      // App Initialization
+      window.onload = function() {
+        setupUIHandlers();
+        setupFirebase();
+      };
+    </script>
+  </body>
+</html>

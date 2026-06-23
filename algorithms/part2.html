@@ -1,0 +1,2981 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <title>الخوارزميات وهياكل البيانات — الجزء الثاني</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=IBM+Plex+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --p: #5b21b6;
+        --pd: #3b0764;
+        --pl: #7c3aed;
+        --pp: #ede9fe;
+        --g: #d97706;
+        --gl: #fef3c7;
+        --gn: #065f46;
+        --gnl: #d1fae5;
+        --r: #991b1b;
+        --rl: #fee2e2;
+        --bl: #1e40af;
+        --bll: #dbeafe;
+        --cb: #1e1b4b;
+        --br: #e5e7eb;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Cairo", Arial, sans-serif;
+        font-size: 11pt;
+        color: #1f2937;
+        background: white;
+        direction: rtl;
+        line-height: 1.9;
+      }
+      .pb {
+        page-break-after: always;
+      }
+      .cp {
+        padding: 48px 65px 68px;
+        page-break-after: always;
+      }
+      .pgh {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 28px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid var(--pp);
+      }
+      .pgch {
+        font-size: 9pt;
+        color: var(--p);
+        font-weight: 700;
+        letter-spacing: 1px;
+      }
+      .pgbr {
+        font-size: 9pt;
+        color: #9ca3af;
+        font-family: "IBM Plex Mono", monospace;
+      }
+      .cho {
+        background: linear-gradient(135deg, var(--pd), var(--pl));
+        border-radius: 16px;
+        padding: 26px 28px;
+        margin-bottom: 26px;
+      }
+      .chnum {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 9pt;
+        color: #c4b5fd;
+        letter-spacing: 3px;
+        margin-bottom: 7px;
+      }
+      .chtitle {
+        font-size: 22pt;
+        font-weight: 900;
+        color: white;
+        line-height: 1.2;
+        margin-bottom: 10px;
+      }
+      .chdesc {
+        font-size: 11pt;
+        color: rgba(255, 255, 255, 0.7);
+        line-height: 1.8;
+      }
+      h2.sec {
+        font-size: 15pt;
+        font-weight: 900;
+        color: var(--pd);
+        border-bottom: 3px solid var(--pp);
+        padding-bottom: 5px;
+        margin: 22px 0 10px;
+        position: relative;
+      }
+      h2.sec::after {
+        content: "";
+        position: absolute;
+        bottom: -3px;
+        right: 0;
+        width: 55px;
+        height: 3px;
+        background: var(--g);
+      }
+      h3.sub {
+        font-size: 13pt;
+        font-weight: 700;
+        color: var(--p);
+        margin: 16px 0 7px;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+      }
+      h3.sub::before {
+        content: "◆";
+        color: var(--g);
+        font-size: 9pt;
+      }
+      p.body {
+        font-size: 11pt;
+        line-height: 1.9;
+        color: #374151;
+        margin-bottom: 10px;
+      }
+      .def {
+        background: var(--pp);
+        border-right: 5px solid var(--p);
+        border-radius: 0 12px 12px 0;
+        padding: 14px 17px;
+        margin: 12px 0;
+        page-break-inside: avoid;
+      }
+      .def-t {
+        font-size: 10pt;
+        font-weight: 700;
+        color: var(--p);
+        margin-bottom: 5px;
+      }
+      .note {
+        border-radius: 10px;
+        padding: 11px 15px;
+        margin: 11px 0;
+        display: flex;
+        align-items: flex-start;
+        gap: 9px;
+        page-break-inside: avoid;
+        font-size: 10.5pt;
+      }
+      .note.tip {
+        background: var(--gnl);
+        border-right: 4px solid #10b981;
+      }
+      .note.warn {
+        background: #fef3c7;
+        border-right: 4px solid #f59e0b;
+      }
+      .note.info {
+        background: var(--bll);
+        border-right: 4px solid #3b82f6;
+      }
+      .note.danger {
+        background: var(--rl);
+        border-right: 4px solid #ef4444;
+      }
+      .note.gold {
+        background: var(--gl);
+        border-right: 4px solid var(--g);
+      }
+      .ni {
+        font-size: 14pt;
+        flex-shrink: 0;
+        margin-top: 1px;
+      }
+      .cw {
+        margin: 11px 0;
+        border-radius: 10px;
+        overflow: hidden;
+        page-break-inside: avoid;
+      }
+      .ch2 {
+        background: #312e81;
+        padding: 6px 13px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .cl {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 8pt;
+        color: #fde68a;
+        font-weight: 700;
+        letter-spacing: 1px;
+      }
+      .clb {
+        font-size: 8pt;
+        color: rgba(255, 255, 255, 0.45);
+        font-family: "IBM Plex Mono", monospace;
+      }
+      .cb2 {
+        background: var(--cb);
+        padding: 13px 17px;
+        direction: ltr;
+        text-align: left;
+      }
+      .cb2 pre {
+        font-family: "IBM Plex Mono", "Courier New", monospace;
+        font-size: 9.5pt;
+        color: #c4b5fd;
+        line-height: 1.8;
+        white-space: pre;
+      }
+      .kw {
+        color: #f0abfc;
+        font-weight: 700;
+      }
+      .fn {
+        color: #7dd3fc;
+      }
+      .num {
+        color: #fde68a;
+      }
+      .cm {
+        color: #6b7280;
+        font-style: italic;
+      }
+      .str {
+        color: #6ee7b7;
+      }
+      .tp {
+        color: #fda4af;
+      }
+      .op {
+        color: #fb923c;
+      }
+      .inc {
+        color: #a78bfa;
+      }
+      .cxt {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 13px 0;
+        font-size: 10pt;
+        direction: rtl;
+        page-break-inside: avoid;
+      }
+      .cxt th {
+        background: var(--pd);
+        color: #fde68a;
+        padding: 8px 11px;
+        text-align: center;
+        font-weight: 700;
+      }
+      .cxt td {
+        padding: 7px 11px;
+        text-align: center;
+        border-bottom: 1px solid var(--br);
+      }
+      .cxt tr:nth-child(even) td {
+        background: #f9f9ff;
+      }
+      .g {
+        color: #065f46;
+        font-weight: 700;
+        font-family: "IBM Plex Mono", monospace;
+      }
+      .m {
+        color: #92400e;
+        font-weight: 700;
+        font-family: "IBM Plex Mono", monospace;
+      }
+      .b {
+        color: #991b1b;
+        font-weight: 700;
+        font-family: "IBM Plex Mono", monospace;
+      }
+      .bd {
+        display: inline-flex;
+        align-items: center;
+        padding: 3px 11px;
+        border-radius: 50px;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 9pt;
+        font-weight: 700;
+        margin: 2px;
+      }
+      .bd.exc {
+        background: #d1fae5;
+        color: #065f46;
+        border: 1.5px solid #6ee7b7;
+      }
+      .bd.gd {
+        background: var(--bll);
+        color: #1e3a8a;
+        border: 1.5px solid #93c5fd;
+      }
+      .bd.md {
+        background: #fef3c7;
+        color: #78350f;
+        border: 1.5px solid #fcd34d;
+      }
+      .bd.bd2 {
+        background: var(--rl);
+        color: #7f1d1d;
+        border: 1.5px solid #fca5a5;
+      }
+      .av {
+        display: flex;
+        align-items: flex-end;
+        gap: 3px;
+        direction: ltr;
+        justify-content: center;
+        margin: 10px 0;
+        flex-wrap: wrap;
+      }
+      .ac {
+        text-align: center;
+      }
+      .cell {
+        width: 38px;
+        height: 38px;
+        border: 2px solid var(--p);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12pt;
+        font-weight: 700;
+        border-radius: 6px;
+        font-family: "IBM Plex Mono", monospace;
+        color: var(--pd);
+      }
+      .cell.c1 {
+        background: #fde68a;
+      }
+      .cell.c2 {
+        background: #a7f3d0;
+      }
+      .cell.c3 {
+        background: #bfdbfe;
+      }
+      .cell.c4 {
+        background: #fecaca;
+      }
+      .cell.c5 {
+        background: #ddd6fe;
+      }
+      .cell.c6 {
+        background: #fed7aa;
+      }
+      .cell.hi {
+        background: var(--g);
+        border-color: #d97706;
+        transform: scale(1.1);
+      }
+      .cell.ok {
+        background: #10b981;
+        color: white;
+        border-color: #059669;
+      }
+      .cell.st {
+        background: #7c3aed;
+        color: white;
+        border-color: #5b21b6;
+      }
+      .cell.cp2 {
+        background: #3b82f6;
+        color: white;
+        border-color: #1d4ed8;
+      }
+      .ci {
+        font-size: 8pt;
+        color: #9ca3af;
+        font-family: "IBM Plex Mono", monospace;
+        text-align: center;
+        margin-top: 3px;
+      }
+      .steps {
+        margin: 10px 0;
+      }
+      .step {
+        display: flex;
+        gap: 11px;
+        align-items: flex-start;
+        margin-bottom: 7px;
+        page-break-inside: avoid;
+      }
+      .sn {
+        min-width: 26px;
+        height: 26px;
+        background: var(--p);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10pt;
+        font-weight: 900;
+        flex-shrink: 0;
+        margin-top: 2px;
+      }
+      .sb {
+        flex: 1;
+      }
+      .st2 {
+        font-size: 11pt;
+        font-weight: 700;
+        color: var(--pd);
+      }
+      .sd {
+        font-size: 10.5pt;
+        color: #4b5563;
+        line-height: 1.7;
+      }
+      .chk {
+        display: flex;
+        gap: 8px;
+        align-items: flex-start;
+        margin: 5px 0;
+        font-size: 10.5pt;
+      }
+      .chki {
+        color: var(--p);
+        font-size: 11pt;
+        margin-top: 3px;
+        flex-shrink: 0;
+      }
+      .ib {
+        background: linear-gradient(135deg, #1e1b4b, #312e81);
+        border-radius: 12px;
+        padding: 18px 21px;
+        margin: 15px 0;
+        page-break-inside: avoid;
+      }
+      .ibt {
+        font-size: 11pt;
+        font-weight: 700;
+        color: #fde68a;
+        margin-bottom: 9px;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+      }
+      .ibq {
+        font-size: 10.5pt;
+        color: #c4b5fd;
+        margin: 5px 0;
+        padding-right: 11px;
+        border-right: 3px solid var(--pl);
+        line-height: 1.7;
+      }
+      .ex {
+        border: 2px solid var(--p);
+        border-radius: 12px;
+        overflow: hidden;
+        margin: 13px 0;
+        page-break-inside: avoid;
+      }
+      .exh {
+        background: var(--p);
+        padding: 8px 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .ext {
+        font-size: 11pt;
+        font-weight: 700;
+        color: white;
+      }
+      .exm {
+        font-size: 9pt;
+        color: #c4b5fd;
+      }
+      .exb {
+        padding: 13px 17px;
+      }
+      .diff {
+        display: inline-flex;
+        align-items: center;
+        padding: 2px 10px;
+        border-radius: 50px;
+        font-size: 8.5pt;
+        font-weight: 700;
+        margin-left: 7px;
+      }
+      .diff.easy {
+        background: #d1fae5;
+        color: #065f46;
+      }
+      .diff.med {
+        background: #fef3c7;
+        color: #78350f;
+      }
+      .diff.hard {
+        background: var(--rl);
+        color: #7f1d1d;
+      }
+      .ct {
+        display: inline-block;
+        background: var(--bll);
+        color: var(--bl);
+        border-radius: 4px;
+        padding: 1px 7px;
+        font-size: 8pt;
+        font-weight: 700;
+        margin: 2px;
+      }
+      .two {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        margin: 11px 0;
+      }
+      .three {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 11px;
+        margin: 11px 0;
+      }
+      .card {
+        background: #f3f4f6;
+        border: 1.5px solid var(--br);
+        border-radius: 10px;
+        padding: 13px;
+        page-break-inside: avoid;
+      }
+      .card.purple {
+        background: var(--pp);
+        border-color: #a78bfa;
+      }
+      .card.green {
+        background: var(--gnl);
+        border-color: #6ee7b7;
+      }
+      .card.gold {
+        background: var(--gl);
+        border-color: #fcd34d;
+      }
+      .card.red {
+        background: var(--rl);
+        border-color: #fca5a5;
+      }
+      .card.dark {
+        background: linear-gradient(135deg, var(--pd), var(--pl));
+        border-color: var(--pl);
+      }
+      .card-t {
+        font-size: 11pt;
+        font-weight: 700;
+        color: var(--pd);
+        margin-bottom: 7px;
+      }
+      .card.dark .card-t {
+        color: #fde68a;
+      }
+      .formula {
+        background: var(--cb);
+        border: 1px solid #4c1d95;
+        border-radius: 8px;
+        padding: 9px 17px;
+        text-align: center;
+        margin: 9px 0;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 12pt;
+        color: #fde68a;
+        font-weight: 700;
+        direction: ltr;
+      }
+      .pgf {
+        margin-top: 38px;
+        padding-top: 9px;
+        border-top: 1.5px solid var(--pp);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .pga {
+        font-size: 8.5pt;
+        color: var(--g);
+        font-weight: 700;
+      }
+      .pgn {
+        font-size: 8.5pt;
+        color: #9ca3af;
+        font-family: "IBM Plex Mono", monospace;
+      }
+      .tt {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 9.5pt;
+        direction: ltr;
+        margin: 10px 0;
+        page-break-inside: avoid;
+      }
+      .tt th {
+        background: #312e81;
+        color: #e9d5ff;
+        padding: 6px 9px;
+        text-align: center;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 8.5pt;
+      }
+      .tt td {
+        padding: 6px 9px;
+        text-align: center;
+        border-bottom: 1px solid #e5e7eb;
+        font-family: "IBM Plex Mono", monospace;
+      }
+      .tt tr:nth-child(even) td {
+        background: #f5f3ff;
+      }
+      .tt .hi td {
+        background: #fde68a;
+        color: #1c1917;
+        font-weight: 700;
+      }
+      hr.dv {
+        border: none;
+        border-top: 1.5px solid var(--pp);
+        margin: 17px 0;
+      }
+      .bc {
+        width: 100%;
+        min-height: 100vh;
+        background: linear-gradient(
+          160deg,
+          #1e1b4b 0%,
+          #3b0764 50%,
+          #5b21b6 100%
+        );
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 60px;
+        page-break-after: always;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ══════ CH 10: HEAP ══════ -->
+    <div class="cp">
+      <div class="pgh">
+        <span class="pgch">الفصل العاشر ● الكومة وطابور الأولوية</span
+        ><span class="pgbr">AswaniStack ✦ Eng. Osman Taher</span>
+      </div>
+      <div class="cho">
+        <div class="chnum">CHAPTER 10 — HEAP &amp; PRIORITY QUEUE</div>
+        <div class="chtitle">
+          الكومة وطابور الأولوية<br />Heap &amp; Priority Queue
+        </div>
+        <div class="chdesc">
+          الكومة هي شجرة ثنائية كاملة تضمن أن الأب دائماً أكبر (Max-Heap) أو
+          أصغر (Min-Heap) من أبنائه. تُستخدم في Heap Sort وأسئلة Top-K الشهيرة.
+        </div>
+      </div>
+
+      <h2 class="sec">10.1 ما هي الكومة؟</h2>
+      <div class="def">
+        <div class="def-t">💡 التعريف</div>
+        <p class="body">
+          الكومة هي <strong>شجرة ثنائية كاملة تحقق خاصية الكومة</strong>: في
+          Max-Heap كل أب ≥ أبنائه، وفي Min-Heap كل أب ≤ أبنائه. يمكن تمثيلها
+          بمصفوفة بكفاءة.
+        </p>
+      </div>
+
+      <div class="two">
+        <div style="text-align: center">
+          <div
+            style="
+              font-size: 10pt;
+              font-weight: 700;
+              color: var(--pd);
+              margin-bottom: 8px;
+            "
+          >
+            Max-Heap
+          </div>
+          <svg
+            width="200"
+            height="155"
+            viewBox="0 0 200 155"
+            style="direction: ltr"
+          >
+            <line
+              x1="100"
+              y1="22"
+              x2="55"
+              y2="65"
+              stroke="#7c3aed"
+              stroke-width="2"
+            />
+            <line
+              x1="100"
+              y1="22"
+              x2="145"
+              y2="65"
+              stroke="#7c3aed"
+              stroke-width="2"
+            />
+            <line
+              x1="55"
+              y1="65"
+              x2="28"
+              y2="115"
+              stroke="#7c3aed"
+              stroke-width="2"
+            />
+            <line
+              x1="55"
+              y1="65"
+              x2="82"
+              y2="115"
+              stroke="#7c3aed"
+              stroke-width="2"
+            />
+            <line
+              x1="145"
+              y1="65"
+              x2="118"
+              y2="115"
+              stroke="#7c3aed"
+              stroke-width="2"
+            />
+            <line
+              x1="145"
+              y1="65"
+              x2="172"
+              y2="115"
+              stroke="#7c3aed"
+              stroke-width="2"
+            />
+            <circle
+              cx="100"
+              cy="22"
+              r="18"
+              fill="#fde68a"
+              stroke="#d97706"
+              stroke-width="2.5"
+            />
+            <text
+              x="100"
+              y="28"
+              text-anchor="middle"
+              font-family="IBM Plex Mono"
+              font-size="13"
+              font-weight="700"
+              fill="#78350f"
+            >
+              100
+            </text>
+            <circle
+              cx="55"
+              cy="65"
+              r="16"
+              fill="#ddd6fe"
+              stroke="#7c3aed"
+              stroke-width="2"
+            />
+            <text
+              x="55"
+              y="71"
+              text-anchor="middle"
+              font-family="IBM Plex Mono"
+              font-size="12"
+              font-weight="700"
+              fill="#3b0764"
+            >
+              90
+            </text>
+            <circle
+              cx="145"
+              cy="65"
+              r="16"
+              fill="#ddd6fe"
+              stroke="#7c3aed"
+              stroke-width="2"
+            />
+            <text
+              x="145"
+              y="71"
+              text-anchor="middle"
+              font-family="IBM Plex Mono"
+              font-size="12"
+              font-weight="700"
+              fill="#3b0764"
+            >
+              80
+            </text>
+            <circle
+              cx="28"
+              cy="115"
+              r="14"
+              fill="#d1fae5"
+              stroke="#10b981"
+              stroke-width="2"
+            />
+            <text
+              x="28"
+              y="121"
+              text-anchor="middle"
+              font-family="IBM Plex Mono"
+              font-size="11"
+              font-weight="700"
+              fill="#065f46"
+            >
+              70
+            </text>
+            <circle
+              cx="82"
+              cy="115"
+              r="14"
+              fill="#d1fae5"
+              stroke="#10b981"
+              stroke-width="2"
+            />
+            <text
+              x="82"
+              y="121"
+              text-anchor="middle"
+              font-family="IBM Plex Mono"
+              font-size="11"
+              font-weight="700"
+              fill="#065f46"
+            >
+              60
+            </text>
+            <circle
+              cx="118"
+              cy="115"
+              r="14"
+              fill="#d1fae5"
+              stroke="#10b981"
+              stroke-width="2"
+            />
+            <text
+              x="118"
+              y="121"
+              text-anchor="middle"
+              font-family="IBM Plex Mono"
+              font-size="11"
+              font-weight="700"
+              fill="#065f46"
+            >
+              50
+            </text>
+            <circle
+              cx="172"
+              cy="115"
+              r="14"
+              fill="#d1fae5"
+              stroke="#10b981"
+              stroke-width="2"
+            />
+            <text
+              x="172"
+              y="121"
+              text-anchor="middle"
+              font-family="IBM Plex Mono"
+              font-size="11"
+              font-weight="700"
+              fill="#065f46"
+            >
+              40
+            </text>
+            <text
+              x="100"
+              y="148"
+              text-anchor="middle"
+              font-family="Cairo"
+              font-size="9"
+              fill="#d97706"
+            >
+              الأب دائماً أكبر
+            </text>
+          </svg>
+        </div>
+        <div>
+          <div
+            style="
+              font-size: 10pt;
+              font-weight: 700;
+              color: var(--pd);
+              margin-bottom: 8px;
+            "
+          >
+            تمثيل المصفوفة (Array Representation)
+          </div>
+          <div class="av">
+            <div class="ac">
+              <div class="cell hi">100</div>
+              <div class="ci">0</div>
+            </div>
+            <div class="ac">
+              <div class="cell c1">90</div>
+              <div class="ci">1</div>
+            </div>
+            <div class="ac">
+              <div class="cell c2">80</div>
+              <div class="ci">2</div>
+            </div>
+            <div class="ac">
+              <div class="cell c3">70</div>
+              <div class="ci">3</div>
+            </div>
+            <div class="ac">
+              <div class="cell c4">60</div>
+              <div class="ci">4</div>
+            </div>
+            <div class="ac">
+              <div class="cell c5">50</div>
+              <div class="ci">5</div>
+            </div>
+            <div class="ac">
+              <div class="cell c6">40</div>
+              <div class="ci">6</div>
+            </div>
+          </div>
+          <div
+            style="
+              font-size: 9.5pt;
+              color: #374151;
+              margin-top: 10px;
+              direction: rtl;
+            "
+          >
+            <div class="chk">
+              <span class="chki">✦</span>
+              <div>
+                أب العقدة i →
+                <code
+                  style="
+                    background: #f3f4f6;
+                    padding: 1px 6px;
+                    border-radius: 4px;
+                  "
+                  >(i-1)/2</code
+                >
+              </div>
+            </div>
+            <div class="chk">
+              <span class="chki">✦</span>
+              <div>
+                الابن الأيسر →
+                <code
+                  style="
+                    background: #f3f4f6;
+                    padding: 1px 6px;
+                    border-radius: 4px;
+                  "
+                  >2*i+1</code
+                >
+              </div>
+            </div>
+            <div class="chk">
+              <span class="chki">✦</span>
+              <div>
+                الابن الأيمن →
+                <code
+                  style="
+                    background: #f3f4f6;
+                    padding: 1px 6px;
+                    border-radius: 4px;
+                  "
+                  >2*i+2</code
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="sec">10.2 Priority Queue في C++</h2>
+      <div class="cw">
+        <div class="ch2">
+          <span class="cl">C++ — priority_queue</span
+          ><span class="clb">heap_usage.cpp</span>
+        </div>
+        <div class="cb2">
+          <pre>
+<span class="inc">#include &lt;queue&gt;</span>
+<span class="kw">using namespace</span> std;
+
+<span class="cm">// ── Max-Heap (الافتراضي) ───────────────────────</span>
+<span class="tp">priority_queue</span>&lt;<span class="tp">int</span>&gt; maxH;
+maxH.<span class="fn">push</span>(<span class="num">30</span>); maxH.<span class="fn">push</span>(<span class="num">10</span>); maxH.<span class="fn">push</span>(<span class="num">50</span>);
+maxH.<span class="fn">top</span>(); <span class="cm">// 50 — الأكبر دائماً</span>
+
+<span class="cm">// ── Min-Heap ───────────────────────────────────</span>
+<span class="tp">priority_queue</span>&lt;<span class="tp">int</span>, <span class="tp">vector</span>&lt;<span class="tp">int</span>&gt;, <span class="tp">greater</span>&lt;<span class="tp">int</span>&gt;&gt; minH;
+minH.<span class="fn">push</span>(<span class="num">30</span>); minH.<span class="fn">push</span>(<span class="num">10</span>); minH.<span class="fn">push</span>(<span class="num">50</span>);
+minH.<span class="fn">top</span>(); <span class="cm">// 10 — الأصغر دائماً</span>
+
+<span class="cm">// جميع العمليات: Push/Pop O(log n) | Top O(1)</span></pre>
+        </div>
+      </div>
+
+      <h2 class="sec">10.3 تمارين LeetCode Style</h2>
+
+      <div class="ex">
+        <div class="exh">
+          <span class="ext">مسألة 1: Kth Largest Element in Array</span
+          ><span class="exm"
+            ><span class="diff medium">Medium</span>
+            <span class="ct">Amazon</span><span class="ct">Google</span
+            ><span class="ct">Meta</span></span
+          >
+        </div>
+        <div class="exb">
+          <p class="body">
+            <strong>المشكلة:</strong> أوجد العنصر الـ k الأكبر في المصفوفة.
+          </p>
+          <p class="body"><strong>مثال:</strong> [3,2,1,5,6,4], k=2 → 5</p>
+          <div class="note info">
+            <span class="ni">💡</span
+            ><span
+              >استخدم Min-Heap بحجم k. إذا تجاوز الحجم k، احذف أصغر عنصر.
+              الناتج: top() هو الـ k الأكبر.</span
+            >
+          </div>
+          <div class="cw" style="margin-top: 9px">
+            <div class="ch2">
+              <span class="cl">C++ — Min-Heap O(n log k)</span>
+            </div>
+            <div class="cb2">
+              <pre>
+<span class="tp">int</span> <span class="fn">findKthLargest</span>(<span class="tp">vector</span>&lt;<span class="tp">int</span>&gt;&amp; nums, <span class="tp">int</span> k) {
+    <span class="tp">priority_queue</span>&lt;<span class="tp">int</span>, <span class="tp">vector</span>&lt;<span class="tp">int</span>&gt;, <span class="tp">greater</span>&lt;<span class="tp">int</span>&gt;&gt; minH;
+
+    <span class="kw">for</span> (<span class="tp">int</span> n : nums) {
+        minH.<span class="fn">push</span>(n);
+        <span class="kw">if</span> (minH.<span class="fn">size</span>() &gt; k) minH.<span class="fn">pop</span>(); <span class="cm">// احذف الأصغر</span>
+    }
+    <span class="kw">return</span> minH.<span class="fn">top</span>(); <span class="cm">// الـ k الأكبر</span>
+}
+<span class="cm">// Time: O(n log k) | Space: O(k)</span></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ex">
+        <div class="exh">
+          <span class="ext">مسألة 2: Top K Frequent Elements</span
+          ><span class="exm"
+            ><span class="diff medium">Medium</span>
+            <span class="ct">Amazon</span><span class="ct">Google</span
+            ><span class="ct">Meta</span><span class="ct">Microsoft</span></span
+          >
+        </div>
+        <div class="exb">
+          <p class="body">
+            <strong>المشكلة:</strong> أوجد الـ k عناصر الأكثر تكراراً.
+          </p>
+          <p class="body"><strong>مثال:</strong> [1,1,1,2,2,3], k=2 → [1,2]</p>
+          <div class="cw" style="margin-top: 9px">
+            <div class="ch2">
+              <span class="cl">C++ — HashMap + Min-Heap O(n log k)</span>
+            </div>
+            <div class="cb2">
+              <pre>
+<span class="tp">vector</span>&lt;<span class="tp">int</span>&gt; <span class="fn">topKFrequent</span>(<span class="tp">vector</span>&lt;<span class="tp">int</span>&gt;&amp; nums, <span class="tp">int</span> k) {
+    <span class="tp">unordered_map</span>&lt;<span class="tp">int</span>,<span class="tp">int</span>&gt; freq;
+    <span class="kw">for</span> (<span class="tp">int</span> n : nums) freq[n]++;
+
+    <span class="cm">// Min-Heap: {frequency, value}</span>
+    <span class="tp">priority_queue</span>&lt;<span class="tp">pair</span>&lt;<span class="tp">int</span>,<span class="tp">int</span>&gt;,
+        <span class="tp">vector</span>&lt;<span class="tp">pair</span>&lt;<span class="tp">int</span>,<span class="tp">int</span>&gt;&gt;,
+        <span class="tp">greater</span>&lt;&gt;&gt; minH;
+
+    <span class="kw">for</span> (<span class="kw">auto</span>&amp; [val, cnt] : freq) {
+        minH.<span class="fn">push</span>({cnt, val});
+        <span class="kw">if</span> (minH.<span class="fn">size</span>() &gt; k) minH.<span class="fn">pop</span>();
+    }
+
+    <span class="tp">vector</span>&lt;<span class="tp">int</span>&gt; res;
+    <span class="kw">while</span> (!minH.<span class="fn">empty</span>()) {
+        res.<span class="fn">push_back</span>(minH.<span class="fn">top</span>().second);
+        minH.<span class="fn">pop</span>();
+    }
+    <span class="kw">return</span> res;
+}</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pgf">
+        <span class="pga">Eng. Osman Taher — AswaniStack</span
+        ><span class="pgn">PAGE 114</span>
+      </div>
+    </div>
+
+    <!-- ══════ CH 11: HASH TABLES ══════ -->
+    <div class="cp">
+      <div class="pgh">
+        <span class="pgch">الفصل الحادي عشر ● جداول التجزئة</span
+        ><span class="pgbr">AswaniStack ✦ Eng. Osman Taher</span>
+      </div>
+      <div class="cho">
+        <div class="chnum">CHAPTER 11 — HASH TABLES</div>
+        <div class="chtitle">جداول التجزئة<br />Hash Tables</div>
+        <div class="chdesc">
+          أقوى هيكل بيانات للوصول السريع — O(1) للبحث والإدراج والحذف في
+          المتوسط. مفتاح حل عشرات مسائل LeetCode بكفاءة.
+        </div>
+      </div>
+
+      <h2 class="sec">11.1 كيف تعمل Hash Table؟</h2>
+      <div class="def">
+        <div class="def-t">💡 الفكرة الجوهرية</div>
+        <p class="body">
+          تأخذ المفتاح (Key) وتمرره عبر
+          <strong>دالة التجزئة (Hash Function)</strong> للحصول على فهرس في
+          مصفوفة. البحث بالمفتاح مباشرةً بدون مسح كامل.
+        </p>
+      </div>
+      <div class="formula">hash_index = hash_function(key) % table_size</div>
+
+      <h2 class="sec">11.2 unordered_map و unordered_set في C++</h2>
+      <div class="cw">
+        <div class="ch2">
+          <span class="cl">C++</span><span class="clb">hash_table.cpp</span>
+        </div>
+        <div class="cb2">
+          <pre>
+<span class="inc">#include &lt;unordered_map&gt;</span>
+<span class="inc">#include &lt;unordered_set&gt;</span>
+<span class="kw">using namespace</span> std;
+
+<span class="tp">int</span> <span class="fn">main</span>() {
+    <span class="cm">// ── unordered_map: key → value ─────────────────</span>
+    <span class="tp">unordered_map</span>&lt;<span class="tp">string</span>, <span class="tp">int</span>&gt; freq;
+    freq[<span class="str">"apple"</span>]++;            <span class="cm">// أضف/عدّل O(1)</span>
+    freq[<span class="str">"banana"</span>] = <span class="num">3</span>;
+    freq.<span class="fn">count</span>(<span class="str">"apple"</span>);        <span class="cm">// هل موجود؟ O(1)</span>
+    freq.<span class="fn">erase</span>(<span class="str">"banana"</span>);       <span class="cm">// احذف O(1)</span>
+
+    <span class="kw">for</span> (<span class="kw">auto</span>&amp; [key, val] : freq)
+        <span class="fn">cout</span> &lt;&lt; key &lt;&lt; <span class="str">": "</span> &lt;&lt; val &lt;&lt; <span class="str">"\n"</span>;
+
+    <span class="cm">// ── unordered_set: قيم فريدة ──────────────────</span>
+    <span class="tp">unordered_set</span>&lt;<span class="tp">int</span>&gt; seen;
+    seen.<span class="fn">insert</span>(<span class="num">42</span>);
+    <span class="kw">if</span> (seen.<span class="fn">count</span>(<span class="num">42</span>)) <span class="fn">cout</span> &lt;&lt; <span class="str">"موجود!\n"</span>;
+}
+<span class="cm">// Average: O(1) للكل | Worst: O(n) حالة التصادم</span></pre>
+        </div>
+      </div>
+
+      <h2 class="sec">11.3 تمارين LeetCode Style</h2>
+
+      <div class="ex">
+        <div class="exh">
+          <span class="ext">مسألة 1: Longest Consecutive Sequence</span
+          ><span class="exm"
+            ><span class="diff medium">Medium</span>
+            <span class="ct">Google</span><span class="ct">Amazon</span
+            ><span class="ct">Meta</span></span
+          >
+        </div>
+        <div class="exb">
+          <p class="body">
+            <strong>المشكلة:</strong> [100,4,200,1,3,2] → أوجد طول أطول تسلسل
+            متتالي. الجواب: 4 ([1,2,3,4])
+          </p>
+          <div class="note tip">
+            <span class="ni">💡</span
+            ><span
+              >ضع كل الأرقام في Set. ابحث فقط عن بداية التسلسل (العدد الذي n-1
+              غير موجود في الـ Set).</span
+            >
+          </div>
+          <div class="cw" style="margin-top: 9px">
+            <div class="ch2">
+              <span class="cl">C++ — O(n) باستخدام HashSet</span>
+            </div>
+            <div class="cb2">
+              <pre>
+<span class="tp">int</span> <span class="fn">longestConsecutive</span>(<span class="tp">vector</span>&lt;<span class="tp">int</span>&gt;&amp; nums) {
+    <span class="tp">unordered_set</span>&lt;<span class="tp">int</span>&gt; s(nums.<span class="fn">begin</span>(), nums.<span class="fn">end</span>());
+    <span class="tp">int</span> longest = <span class="num">0</span>;
+
+    <span class="kw">for</span> (<span class="tp">int</span> n : s) {
+        <span class="kw">if</span> (!s.<span class="fn">count</span>(n - <span class="num">1</span>)) {    <span class="cm">// بداية تسلسل!</span>
+            <span class="tp">int</span> cur = n, len = <span class="num">1</span>;
+            <span class="kw">while</span> (s.<span class="fn">count</span>(cur + <span class="num">1</span>)) { cur++; len++; }
+            longest = <span class="fn">max</span>(longest, len);
+        }
+    }
+    <span class="kw">return</span> longest;
+}
+<span class="cm">// Time: O(n) | Space: O(n)</span></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ex">
+        <div class="exh">
+          <span class="ext">مسألة 2: Group Anagrams</span
+          ><span class="exm"
+            ><span class="diff medium">Medium</span>
+            <span class="ct">Amazon</span><span class="ct">Google</span
+            ><span class="ct">Meta</span></span
+          >
+        </div>
+        <div class="exb">
+          <p class="body">
+            <strong>المشكلة:</strong> ["eat","tea","tan","ate","nat","bat"] →
+            [["bat"],["nat","tan"],["ate","eat","tea"]]
+          </p>
+          <div class="cw" style="margin-top: 9px">
+            <div class="ch2">
+              <span class="cl">C++ — Sort as Key O(n·k·log k)</span>
+            </div>
+            <div class="cb2">
+              <pre>
+<span class="tp">vector</span>&lt;<span class="tp">vector</span>&lt;<span class="tp">string</span>&gt;&gt; <span class="fn">groupAnagrams</span>(<span class="tp">vector</span>&lt;<span class="tp">string</span>&gt;&amp; strs) {
+    <span class="tp">unordered_map</span>&lt;<span class="tp">string</span>, <span class="tp">vector</span>&lt;<span class="tp">string</span>&gt;&gt; groups;
+
+    <span class="kw">for</span> (<span class="tp">string</span>&amp; s : strs) {
+        <span class="tp">string</span> key = s;
+        <span class="fn">sort</span>(key.<span class="fn">begin</span>(), key.<span class="fn">end</span>()); <span class="cm">// المفتاح = الكلمة مرتبة</span>
+        groups[key].<span class="fn">push_back</span>(s);
+    }
+
+    <span class="tp">vector</span>&lt;<span class="tp">vector</span>&lt;<span class="tp">string</span>&gt;&gt; res;
+    <span class="kw">for</span> (<span class="kw">auto</span>&amp; [_, group] : groups)
+        res.<span class="fn">push_back</span>(group);
+    <span class="kw">return</span> res;
+}</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ib">
+        <div class="ibt">🎯 أسئلة مقابلات — Hash Tables</div>
+        <div class="ibq">
+          ما الفرق بين map وunordered_map في C++؟ — map مرتبة O(log n)،
+          unordered_map غير مرتبة O(1) avg
+        </div>
+        <div class="ibq">
+          كيف تتعامل مع التصادم (Collision)؟ — Chaining (قوائم مرتبطة) أو Open
+          Addressing (Linear/Quadratic Probing)
+        </div>
+        <div class="ibq">
+          متى تستخدم Set بدلاً من Map؟ — Set للتحقق من وجود عنصر فقط، Map عندما
+          تحتاج قيمة مرتبطة بالمفتاح
+        </div>
+      </div>
+
+      <div class="pgf">
+        <span class="pga">Eng. Osman Taher — AswaniStack</span
+        ><span class="pgn">PAGE 125</span>
+      </div>
+    </div>
+
+    <!-- ══════ CH 12: GRAPHS ══════ -->
+    <div class="cp">
+      <div class="pgh">
+        <span class="pgch">الفصل الثاني عشر ● الرسوم البيانية</span
+        ><span class="pgbr">AswaniStack ✦ Eng. Osman Taher</span>
+      </div>
+      <div class="cho">
+        <div class="chnum">CHAPTER 12 — GRAPHS</div>
+        <div class="chtitle">
+          الرسوم البيانية<br />Graph Theory &amp; Representation
+        </div>
+        <div class="chdesc">
+          الإنترنت شبكة، Google Maps رسم بياني، شبكات التواصل الاجتماعي رسم
+          بياني. فهم الـ Graph = فهم العالم الرقمي من حولنا.
+        </div>
+      </div>
+
+      <h2 class="sec">12.1 مصطلحات الرسوم البيانية</h2>
+      <div class="two">
+        <div>
+          <div class="chk">
+            <span class="chki">✦</span>
+            <div><strong>Vertex (عقدة):</strong> نقطة في الرسم البياني.</div>
+          </div>
+          <div class="chk">
+            <span class="chki">✦</span>
+            <div><strong>Edge (حافة):</strong> اتصال بين عقدتين.</div>
+          </div>
+          <div class="chk">
+            <span class="chki">✦</span>
+            <div><strong>Directed:</strong> الحواف لها اتجاه (→).</div>
+          </div>
+          <div class="chk">
+            <span class="chki">✦</span>
+            <div><strong>Undirected:</strong> الحواف بدون اتجاه.</div>
+          </div>
+          <div class="chk">
+            <span class="chki">✦</span>
+            <div><strong>Weighted:</strong> لكل حافة وزن/تكلفة.</div>
+          </div>
+          <div class="chk">
+            <span class="chki">✦</span>
+            <div><strong>Cycle:</strong> مسار يعود لنفس العقدة.</div>
+          </div>
+          <div class="chk">
+            <span class="chki">✦</span>
+            <div><strong>Connected:</strong> يوجد مسار بين كل عقدتين.</div>
+          </div>
+        </div>
+        <div style="text-align: center">
+          <svg
+            width="200"
+            height="155"
+            viewBox="0 0 200 155"
+            style="direction: ltr"
+          >
+            <line
+              x1="30"
+              y1="30"
+              x2="170"
+              y2="30"
+              stroke="#d97706"
+              stroke-width="2"
+            />
+            <text
+              x="100"
+              y="24"
+              text-anchor="middle"
+              font-family="IBM Plex Mono"
+              font-size="9"
+              fill="#d97706"
+            >
+              5
+            </text>
+            <line
+              x1="30"
+              y1="30"
+              x2="100"
+              y2="120"
+              stroke="#10b981"
+              stroke-width="2"
+            />
+            <text
+              x="58"
+              y="88"
+              text-anchor="middle"
+              font-family="IBM Plex Mono"
+              font-size="9"
+              fill="#10b981"
+            >
+              3
+            </text>
+            <line
+              x1="170"
+              y1="30"
+              x2="100"
+              y2="120"
+              stroke="#7c3aed"
+              stroke-width="2"
+            />
+            <text
+              x="143"
+              y="88"
+              text-anchor="middle"
+              font-family="IBM Plex Mono"
+              font-size="9"
+              fill="#7c3aed"
+            >
+              4
+            </text>
+            <line
+              x1="100"
+              y1="120"
+              x2="170"
+              y2="120"
+              stroke="#ef4444"
+              stroke-width="2"
+            />
+            <text
+              x="135"
+              y="136"
+              text-anchor="middle"
+              font-family="IBM Plex Mono"
+              font-size="9"
+              fill="#ef4444"
+            >
+              7
+            </text>
+            <circle
+              cx="30"
+              cy="30"
+              r="16"
+              fill="#ddd6fe"
+              stroke="#7c3aed"
+              stroke-width="2"
+            />
+            <text
+              x="30"
+              y="36"
+              text-anchor="middle"
+              font-family="IBM Plex Mono"
+              font-size="12"
+              font-weight="700"
+              fill="#3b0764"
+            >
+              A
+            </text>
+            <circle
+              cx="170"
+              cy="30"
+              r="16"
+              fill="#d1fae5"
+              stroke="#10b981"
+              stroke-width="2"
+            />
+            <text
+              x="170"
+              y="36"
+              text-anchor="middle"
+              font-family="IBM Plex Mono"
+              font-size="12"
+              font-weight="700"
+              fill="#065f46"
+            >
+              B
+            </text>
+            <circle
+              cx="100"
+              cy="120"
+              r="16"
+              fill="#fde68a"
+              stroke="#d97706"
+              stroke-width="2"
+            />
+            <text
+              x="100"
+              y="126"
+              text-anchor="middle"
+              font-family="IBM Plex Mono"
+              font-size="12"
+              font-weight="700"
+              fill="#78350f"
+            >
+              C
+            </text>
+            <circle
+              cx="170"
+              cy="120"
+              r="16"
+              fill="#fecaca"
+              stroke="#ef4444"
+              stroke-width="2"
+            />
+            <text
+              x="170"
+              y="126"
+              text-anchor="middle"
+              font-family="IBM Plex Mono"
+              font-size="12"
+              font-weight="700"
+              fill="#7f1d1d"
+            >
+              D
+            </text>
+          </svg>
+          <div style="font-size: 9pt; color: #9ca3af">
+            Weighted Undirected Graph
+          </div>
+        </div>
+      </div>
+
+      <h2 class="sec">12.2 تمثيل الرسم البياني بـ C++</h2>
+      <div class="cw">
+        <div class="ch2">
+          <span class="cl">C++ — Adjacency List</span
+          ><span class="clb">graph_representation.cpp</span>
+        </div>
+        <div class="cb2">
+          <pre>
+<span class="kw">using namespace</span> std;
+
+<span class="cm">// ── Adjacency List (الأكثر استخداماً) ─────────</span>
+<span class="tp">int</span> V = <span class="num">5</span>; <span class="cm">// عدد العقد</span>
+<span class="tp">vector</span>&lt;<span class="tp">vector</span>&lt;<span class="tp">int</span>&gt;&gt; adj(V);
+
+<span class="cm">// إضافة حافة Undirected</span>
+adj[<span class="num">0</span>].<span class="fn">push_back</span>(<span class="num">1</span>);
+adj[<span class="num">1</span>].<span class="fn">push_back</span>(<span class="num">0</span>); <span class="cm">// اتجاهان</span>
+adj[<span class="num">0</span>].<span class="fn">push_back</span>(<span class="num">2</span>);
+adj[<span class="num">2</span>].<span class="fn">push_back</span>(<span class="num">0</span>);
+
+<span class="cm">// ── Weighted Graph ─────────────────────────────</span>
+<span class="tp">vector</span>&lt;<span class="tp">vector</span>&lt;<span class="tp">pair</span>&lt;<span class="tp">int</span>,<span class="tp">int</span>&gt;&gt;&gt; wAdj(V); <span class="cm">// {neighbor, weight}</span>
+wAdj[<span class="num">0</span>].<span class="fn">push_back</span>({<span class="num">1</span>, <span class="num">5</span>}); <span class="cm">// 0→1 بوزن 5</span>
+wAdj[<span class="num">1</span>].<span class="fn">push_back</span>({<span class="num">2</span>, <span class="num">3</span>}); <span class="cm">// 1→2 بوزن 3</span>
+
+<span class="cm">// Space: O(V+E) — مثالي للـ Sparse Graphs</span></pre>
+        </div>
+      </div>
+
+      <div class="ib">
+        <div class="ibt">🎯 أسئلة مقابلات — Graphs</div>
+        <div class="ibq">
+          ما الفرق بين Adjacency List وAdjacency Matrix؟ — List: O(V+E) space،
+          Matrix: O(V²) space. List أفضل للـ Sparse
+        </div>
+        <div class="ibq">
+          ما الفرق بين DAG وUndirected Graph؟ — DAG موجّه وبلا دورات، يُستخدم في
+          Topological Sort
+        </div>
+        <div class="ibq">
+          كيف تكتشف وجود دورة في Directed Graph؟ — DFS مع تتبع حالة العقد:
+          WHITE/GRAY/BLACK
+        </div>
+      </div>
+
+      <div class="pgf">
+        <span class="pga">Eng. Osman Taher — AswaniStack</span
+        ><span class="pgn">PAGE 136</span>
+      </div>
+    </div>
+
+    <!-- ══════ CH 13: RECURSION ══════ -->
+    <div class="cp">
+      <div class="pgh">
+        <span class="pgch">الفصل الثالث عشر ● التكرار وفرّق تسُد</span
+        ><span class="pgbr">AswaniStack ✦ Eng. Osman Taher</span>
+      </div>
+      <div class="cho">
+        <div class="chnum">CHAPTER 13 — RECURSION &amp; DIVIDE AND CONQUER</div>
+        <div class="chtitle">
+          التكرار وفرّق تسُد<br />Recursion &amp; D&amp;C
+        </div>
+        <div class="chdesc">
+          Recursion = الدالة تستدعي نفسها. D&amp;C = قسّم الكبير لأجزاء صغيرة
+          وحلّها. معاً هما أساس Merge Sort وBinary Search وBacktracking.
+        </div>
+      </div>
+
+      <h2 class="sec">13.1 ركنا Recursion</h2>
+      <div class="three">
+        <div class="card red">
+          <div class="card-t">1. Base Case ⚓</div>
+          <p style="font-size: 10pt">
+            الحالة التي تُوقف الاستدعاء.
+            <strong>بدونها → Stack Overflow!</strong>
+          </p>
+        </div>
+        <div class="card purple">
+          <div class="card-t">2. Recursive Case 🔄</div>
+          <p style="font-size: 10pt">
+            استدعاء الدالة بمشكلة <strong>أصغر</strong> تقترب من الـ Base Case.
+          </p>
+        </div>
+        <div class="card green">
+          <div class="card-t">3. Trust the Magic ✨</div>
+          <p style="font-size: 10pt">افترض أن الاستدعاء يعمل صح وابنِ عليه.</p>
+        </div>
+      </div>
+
+      <div class="cw">
+        <div class="ch2">
+          <span class="cl">C++ — Factorial &amp; Fibonacci</span>
+        </div>
+        <div class="cb2">
+          <pre>
+<span class="cm">// ── Factorial: n! ──────────────────────────────</span>
+<span class="tp">int</span> <span class="fn">factorial</span>(<span class="tp">int</span> n) {
+    <span class="kw">if</span> (n &lt;= <span class="num">1</span>) <span class="kw">return</span> <span class="num">1</span>;         <span class="cm">// Base Case</span>
+    <span class="kw">return</span> n * <span class="fn">factorial</span>(n - <span class="num">1</span>);  <span class="cm">// Recursive</span>
+}
+<span class="cm">// factorial(5) → 5*4*3*2*1 = 120</span>
+
+<span class="cm">// ── Fibonacci Memoization O(n) ─────────────────</span>
+<span class="tp">unordered_map</span>&lt;<span class="tp">int</span>,<span class="tp">int</span>&gt; memo;
+<span class="tp">int</span> <span class="fn">fib</span>(<span class="tp">int</span> n) {
+    <span class="kw">if</span> (n &lt;= <span class="num">1</span>) <span class="kw">return</span> n;
+    <span class="kw">if</span> (memo.<span class="fn">count</span>(n)) <span class="kw">return</span> memo[n];
+    <span class="kw">return</span> memo[n] = <span class="fn">fib</span>(n-<span class="num">1</span>) + <span class="fn">fib</span>(n-<span class="num">2</span>);
+}
+<span class="cm">// بدون مemoization: O(2^n) | معها: O(n)</span></pre>
+        </div>
+      </div>
+
+      <h2 class="sec">13.2 Backtracking — التراجع</h2>
+      <p class="body">
+        تقنية لاستعراض كل الحلول الممكنة مع التراجع عند الوصول لحل غير صالح.
+        مثالية لمسائل التوليد والتحسين.
+      </p>
+
+      <div class="ex">
+        <div class="exh">
+          <span class="ext">مسألة 1: Subsets (Power Set)</span
+          ><span class="exm"
+            ><span class="diff medium">Medium</span>
+            <span class="ct">Amazon</span><span class="ct">Microsoft</span
+            ><span class="ct">Google</span></span
+          >
+        </div>
+        <div class="exb">
+          <p class="body">
+            <strong>المشكلة:</strong> [1,2,3] → أرجع كل المجموعات الجزئية
+            الممكنة (8 مجموعات = 2³)
+          </p>
+          <div class="cw" style="margin-top: 9px">
+            <div class="ch2">
+              <span class="cl">C++ — Backtracking O(2^n)</span>
+            </div>
+            <div class="cb2">
+              <pre>
+<span class="tp">void</span> <span class="fn">bt</span>(<span class="tp">vector</span>&lt;<span class="tp">int</span>&gt;&amp; nums, <span class="tp">int</span> start,
+         <span class="tp">vector</span>&lt;<span class="tp">int</span>&gt;&amp; cur, <span class="tp">vector</span>&lt;<span class="tp">vector</span>&lt;<span class="tp">int</span>&gt;&gt;&amp; res) {
+    res.<span class="fn">push_back</span>(cur);
+
+    <span class="kw">for</span> (<span class="tp">int</span> i = start; i &lt; nums.<span class="fn">size</span>(); i++) {
+        cur.<span class="fn">push_back</span>(nums[i]);  <span class="cm">// اختر</span>
+        <span class="fn">bt</span>(nums, i+<span class="num">1</span>, cur, res); <span class="cm">// استكشف</span>
+        cur.<span class="fn">pop_back</span>();          <span class="cm">// تراجع!</span>
+    }
+}
+
+<span class="tp">vector</span>&lt;<span class="tp">vector</span>&lt;<span class="tp">int</span>&gt;&gt; <span class="fn">subsets</span>(<span class="tp">vector</span>&lt;<span class="tp">int</span>&gt;&amp; nums) {
+    <span class="tp">vector</span>&lt;<span class="tp">vector</span>&lt;<span class="tp">int</span>&gt;&gt; res;
+    <span class="tp">vector</span>&lt;<span class="tp">int</span>&gt; cur;
+    <span class="fn">bt</span>(nums, <span class="num">0</span>, cur, res);
+    <span class="kw">return</span> res;
+}</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ex">
+        <div class="exh">
+          <span class="ext">مسألة 2: Permutations</span
+          ><span class="exm"
+            ><span class="diff medium">Medium</span> <span class="ct">Meta</span
+            ><span class="ct">Amazon</span><span class="ct">Google</span></span
+          >
+        </div>
+        <div class="exb">
+          <p class="body">
+            <strong>المشكلة:</strong> [1,2,3] → أرجع كل التبديلات الممكنة (6 =
+            3!)
+          </p>
+          <div class="cw" style="margin-top: 9px">
+            <div class="ch2">
+              <span class="cl">C++ — Backtracking O(n!)</span>
+            </div>
+            <div class="cb2">
+              <pre>
+<span class="tp">void</span> <span class="fn">permute</span>(<span class="tp">vector</span>&lt;<span class="tp">int</span>&gt;&amp; nums, <span class="tp">vector</span>&lt;<span class="tp">bool</span>&gt;&amp; used,
+              <span class="tp">vector</span>&lt;<span class="tp">int</span>&gt;&amp; cur, <span class="tp">vector</span>&lt;<span class="tp">vector</span>&lt;<span class="tp">int</span>&gt;&gt;&amp; res) {
+    <span class="kw">if</span> (cur.<span class="fn">size</span>() == nums.<span class="fn">size</span>()) {
+        res.<span class="fn">push_back</span>(cur); <span class="kw">return</span>;
+    }
+    <span class="kw">for</span> (<span class="tp">int</span> i = <span class="num">0</span>; i &lt; nums.<span class="fn">size</span>(); i++) {
+        <span class="kw">if</span> (used[i]) <span class="kw">continue</span>;
+        used[i] = <span class="kw">true</span>;
+        cur.<span class="fn">push_back</span>(nums[i]);
+        <span class="fn">permute</span>(nums, used, cur, res);
+        cur.<span class="fn">pop_back</span>();
+        used[i] = <span class="kw">false</span>; <span class="cm">// تراجع!</span>
+    }
+}</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pgf">
+        <span class="pga">Eng. Osman Taher — AswaniStack</span
+        ><span class="pgn">PAGE 149</span>
+      </div>
+    </div>
+
+    <!-- ══════ CH 14: DYNAMIC PROGRAMMING ══════ -->
+    <div class="cp">
+      <div class="pgh">
+        <span class="pgch">الفصل الرابع عشر ● البرمجة الديناميكية</span
+        ><span class="pgbr">AswaniStack ✦ Eng. Osman Taher</span>
+      </div>
+      <div class="cho">
+        <div class="chnum">CHAPTER 14 — DYNAMIC PROGRAMMING</div>
+        <div class="chtitle">البرمجة الديناميكية<br />Dynamic Programming</div>
+        <div class="chdesc">
+          الفكرة الأذكى: "لا تحسب نفس الشيء مرتين". DP تحوّل O(2ⁿ) إلى O(n).
+          مطلوبة في كل مقابلات FAANG بدون استثناء.
+        </div>
+      </div>
+
+      <div class="two">
+        <div>
+          <h2 class="sec">14.1 متطلبان أساسيان</h2>
+          <div class="note info">
+            <span class="ni">1️⃣</span
+            ><span
+              ><strong>Optimal Substructure:</strong> الحل الأمثل يتكون من حلول
+              أمثل للمشاكل الفرعية.</span
+            >
+          </div>
+          <div class="note tip">
+            <span class="ni">2️⃣</span
+            ><span
+              ><strong>Overlapping Subproblems:</strong> نفس المشاكل الفرعية
+              تُحسب أكثر من مرة.</span
+            >
+          </div>
+        </div>
+        <div>
+          <h2 class="sec">14.2 طريقتان</h2>
+          <div class="note warn">
+            <span class="ni">⬇️</span
+            ><span
+              ><strong>Top-Down (Memoization):</strong> ابدأ من الكبير، خزّن في
+              HashMap.</span
+            >
+          </div>
+          <div class="note gold">
+            <span class="ni">⬆️</span
+            ><span
+              ><strong>Bottom-Up (Tabulation):</strong> ابنِ الجدول من الأصغر.
+              عادةً أسرع.</span
+            >
+          </div>
+        </div>
+      </div>
+
+      <h2 class="sec">14.3 أشهر مسائل DP</h2>
+
+      <div class="ex">
+        <div class="exh">
+          <span class="ext">مسألة 1: Coin Change</span
+          ><span class="exm"
+            ><span class="diff medium">Medium</span>
+            <span class="ct">Amazon</span><span class="ct">Google</span
+            ><span class="ct">Apple</span></span
+          >
+        </div>
+        <div class="exb">
+          <p class="body">
+            <strong>المشكلة:</strong> عملات [1,5,10], amount=11 → أقل عدد من
+            العملات؟ الجواب: 2 (10+1)
+          </p>
+          <div class="av" style="margin: 8px 0">
+            <div class="ac">
+              <div class="cell st">0</div>
+              <div class="ci">dp[0]</div>
+            </div>
+            <div class="ac">
+              <div class="cell c1">1</div>
+              <div class="ci">dp[1]</div>
+            </div>
+            <div class="ac">
+              <div class="cell c2">2</div>
+              <div class="ci">dp[2]</div>
+            </div>
+            <div class="ac">
+              <div class="cell c3">3</div>
+              <div class="ci">dp[3]</div>
+            </div>
+            <div class="ac">
+              <div class="cell c4">4</div>
+              <div class="ci">dp[4]</div>
+            </div>
+            <div class="ac">
+              <div class="cell c5">1</div>
+              <div class="ci">dp[5]</div>
+            </div>
+            <div class="ac">
+              <div class="cell c6">2</div>
+              <div class="ci">dp[6]</div>
+            </div>
+            <div class="ac">
+              <div class="cell c1">1</div>
+              <div class="ci">dp[10]</div>
+            </div>
+            <div class="ac">
+              <div class="cell ok">2</div>
+              <div class="ci" style="color: #065f46; font-weight: 700">
+                dp[11]✓
+              </div>
+            </div>
+          </div>
+          <div class="cw" style="margin-top: 9px">
+            <div class="ch2">
+              <span class="cl">C++ — Bottom-Up DP O(amount × coins)</span>
+            </div>
+            <div class="cb2">
+              <pre>
+<span class="tp">int</span> <span class="fn">coinChange</span>(<span class="tp">vector</span>&lt;<span class="tp">int</span>&gt;&amp; coins, <span class="tp">int</span> amount) {
+    <span class="tp">vector</span>&lt;<span class="tp">int</span>&gt; dp(amount+<span class="num">1</span>, amount+<span class="num">1</span>); <span class="cm">// ∞</span>
+    dp[<span class="num">0</span>] = <span class="num">0</span>;
+
+    <span class="kw">for</span> (<span class="tp">int</span> i = <span class="num">1</span>; i &lt;= amount; i++)
+        <span class="kw">for</span> (<span class="tp">int</span> coin : coins)
+            <span class="kw">if</span> (coin &lt;= i)
+                dp[i] = <span class="fn">min</span>(dp[i], <span class="num">1</span> + dp[i-coin]);
+
+    <span class="kw">return</span> dp[amount] &gt; amount ? -<span class="num">1</span> : dp[amount];
+}
+<span class="cm">// Time: O(amount × coins.size()) | Space: O(amount)</span></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ex">
+        <div class="exh">
+          <span class="ext">مسألة 2: Longest Common Subsequence (LCS)</span
+          ><span class="exm"
+            ><span class="diff medium">Medium</span>
+            <span class="ct">Google</span><span class="ct">Amazon</span
+            ><span class="ct">Microsoft</span></span
+          >
+        </div>
+        <div class="exb">
+          <p class="body">
+            <strong>المشكلة:</strong> text1="abcde", text2="ace" → أطول تسلسل
+            مشترك = 3 ("ace")
+          </p>
+          <div class="cw" style="margin-top: 9px">
+            <div class="ch2">
+              <span class="cl">C++ — 2D DP Table O(m×n)</span>
+            </div>
+            <div class="cb2">
+              <pre>
+<span class="tp">int</span> <span class="fn">lcs</span>(<span class="tp">string</span> t1, <span class="tp">string</span> t2) {
+    <span class="tp">int</span> m = t1.<span class="fn">size</span>(), n = t2.<span class="fn">size</span>();
+    <span class="tp">vector</span>&lt;<span class="tp">vector</span>&lt;<span class="tp">int</span>&gt;&gt; dp(m+<span class="num">1</span>, <span class="tp">vector</span>&lt;<span class="tp">int</span>&gt;(n+<span class="num">1</span>, <span class="num">0</span>));
+
+    <span class="kw">for</span> (<span class="tp">int</span> i = <span class="num">1</span>; i &lt;= m; i++)
+        <span class="kw">for</span> (<span class="tp">int</span> j = <span class="num">1</span>; j &lt;= n; j++) {
+            <span class="kw">if</span> (t1[i-<span class="num">1</span>] == t2[j-<span class="num">1</span>])
+                dp[i][j] = dp[i-<span class="num">1</span>][j-<span class="num">1</span>] + <span class="num">1</span>;
+            <span class="kw">else</span>
+                dp[i][j] = <span class="fn">max</span>(dp[i-<span class="num">1</span>][j], dp[i][j-<span class="num">1</span>]);
+        }
+    <span class="kw">return</span> dp[m][n];
+}</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ex">
+        <div class="exh">
+          <span class="ext">مسألة 3: House Robber</span
+          ><span class="exm"
+            ><span class="diff medium">Medium</span>
+            <span class="ct">Amazon</span><span class="ct">Google</span
+            ><span class="ct">Meta</span></span
+          >
+        </div>
+        <div class="exb">
+          <p class="body">
+            <strong>المشكلة:</strong> [2,7,9,3,1] → أقصى مجموع بدون أخذ منازل
+            متجاورة. الجواب: 12 (2+9+1)
+          </p>
+          <div class="cw" style="margin-top: 9px">
+            <div class="ch2">
+              <span class="cl">C++ — Space Optimized O(n) / Space O(1)</span>
+            </div>
+            <div class="cb2">
+              <pre>
+<span class="tp">int</span> <span class="fn">rob</span>(<span class="tp">vector</span>&lt;<span class="tp">int</span>&gt;&amp; nums) {
+    <span class="tp">int</span> prev2 = <span class="num">0</span>, prev1 = <span class="num">0</span>;
+
+    <span class="kw">for</span> (<span class="tp">int</span> n : nums) {
+        <span class="tp">int</span> cur = <span class="fn">max</span>(prev1, prev2 + n);
+        prev2 = prev1;
+        prev1 = cur;
+    }
+    <span class="kw">return</span> prev1;
+}
+<span class="cm">// dp[i] = max(dp[i-1], dp[i-2] + nums[i])</span></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pgf">
+        <span class="pga">Eng. Osman Taher — AswaniStack</span
+        ><span class="pgn">PAGE 161</span>
+      </div>
+    </div>
+
+    <!-- ══════ CH 15: GREEDY ══════ -->
+    <div class="cp">
+      <div class="pgh">
+        <span class="pgch">الفصل الخامس عشر ● الخوارزميات الجشعة</span
+        ><span class="pgbr">AswaniStack ✦ Eng. Osman Taher</span>
+      </div>
+      <div class="cho">
+        <div class="chnum">CHAPTER 15 — GREEDY ALGORITHMS</div>
+        <div class="chtitle">الخوارزميات الجشعة<br />Greedy Algorithms</div>
+        <div class="chdesc">
+          في كل خطوة اختر الأفضل محلياً. بسيطة وسريعة — لكن لا تنجح مع كل
+          المشاكل. تعلّم متى تستخدمها ومتى تلجأ لـ DP بدلاً منها.
+        </div>
+      </div>
+
+      <h2 class="sec">15.1 مبدأ Greedy</h2>
+      <div class="def">
+        <div class="def-t">💡 التعريف</div>
+        <p class="body">
+          في كل خطوة نتخذ القرار الذي يبدو
+          <strong>الأفضل في اللحظة الحالية</strong> دون النظر للمستقبل. لا نعود
+          لتغيير قراراتنا السابقة أبداً.
+        </p>
+      </div>
+
+      <div class="two">
+        <div class="card green">
+          <div class="card-t">✅ متى ينجح Greedy؟</div>
+          <div class="chk">
+            <span class="chki">✦</span>
+            <div>يوجد Greedy Choice Property</div>
+          </div>
+          <div class="chk">
+            <span class="chki">✦</span>
+            <div>Optimal Substructure</div>
+          </div>
+          <div class="chk">
+            <span class="chki">✦</span>
+            <div>مسألة الجدولة والتغطية</div>
+          </div>
+          <div class="chk">
+            <span class="chki">✦</span>
+            <div>Huffman Coding</div>
+          </div>
+        </div>
+        <div class="card red">
+          <div class="card-t">❌ متى يفشل Greedy؟</div>
+          <div class="chk">
+            <span class="chki">✦</span>
+            <div>0/1 Knapsack → استخدم DP</div>
+          </div>
+          <div class="chk">
+            <span class="chki">✦</span>
+            <div>Coin Change مع عملات غير قياسية</div>
+          </div>
+          <div class="chk">
+            <span class="chki">✦</span>
+            <div>Shortest Path مع حواف سالبة</div>
+          </div>
+          <div class="chk">
+            <span class="chki">✦</span>
+            <div>مشاكل التحسين الكاملة</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ex">
+        <div class="exh">
+          <span class="ext">مسألة 1: Jump Game</span
+          ><span class="exm"
+            ><span class="diff medium">Medium</span>
+            <span class="ct">Amazon</span><span class="ct">Google</span
+            ><span class="ct">Microsoft</span></span
+          >
+        </div>
+        <div class="exb">
+          <p class="body">
+            <strong>المشكلة:</strong> [2,3,1,1,4] → هل يمكن الوصول للنهاية؟
+            الجواب: true
+          </p>
+          <p class="body">
+            <strong>مثال سالب:</strong> [3,2,1,0,4] → false (عالق عند index 3)
+          </p>
+          <div class="cw" style="margin-top: 9px">
+            <div class="ch2">
+              <span class="cl">C++ — Greedy O(n) / Space O(1)</span>
+            </div>
+            <div class="cb2">
+              <pre>
+<span class="tp">bool</span> <span class="fn">canJump</span>(<span class="tp">vector</span>&lt;<span class="tp">int</span>&gt;&amp; nums) {
+    <span class="tp">int</span> maxReach = <span class="num">0</span>; <span class="cm">// أقصى موضع يمكن الوصول إليه</span>
+
+    <span class="kw">for</span> (<span class="tp">int</span> i = <span class="num">0</span>; i &lt; nums.<span class="fn">size</span>(); i++) {
+        <span class="kw">if</span> (i &gt; maxReach) <span class="kw">return false</span>; <span class="cm">// عالق!</span>
+        maxReach = <span class="fn">max</span>(maxReach, i + nums[i]);
+    }
+    <span class="kw">return true</span>;
+}</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ex">
+        <div class="exh">
+          <span class="ext">مسألة 2: Meeting Rooms II</span
+          ><span class="exm"
+            ><span class="diff medium">Medium</span>
+            <span class="ct">Google</span><span class="ct">Amazon</span
+            ><span class="ct">Meta</span></span
+          >
+        </div>
+        <div class="exb">
+          <p class="body">
+            <strong>المشكلة:</strong> [[0,30],[5,10],[15,20]] → كم غرفة اجتماعات
+            تحتاج؟ الجواب: 2
+          </p>
+          <div class="cw" style="margin-top: 9px">
+            <div class="ch2">
+              <span class="cl">C++ — Min-Heap O(n log n)</span>
+            </div>
+            <div class="cb2">
+              <pre>
+<span class="tp">int</span> <span class="fn">minMeetingRooms</span>(<span class="tp">vector</span>&lt;<span class="tp">vector</span>&lt;<span class="tp">int</span>&gt;&gt;&amp; intervals) {
+    <span class="fn">sort</span>(intervals.<span class="fn">begin</span>(), intervals.<span class="fn">end</span>());
+    <span class="tp">priority_queue</span>&lt;<span class="tp">int</span>, <span class="tp">vector</span>&lt;<span class="tp">int</span>&gt;, <span class="tp">greater</span>&lt;&gt;&gt; minH;
+
+    <span class="kw">for</span> (<span class="kw">auto</span>&amp; m : intervals) {
+        <span class="kw">if</span> (!minH.<span class="fn">empty</span>() &amp;&amp; minH.<span class="fn">top</span>() &lt;= m[<span class="num">0</span>])
+            minH.<span class="fn">pop</span>(); <span class="cm">// أعد استخدام الغرفة</span>
+        minH.<span class="fn">push</span>(m[<span class="num">1</span>]); <span class="cm">// وقت الانتهاء</span>
+    }
+    <span class="kw">return</span> minH.<span class="fn">size</span>(); <span class="cm">// عدد الغرف</span>
+}</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pgf">
+        <span class="pga">Eng. Osman Taher — AswaniStack</span
+        ><span class="pgn">PAGE 175</span>
+      </div>
+    </div>
+
+    <!-- ══════ CH 16: GRAPH ALGORITHMS ══════ -->
+    <div class="cp">
+      <div class="pgh">
+        <span class="pgch">الفصل السادس عشر ● BFS, DFS &amp; Dijkstra</span
+        ><span class="pgbr">AswaniStack ✦ Eng. Osman Taher</span>
+      </div>
+      <div class="cho">
+        <div class="chnum">CHAPTER 16 — GRAPH ALGORITHMS</div>
+        <div class="chtitle">
+          خوارزميات الرسوم البيانية<br />BFS · DFS · Dijkstra
+        </div>
+        <div class="chdesc">
+          BFS وDFS لاستعراض الرسم البياني. Dijkstra لأقصر مسار. هذه الثلاثة هي
+          القلب النابض لمئات الخوارزميات الحقيقية.
+        </div>
+      </div>
+
+      <div class="two">
+        <div>
+          <h2 class="sec">16.1 BFS — البحث بالعرض 🌊</h2>
+          <p class="body" style="font-size: 10pt">
+            نستعرض مستوىً مستوىً. نستخدم <strong>Queue</strong>. يجد أقصر مسار
+            في الـ Unweighted Graph.
+          </p>
+          <div class="cw">
+            <div class="ch2"><span class="cl">C++ — BFS</span></div>
+            <div class="cb2">
+              <pre>
+<span class="tp">void</span> <span class="fn">bfs</span>(<span class="tp">vector</span>&lt;<span class="tp">vector</span>&lt;<span class="tp">int</span>&gt;&gt;&amp; g, <span class="tp">int</span> start) {
+    <span class="tp">vector</span>&lt;<span class="tp">bool</span>&gt; vis(g.<span class="fn">size</span>(), <span class="kw">false</span>);
+    <span class="tp">queue</span>&lt;<span class="tp">int</span>&gt; q;
+    vis[start] = <span class="kw">true</span>;
+    q.<span class="fn">push</span>(start);
+
+    <span class="kw">while</span> (!q.<span class="fn">empty</span>()) {
+        <span class="tp">int</span> node = q.<span class="fn">front</span>(); q.<span class="fn">pop</span>();
+        <span class="fn">cout</span> &lt;&lt; node &lt;&lt; <span class="str">" "</span>;
+        <span class="kw">for</span> (<span class="tp">int</span> nb : g[node])
+            <span class="kw">if</span> (!vis[nb]) {
+                vis[nb] = <span class="kw">true</span>;
+                q.<span class="fn">push</span>(nb);
+            }
+    }
+}
+<span class="cm">// Time: O(V+E) | Space: O(V)</span></pre>
+            </div>
+          </div>
+        </div>
+        <div>
+          <h2 class="sec">16.2 DFS — البحث بالعمق 🏔️</h2>
+          <p class="body" style="font-size: 10pt">
+            نغوص في كل فرع حتى نهايته. نستخدم <strong>Recursion</strong> أو
+            Stack. أفضل لاكتشاف الدورات والمسارات.
+          </p>
+          <div class="cw">
+            <div class="ch2"><span class="cl">C++ — DFS</span></div>
+            <div class="cb2">
+              <pre>
+<span class="tp">void</span> <span class="fn">dfs</span>(<span class="tp">vector</span>&lt;<span class="tp">vector</span>&lt;<span class="tp">int</span>&gt;&gt;&amp; g,
+          <span class="tp">int</span> node, <span class="tp">vector</span>&lt;<span class="tp">bool</span>&gt;&amp; vis) {
+    vis[node] = <span class="kw">true</span>;
+    <span class="fn">cout</span> &lt;&lt; node &lt;&lt; <span class="str">" "</span>;
+
+    <span class="kw">for</span> (<span class="tp">int</span> nb : g[node])
+        <span class="kw">if</span> (!vis[nb])
+            <span class="fn">dfs</span>(g, nb, vis);
+}
+<span class="cm">// Time: O(V+E) | Space: O(V)</span></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="sec">16.3 Dijkstra — أقصر مسار ⭐⭐</h2>
+      <p class="body">
+        يجد أقصر مسار من عقدة مصدر لكل العقد في الـ Weighted Graph (بدون حواف
+        سالبة).
+      </p>
+      <div class="cw">
+        <div class="ch2">
+          <span class="cl">C++ — Dijkstra O((V+E) log V)</span
+          ><span class="clb">dijkstra.cpp</span>
+        </div>
+        <div class="cb2">
+          <pre>
+<span class="tp">vector</span>&lt;<span class="tp">int</span>&gt; <span class="fn">dijkstra</span>(<span class="tp">vector</span>&lt;<span class="tp">vector</span>&lt;<span class="tp">pair</span>&lt;<span class="tp">int</span>,<span class="tp">int</span>&gt;&gt;&gt;&amp; g, <span class="tp">int</span> src) {
+    <span class="tp">int</span> V = g.<span class="fn">size</span>();
+    <span class="tp">vector</span>&lt;<span class="tp">int</span>&gt; dist(V, INT_MAX);
+    <span class="cm">// Min-Heap: {distance, node}</span>
+    <span class="tp">priority_queue</span>&lt;<span class="tp">pair</span>&lt;<span class="tp">int</span>,<span class="tp">int</span>&gt;,
+        <span class="tp">vector</span>&lt;<span class="tp">pair</span>&lt;<span class="tp">int</span>,<span class="tp">int</span>&gt;&gt;, <span class="tp">greater</span>&lt;&gt;&gt; pq;
+
+    dist[src] = <span class="num">0</span>;
+    pq.<span class="fn">push</span>({<span class="num">0</span>, src});
+
+    <span class="kw">while</span> (!pq.<span class="fn">empty</span>()) {
+        <span class="kw">auto</span> [d, u] = pq.<span class="fn">top</span>(); pq.<span class="fn">pop</span>();
+        <span class="kw">if</span> (d &gt; dist[u]) <span class="kw">continue</span>; <span class="cm">// تجاهل قديم</span>
+
+        <span class="kw">for</span> (<span class="kw">auto</span> [v, w] : g[u]) {
+            <span class="kw">if</span> (dist[u] + w &lt; dist[v]) {
+                dist[v] = dist[u] + w;
+                pq.<span class="fn">push</span>({dist[v], v});
+            }
+        }
+    }
+    <span class="kw">return</span> dist; <span class="cm">// المسافة لكل عقدة</span>
+}</pre>
+        </div>
+      </div>
+
+      <div class="ex">
+        <div class="exh">
+          <span class="ext">مسألة: Number of Islands</span
+          ><span class="exm"
+            ><span class="diff medium">Medium</span>
+            <span class="ct">Amazon</span><span class="ct">Google</span
+            ><span class="ct">Meta</span><span class="ct">Microsoft</span></span
+          >
+        </div>
+        <div class="exb">
+          <p class="body">
+            <strong>المشكلة:</strong> شبكة 1 (أرض) و0 (ماء). كم عدد الجزر
+            المتصلة؟
+          </p>
+          <div class="cw" style="margin-top: 9px">
+            <div class="ch2">
+              <span class="cl">C++ — DFS Flood Fill O(m×n)</span>
+            </div>
+            <div class="cb2">
+              <pre>
+<span class="tp">void</span> <span class="fn">sink</span>(<span class="tp">vector</span>&lt;<span class="tp">vector</span>&lt;<span class="tp">char</span>&gt;&gt;&amp; g, <span class="tp">int</span> r, <span class="tp">int</span> c) {
+    <span class="kw">if</span> (r&lt;<span class="num">0</span>||r&gt;=g.<span class="fn">size</span>()||c&lt;<span class="num">0</span>||c&gt;=g[<span class="num">0</span>].<span class="fn">size</span>()||g[r][c]!=<span class="str">'1'</span>)
+        <span class="kw">return</span>;
+    g[r][c] = <span class="str">'0'</span>; <span class="cm">// غرّق الأرض</span>
+    <span class="fn">sink</span>(g,r+<span class="num">1</span>,c); <span class="fn">sink</span>(g,r-<span class="num">1</span>,c);
+    <span class="fn">sink</span>(g,r,c+<span class="num">1</span>); <span class="fn">sink</span>(g,r,c-<span class="num">1</span>);
+}
+
+<span class="tp">int</span> <span class="fn">numIslands</span>(<span class="tp">vector</span>&lt;<span class="tp">vector</span>&lt;<span class="tp">char</span>&gt;&gt;&amp; grid) {
+    <span class="tp">int</span> islands = <span class="num">0</span>;
+    <span class="kw">for</span> (<span class="tp">int</span> r = <span class="num">0</span>; r &lt; grid.<span class="fn">size</span>(); r++)
+        <span class="kw">for</span> (<span class="tp">int</span> c = <span class="num">0</span>; c &lt; grid[<span class="num">0</span>].<span class="fn">size</span>(); c++)
+            <span class="kw">if</span> (grid[r][c]==<span class="str">'1'</span>) { <span class="fn">sink</span>(grid,r,c); islands++; }
+    <span class="kw">return</span> islands;
+}</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pgf">
+        <span class="pga">Eng. Osman Taher — AswaniStack</span
+        ><span class="pgn">PAGE 186</span>
+      </div>
+    </div>
+
+    <!-- ══════ CH 17: INTERVIEWS ══════ -->
+    <div class="cp">
+      <div class="pgh">
+        <span class="pgch">الفصل السابع عشر ● تحضير المقابلات</span
+        ><span class="pgbr">AswaniStack ✦ Eng. Osman Taher</span>
+      </div>
+      <div class="cho">
+        <div class="chnum">CHAPTER 17 — INTERVIEW PREPARATION</div>
+        <div class="chtitle">
+          تحضير مقابلات FAANG<br />Google · Amazon · Meta · Microsoft
+        </div>
+        <div class="chdesc">
+          هذا الفصل يلخّص كل ما تحتاجه لاجتياز مقابلات كبرى الشركات التقنية —
+          الاستراتيجية، الأسئلة الأكثر تكراراً، وكيف تفكر تحت الضغط.
+        </div>
+      </div>
+
+      <h2 class="sec">17.1 استراتيجية حل أسئلة المقابلات — UMPIRE</h2>
+      <div class="steps">
+        <div class="step">
+          <div class="sn">U</div>
+          <div class="sb">
+            <div class="st2">Understand — افهم السؤال جيداً</div>
+            <div class="sd">
+              اقرأ مرتين. اسأل: حجم المدخلات؟ أرقام سالبة؟ هل المصفوفة مرتبة؟ هل
+              يمكن تكرار العناصر؟
+            </div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="sn">M</div>
+          <div class="sb">
+            <div class="st2">Match — طابق المشكلة بنمط معروف</div>
+            <div class="sd">
+              Sliding Window? Two Pointers? DP? Graph? Binary Search?
+              Backtracking?
+            </div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="sn">P</div>
+          <div class="sb">
+            <div class="st2">Plan — خطّط قبل أن تكتب</div>
+            <div class="sd">
+              ابدأ بـ Brute Force واذكر تعقيده، ثم طوّره للحل الأمثل.
+            </div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="sn">I</div>
+          <div class="sb">
+            <div class="st2">Implement — اكتب وتحدّث بصوت عالٍ</div>
+            <div class="sd">المحاور يريد يرى طريقة تفكيرك. اشرح كل خطوة.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="sn">R</div>
+          <div class="sb">
+            <div class="st2">Review — راجع الكود</div>
+            <div class="sd">
+              تحقق من Edge Cases: مصفوفة فارغة؟ عنصر واحد؟ كل القيم متساوية؟
+            </div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="sn">E</div>
+          <div class="sb">
+            <div class="st2">Evaluate — اذكر التعقيد</div>
+            <div class="sd">أنهِ دائماً بـ "Time: O(...) | Space: O(...)"</div>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="sec">17.2 أسئلة FAANG الأكثر تكراراً</h2>
+
+      <div class="ib">
+        <div class="ibt" style="color: #34d399">
+          🔴 Google — يركّز على الكفاءة والأناقة
+        </div>
+        <div class="ibq">
+          <strong>[Array]</strong> Trapping Rain Water — Two Pointers أو
+          Monotonic Stack — O(n)
+        </div>
+        <div class="ibq">
+          <strong>[String]</strong> Minimum Window Substring — Sliding Window +
+          HashMap — O(n)
+        </div>
+        <div class="ibq">
+          <strong>[Graph]</strong> Course Schedule — Topological Sort (Kahn's
+          BFS) — O(V+E)
+        </div>
+        <div class="ibq">
+          <strong>[DP]</strong> Word Break — DP + HashSet — O(n²)
+        </div>
+        <div class="ibq">
+          <strong>[Tree]</strong> Binary Tree Level Order Traversal — BFS — O(n)
+        </div>
+      </div>
+
+      <div class="ib">
+        <div class="ibt" style="color: #fbbf24">
+          🟠 Amazon — Leadership Principles + Technical Depth
+        </div>
+        <div class="ibq">
+          <strong>[Heap]</strong> K Closest Points to Origin — Max Heap بحجم k —
+          O(n log k)
+        </div>
+        <div class="ibq">
+          <strong>[LinkedList]</strong> Merge K Sorted Lists — Min Heap — O(N
+          log k)
+        </div>
+        <div class="ibq">
+          <strong>[Tree]</strong> Serialize &amp; Deserialize Binary Tree —
+          BFS/DFS — O(n)
+        </div>
+        <div class="ibq">
+          <strong>[DP]</strong> 0/1 Knapsack — 2D DP — O(n × W)
+        </div>
+        <div class="ibq">
+          <strong>[Graph]</strong> Word Ladder — BFS — O(M² × N)
+        </div>
+      </div>
+
+      <div class="ib">
+        <div class="ibt" style="color: #60a5fa">🔵 Meta — السرعة والدقة</div>
+        <div class="ibq">
+          <strong>[Array]</strong> Product of Array Except Self — Prefix/Suffix
+          — O(n)
+        </div>
+        <div class="ibq">
+          <strong>[Tree]</strong> Lowest Common Ancestor — Recursive DFS — O(n)
+        </div>
+        <div class="ibq">
+          <strong>[Graph]</strong> Clone Graph — BFS + HashMap — O(V+E)
+        </div>
+        <div class="ibq">
+          <strong>[Backtracking]</strong> Combination Sum — Backtracking —
+          O(2^n)
+        </div>
+      </div>
+
+      <h2 class="sec">17.3 أنماط LeetCode الـ 14 الأساسية</h2>
+      <div class="three">
+        <div class="card purple">
+          <div class="card-t">1. Sliding Window</div>
+          <p style="font-size: 9.5pt">Max/Min Subarray, Anagram</p>
+        </div>
+        <div class="card green">
+          <div class="card-t">2. Two Pointers</div>
+          <p style="font-size: 9.5pt">3Sum, Container With Most Water</p>
+        </div>
+        <div class="card gold">
+          <div class="card-t">3. Fast &amp; Slow</div>
+          <p style="font-size: 9.5pt">Cycle Detection, Middle of LL</p>
+        </div>
+        <div class="card purple">
+          <div class="card-t">4. Merge Intervals</div>
+          <p style="font-size: 9.5pt">Meeting Rooms, Insert Interval</p>
+        </div>
+        <div class="card green">
+          <div class="card-t">5. Cyclic Sort</div>
+          <p style="font-size: 9.5pt">Missing Number, First Missing</p>
+        </div>
+        <div class="card gold">
+          <div class="card-t">6. Tree BFS</div>
+          <p style="font-size: 9.5pt">Level Order, Zigzag</p>
+        </div>
+        <div class="card purple">
+          <div class="card-t">7. Tree DFS</div>
+          <p style="font-size: 9.5pt">Path Sum, BST Validation</p>
+        </div>
+        <div class="card green">
+          <div class="card-t">8. Two Heaps</div>
+          <p style="font-size: 9.5pt">Median of Data Stream</p>
+        </div>
+        <div class="card gold">
+          <div class="card-t">9. Subsets</div>
+          <p style="font-size: 9.5pt">Power Set, Permutations</p>
+        </div>
+        <div class="card purple">
+          <div class="card-t">10. Modified BS</div>
+          <p style="font-size: 9.5pt">Rotated Array, Peak</p>
+        </div>
+        <div class="card green">
+          <div class="card-t">11. Top K Elements</div>
+          <p style="font-size: 9.5pt">K Frequent, K Closest</p>
+        </div>
+        <div class="card gold">
+          <div class="card-t">12. K-way Merge</div>
+          <p style="font-size: 9.5pt">Merge K Lists, Sorted Matrix</p>
+        </div>
+        <div class="card purple">
+          <div class="card-t">13. DP Patterns</div>
+          <p style="font-size: 9.5pt">Knapsack, Palindrome, LCS</p>
+        </div>
+        <div class="card green">
+          <div class="card-t">14. Graph Traversal</div>
+          <p style="font-size: 9.5pt">Islands, BFS Shortest Path</p>
+        </div>
+      </div>
+
+      <div class="two" style="margin-top: 14px">
+        <div class="note tip">
+          <span class="ni">⏱️</span
+          ><span
+            ><strong>إدارة الوقت:</strong> 5 دق للفهم | 5 دق Brute Force | 15 دق
+            الحل الأمثل | 5 دق للاختبار</span
+          >
+        </div>
+        <div class="note gold">
+          <span class="ni">📅</span
+          ><span
+            ><strong>خطة التحضير:</strong> أسبوع لكل نمط، 2-3 مسائل يومياً على
+            LeetCode، راجع الحلول حتى لو نجحت.</span
+          >
+        </div>
+      </div>
+
+      <div class="pgf">
+        <span class="pga">Eng. Osman Taher — AswaniStack</span
+        ><span class="pgn">PAGE 200</span>
+      </div>
+    </div>
+
+    <!-- ══════ CH 18: CHEAT SHEET ══════ -->
+    <div class="cp">
+      <div class="pgh">
+        <span class="pgch">الفصل الثامن عشر ● Cheat Sheet الشامل</span
+        ><span class="pgbr">AswaniStack ✦ Eng. Osman Taher</span>
+      </div>
+
+      <div style="text-align: center; margin-bottom: 20px">
+        <div style="font-size: 22pt; font-weight: 900; color: var(--pd)">
+          جدول التعقيدات الشامل
+        </div>
+        <div
+          style="
+            font-size: 9pt;
+            color: #9ca3af;
+            font-family: &quot;IBM Plex Mono&quot;, monospace;
+            letter-spacing: 2px;
+            margin-top: 4px;
+          "
+        >
+          COMPLETE COMPLEXITY CHEAT SHEET — Eng. Osman Taher × AswaniStack
+        </div>
+      </div>
+
+      <table class="cxt">
+        <thead>
+          <tr>
+            <th colspan="7" style="font-size: 11pt; background: #1e1b4b">
+              🔄 خوارزميات الفرز — Sorting Algorithms
+            </th>
+          </tr>
+          <tr>
+            <th>الخوارزمية</th>
+            <th>Best Case</th>
+            <th>Average</th>
+            <th>Worst Case</th>
+            <th>Space</th>
+            <th>Stable?</th>
+            <th>In-Place?</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Bubble Sort</strong></td>
+            <td class="g">O(n)</td>
+            <td class="b">O(n²)</td>
+            <td class="b">O(n²)</td>
+            <td class="g">O(1)</td>
+            <td>✅</td>
+            <td>✅</td>
+          </tr>
+          <tr>
+            <td><strong>Selection Sort</strong></td>
+            <td class="b">O(n²)</td>
+            <td class="b">O(n²)</td>
+            <td class="b">O(n²)</td>
+            <td class="g">O(1)</td>
+            <td>❌</td>
+            <td>✅</td>
+          </tr>
+          <tr>
+            <td><strong>Insertion Sort</strong></td>
+            <td class="g">O(n)</td>
+            <td class="b">O(n²)</td>
+            <td class="b">O(n²)</td>
+            <td class="g">O(1)</td>
+            <td>✅</td>
+            <td>✅</td>
+          </tr>
+          <tr>
+            <td><strong>Merge Sort</strong></td>
+            <td class="m">O(n log n)</td>
+            <td class="m">O(n log n)</td>
+            <td class="m">O(n log n)</td>
+            <td class="m">O(n)</td>
+            <td>✅</td>
+            <td>❌</td>
+          </tr>
+          <tr>
+            <td><strong>Quick Sort</strong></td>
+            <td class="m">O(n log n)</td>
+            <td class="m">O(n log n)</td>
+            <td class="b">O(n²)</td>
+            <td class="g">O(log n)</td>
+            <td>❌</td>
+            <td>✅</td>
+          </tr>
+          <tr>
+            <td><strong>Heap Sort</strong></td>
+            <td class="m">O(n log n)</td>
+            <td class="m">O(n log n)</td>
+            <td class="m">O(n log n)</td>
+            <td class="g">O(1)</td>
+            <td>❌</td>
+            <td>✅</td>
+          </tr>
+          <tr>
+            <td><strong>Counting Sort</strong></td>
+            <td class="g">O(n+k)</td>
+            <td class="g">O(n+k)</td>
+            <td class="g">O(n+k)</td>
+            <td class="m">O(k)</td>
+            <td>✅</td>
+            <td>❌</td>
+          </tr>
+          <tr>
+            <td><strong>Radix Sort</strong></td>
+            <td class="g">O(nk)</td>
+            <td class="g">O(nk)</td>
+            <td class="g">O(nk)</td>
+            <td class="m">O(n+k)</td>
+            <td>✅</td>
+            <td>❌</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table class="cxt" style="margin-top: 14px">
+        <thead>
+          <tr>
+            <th colspan="6" style="font-size: 11pt; background: #1e1b4b">
+              📦 هياكل البيانات — Data Structures Operations
+            </th>
+          </tr>
+          <tr>
+            <th>هيكل البيانات</th>
+            <th>Access</th>
+            <th>Search</th>
+            <th>Insert</th>
+            <th>Delete</th>
+            <th>Space</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Array</strong></td>
+            <td class="g">O(1)</td>
+            <td class="m">O(n)</td>
+            <td class="m">O(n)</td>
+            <td class="m">O(n)</td>
+            <td class="m">O(n)</td>
+          </tr>
+          <tr>
+            <td><strong>Singly Linked List</strong></td>
+            <td class="m">O(n)</td>
+            <td class="m">O(n)</td>
+            <td class="g">O(1)*</td>
+            <td class="g">O(1)*</td>
+            <td class="m">O(n)</td>
+          </tr>
+          <tr>
+            <td><strong>Stack</strong></td>
+            <td class="m">O(n)</td>
+            <td class="m">O(n)</td>
+            <td class="g">O(1)</td>
+            <td class="g">O(1)</td>
+            <td class="m">O(n)</td>
+          </tr>
+          <tr>
+            <td><strong>Queue</strong></td>
+            <td class="m">O(n)</td>
+            <td class="m">O(n)</td>
+            <td class="g">O(1)</td>
+            <td class="g">O(1)</td>
+            <td class="m">O(n)</td>
+          </tr>
+          <tr>
+            <td><strong>Hash Table</strong></td>
+            <td>—</td>
+            <td class="g">O(1)*</td>
+            <td class="g">O(1)*</td>
+            <td class="g">O(1)*</td>
+            <td class="m">O(n)</td>
+          </tr>
+          <tr>
+            <td><strong>BST (Balanced)</strong></td>
+            <td class="g">O(log n)</td>
+            <td class="g">O(log n)</td>
+            <td class="g">O(log n)</td>
+            <td class="g">O(log n)</td>
+            <td class="m">O(n)</td>
+          </tr>
+          <tr>
+            <td><strong>Heap (Min/Max)</strong></td>
+            <td class="g">O(1)**</td>
+            <td class="m">O(n)</td>
+            <td class="g">O(log n)</td>
+            <td class="g">O(log n)</td>
+            <td class="m">O(n)</td>
+          </tr>
+          <tr>
+            <td><strong>Trie</strong></td>
+            <td class="g">O(k)</td>
+            <td class="g">O(k)</td>
+            <td class="g">O(k)</td>
+            <td class="g">O(k)</td>
+            <td class="b">O(n×k)</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="body" style="font-size: 8.5pt; color: #9ca3af; margin-top: 4px">
+        * average case | ** للحد الأدنى/الأعلى فقط | k = طول المفتاح
+      </p>
+
+      <table class="cxt" style="margin-top: 14px">
+        <thead>
+          <tr>
+            <th colspan="4" style="font-size: 11pt; background: #1e1b4b">
+              🌐 خوارزميات الرسوم البيانية — Graph Algorithms
+            </th>
+          </tr>
+          <tr>
+            <th>الخوارزمية</th>
+            <th>الوقت</th>
+            <th>المساحة</th>
+            <th>الاستخدام</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>BFS</strong></td>
+            <td class="m">O(V+E)</td>
+            <td class="m">O(V)</td>
+            <td>أقصر مسار (unweighted)</td>
+          </tr>
+          <tr>
+            <td><strong>DFS</strong></td>
+            <td class="m">O(V+E)</td>
+            <td class="m">O(V)</td>
+            <td>Cycle Detection, Connectivity</td>
+          </tr>
+          <tr>
+            <td><strong>Dijkstra</strong></td>
+            <td class="m">O((V+E) log V)</td>
+            <td class="m">O(V)</td>
+            <td>أقصر مسار (لا حواف سالبة)</td>
+          </tr>
+          <tr>
+            <td><strong>Bellman-Ford</strong></td>
+            <td class="b">O(V×E)</td>
+            <td class="m">O(V)</td>
+            <td>أقصر مسار (مع حواف سالبة)</td>
+          </tr>
+          <tr>
+            <td><strong>Floyd-Warshall</strong></td>
+            <td class="b">O(V³)</td>
+            <td class="b">O(V²)</td>
+            <td>أقصر مسار بين كل الأزواج</td>
+          </tr>
+          <tr>
+            <td><strong>Kruskal's</strong></td>
+            <td class="m">O(E log E)</td>
+            <td class="m">O(V)</td>
+            <td>Minimum Spanning Tree</td>
+          </tr>
+          <tr>
+            <td><strong>Prim's</strong></td>
+            <td class="m">O((V+E) log V)</td>
+            <td class="m">O(V)</td>
+            <td>Minimum Spanning Tree</td>
+          </tr>
+          <tr>
+            <td><strong>Topological Sort</strong></td>
+            <td class="m">O(V+E)</td>
+            <td class="m">O(V)</td>
+            <td>ترتيب المهام، Course Schedule</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="two" style="margin-top: 16px">
+        <div class="card purple">
+          <div class="card-t" style="font-size: 12pt">🎯 متى تستخدم ماذا؟</div>
+          <div class="chk">
+            <span class="chki">→</span>
+            <div>وصول سريع → <strong>Hash Table O(1)</strong></div>
+          </div>
+          <div class="chk">
+            <span class="chki">→</span>
+            <div>أقل/أكبر k عنصر → <strong>Heap O(log n)</strong></div>
+          </div>
+          <div class="chk">
+            <span class="chki">→</span>
+            <div>ترتيب + بحث → <strong>BST O(log n)</strong></div>
+          </div>
+          <div class="chk">
+            <span class="chki">→</span>
+            <div>أقصر مسار → <strong>Dijkstra</strong></div>
+          </div>
+          <div class="chk">
+            <span class="chki">→</span>
+            <div>تحسين مشكلة كبيرة → <strong>DP</strong></div>
+          </div>
+          <div class="chk">
+            <span class="chki">→</span>
+            <div>بحث مرتب → <strong>Binary Search</strong></div>
+          </div>
+          <div class="chk">
+            <span class="chki">→</span>
+            <div>كل الاحتمالات → <strong>Backtracking</strong></div>
+          </div>
+        </div>
+        <div class="card green">
+          <div class="card-t" style="font-size: 12pt">💡 Big-O Reference</div>
+          <div class="chk">
+            <span class="chki">✦</span>
+            <div><span class="bd exc">O(1)</span> وصول مباشر، HashMap</div>
+          </div>
+          <div class="chk">
+            <span class="chki">✦</span>
+            <div><span class="bd exc">O(log n)</span> نصّف في كل مرة</div>
+          </div>
+          <div class="chk">
+            <span class="chki">✦</span>
+            <div><span class="bd gd">O(n)</span> حلقة واحدة</div>
+          </div>
+          <div class="chk">
+            <span class="chki">✦</span>
+            <div><span class="bd gd">O(n log n)</span> فرز جيد</div>
+          </div>
+          <div class="chk">
+            <span class="chki">✦</span>
+            <div><span class="bd md">O(n²)</span> حلقتان متداخلتان</div>
+          </div>
+          <div class="chk">
+            <span class="chki">✦</span>
+            <div><span class="bd bd2">O(2ⁿ)</span> تفرعات كاملة</div>
+          </div>
+          <div class="chk">
+            <span class="chki">✦</span>
+            <div><span class="bd bd2">O(n!)</span> كل التبديلات</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pgf">
+        <span class="pga">Eng. Osman Taher — AswaniStack</span
+        ><span class="pgn">PAGE 218</span>
+      </div>
+    </div>
+
+    <!-- ══════ BACK COVER ══════ -->
+    <div class="bc">
+      <div
+        style="
+          position: absolute;
+          width: 500px;
+          height: 500px;
+          border-radius: 50%;
+          background: rgba(255, 255, 255, 0.03);
+          bottom: -150px;
+          right: -100px;
+        "
+      ></div>
+      <div
+        style="
+          position: absolute;
+          top: 0;
+          right: 0;
+          width: 6px;
+          height: 100%;
+          background: linear-gradient(to bottom, #fde68a, #a78bfa, #fde68a);
+        "
+      ></div>
+
+      <div
+        style="
+          width: 84px;
+          height: 84px;
+          background: rgba(255, 255, 255, 0.1);
+          border: 2px solid rgba(255, 255, 255, 0.2);
+          border-radius: 20px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-bottom: 22px;
+          box-shadow: 0 0 50px rgba(108, 63, 196, 0.5);
+        "
+      >
+        <span
+          style="
+            font-family: &quot;IBM Plex Mono&quot;, monospace;
+            font-size: 36px;
+            font-weight: 700;
+            color: #fde68a;
+          "
+          >&lt;/&gt;</span
+        >
+      </div>
+
+      <div
+        style="
+          font-size: 30pt;
+          font-weight: 900;
+          color: #fde68a;
+          letter-spacing: 2px;
+          margin-bottom: 6px;
+          font-family: &quot;Cairo&quot;, sans-serif;
+        "
+      >
+        AswaniStack
+      </div>
+      <div
+        style="
+          width: 70px;
+          height: 3px;
+          background: #a78bfa;
+          border-radius: 3px;
+          margin: 14px auto 20px;
+        "
+      ></div>
+      <div
+        style="
+          font-size: 20pt;
+          font-weight: 900;
+          color: white;
+          margin-bottom: 8px;
+          font-family: &quot;Cairo&quot;, sans-serif;
+        "
+      >
+        الخوارزميات وهياكل البيانات
+      </div>
+      <div
+        style="
+          font-size: 14pt;
+          color: #a78bfa;
+          margin-bottom: 36px;
+          font-family: &quot;Cairo&quot;, sans-serif;
+        "
+      >
+        من الصفر للاحتراف — First Arabic Edition
+      </div>
+
+      <div
+        style="
+          display: flex;
+          gap: 28px;
+          margin-bottom: 44px;
+          flex-wrap: wrap;
+          justify-content: center;
+        "
+      >
+        <div
+          style="
+            text-align: center;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            padding: 14px 22px;
+          "
+        >
+          <div style="font-size: 24pt; font-weight: 900; color: #fde68a">
+            18
+          </div>
+          <div style="font-size: 9pt; color: rgba(255, 255, 255, 0.6)">
+            فصلاً متكاملاً
+          </div>
+        </div>
+        <div
+          style="
+            text-align: center;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            padding: 14px 22px;
+          "
+        >
+          <div style="font-size: 24pt; font-weight: 900; color: #fde68a">
+            50+
+          </div>
+          <div style="font-size: 9pt; color: rgba(255, 255, 255, 0.6)">
+            تمريناً LeetCode
+          </div>
+        </div>
+        <div
+          style="
+            text-align: center;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            padding: 14px 22px;
+          "
+        >
+          <div style="font-size: 24pt; font-weight: 900; color: #fde68a">
+            C++
+          </div>
+          <div style="font-size: 9pt; color: rgba(255, 255, 255, 0.6)">
+            لغة الكود
+          </div>
+        </div>
+        <div
+          style="
+            text-align: center;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            padding: 14px 22px;
+          "
+        >
+          <div style="font-size: 24pt; font-weight: 900; color: #fde68a">
+            FAANG
+          </div>
+          <div style="font-size: 9pt; color: rgba(255, 255, 255, 0.6)">
+            تحضير المقابلات
+          </div>
+        </div>
+      </div>
+
+      <div
+        style="
+          background: rgba(0, 0, 0, 0.3);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          border-radius: 16px;
+          padding: 24px 44px;
+          text-align: center;
+          margin-bottom: 30px;
+        "
+      >
+        <div
+          style="
+            font-size: 9pt;
+            color: #fde68a;
+            letter-spacing: 3px;
+            font-family: &quot;IBM Plex Mono&quot;, monospace;
+            margin-bottom: 8px;
+          "
+        >
+          AUTHOR — المؤلف
+        </div>
+        <div
+          style="
+            font-size: 22pt;
+            font-weight: 900;
+            color: white;
+            font-family: &quot;Cairo&quot;, sans-serif;
+          "
+        >
+          Eng. Osman Taher
+        </div>
+        <div
+          style="
+            font-size: 10pt;
+            color: rgba(255, 255, 255, 0.4);
+            margin-top: 5px;
+            font-family: &quot;IBM Plex Mono&quot;, monospace;
+          "
+        >
+          ✦ AswaniStack — Arabic Tech Books
+        </div>
+      </div>
+
+      <div
+        style="
+          font-size: 10pt;
+          color: rgba(255, 255, 255, 0.3);
+          font-family: &quot;IBM Plex Mono&quot;, monospace;
+          letter-spacing: 1px;
+        "
+      >
+        © AswaniStack · Eng. Osman Taher · All Rights Reserved
+      </div>
+    </div>
+  </body>
+</html>

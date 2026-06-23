@@ -1,0 +1,1103 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>مثبّت السرعة — اختبار الكتابة السريعة الاحترافي</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Rubik for Arabic UI, JetBrains Mono for Code & English Typing -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Rubik', 'sans-serif'],
+              mono: ['JetBrains Mono', 'monospace'],
+            },
+          },
+        },
+      }
+    </script>
+    <style>
+      /* Custom Premium Scrollbar */
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: rgba(156, 163, 175, 0.3);
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: rgba(156, 163, 175, 0.5);
+      }
+
+      /* Cursor/Caret Blink Animation */
+      @keyframes blink {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0; }
+      }
+      .caret-blink {
+        animation: blink 1s infinite;
+      }
+
+      /* Active highlighting and feedback styles for Monkeytype style */
+      .char {
+        position: relative;
+        transition: color 0.1s ease;
+      }
+      .char.correct {
+        color: var(--color-correct, #d1d0c5) !important;
+      }
+      .char.incorrect {
+        color: var(--color-incorrect, #ca4754) !important;
+        background-color: rgba(202, 71, 84, 0.15);
+        border-radius: 2px;
+      }
+      .char.current {
+        color: var(--color-active, #e2b714) !important;
+      }
+
+      /* Smooth transition for active theme changes */
+      body {
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+
+      /* Themes definition via css variables */
+      .theme-amber {
+        --bg-color: #1e1e24;
+        --card-bg: #282830;
+        --accent-color: #e2b714;
+        --accent-hover: #f1c40f;
+        --text-main: #f5f5f7;
+        --text-muted: #7e8083;
+        --color-correct: #ffffff;
+        --color-incorrect: #f43f5e;
+      }
+      .theme-cyber {
+        --bg-color: #0f172a;
+        --card-bg: #1e293b;
+        --accent-color: #06b6d4;
+        --accent-hover: #22d3ee;
+        --text-main: #f8fafc;
+        --text-muted: #64748b;
+        --color-correct: #a7f3d0;
+        --color-incorrect: #f43f5e;
+      }
+      .theme-emerald {
+        --bg-color: #022c22;
+        --card-bg: #064e3b;
+        --accent-color: #34d399;
+        --accent-hover: #6ee7b7;
+        --text-main: #f0fdf4;
+        --text-muted: #10b981;
+        --color-correct: #ffffff;
+        --color-incorrect: #f87171;
+      }
+      .theme-light {
+        --bg-color: #f8fafc;
+        --card-bg: #ffffff;
+        --accent-color: #6366f1;
+        --accent-hover: #4f46e5;
+        --text-main: #0f172a;
+        --text-muted: #94a3b8;
+        --color-correct: #10b981;
+        --color-incorrect: #ef4444;
+      }
+    </style>
+  </head>
+  <body class="theme-amber min-h-screen font-sans flex flex-col justify-between" style="background-color: var(--bg-color); color: var(--text-main);">
+
+    <!-- Header Section -->
+    <header class="border-b border-gray-700/30 py-4 px-6 md:px-12 backdrop-blur-md sticky top-0 z-30 bg-opacity-80">
+      <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl flex items-center justify-center text-xl font-bold shadow-lg" style="background-color: var(--accent-color); color: var(--bg-color);">
+            <i class="fa-solid fa-gauge-high"></i>
+          </div>
+          <div>
+            <h1 class="text-xl font-bold tracking-tight">مثبّت السرعة</h1>
+            <p class="text-xs opacity-60">اختبار الكتابة الاحترافي السريع (دقيقة واحدة)</p>
+          </div>
+        </div>
+
+        <!-- Controls (Theme, Sound, Stats) -->
+        <div class="flex flex-wrap items-center gap-3">
+          <!-- Audio Toggle -->
+          <button id="soundBtn" class="px-3 py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition hover:opacity-80" style="background-color: var(--card-bg);">
+            <i id="soundIcon" class="fa-solid fa-volume-high"></i>
+            <span class="hidden sm:inline">صوت المفاتيح</span>
+          </button>
+
+          <!-- Theme Select -->
+          <div class="relative" style="background-color: var(--card-bg); border-radius: 8px;">
+            <select id="themeSelector" class="appearance-none bg-transparent pr-8 pl-3 py-2 text-sm font-medium rounded-lg focus:outline-none cursor-pointer">
+              <option value="theme-amber" class="text-black">ثيم الكهرمان الدافئ</option>
+              <option value="theme-cyber" class="text-black">ثيم نيون سايبر</option>
+              <option value="theme-emerald" class="text-black">ثيم زمرد الغابة</option>
+              <option value="theme-light" class="text-black">ثيم ناصع البياض</option>
+            </select>
+            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2">
+              <i class="fa-solid fa-palette text-xs"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main App Container -->
+    <main class="max-w-7xl w-full mx-auto p-4 md:p-8 flex-grow grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+      
+      <!-- Right Column: Speed Test Area (Span 2) -->
+      <section class="lg:col-span-2 flex flex-col gap-6">
+        
+        <!-- Category & Passage Selection Panel -->
+        <div class="p-4 rounded-2xl flex flex-wrap items-center justify-between gap-4" style="background-color: var(--card-bg);">
+          <div class="flex items-center gap-2">
+            <span class="text-sm font-semibold opacity-80">اختر موضوع القطعة:</span>
+            <select id="passageSelector" class="bg-gray-800 text-white rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500">
+              <!-- JS will load option categories here -->
+            </select>
+          </div>
+          <div class="flex items-center gap-2 text-sm">
+            <span class="px-2 py-1 rounded bg-black/30 font-mono text-xs text-green-400">موصى به: 60 ثانية</span>
+            <span id="wordCountBadge" class="px-2 py-1 rounded bg-black/30 font-mono text-xs text-blue-400">120 كلمة</span>
+          </div>
+        </div>
+
+        <!-- Real-Time Metrics -->
+        <div class="grid grid-cols-4 gap-4">
+          <!-- Timer Card -->
+          <div class="p-4 rounded-2xl text-center relative overflow-hidden group transition-all" style="background-color: var(--card-bg);">
+            <div class="text-xs opacity-60 font-semibold mb-1">الزمن المتبقي</div>
+            <div id="liveTimer" class="text-2xl md:text-3xl font-bold font-mono" style="color: var(--accent-color);">01:00</div>
+            <div class="absolute bottom-0 left-0 h-1 bg-amber-500 w-full transition-all duration-1000" id="timerProgress"></div>
+          </div>
+          <!-- WPM Card -->
+          <div class="p-4 rounded-2xl text-center" style="background-color: var(--card-bg);">
+            <div class="text-xs opacity-60 font-semibold mb-1">السرعة (WPM)</div>
+            <div id="liveWpm" class="text-2xl md:text-3xl font-bold font-mono">0</div>
+          </div>
+          <!-- Accuracy Card -->
+          <div class="p-4 rounded-2xl text-center" style="background-color: var(--card-bg);">
+            <div class="text-xs opacity-60 font-semibold mb-1">الدقة</div>
+            <div id="liveAccuracy" class="text-2xl md:text-3xl font-bold font-mono">100%</div>
+          </div>
+          <!-- Errors Card -->
+          <div class="p-4 rounded-2xl text-center" style="background-color: var(--card-bg);">
+            <div class="text-xs opacity-60 font-semibold mb-1">الأخطاء</div>
+            <div id="liveErrors" class="text-2xl md:text-3xl font-bold font-mono text-rose-500">0</div>
+          </div>
+        </div>
+
+        <!-- Elegant Interactive Typing Arena -->
+        <div class="relative p-6 md:p-8 rounded-2xl border border-gray-700/20 cursor-text shadow-xl min-h-[220px] transition-all" 
+             style="background-color: var(--card-bg);" id="typingArena">
+          
+          <!-- Caret (Floating Cursor) -->
+          <div id="caret" class="absolute bg-amber-500 w-[2px] rounded opacity-90 transition-all duration-75 caret-blink" style="display: none; background-color: var(--accent-color);"></div>
+
+          <!-- Hidden Input for seamless mobile & physical typing capture -->
+          <input type="text" id="hiddenInput" class="absolute opacity-0 w-0 h-0 pointer-events-none" autocomplete="off" />
+
+          <!-- Passages display rendered as custom letters -->
+          <div id="wordsContainer" class="flex flex-wrap gap-x-2 gap-y-4 text-xl md:text-2xl font-mono leading-relaxed select-none outline-none filter blur-0 transition duration-300" style="color: var(--text-muted); direction: ltr; text-align: left;">
+            <!-- Rendered beautifully dynamically -->
+          </div>
+
+          <!-- Click to focus screen overlay -->
+          <div id="focusOverlay" class="absolute inset-0 bg-black/60 backdrop-blur-sm rounded-2xl flex flex-col justify-center items-center gap-3 cursor-pointer select-none transition-all">
+            <i class="fa-solid fa-keyboard text-4xl animate-bounce" style="color: var(--accent-color);"></i>
+            <span class="text-lg font-bold">انقر هنا لبدء اختبار الكتابة</span>
+            <span class="text-xs opacity-75">سيتم احتساب الوقت تلقائياً عند كتابة أول حرف</span>
+          </div>
+        </div>
+
+        <!-- Quick Controls -->
+        <div class="flex items-center gap-3">
+          <button id="btnRestart" class="flex-1 py-3 px-6 rounded-xl font-bold flex items-center justify-center gap-2 transition-all hover:scale-[1.02]" style="background-color: var(--accent-color); color: var(--bg-color);">
+            <i class="fa-solid fa-arrow-rotate-left"></i>
+            إعادة المحاولة
+          </button>
+          <button id="btnNewPassage" class="flex-1 py-3 px-6 rounded-xl font-bold flex items-center justify-center gap-2 transition hover:opacity-80" style="background-color: var(--card-bg);">
+            <i class="fa-solid fa-shuffle"></i>
+            موضوع عشوائي
+          </button>
+        </div>
+
+        <!-- Virtual Interactive Keyboard Layout (Lights up while typing!) -->
+        <div class="p-4 rounded-2xl select-none" style="background-color: var(--card-bg); direction: ltr;">
+          <div class="text-xs text-center mb-3 opacity-50 font-sans">لوحة مفاتيح تفاعلية لتسهيل حركة الأصابع</div>
+          <div class="flex flex-col gap-1.5 font-mono max-w-lg mx-auto">
+            <!-- Row 1 -->
+            <div class="flex justify-center gap-1 text-xs md:text-sm">
+              <span id="key-q" class="w-8 h-8 md:w-10 md:h-10 rounded flex items-center justify-center border border-gray-700 bg-black/20 text-gray-400">Q</span>
+              <span id="key-w" class="w-8 h-8 md:w-10 md:h-10 rounded flex items-center justify-center border border-gray-700 bg-black/20 text-gray-400">W</span>
+              <span id="key-e" class="w-8 h-8 md:w-10 md:h-10 rounded flex items-center justify-center border border-gray-700 bg-black/20 text-gray-400">E</span>
+              <span id="key-r" class="w-8 h-8 md:w-10 md:h-10 rounded flex items-center justify-center border border-gray-700 bg-black/20 text-gray-400">R</span>
+              <span id="key-t" class="w-8 h-8 md:w-10 md:h-10 rounded flex items-center justify-center border border-gray-700 bg-black/20 text-gray-400">T</span>
+              <span id="key-y" class="w-8 h-8 md:w-10 md:h-10 rounded flex items-center justify-center border border-gray-700 bg-black/20 text-gray-400">Y</span>
+              <span id="key-u" class="w-8 h-8 md:w-10 md:h-10 rounded flex items-center justify-center border border-gray-700 bg-black/20 text-gray-400">U</span>
+              <span id="key-i" class="w-8 h-8 md:w-10 md:h-10 rounded flex items-center justify-center border border-gray-700 bg-black/20 text-gray-400">I</span>
+              <span id="key-o" class="w-8 h-8 md:w-10 md:h-10 rounded flex items-center justify-center border border-gray-700 bg-black/20 text-gray-400">O</span>
+              <span id="key-p" class="w-8 h-8 md:w-10 md:h-10 rounded flex items-center justify-center border border-gray-700 bg-black/20 text-gray-400">P</span>
+            </div>
+            <!-- Row 2 -->
+            <div class="flex justify-center gap-1 text-xs md:text-sm">
+              <span id="key-a" class="w-8 h-8 md:w-10 md:h-10 rounded flex items-center justify-center border border-gray-700 bg-black/20 text-gray-400">A</span>
+              <span id="key-s" class="w-8 h-8 md:w-10 md:h-10 rounded flex items-center justify-center border border-gray-700 bg-black/20 text-gray-400">S</span>
+              <span id="key-d" class="w-8 h-8 md:w-10 md:h-10 rounded flex items-center justify-center border border-gray-700 bg-black/20 text-gray-400">D</span>
+              <span id="key-f" class="w-8 h-8 md:w-10 md:h-10 rounded flex items-center justify-center border border-gray-700 bg-black/20 text-gray-400">F</span>
+              <span id="key-g" class="w-8 h-8 md:w-10 md:h-10 rounded flex items-center justify-center border border-gray-700 bg-black/20 text-gray-400">G</span>
+              <span id="key-h" class="w-8 h-8 md:w-10 md:h-10 rounded flex items-center justify-center border border-gray-700 bg-black/20 text-gray-400">H</span>
+              <span id="key-j" class="w-8 h-8 md:w-10 md:h-10 rounded flex items-center justify-center border border-gray-700 bg-black/20 text-gray-400">J</span>
+              <span id="key-k" class="w-8 h-8 md:w-10 md:h-10 rounded flex items-center justify-center border border-gray-700 bg-black/20 text-gray-400">K</span>
+              <span id="key-l" class="w-8 h-8 md:w-10 md:h-10 rounded flex items-center justify-center border border-gray-700 bg-black/20 text-gray-400">L</span>
+            </div>
+            <!-- Row 3 -->
+            <div class="flex justify-center gap-1 text-xs md:text-sm">
+              <span id="key-z" class="w-8 h-8 md:w-10 md:h-10 rounded flex items-center justify-center border border-gray-700 bg-black/20 text-gray-400">Z</span>
+              <span id="key-x" class="w-8 h-8 md:w-10 md:h-10 rounded flex items-center justify-center border border-gray-700 bg-black/20 text-gray-400">X</span>
+              <span id="key-c" class="w-8 h-8 md:w-10 md:h-10 rounded flex items-center justify-center border border-gray-700 bg-black/20 text-gray-400">C</span>
+              <span id="key-v" class="w-8 h-8 md:w-10 md:h-10 rounded flex items-center justify-center border border-gray-700 bg-black/20 text-gray-400">V</span>
+              <span id="key-b" class="w-8 h-8 md:w-10 md:h-10 rounded flex items-center justify-center border border-gray-700 bg-black/20 text-gray-400">B</span>
+              <span id="key-n" class="w-8 h-8 md:w-10 md:h-10 rounded flex items-center justify-center border border-gray-700 bg-black/20 text-gray-400">N</span>
+              <span id="key-m" class="w-8 h-8 md:w-10 md:h-10 rounded flex items-center justify-center border border-gray-700 bg-black/20 text-gray-400">M</span>
+            </div>
+            <!-- Space Row -->
+            <div class="flex justify-center gap-1">
+              <span id="key-space" class="w-48 h-8 md:h-10 rounded border border-gray-700 bg-black/20 text-center text-xs text-gray-500 flex items-center justify-center">مسافة Space</span>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- Left Column: Scoreboard History / Leaderboard (Span 1) -->
+      <section class="flex flex-col gap-6 w-full">
+        
+        <!-- Live Connection & User Card -->
+        <div class="p-5 rounded-2xl flex items-center justify-between shadow-lg" style="background-color: var(--card-bg);">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full flex items-center justify-center text-white bg-indigo-600">
+              <i class="fa-solid fa-user-shield"></i>
+            </div>
+            <div>
+              <div class="font-bold text-sm">سجل المحاولات السحابي</div>
+              <div class="text-xs text-green-400 flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-green-400 inline-block"></span>
+                مؤمن ومزامن بنجاح
+              </div>
+            </div>
+          </div>
+          <span class="text-xs opacity-60 font-mono" id="userIdTag">أنت كطائر عابر</span>
+        </div>
+
+        <!-- Progress Stats Summary -->
+        <div class="p-6 rounded-2xl shadow-xl flex flex-col gap-4" style="background-color: var(--card-bg);">
+          <h3 class="text-sm font-bold flex items-center gap-2">
+            <i class="fa-solid fa-chart-line" style="color: var(--accent-color);"></i>
+            مستواك الحالي العام
+          </h3>
+          <div class="grid grid-cols-2 gap-4">
+            <div class="p-3 bg-black/20 rounded-xl text-center">
+              <div class="text-[10px] opacity-60">أفضل سرعة</div>
+              <div id="bestWpm" class="text-xl font-mono font-bold">0</div>
+            </div>
+            <div class="p-3 bg-black/20 rounded-xl text-center">
+              <div class="text-[10px] opacity-60">متوسط الدقة</div>
+              <div id="avgAccuracy" class="text-xl font-mono font-bold">0%</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Typing Scoreboard Log -->
+        <div class="p-6 rounded-2xl shadow-xl flex-grow flex flex-col min-h-[300px]" style="background-color: var(--card-bg);">
+          <div class="flex items-center justify-between mb-4 pb-3 border-b border-gray-700/30">
+            <h3 class="font-bold text-sm flex items-center gap-2">
+              <i class="fa-solid fa-clock-rotate-left" style="color: var(--accent-color);"></i>
+              أرشيف المحاولات السابقة
+            </h3>
+            <span id="scoreCount" class="text-xs px-2 py-0.5 rounded bg-black/30 font-mono">0</span>
+          </div>
+
+          <!-- Empty History -->
+          <div id="emptyHistory" class="flex-grow flex flex-col items-center justify-center text-center p-8">
+            <i class="fa-solid fa-database text-3xl opacity-20 mb-3"></i>
+            <p class="text-sm opacity-60">لا يوجد بيانات مسجلة بعد.</p>
+            <p class="text-xs opacity-40 mt-1">أكمل أول اختبار لك وسيتم حفظ النتيجة فوراً!</p>
+          </div>
+
+          <!-- Scrollable Score Cards -->
+          <div id="historyList" class="flex flex-col gap-3 overflow-y-auto max-h-[400px] hidden">
+            <!-- Dynamically populated from Firestore/Local state -->
+          </div>
+        </div>
+
+      </section>
+    </main>
+
+    <!-- Results Modal (Interactive Summary with Badges) -->
+    <div id="resultModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50 opacity-0 pointer-events-none transition-all duration-300">
+      <div class="max-w-md w-full rounded-3xl p-6 md:p-8 shadow-2xl relative text-center border border-gray-700/30 transform scale-95 transition-transform duration-300" style="background-color: var(--card-bg);">
+        
+        <!-- Badge Award Icon -->
+        <div id="medalContainer" class="w-24 h-24 mx-auto rounded-full bg-amber-500/10 flex items-center justify-center text-5xl mb-4 text-amber-500 animate-bounce">
+          <i class="fa-solid fa-medal"></i>
+        </div>
+
+        <h2 id="resultQuote" class="text-xl md:text-2xl font-bold mb-2">ممتاز! محاولة أسطورية 🚀</h2>
+        <p class="text-xs text-gray-400 mb-6" id="passageTitleResult">اسم القطعة: التكنولوجيا الحديثة</p>
+
+        <!-- Dynamic Detailed Metrics -->
+        <div class="grid grid-cols-2 gap-4 mb-6">
+          <div class="p-3 bg-black/30 rounded-2xl">
+            <div class="text-[11px] opacity-60 mb-1">سرعة الكتابة الصافية</div>
+            <div id="modalWpm" class="text-2xl font-mono font-bold" style="color: var(--accent-color);">0 WPM</div>
+          </div>
+          <div class="p-3 bg-black/30 rounded-2xl">
+            <div class="text-[11px] opacity-60 mb-1">نسبة الدقة النهائية</div>
+            <div id="modalAccuracy" class="text-2xl font-mono font-bold text-green-400">0%</div>
+          </div>
+          <div class="p-3 bg-black/30 rounded-2xl">
+            <div class="text-[11px] opacity-60 mb-1">عدد الأخطاء الكلية</div>
+            <div id="modalErrors" class="text-2xl font-mono font-bold text-rose-400">0</div>
+          </div>
+          <div class="p-3 bg-black/30 rounded-2xl">
+            <div class="text-[11px] opacity-60 mb-1">الرتبة والتقييم</div>
+            <div id="modalRank" class="text-lg font-bold text-indigo-400">فضي</div>
+          </div>
+        </div>
+
+        <!-- Modal Actions -->
+        <div class="flex flex-col gap-2">
+          <button id="btnShare" class="w-full py-3 rounded-xl font-bold flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white transition">
+            <i class="fa-solid fa-share-nodes"></i>
+            نسخ تقرير النتيجة ومشاركتها
+          </button>
+          <div class="flex gap-2">
+            <button id="btnModalRestart" class="flex-1 py-3 rounded-xl font-bold transition hover:opacity-80" style="background-color: var(--accent-color); color: var(--bg-color);">
+              <i class="fa-solid fa-arrow-rotate-left"></i>
+              أعد الاختبار
+            </button>
+            <button id="btnCloseModal" class="flex-1 py-3 bg-gray-700 hover:bg-gray-600 rounded-xl font-bold text-white transition">
+              إغلاق
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Notifications Container -->
+    <div id="toast" class="fixed bottom-6 right-6 px-5 py-3 rounded-xl shadow-lg border border-gray-700/50 transform translate-y-20 opacity-0 transition-all duration-300 z-50 text-sm font-medium"></div>
+
+    <!-- Interactive Custom Footer -->
+    <footer class="border-t border-gray-700/30 py-6 text-center text-xs opacity-60" style="background-color: rgba(0,0,0,0.2);">
+      <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4">
+        <span>كل الحقوق محفوظة © 2026. مصمم بنظام الكتابة باللمس الاحترافي.</span>
+        <div class="flex gap-4">
+          <span>نظام الفحص: 60 ثانية</span>
+          <span>•</span>
+          <span>اللغة: مقاطع باللغة الإنجليزية</span>
+          <span>•</span>
+          <span>تخزين مشفّر</span>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Firebase 11.6.1 Integration script & Typing App Logic -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+      import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+      import { getFirestore, collection, doc, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+      // 1. Data Store: 12 Premium English Passages (~120 words each)
+      const passages = [
+        {
+          id: "tech-ai",
+          category: "التكنولوجيا والذكاء الاصطناعي",
+          title: "Technology & AI",
+          text: "Technology has completely transformed the way we live, work, and communicate in the modern world. From the smartphones in our pockets to the complex algorithms driving global industries, digital innovation is everywhere. As artificial intelligence continues to advance, we are witnessing unprecedented changes in medicine, education, and entertainment. This rapid evolution offers incredible opportunities for growth but also presents unique challenges regarding privacy, security, and digital equity. To thrive in this new landscape, society must balance progress with ethical considerations, ensuring that technology serves to empower all individuals rather than divide them. As we look to the future, remaining adaptable and digitally literate will be key to navigating the exciting changes that lie ahead for humanity."
+        },
+        {
+          id: "nature-forest",
+          category: "الغابات والبيئة",
+          title: "Nature & Forests",
+          text: "Forests are the lungs of our planet, playing a vital role in maintaining the balance of Earth's delicate ecosystems. They provide a habitat for millions of species of plants, animals, and insects, many of which are still undiscovered. Beyond their incredible biodiversity, forests help regulate the global climate by absorbing vast amounts of carbon dioxide and releasing oxygen back into the atmosphere. The roots of trees also anchor the soil, preventing erosion and filtering water before it reaches rivers and oceans. However, human activities such as logging, agriculture, and urbanization continue to threaten these precious landscapes. Protecting and restoring our natural forests is not just an environmental obligation; it is essential for the survival and well-being of future generations."
+        },
+        {
+          id: "space-explore",
+          category: "استكشاف الفضاء الكوني",
+          title: "Space Exploration",
+          text: "The exploration of outer space has always captured the human imagination, driving us to look beyond our own blue planet. For decades, scientists and astronauts have pushed the boundaries of technology to study distant stars, planets, and galaxies. Programs like the Hubble and James Webb space telescopes have revealed breathtaking images of the early universe, helping us understand how stars are born and how galaxies evolve over billions of years. As we plan future missions to Mars and establish permanent bases on the Moon, the dream of becoming a multi-planetary species feels closer than ever. Space exploration not only expands our scientific knowledge but also inspires global cooperation, proving that humanity can achieve extraordinary goals when we work together."
+        },
+        {
+          id: "mind-meditation",
+          category: "اليقظة الذهنية والهدوء",
+          title: "Mindfulness & Peace",
+          text: "In our fast-paced modern world, finding moments of peace can feel like an impossible task. We are constantly bombarded with notifications, messages, and endless lists of chores, leaving little time for quiet reflection. Practicing mindfulness offers a simple yet powerful solution to this daily chaos. By focusing our attention entirely on the present moment, we can learn to observe our thoughts and feelings without judgment. This simple act of awareness helps reduce stress, improves focus, and fosters a deeper sense of emotional balance. Whether it is through daily meditation, deep breathing exercises, or simply enjoying a quiet walk in nature, incorporating mindfulness into our routines can profoundly transform our mental and physical well-being."
+        },
+        {
+          id: "ocean-life",
+          category: "عجائب المحيطات والبحار",
+          title: "Ocean & Marine Life",
+          text: "The world's oceans cover over seventy percent of the Earth's surface and contain some of the most mysterious environments on the planet. From sunlit coral reefs teeming with colorful marine life to the pitch-black depths of the Mariana Trench, the ocean is a place of incredible diversity and wonder. It regulates global weather patterns, generates half of the oxygen we breathe, and provides a primary source of food for billions of people. Despite its immense importance, marine life faces severe threats from plastic pollution, overfishing, and rising temperatures. Safeguarding our oceans requires international agreement, sustainable practices, and individual commitment to reduce waste, ensuring these deep blue expanses remain healthy and vibrant for ages to come."
+        },
+        {
+          id: "history-civil",
+          category: "تاريخ الحضارات البشرية",
+          title: "History & Civilizations",
+          text: "History is a vast tapestry of human experiences, filled with the triumphs and failures of civilizations that came before us. By studying the past, we gain valuable insights into how our current world was shaped, from ancient philosophy to scientific revolutions. We learn about the rise and fall of empires, the struggles for freedom and equality, and the cultural movements that continue to influence art and literature today. Understanding history helps us appreciate the diversity of human culture while warning us against repeating the mistakes of previous eras. It is a powerful tool for building a more empathetic and just society, encouraging us to make informed decisions that will benefit the global community in the future."
+        },
+        {
+          id: "books-read",
+          category: "قوة القراءة والكتب",
+          title: "The Power of Books",
+          text: "Reading is one of the most powerful activities we can engage in, acting as a gateway to new worlds, ideas, and perspectives. When we open a book, we are invited to step into the shoes of another person, experiencing their joy, sorrow, and unique journey. This fosters a deep sense of empathy and broadens our understanding of the complex human experience. Beyond its emotional benefits, reading stimulates the brain, expanding our vocabulary and strengthening critical thinking skills. Whether you prefer historical fiction, scientific essays, or thrilling mysteries, the habit of regular reading cultivates a love of learning and curiosity, enriching our inner lives in ways that few other activities can match."
+        },
+        {
+          id: "time-productivity",
+          category: "الإنتاجية وإدارة الوقت",
+          title: "Productivity & Focus",
+          text: "True productivity is not about doing more things in less time; it is about doing the right things with focus and purpose. Many people confuse being busy with being productive, filling their schedules with endless minor tasks while neglecting their most important goals. To achieve meaningful progress, we must learn to prioritize our work, eliminate distractions, and manage our energy levels throughout the day. Techniques like breaking large projects into smaller steps and taking regular short breaks can prevent burnout and maintain a high standard of quality. By working smarter rather than harder, we create more space in our lives for creative thinking, personal growth, and relaxation, leading to a much more satisfying balance."
+        },
+        {
+          id: "edu-future",
+          category: "التعليم وبناء المستقبل",
+          title: "Education & Future",
+          text: "Education is the cornerstone of personal and societal growth, empowering individuals with the knowledge and skills needed to shape their own destinies. A quality education does more than teach facts and figures; it cultivates critical thinking, nurtures creativity, and encourages lifelong curiosity. In classrooms around the world, students learn to collaborate, solve complex problems, and appreciate diverse perspectives, preparing them to contribute meaningfully to their communities. As the global economy evolves, access to education must expand to include digital literacy and vocational training, ensuring that no one is left behind. Investing in education is the single most effective way to break cycles of poverty and build a brighter, more equitable future."
+        },
+        {
+          id: "art-expression",
+          category: "الفن لغة الشعوب العالمية",
+          title: "Art & Expression",
+          text: "Art is a universal language that transcends borders, cultures, and time periods, allowing people to express complex emotions and ideas when words are simply not enough. Throughout human history, painting, sculpture, music, and dance have served as mirrors of society, reflecting our deepest fears, hopes, and beliefs. Art challenges us to view the world from different perspectives, sparks conversations about social change, and brings communities together in shared celebration. Engaging with art, whether as a creator or an observer, enriches our lives and stimulates our imaginations. It reminds us of our shared humanity and the enduring power of creativity to bring beauty and meaning to our everyday experiences."
+        },
+        {
+          id: "health-longevity",
+          category: "الصحة وجودة الحياة البدنية",
+          title: "Health & Longevity",
+          text: "Maintaining good health is a lifelong journey that requires a balanced approach to both physical and mental well-being. A nutritious diet, regular physical activity, and adequate sleep form the foundation of physical vitality, helping to protect our bodies from illness and stress. Equally important is mental health, which is nurtured through meaningful relationships, self-care practices, and seeking support when needed. In our busy lives, it is easy to neglect these basic needs, but prioritizing health pays rich dividends in terms of happiness, energy, and overall longevity. By making conscious, healthy choices every day, we empower ourselves to live life to the fullest and enjoy all the wonderful experiences it has to offer."
+        },
+        {
+          id: "sustainable-tomorrow",
+          category: "المستقبل والاستدامة",
+          title: "The Sustainable Future",
+          text: "The future is not something that simply happens to us; it is something we actively create through the choices we make today. As we stand at the crossroads of technological advancement, environmental change, and social evolution, the path we choose will define the lives of generations to come. Building a sustainable and fair future requires us to embrace renewable energy, foster international cooperation, and design cities that are resilient and green. It calls for a renewed commitment to human rights, scientific research, and empathy. While the challenges ahead are undoubtedly great, our capacity for innovation and adaptation gives us every reason to look toward tomorrow with hope, courage, and determination."
+        }
+      ];
+
+      // 2. Global State Variables
+      let currentPassage = passages[0];
+      let charElements = [];
+      let typedSequence = [];
+      let currentIndex = 0;
+      let timerInterval = null;
+      let timeLeft = 60;
+      let isPlaying = false;
+      let testStarted = false;
+      let soundEnabled = true;
+
+      // Local Fallback Array for Scores (Synchronized with Firestore if connected)
+      let scoreHistory = [];
+
+      // Web Audio API context for zero-lag local audio synthesis (Typewriter clicks)
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+      // UI Element Bindings
+      const typingArena = document.getElementById('typingArena');
+      const hiddenInput = document.getElementById('hiddenInput');
+      const wordsContainer = document.getElementById('wordsContainer');
+      const focusOverlay = document.getElementById('focusOverlay');
+      const caret = document.getElementById('caret');
+      const liveTimer = document.getElementById('liveTimer');
+      const liveWpm = document.getElementById('liveWpm');
+      const liveAccuracy = document.getElementById('liveAccuracy');
+      const liveErrors = document.getElementById('liveErrors');
+      const timerProgress = document.getElementById('timerProgress');
+      const themeSelector = document.getElementById('themeSelector');
+      const soundBtn = document.getElementById('soundBtn');
+      const soundIcon = document.getElementById('soundIcon');
+      const passageSelector = document.getElementById('passageSelector');
+      const wordCountBadge = document.getElementById('wordCountBadge');
+      
+      const btnRestart = document.getElementById('btnRestart');
+      const btnNewPassage = document.getElementById('btnNewPassage');
+      
+      // Score log bindings
+      const historyList = document.getElementById('historyList');
+      const emptyHistory = document.getElementById('emptyHistory');
+      const scoreCount = document.getElementById('scoreCount');
+      const bestWpmDisplay = document.getElementById('bestWpm');
+      const avgAccuracyDisplay = document.getElementById('avgAccuracy');
+      const userIdTag = document.getElementById('userIdTag');
+
+      // Modal Bindings
+      const resultModal = document.getElementById('resultModal');
+      const modalWpm = document.getElementById('modalWpm');
+      const modalAccuracy = document.getElementById('modalAccuracy');
+      const modalErrors = document.getElementById('modalErrors');
+      const modalRank = document.getElementById('modalRank');
+      const medalContainer = document.getElementById('medalContainer');
+      const resultQuote = document.getElementById('resultQuote');
+      const passageTitleResult = document.getElementById('passageTitleResult');
+      const btnShare = document.getElementById('btnShare');
+      const btnModalRestart = document.getElementById('btnModalRestart');
+      const btnCloseModal = document.getElementById('btnCloseModal');
+
+      // 3. Firestore & Authentication Infrastructure (CRITICAL Integration)
+      const appId = typeof __app_id !== 'undefined' ? __app_id : 'typing-speed-test';
+      let db = null;
+      let auth = null;
+      let user = null;
+
+      async function initFirebaseAndAuth() {
+        if (typeof __firebase_config !== 'undefined' && __firebase_config) {
+          try {
+            const firebaseConfig = JSON.parse(__firebase_config);
+            const app = initializeApp(firebaseConfig);
+            auth = getAuth(app);
+            db = getFirestore(app);
+
+            // Rule 3: Auth Before Queries - Prioritize token, then anonymous
+            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+              await signInWithCustomToken(auth, __initial_auth_token);
+            } else {
+              await signInAnonymously(auth);
+            }
+
+            // Track state transitions safely
+            onAuthStateChanged(auth, (firebaseUser) => {
+              user = firebaseUser;
+              if (user) {
+                userIdTag.textContent = `مستعمل ID: ${user.uid.slice(0, 6)}...`;
+                loadScoresFromFirestore();
+              }
+            });
+          } catch (e) {
+            console.error("Firebase startup issues (falling back to memory):", e);
+            userIdTag.textContent = "غير متصل (حفظ محلي)";
+            loadScoresFromLocalStorage();
+          }
+        } else {
+          userIdTag.textContent = "غير متصل (حفظ محلي)";
+          loadScoresFromLocalStorage();
+        }
+      }
+
+      // Safe Local storage fallback if user has offline permissions
+      function loadScoresFromLocalStorage() {
+        try {
+          const raw = localStorage.getItem('typing_history_backup');
+          if (raw) {
+            scoreHistory = JSON.parse(raw);
+            renderScoresList();
+          }
+        } catch (e) {}
+      }
+
+      function saveScoreToLocalStorage(scoreObj) {
+        try {
+          scoreHistory.unshift(scoreObj);
+          localStorage.setItem('typing_history_backup', JSON.stringify(scoreHistory));
+          renderScoresList();
+        } catch (e) {}
+      }
+
+      // Rule 1: Strict Paths, Rule 2: No Complex Queries
+      async function loadScoresFromFirestore() {
+        if (!db || !user) return;
+        try {
+          // Rule 1: Public/private path layout
+          const collectionRef = collection(db, 'artifacts', appId, 'users', user.uid, 'history');
+          const snapshot = await getDocs(collectionRef);
+          
+          let list = [];
+          snapshot.forEach(docSnap => {
+            list.push({ id: docSnap.id, ...docSnap.data() });
+          });
+
+          // Rule 2: No complex queries. Fetch clean list and sort locally in memory
+          list.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+          scoreHistory = list;
+          renderScoresList();
+        } catch (e) {
+          console.error("Failed fetching online history, loading backup:", e);
+          loadScoresFromLocalStorage();
+        }
+      }
+
+      async function pushScoreToFirestore(scoreObj) {
+        if (!db || !user) {
+          saveScoreToLocalStorage(scoreObj);
+          return;
+        }
+        try {
+          const collectionRef = collection(db, 'artifacts', appId, 'users', user.uid, 'history');
+          await addDoc(collectionRef, scoreObj);
+          // Reload scores after saving
+          await loadScoresFromFirestore();
+        } catch (e) {
+          console.error("Error writing online, saving backup:", e);
+          saveScoreToLocalStorage(scoreObj);
+        }
+      }
+
+      // Render Scores to Sidebar with beautiful progress tracking
+      function renderScoresList() {
+        if (scoreHistory.length === 0) {
+          emptyHistory.classList.remove('hidden');
+          historyList.classList.add('hidden');
+          bestWpmDisplay.textContent = '0';
+          avgAccuracyDisplay.textContent = '0%';
+          scoreCount.textContent = '0';
+          return;
+        }
+
+        emptyHistory.classList.add('hidden');
+        historyList.classList.remove('hidden');
+
+        scoreCount.textContent = scoreHistory.length;
+
+        // Calculate and update averages
+        const bestWpm = Math.max(...scoreHistory.map(s => s.wpm || 0));
+        const totalAccuracy = scoreHistory.reduce((sum, s) => sum + (s.accuracy || 0), 0);
+        const avgAccuracy = Math.round(totalAccuracy / scoreHistory.length);
+
+        bestWpmDisplay.textContent = bestWpm;
+        avgAccuracyDisplay.textContent = `${avgAccuracy}%`;
+
+        // Render past 10 logs smoothly
+        historyList.innerHTML = scoreHistory.slice(0, 10).map((score) => {
+          const formattedDate = new Date(score.timestamp).toLocaleDateString('ar-EG', {
+            month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+          });
+          return `
+            <div class="p-3 bg-black/25 rounded-xl border border-gray-700/10 flex items-center justify-between text-xs transition duration-200 hover:bg-black/40">
+              <div class="flex flex-col gap-1">
+                <span class="font-bold text-gray-200">${score.passageTitle || 'غير معروف'}</span>
+                <span class="opacity-50 text-[10px]">${formattedDate}</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="text-right">
+                  <div class="font-mono font-bold text-sm" style="color: var(--accent-color);">${score.wpm} WPM</div>
+                  <div class="opacity-60 text-[10px] font-mono">دقة: ${score.accuracy}%</div>
+                </div>
+                <div class="text-[10px] px-1.5 py-0.5 rounded ${score.errors > 5 ? 'bg-red-500/10 text-red-400' : 'bg-green-500/10 text-green-400'}">
+                  ${score.errors} خطأ
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // 4. Synth Audio engine for satisfying clicks
+      function playClickSound(isError = false) {
+        if (!soundEnabled) return;
+        try {
+          if (audioCtx.state === 'suspended') {
+            audioCtx.resume();
+          }
+          const osc = audioCtx.createOscillator();
+          const gainNode = audioCtx.createGain();
+          
+          osc.connect(gainNode);
+          gainNode.connect(audioCtx.destination);
+          
+          if (isError) {
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(140, audioCtx.currentTime);
+            gainNode.gain.setValueAtTime(0.12, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.15);
+          } else {
+            // High crisp click
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(950, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(1600, audioCtx.currentTime + 0.04);
+            gainNode.gain.setValueAtTime(0.06, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.04);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.04);
+          }
+        } catch (e) {
+          console.warn("Audio Context blocked or failed:", e);
+        }
+      }
+
+      // 5. Typing Test Engine Logic
+      function loadCategories() {
+        passageSelector.innerHTML = passages.map((p, index) => {
+          return `<option value="${index}">${p.category} (${p.title})</option>`;
+        }).join('');
+      }
+
+      function initPassage(passage) {
+        currentPassage = passage;
+        const words = passage.text.split(' ');
+        
+        wordsContainer.innerHTML = words.map((word, wIdx) => {
+          const letterSpans = word.split('').map((char, cIdx) => {
+            return `<span class="char">${char}</span>`;
+          }).join('');
+          
+          // Separate words safely with invisible space placeholder
+          const isLastWord = wIdx === words.length - 1;
+          const spaceSpan = !isLastWord ? `<span class="char space-char text-gray-600/50">&nbsp;</span>` : '';
+          return `<div class="word inline-flex">${letterSpans}</div>${spaceSpan}`;
+        }).join('');
+
+        // Store references
+        charElements = Array.from(wordsContainer.querySelectorAll('.char'));
+        currentIndex = 0;
+        typedSequence = [];
+        
+        // Setup default active element
+        resetLiveStatsDisplay();
+        highlightActiveChar();
+      }
+
+      function highlightActiveChar() {
+        charElements.forEach((el, index) => {
+          el.classList.remove('current');
+          if (index === currentIndex) {
+            el.classList.add('current');
+          }
+        });
+
+        // Place the beautiful virtual Caret
+        const activeChar = charElements[currentIndex];
+        if (activeChar) {
+          const containerRect = wordsContainer.getBoundingClientRect();
+          const charRect = activeChar.getBoundingClientRect();
+          
+          caret.style.display = 'block';
+          caret.style.left = `${charRect.left - containerRect.left}px`;
+          caret.style.top = `${charRect.top - containerRect.top}px`;
+          caret.style.height = `${charRect.height}px`;
+          caret.style.width = activeChar.textContent === '\u00A0' ? '8px' : '2px';
+        } else {
+          caret.style.display = 'none';
+        }
+      }
+
+      function resetLiveStatsDisplay() {
+        liveTimer.textContent = "01:00";
+        liveWpm.textContent = "0";
+        liveAccuracy.textContent = "100%";
+        liveErrors.textContent = "0";
+        timerProgress.style.width = '100%';
+        timeLeft = 60;
+        testStarted = false;
+        isPlaying = false;
+        clearInterval(timerInterval);
+      }
+
+      function startTimer() {
+        testStarted = true;
+        isPlaying = true;
+        timeLeft = 60;
+        timerInterval = setInterval(() => {
+          timeLeft--;
+          if (timeLeft <= 0) {
+            endSpeedTest();
+          } else {
+            const min = String(Math.floor(timeLeft / 60)).padStart(2, '0');
+            const sec = String(timeLeft % 60).padStart(2, '0');
+            liveTimer.textContent = `${min}:${sec}`;
+            timerProgress.style.width = `${(timeLeft / 60) * 100}%`;
+            
+            // Calculate live middle stats safely
+            calculateLiveStats();
+          }
+        }, 1000);
+      }
+
+      function calculateLiveStats() {
+        const timePassed = 60 - timeLeft;
+        if (timePassed <= 0) return;
+
+        const correctChars = wordsContainer.querySelectorAll('.char.correct').length;
+        const incorrectChars = wordsContainer.querySelectorAll('.char.incorrect').length;
+        const totalTyped = correctChars + incorrectChars;
+
+        // Standard speed formula: (Correct chars / 5) / (minutes)
+        const computedWpm = Math.round((correctChars / 5) / (timePassed / 60));
+        liveWpm.textContent = computedWpm;
+
+        // Accuracy
+        if (totalTyped > 0) {
+          const accuracy = Math.round((correctChars / totalTyped) * 100);
+          liveAccuracy.textContent = `${accuracy}%`;
+        } else {
+          liveAccuracy.textContent = `100%`;
+        }
+        liveErrors.textContent = incorrectChars;
+      }
+
+      function handleTypingInput(char) {
+        if (!isPlaying && !testStarted) {
+          startTimer();
+        }
+
+        if (currentIndex >= charElements.length) return;
+
+        const currentEl = charElements[currentIndex];
+        let targetText = currentEl.textContent;
+        if (targetText === '\u00A0') targetText = ' '; // Map space character back
+
+        // Virtual Keyboard highlighting
+        const keyId = `key-${char.toLowerCase() === ' ' ? 'space' : char.toLowerCase()}`;
+        const keyEl = document.getElementById(keyId);
+        if (keyEl) {
+          keyEl.classList.add('bg-amber-500', 'text-black', 'scale-95');
+          setTimeout(() => {
+            keyEl.classList.remove('bg-amber-500', 'text-black', 'scale-95');
+          }, 150);
+        }
+
+        if (char === targetText) {
+          currentEl.classList.add('correct');
+          currentEl.classList.remove('incorrect');
+          playClickSound(false);
+        } else {
+          currentEl.classList.add('incorrect');
+          currentEl.classList.remove('correct');
+          playClickSound(true);
+        }
+
+        currentIndex++;
+        highlightActiveChar();
+        calculateLiveStats();
+
+        // Finish early if user hits end of passage
+        if (currentIndex >= charElements.length) {
+          endSpeedTest();
+        }
+      }
+
+      function handleBackspace() {
+        if (currentIndex === 0) return;
+        currentIndex--;
+        const currentEl = charElements[currentIndex];
+        currentEl.classList.remove('correct', 'incorrect');
+        playClickSound(false);
+        highlightActiveChar();
+        calculateLiveStats();
+      }
+
+      async function endSpeedTest() {
+        clearInterval(timerInterval);
+        isPlaying = false;
+        liveTimer.textContent = "00:00";
+        timerProgress.style.width = '0%';
+
+        const correctChars = wordsContainer.querySelectorAll('.char.correct').length;
+        const incorrectChars = wordsContainer.querySelectorAll('.char.incorrect').length;
+        const totalTyped = correctChars + incorrectChars;
+        const finalWpm = Math.round((correctChars / 5) / (1)); // 1 min duration
+        const finalAccuracy = totalTyped > 0 ? Math.round((correctChars / totalTyped) * 100) : 0;
+
+        // Show badge depending on WPM speed
+        let rank = "سائح 🚶‍♂️";
+        let quote = "تحتاج لبعض الممارسة والتركيز!";
+        let badgeColor = "text-amber-600";
+        let badgeIcon = '<i class="fa-solid fa-award"></i>';
+
+        if (finalWpm >= 80) {
+          rank = "أسطوري ⚡ (ماسي)";
+          quote = "يا إلهي! أنت سريع البرق وصاحب أنامل ماسية خارقة!";
+          badgeColor = "text-sky-300";
+          badgeIcon = '<i class="fa-solid fa-crown"></i>';
+        } else if (finalWpm >= 50) {
+          rank = "محترف 🚀 (ذهبي)";
+          quote = "سرعة ممتازة ودقة عالية، مستواك يضاهي المبرمجين المحترفين!";
+          badgeColor = "text-yellow-400";
+          badgeIcon = '<i class="fa-solid fa-medal"></i>';
+        } else if (finalWpm >= 30) {
+          rank = "مستكشف 👍 (فضي)";
+          quote = "سرعة جيدة جداً، مع مزيد من التدريب ستصل للقمة قريباً!";
+          badgeColor = "text-gray-300";
+          badgeIcon = '<i class="fa-solid fa-shield-halved"></i>';
+        }
+
+        // Apply badge details to UI
+        modalRank.innerHTML = rank;
+        modalRank.className = `text-lg font-bold ${badgeColor}`;
+        medalContainer.innerHTML = badgeIcon;
+        medalContainer.className = `w-24 h-24 mx-auto rounded-full bg-black/30 flex items-center justify-center text-5xl mb-4 ${badgeColor} animate-bounce`;
+        resultQuote.textContent = quote;
+        passageTitleResult.textContent = `اسم القطعة: ${currentPassage.category} (${currentPassage.title})`;
+
+        modalWpm.textContent = `${finalWpm} WPM`;
+        modalAccuracy.textContent = `${finalAccuracy}%`;
+        modalErrors.textContent = incorrectChars;
+
+        // Display results modal smoothly
+        resultModal.classList.remove('pointer-events-none', 'opacity-0');
+        resultModal.querySelector('.transform').classList.remove('scale-95');
+
+        // Save Results using modern storage logic (Strict firestore rules obeyed)
+        const scoreObj = {
+          wpm: finalWpm,
+          accuracy: finalAccuracy,
+          errors: incorrectChars,
+          passageTitle: currentPassage.title,
+          timestamp: new Date().toISOString()
+        };
+
+        await pushScoreToFirestore(scoreObj);
+      }
+
+      function showToast(message, type = "success") {
+        const toast = document.getElementById('toast');
+        toast.textContent = message;
+        toast.className = `fixed bottom-6 right-6 px-5 py-3 rounded-xl shadow-lg border border-gray-700/50 transform translate-y-0 opacity-100 transition-all duration-300 z-50 text-sm font-medium ${
+          type === "success" ? 'bg-green-600 text-white' : 'bg-amber-600 text-black'
+        }`;
+        
+        setTimeout(() => {
+          toast.classList.add('opacity-0', 'translate-y-20');
+        }, 3000);
+      }
+
+      // Clipboard formatting helper complying with CSP / Safe Sandboxing rules
+      function shareResultText() {
+        const textToCopy = `🏁 اختبار الكتابة السريعة: مثبّت السرعة!\nالقطعة: ${currentPassage.title}\nالسرعة: ${modalWpm.textContent}\nالدقة: ${modalAccuracy.textContent}\nالأخطاء: ${modalErrors.textContent}\nالرتبة: ${modalRank.textContent}\nتدرّب الآن وارفع مستواك التنافسي!`;
+        
+        // Strict command execution bypasses cross-iframe clipboard blocking safely
+        const textarea = document.createElement('textarea');
+        textarea.value = textToCopy;
+        textarea.style.position = 'fixed';
+        document.body.appendChild(textarea);
+        textarea.select();
+        try {
+          document.execCommand('copy');
+          showToast('تم نسخ تقرير نتيجتك بنجاح لتشاركه مع أصدقائك!', 'success');
+        } catch (err) {
+          showToast('تعذر النسخ التلقائي لبعض قيود المتصفح.', 'warning');
+        }
+        document.body.removeChild(textarea);
+      }
+
+      // Theme Manager
+      function applyTheme(themeName) {
+        document.body.className = `${themeName} min-h-screen font-sans flex flex-col justify-between`;
+        localStorage.setItem('typing_selected_theme', themeName);
+        themeSelector.value = themeName;
+      }
+
+      // Core event wiring & Focus capture
+      function setupEventHandlers() {
+        // Handle input events on the arena
+        typingArena.addEventListener('click', () => {
+          hiddenInput.focus();
+          focusOverlay.classList.add('opacity-0', 'pointer-events-none');
+        });
+
+        hiddenInput.addEventListener('blur', () => {
+          focusOverlay.classList.remove('opacity-0', 'pointer-events-none');
+        });
+
+        // Capture physical and virtual keys seamlessly
+        hiddenInput.addEventListener('keydown', (e) => {
+          if (e.key === 'Backspace') {
+            handleBackspace();
+            e.preventDefault();
+          } else if (e.key === ' ') {
+            handleTypingInput(' ');
+            e.preventDefault();
+          }
+        });
+
+        hiddenInput.addEventListener('input', (e) => {
+          const val = e.target.value;
+          // Clean the hidden buffer instantly
+          e.target.value = '';
+          if (val && val !== ' ' && val !== 'Backspace') {
+            // Send the key character typed
+            handleTypingInput(val.charAt(val.length - 1));
+          }
+        });
+
+        // Theme selector event
+        themeSelector.addEventListener('change', (e) => {
+          applyTheme(e.target.value);
+        });
+
+        // Audio state change toggle
+        soundBtn.addEventListener('click', () => {
+          soundEnabled = !soundEnabled;
+          soundIcon.className = soundEnabled ? 'fa-solid fa-volume-high' : 'fa-solid fa-volume-xmark text-rose-500';
+          showToast(soundEnabled ? 'تم تفعيل الصوت التفاعلي للمفاتيح' : 'تم كتم الصوت التفاعلي للمفاتيح', 'success');
+        });
+
+        // Selection of topics
+        passageSelector.addEventListener('change', (e) => {
+          const idx = Number(e.target.value);
+          initPassage(passages[idx]);
+          hiddenInput.focus();
+        });
+
+        // Restarts
+        btnRestart.addEventListener('click', () => {
+          initPassage(currentPassage);
+          hiddenInput.focus();
+          showToast('تمت إعادة تهيئة الاختبار بنجاح. ابدأ الكتابة فوراً!', 'success');
+        });
+
+        btnModalRestart.addEventListener('click', () => {
+          resultModal.classList.add('pointer-events-none', 'opacity-0');
+          initPassage(currentPassage);
+          hiddenInput.focus();
+        });
+
+        btnNewPassage.addEventListener('click', () => {
+          const currentIdx = passages.indexOf(currentPassage);
+          let newIdx;
+          do {
+            newIdx = Math.floor(Math.random() * passages.length);
+          } while (newIdx === currentIdx);
+          
+          passageSelector.value = newIdx;
+          initPassage(passages[newIdx]);
+          hiddenInput.focus();
+          showToast('تم تحميل قطعة عشوائية جديدة لزيادة مستواك!', 'success');
+        });
+
+        btnCloseModal.addEventListener('click', () => {
+          resultModal.classList.add('pointer-events-none', 'opacity-0');
+        });
+
+        btnShare.addEventListener('click', shareResultText);
+      }
+
+      // Initialize Application on Window Ready
+      window.onload = function() {
+        loadCategories();
+        
+        // Retrieve and restore saved configurations
+        const savedTheme = localStorage.getItem('typing_selected_theme') || 'theme-cyber';
+        applyTheme(savedTheme);
+
+        initFirebaseAndAuth();
+        setupEventHandlers();
+
+        // Default initial loading
+        initPassage(passages[0]);
+      };
+    </script>
+  </body>
+</html>

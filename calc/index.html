@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الآلة الحاسبة السيبرانية الاحترافية - Cyber Calculator</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Cairo Google Font for premium Arabic digits -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: radial-gradient(circle at center, #0f172a 0%, #020617 100%);
+        }
+
+        /* Premium Glassmorphic container with neon accents */
+        .glass-calculator {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5),
+                        0 0 40px rgba(6, 182, 212, 0.05);
+        }
+
+        /* Beautiful styled scrollbar for display overflow */
+        .custom-scroll::-webkit-scrollbar {
+            height: 4px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.01);
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 99px;
+        }
+
+        /* Key hover glow animations */
+        .key-btn {
+            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .key-btn:active {
+            transform: scale(0.92);
+        }
+    </style>
+</head>
+<body class="text-slate-100 min-h-screen flex items-center justify-center p-4">
+
+    <!-- Main Outer Container -->
+    <div class="w-full max-w-sm glass-calculator rounded-[2.5rem] p-6 space-y-6 relative overflow-hidden">
+        
+        <!-- Decorative futuristic background elements -->
+        <div class="absolute -top-12 -left-12 w-24 h-24 bg-cyan-500/10 rounded-full blur-xl"></div>
+        <div class="absolute -bottom-12 -right-12 w-24 h-24 bg-fuchsia-500/10 rounded-full blur-xl"></div>
+
+        <!-- Calculator Branding Header -->
+        <div class="flex items-center justify-between text-[11px] text-slate-500 font-bold tracking-widest px-1">
+            <span class="flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-cyan-500 animate-pulse"></span>
+                CYBER CALC v2.5
+            </span>
+            <span>SECURE MATH ENGINE</span>
+        </div>
+
+        <!-- Glassmorphism Multi-layer Display Area -->
+        <div class="bg-slate-950/60 border border-slate-900/80 rounded-3xl p-5 flex flex-col justify-between h-36 relative overflow-hidden shadow-inner">
+            
+            <!-- History Expression Tracker (top layer) -->
+            <div id="history-display" class="text-left text-slate-500 text-sm font-semibold tracking-wide h-6 overflow-x-auto custom-scroll whitespace-nowrap scroll-smooth" dir="ltr">
+                <!-- Expression will appear here -->
+            </div>
+
+            <!-- Primary Live Result Input Area (bottom layer) -->
+            <div class="flex flex-col items-end justify-end mt-auto w-full">
+                <div id="main-display" class="w-full text-right text-4xl font-extrabold text-white tracking-wide overflow-x-auto custom-scroll whitespace-nowrap scroll-smooth py-1" dir="ltr">
+                    0
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Keypad Grid Layout (5 rows, 4 columns) -->
+        <div class="grid grid-cols-4 gap-3">
+            
+            <!-- ROW 1 -->
+            <button onclick="handleKeyInput('AC')" class="key-btn col-span-1 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 rounded-2xl p-4 font-black text-sm flex items-center justify-center">
+                AC
+            </button>
+            <button onclick="handleKeyInput('C')" class="key-btn col-span-1 bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/20 rounded-2xl p-4 font-black text-sm flex items-center justify-center">
+                C
+            </button>
+            <button onclick="handleKeyInput('DEL')" class="key-btn col-span-1 bg-slate-800/60 hover:bg-slate-700/60 text-slate-300 border border-slate-700/30 rounded-2xl p-4 font-bold text-sm flex items-center justify-center">
+                DEL
+            </button>
+            <button onclick="handleKeyInput('/')" class="key-btn col-span-1 bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 border border-cyan-500/20 rounded-2xl p-4 font-black text-xl flex items-center justify-center">
+                ÷
+            </button>
+
+            <!-- ROW 2 -->
+            <button onclick="handleKeyInput('7')" class="key-btn col-span-1 bg-slate-900/40 hover:bg-slate-800/50 text-slate-200 border border-slate-800 rounded-2xl p-4 font-bold text-lg flex items-center justify-center">
+                7
+            </button>
+            <button onclick="handleKeyInput('8')" class="key-btn col-span-1 bg-slate-900/40 hover:bg-slate-800/50 text-slate-200 border border-slate-800 rounded-2xl p-4 font-bold text-lg flex items-center justify-center">
+                8
+            </button>
+            <button onclick="handleKeyInput('9')" class="key-btn col-span-1 bg-slate-900/40 hover:bg-slate-800/50 text-slate-200 border border-slate-800 rounded-2xl p-4 font-bold text-lg flex items-center justify-center">
+                9
+            </button>
+            <button onclick="handleKeyInput('*')" class="key-btn col-span-1 bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 border border-cyan-500/20 rounded-2xl p-4 font-black text-xl flex items-center justify-center">
+                ×
+            </button>
+
+            <!-- ROW 3 -->
+            <button onclick="handleKeyInput('4')" class="key-btn col-span-1 bg-slate-900/40 hover:bg-slate-800/50 text-slate-200 border border-slate-800 rounded-2xl p-4 font-bold text-lg flex items-center justify-center">
+                4
+            </button>
+            <button onclick="handleKeyInput('5')" class="key-btn col-span-1 bg-slate-900/40 hover:bg-slate-800/50 text-slate-200 border border-slate-800 rounded-2xl p-4 font-bold text-lg flex items-center justify-center">
+                5
+            </button>
+            <button onclick="handleKeyInput('6')" class="key-btn col-span-1 bg-slate-900/40 hover:bg-slate-800/50 text-slate-200 border border-slate-800 rounded-2xl p-4 font-bold text-lg flex items-center justify-center">
+                6
+            </button>
+            <button onclick="handleKeyInput('-')" class="key-btn col-span-1 bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 border border-cyan-500/20 rounded-2xl p-4 font-black text-xl flex items-center justify-center">
+                -
+            </button>
+
+            <!-- ROW 4 -->
+            <button onclick="handleKeyInput('1')" class="key-btn col-span-1 bg-slate-900/40 hover:bg-slate-800/50 text-slate-200 border border-slate-800 rounded-2xl p-4 font-bold text-lg flex items-center justify-center">
+                1
+            </button>
+            <button onclick="handleKeyInput('2')" class="key-btn col-span-1 bg-slate-900/40 hover:bg-slate-800/50 text-slate-200 border border-slate-800 rounded-2xl p-4 font-bold text-lg flex items-center justify-center">
+                2
+            </button>
+            <button onclick="handleKeyInput('3')" class="key-btn col-span-1 bg-slate-900/40 hover:bg-slate-800/50 text-slate-200 border border-slate-800 rounded-2xl p-4 font-bold text-lg flex items-center justify-center">
+                3
+            </button>
+            <button onclick="handleKeyInput('+')" class="key-btn col-span-1 bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 border border-cyan-500/20 rounded-2xl p-4 font-black text-xl flex items-center justify-center">
+                +
+            </button>
+
+            <!-- ROW 5 -->
+            <button onclick="handleKeyInput('%')" class="key-btn col-span-1 bg-slate-900/40 hover:bg-slate-800/50 text-slate-200 border border-slate-800 rounded-2xl p-4 font-bold text-lg flex items-center justify-center">
+                %
+            </button>
+            <button onclick="handleKeyInput('0')" class="key-btn col-span-1 bg-slate-900/40 hover:bg-slate-800/50 text-slate-200 border border-slate-800 rounded-2xl p-4 font-bold text-lg flex items-center justify-center">
+                0
+            </button>
+            <button onclick="handleKeyInput('.')" class="key-btn col-span-1 bg-slate-900/40 hover:bg-slate-800/50 text-slate-200 border border-slate-800 rounded-2xl p-4 font-bold text-lg flex items-center justify-center">
+                .
+            </button>
+            <!-- Giant Neon Gradient Equals Button -->
+            <button onclick="handleKeyInput('=')" class="key-btn col-span-1 bg-gradient-to-r from-cyan-500 to-emerald-500 hover:from-cyan-400 hover:to-emerald-400 text-slate-950 rounded-2xl p-4 font-black text-xl flex items-center justify-center shadow-lg shadow-emerald-500/10">
+                =
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- Core Calculator Processing Script Engine -->
+    <script>
+        // DOM Elements
+        const mainDisplay = document.getElementById('main-display');
+        const historyDisplay = document.getElementById('history-display');
+
+        // Application State State Machine
+        let activeExpression = ""; // Raw math string under build (e.g., "12.5+3*4")
+        let hasCalculated = false; // Flag to clear output upon typing new numbers right after equal (=)
+
+        // Maps raw internal math operators to beautiful visual display operators
+        const visualMapping = {
+            '*': ' × ',
+            '/': ' ÷ ',
+            '+': ' + ',
+            '-': ' - '
+        };
+
+        // Render inputs onto displays dynamically
+        function updateDisplay() {
+            if (activeExpression === "") {
+                mainDisplay.textContent = "0";
+            } else {
+                // Generate sleek formatted visual representation
+                let visualStr = "";
+                for (let i = 0; i < activeExpression.length; i++) {
+                    const char = activeExpression[i];
+                    if (visualMapping[char]) {
+                        visualStr += visualMapping[char];
+                    } else {
+                        visualStr += char;
+                    }
+                }
+                mainDisplay.textContent = visualStr;
+            }
+            
+            // Auto scroll displays to the right so users see last entries instantly
+            mainDisplay.scrollLeft = mainDisplay.scrollWidth;
+            historyDisplay.scrollLeft = historyDisplay.scrollWidth;
+        }
+
+        // --- CORE MATH PARSER (NO EVAL) ---
+
+        // Step 1: Tokenizer Lexical Parser
+        function tokenize(expr) {
+            const tokens = [];
+            let i = 0;
+            while (i < expr.length) {
+                const char = expr[i];
+                if (char === ' ') {
+                    i++;
+                    continue;
+                }
+                // Check for operators
+                if ('+-*/%'.includes(char)) {
+                    // Evaluate unary positive/negative conditions
+                    const isUnary = (char === '-' || char === '+') && 
+                                    (tokens.length === 0 || '+-*/'.includes(tokens[tokens.length - 1]));
+                    if (isUnary) {
+                        let numStr = char;
+                        i++;
+                        while (i < expr.length && /[0-9.]/.test(expr[i])) {
+                            numStr += expr[i];
+                            i++;
+                        }
+                        // Handle incomplete trailing unary operator like "5*+"
+                        if (numStr === '-' || numStr === '+') {
+                            throw new Error("صيغة خاطئة");
+                        }
+                        tokens.push(parseFloat(numStr));
+                    } else {
+                        // Regular Operator
+                        tokens.push(char);
+                        i++;
+                    }
+                } else if (/[0-9.]/.test(char)) {
+                    let numStr = '';
+                    while (i < expr.length && /[0-9.]/.test(expr[i])) {
+                        numStr += expr[i];
+                        i++;
+                    }
+                    tokens.push(parseFloat(numStr));
+                } else {
+                    throw new Error("رمز غير صالح");
+                }
+            }
+            return tokens;
+        }
+
+        // Pre-process percentages logic instantly inside tokens
+        function preprocessPercentages(tokens) {
+            const processed = [];
+            for (let i = 0; i < tokens.length; i++) {
+                if (tokens[i] === '%') {
+                    if (processed.length === 0 || typeof processed[processed.length - 1] !== 'number') {
+                        throw new Error("صيغة خاطئة");
+                    }
+                    const num = processed.pop();
+                    processed.push(num / 100);
+                } else {
+                    processed.push(tokens[i]);
+                }
+            }
+            return processed;
+        }
+
+        // Step 2: Shunting-Yard (Infix to Postfix RPN Converter) & Stack Evaluator
+        function evaluateExpression(expr) {
+            let tokens = tokenize(expr);
+            tokens = preprocessPercentages(tokens);
+
+            if (tokens.length === 0) return 0;
+
+            const outputQueue = [];
+            const operatorStack = [];
+            const precedence = {
+                '+': 1,
+                '-': 1,
+                '*': 2,
+                '/': 2
+            };
+
+            for (const token of tokens) {
+                if (typeof token === 'number') {
+                    outputQueue.push(token);
+                } else if ('+-*/'.includes(token)) {
+                    while (
+                        operatorStack.length > 0 &&
+                        '+-*/'.includes(operatorStack[operatorStack.length - 1]) &&
+                        precedence[operatorStack[operatorStack.length - 1]] >= precedence[token]
+                    ) {
+                        outputQueue.push(operatorStack.pop());
+                    }
+                    operatorStack.push(token);
+                }
+            }
+            while (operatorStack.length > 0) {
+                const op = operatorStack.pop();
+                if ('+-*/'.includes(op)) {
+                    outputQueue.push(op);
+                }
+            }
+
+            // Postfix Evaluation using Stack
+            const stack = [];
+            for (const token of outputQueue) {
+                if (typeof token === 'number') {
+                    stack.push(token);
+                } else {
+                    const b = stack.pop();
+                    const a = stack.pop();
+                    if (a === undefined || b === undefined) {
+                        throw new Error("صيغة خاطئة");
+                    }
+                    let result;
+                    switch (token) {
+                        case '+': result = a + b; break;
+                        case '-': result = a - b; break;
+                        case '*': result = a * b; break;
+                        case '/': 
+                            if (b === 0) throw new Error("لا يمكن القسمة على 0");
+                            result = a / b; 
+                            break;
+                    }
+                    stack.push(result);
+                }
+            }
+
+            if (stack.length !== 1) {
+                throw new Error("صيغة خاطئة");
+            }
+
+            // Clean floating-point precision issues safely
+            return cleanFloat(stack[0]);
+        }
+
+        // Helper function to resolve JavaScript float accuracy issues
+        function cleanFloat(val) {
+            if (isNaN(val)) return 'Error';
+            if (!isFinite(val)) return 'Infinity';
+            // Rounding limits up to 12 decimal places dynamically stripping trailing zeros
+            return parseFloat(val.toFixed(12));
+        }
+
+        // Checks if decimal input is currently valid for active operand
+        function canAppendDecimal() {
+            const parts = activeExpression.split(/[\+\-\*\/]/);
+            const lastSegment = parts[parts.length - 1];
+            return !lastSegment.includes('.');
+        }
+
+        // --- KEYSTROKE INTERACTION ROUTINE ---
+
+        function handleKeyInput(key) {
+            const lastChar = activeExpression.slice(-1);
+
+            switch (key) {
+                case 'AC':
+                    // Reset all displays
+                    activeExpression = "";
+                    historyDisplay.textContent = "";
+                    hasCalculated = false;
+                    updateDisplay();
+                    break;
+
+                case 'C':
+                    // Clear current build operand
+                    const parts = activeExpression.split(/([\+\-\*\/])/);
+                    if (parts.length > 1) {
+                        // Remove last operand completely
+                        parts.pop();
+                        activeExpression = parts.join('');
+                    } else {
+                        activeExpression = "";
+                    }
+                    updateDisplay();
+                    break;
+
+                case 'DEL':
+                    if (hasCalculated) {
+                        activeExpression = "";
+                        hasCalculated = false;
+                    } else {
+                        activeExpression = activeExpression.slice(0, -1);
+                    }
+                    updateDisplay();
+                    break;
+
+                case '=':
+                    if (activeExpression === "") return;
+                    
+                    // Prevent trailing operator issues before calculation
+                    if ('+-*/'.includes(lastChar)) {
+                        activeExpression = activeExpression.slice(0, -1);
+                    }
+
+                    try {
+                        let formattedExpr = "";
+                        for (let i = 0; i < activeExpression.length; i++) {
+                            const char = activeExpression[i];
+                            formattedExpr += visualMapping[char] || char;
+                        }
+                        
+                        const result = evaluateExpression(activeExpression);
+                        
+                        // Output results
+                        historyDisplay.textContent = `${formattedExpr} =`;
+                        activeExpression = String(result);
+                        hasCalculated = true;
+                        updateDisplay();
+                    } catch (error) {
+                        historyDisplay.textContent = "";
+                        mainDisplay.textContent = error.message === "لا يمكن القسمة على 0" ? "Error: Div by 0" : "Error";
+                        activeExpression = "";
+                        hasCalculated = false;
+                    }
+                    break;
+
+                case '.':
+                    if (hasCalculated) {
+                        activeExpression = "0.";
+                        hasCalculated = false;
+                        updateDisplay();
+                        return;
+                    }
+                    if (activeExpression === "" || '+-*/'.includes(lastChar)) {
+                        activeExpression += "0.";
+                    } else if (canAppendDecimal()) {
+                        activeExpression += ".";
+                    }
+                    updateDisplay();
+                    break;
+
+                case '+':
+                case '-':
+                case '*':
+                case '/':
+                    hasCalculated = false;
+                    if (activeExpression === "") {
+                        if (key === '-') {
+                            activeExpression += key; // Allow starting with negative number
+                        }
+                    } else if ('+-*/'.includes(lastChar)) {
+                        // Handle replacing consecutive operator inputs
+                        if (activeExpression.length === 1 && lastChar === '-') {
+                            return; // Don't replace starting negative sign
+                        }
+                        
+                        // If previous characters contain secondary operators, handle correctly (like "5* -")
+                        const secondLastChar = activeExpression.slice(-2, -1);
+                        if ('+-*/'.includes(secondLastChar)) {
+                            // Strip both operators and replace with new
+                            activeExpression = activeExpression.slice(0, -2) + key;
+                        } else if (key === '-' && (lastChar === '*' || lastChar === '/')) {
+                            // Allow negative sign after multiply or divide (e.g. "5 × -")
+                            activeExpression += key;
+                        } else {
+                            // Regular single replace
+                            activeExpression = activeExpression.slice(0, -1) + key;
+                        }
+                    } else {
+                        activeExpression += key;
+                    }
+                    updateDisplay();
+                    break;
+
+                case '%':
+                    hasCalculated = false;
+                    if (activeExpression !== "" && !'+-*/%'.includes(lastChar)) {
+                        activeExpression += "%";
+                    }
+                    updateDisplay();
+                    break;
+
+                default:
+                    // Numeric entry
+                    if (hasCalculated) {
+                        activeExpression = key;
+                        hasCalculated = false;
+                    } else {
+                        // Avoid consecutive starting double zeros
+                        if (activeExpression === "0" && key === "0") return;
+                        if (activeExpression === "0" && key !== "0") {
+                            activeExpression = key; // Replace initial zero
+                        } else {
+                            activeExpression += key;
+                        }
+                    }
+                    updateDisplay();
+                    break;
+            }
+        }
+
+        // --- KEYBOARD LISTENER DELEGATION ---
+        window.addEventListener('keydown', (e) => {
+            const key = e.key;
+            if (/[0-9]/.test(key)) {
+                handleKeyInput(key);
+            } else if (key === '.') {
+                handleKeyInput('.');
+            } else if (key === '+') {
+                handleKeyInput('+');
+            } else if (key === '-') {
+                handleKeyInput('-');
+            } else if (key === '*') {
+                handleKeyInput('*');
+            } else if (key === '/') {
+                e.preventDefault(); // Prevent native browser search slash
+                handleKeyInput('/');
+            } else if (key === '%') {
+                handleKeyInput('%');
+            } else if (key === 'Enter' || key === '=') {
+                handleKeyInput('=');
+            } else if (key === 'Backspace') {
+                handleKeyInput('DEL');
+            } else if (key === 'Escape') {
+                handleKeyInput('AC');
+            } else if (key.toLowerCase() === 'c') {
+                handleKeyInput('C');
+            }
+        });
+    </script>
+</body>
+</html>

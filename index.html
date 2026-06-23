@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مستودع التطبيقات والمشاريع الأسطورية</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Cairo Font for Premium Arabic Typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: radial-gradient(circle at top right, #0b0f19 0%, #020617 100%);
+        }
+
+        /* Glassmorphism dashboard cards styling */
+        .glass-card {
+            background: rgba(15, 23, 42, 0.45);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            transform: translateY(0) scale(1);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+                        box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+                        border-color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Dynamic staggered entrance animations keyframes */
+        @keyframes slideUpFade {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-card {
+            animation: slideUpFade 0.6s cubic-bezier(0.4, 0, 0.2, 1) both;
+        }
+
+        /* Beautiful styled scrollbar for dashboard */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #020617;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 99px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(6, 182, 212, 0.3);
+        }
+    </style>
+</head>
+<body class="text-slate-100 min-h-screen py-8 px-4 md:py-16 md:px-8 flex flex-col justify-between overflow-x-hidden selection:bg-cyan-500/30">
+
+    <!-- Glowing Background Elements -->
+    <div class="fixed top-[-10%] left-[-10%] w-[50vw] h-[50vw] bg-indigo-500/5 rounded-full blur-[120px] pointer-events-none z-0"></div>
+    <div class="fixed bottom-[-10%] right-[-10%] w-[50vw] h-[50vw] bg-cyan-500/5 rounded-full blur-[120px] pointer-events-none z-0"></div>
+
+    <div class="w-full max-w-7xl mx-auto flex-1 flex flex-col justify-center space-y-8 z-10 relative">
+        
+        <!-- Header Dashboard Branding -->
+        <header class="text-center space-y-3">
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-3xl bg-gradient-to-tr from-cyan-500 to-indigo-500 text-3xl mb-1 shadow-lg shadow-cyan-500/10 animate-bounce">
+                🚀
+            </div>
+            <h1 class="text-3xl md:text-5xl font-black bg-gradient-to-r from-cyan-400 via-teal-300 to-indigo-400 bg-clip-text text-transparent tracking-tight">
+                لوحة التحكم واستعراض المشاريع البرمجية
+            </h1>
+            <p class="text-xs md:text-sm text-slate-400 max-w-lg mx-auto leading-relaxed">
+                مستودع المطور الإبداعي الذكي - منصة متكاملة تضم <span id="project-count-badge" class="text-cyan-400 font-extrabold text-base">--</span> تطبيقاً ولعبة مبرمجة بأعلى دقة ومعايير جمالية.
+            </p>
+        </header>
+
+        <!-- Search Controls Hub & Quick Categories Filter -->
+        <section class="glass-card rounded-[2rem] p-5 shadow-xl flex flex-col md:flex-row items-center justify-between gap-4 border border-slate-800/40">
+            
+            <!-- Dynamic Search input -->
+            <div class="w-full md:w-96 relative">
+                <input type="text" id="search-input" oninput="handleSearch(this.value)" placeholder="ابحث باسم المجلد أو تطبيق معين..." 
+                       class="w-full bg-slate-950/60 border-2 border-slate-850 rounded-2xl py-3.5 pl-12 pr-6 text-sm font-bold text-slate-200 outline-none focus:border-cyan-500 focus:bg-slate-950 transition-all duration-300 shadow-inner">
+                <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none">🔍</span>
+            </div>
+
+            <!-- Category Switchers -->
+            <div class="flex items-center gap-2 flex-wrap justify-center text-xs font-black">
+                <button onclick="filterCategory('all')" id="filter-all" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-500 text-slate-950 shadow-md transition-all">كل المشاريع</button>
+                <button onclick="filterCategory('game')" id="filter-game" class="px-4 py-2.5 rounded-xl bg-slate-900/60 border border-slate-800 text-slate-400 hover:text-slate-200 hover:bg-slate-800/80 transition-all">ألعاب تسلية (Games)</button>
+                <button onclick="filterCategory('tool')" id="filter-tool" class="px-4 py-2.5 rounded-xl bg-slate-900/60 border border-slate-800 text-slate-400 hover:text-slate-200 hover:bg-slate-800/80 transition-all">أدوات ذكية (Tools)</button>
+                <button onclick="filterCategory('dev')" id="filter-dev" class="px-4 py-2.5 rounded-xl bg-slate-900/60 border border-slate-800 text-slate-400 hover:text-slate-200 hover:bg-slate-800/80 transition-all">مفاهيم وبرمجة (Dev)</button>
+            </div>
+
+        </section>
+
+        <!-- Main Dynamic Projects Grid Container -->
+        <main id="projects-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 items-stretch">
+            <!-- Dynamic project cards rendered here -->
+        </main>
+
+        <!-- Fallback Search Empty State -->
+        <div id="empty-search-state" class="text-center py-20 space-y-3 hidden">
+            <div class="text-5xl">🕵️‍♂️</div>
+            <p class="text-sm font-bold text-slate-400">عذراً، لم نجد أي مشروع يطابق هذا البحث!</p>
+            <p class="text-xs text-slate-500">تأكد من كتابة الأحرف بشكل صحيح باللغة العربية أو الإنجليزية.</p>
+        </div>
+
+    </div>
+
+    <!-- Platform Footer -->
+    <footer class="text-center py-8 text-xs text-slate-500 font-bold tracking-wider z-10 relative">
+        منصة معرض أعمال المطور الفنية • مصممة ومطورة وفقاً للمعايير القياسية العالمية لعام ٢٠٢٦ م
+    </footer>
+
+    <!-- Comprehensive JS Processing Data & Engine -->
+    <script>
+        // Web Audio Synth feedback engine for premium sound notifications
+        let audioCtx = null;
+        
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        function playSfx(type) {
+            try {
+                initAudio();
+                const ctx = audioCtx;
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                const now = ctx.currentTime;
+
+                if (type === 'hover') {
+                    // Soft high frequency short tick
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(800, now);
+                    gain.gain.setValueAtTime(0.015, now);
+                    gain.gain.linearRampToValueAtTime(0.001, now + 0.05);
+                    osc.start(now);
+                    osc.stop(now + 0.05);
+                } else if (type === 'click') {
+                    // Beautiful ascending positive confirmation chime
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(523.25, now); // C5
+                    osc.frequency.setValueAtTime(659.25, now + 0.06); // E5
+                    gain.gain.setValueAtTime(0.06, now);
+                    gain.gain.linearRampToValueAtTime(0.001, now + 0.2);
+                    osc.start(now);
+                    osc.stop(now + 0.2);
+                }
+            } catch (e) {
+                console.warn('Audio feedback context safely bypassed:', e);
+            }
+        }
+
+        // --- Master Projects Database Mapping ---
+        // Slugs correspond perfectly to directory names shown in image_291b3f.png
+        const projectsDatabase = [
+            {
+                slug: "agile",
+                title: "منهجية وتخطيط Agile",
+                subtitle: "إدارة المشاريع المرنة",
+                category: "dev",
+                desc: "واجهة وبوابة مفاهيم تخطيط المشاريع وإدارة المهام وفق أحدث معايير الأجايل.",
+                glowColor: "rgba(168, 85, 247, 0.4)", // Purple
+                accentClass: "border-purple-500/20 text-purple-400 bg-purple-500/10",
+                icon: "📋"
+            },
+            {
+                slug: "algorithms",
+                title: "مستكشف ومحلل الخوارزميات",
+                subtitle: "مفاهيم علوم الحاسوب",
+                category: "dev",
+                desc: "عرض تفاعلي وهندسي لطرق عمل وترتيب الخوارزميات البرمجية المعقدة.",
+                glowColor: "rgba(59, 130, 246, 0.4)", // Blue
+                accentClass: "border-blue-500/20 text-blue-400 bg-blue-500/10",
+                icon: "⚙️"
+            },
+            {
+                slug: "bmi-calculator",
+                title: "حاسبة مؤشر كتلة الجسم",
+                subtitle: "BMI Calculator Pro",
+                category: "tool",
+                desc: "تطبيق ويب تفاعلي ذكي لقياس اللياقة والكتلة الصحية بدقة لمعايير WHO.",
+                glowColor: "rgba(16, 185, 129, 0.4)", // Emerald
+                accentClass: "border-emerald-500/20 text-emerald-400 bg-emerald-500/10",
+                icon: "⚖️"
+            },
+            {
+                slug: "c++",
+                title: "مستودع مشاريع C++",
+                subtitle: "C++ Programming Stack",
+                category: "dev",
+                desc: "ملفات برمجية ومشاريع مخصصة تعكس قوة وكفاءة التطوير بلغة السي بلس بلس.",
+                glowColor: "rgba(244, 63, 94, 0.4)", // Rose
+                accentClass: "border-rose-500/20 text-rose-400 bg-rose-500/10",
+                icon: "💻"
+            },
+            {
+                slug: "calc",
+                title: "الآلة الحاسبة السيبرانية",
+                subtitle: "Cyber Calculator Engine",
+                category: "tool",
+                desc: "آلة حاسبة متقدمة مبرمجة بخوارزميات تحليلية كاملة للأمان والعمليات المتعددة.",
+                glowColor: "rgba(6, 182, 212, 0.4)", // Cyan
+                accentClass: "border-cyan-500/20 text-cyan-400 bg-cyan-500/10",
+                icon: "🧮"
+            },
+            {
+                slug: "dice-Game",
+                title: "صراع النرد الأسطوري",
+                subtitle: "Dice Conquest 3D",
+                category: "game",
+                desc: "لعبة نرد تفاعلية ثلاثية الأبعاد بذكاء اصطناعي وتتبع نتائج بالـ LocalStorage.",
+                glowColor: "rgba(245, 158, 11, 0.4)", // Amber
+                accentClass: "border-amber-500/20 text-amber-400 bg-amber-500/10",
+                icon: "🎲"
+            },
+            {
+                slug: "drum-Kit",
+                title: "المعزف الإيقاعي السيبراني",
+                subtitle: "Cyber Drum Kit",
+                category: "game",
+                desc: "محاكي طبول وعزف إيقاعي تفاعلي يصنع الأصوات برمجياً بدون أي تأخير.",
+                glowColor: "rgba(217, 70, 239, 0.4)", // Fuchsia
+                accentClass: "border-fuchsia-500/20 text-fuchsia-400 bg-fuchsia-500/10",
+                icon: "🥁"
+            },
+            {
+                slug: "DSA",
+                title: "هياكل البيانات والترتيب",
+                subtitle: "Data Structures Stack",
+                category: "dev",
+                desc: "شروحات وأكواد لهياكل البيانات (Arrays, Lists, Trees) وبنائها البرمجي المطور.",
+                glowColor: "rgba(99, 102, 241, 0.4)", // Indigo
+                accentClass: "border-indigo-500/20 text-indigo-400 bg-indigo-500/10",
+                icon: "🌿"
+            },
+            {
+                slug: "fastWrite",
+                title: "مدرب الكتابة السريعة",
+                subtitle: "Fast Writing Coach",
+                category: "tool",
+                desc: "أداة ذكية لاختبار سرعة ودقة الكتابة على لوحة المفاتيح وحساب نسبة الأخطاء.",
+                glowColor: "rgba(20, 184, 166, 0.4)", // Teal
+                accentClass: "border-teal-500/20 text-teal-400 bg-teal-500/10",
+                icon: "⌨️"
+            },
+            {
+                slug: "flashcart",
+                title: "البطاقات الاستذكارية الذكية",
+                subtitle: "Memorize Master Pro",
+                category: "tool",
+                desc: "منصة بطاقات ذكية للحفظ والمذاكرة بتقنية 3D وتخزين كامل بالـ LocalStorage.",
+                glowColor: "rgba(168, 85, 247, 0.4)", // Purple
+                accentClass: "border-purple-500/20 text-purple-400 bg-purple-500/10",
+                icon: "🧠"
+            },
+            {
+                slug: "google-Dorks",
+                title: "مستكشف ثغرات جوجل",
+                subtitle: "Google Dorks Explorer",
+                category: "tool",
+                desc: "مساعد رصد الاختراقات وبناء جمل الاستعلام المتقدمة لمحركات البحث للأمان السيبراني.",
+                glowColor: "rgba(239, 68, 68, 0.4)", // Red
+                accentClass: "border-rose-500/20 text-rose-400 bg-rose-500/10",
+                icon: "🛡️"
+            },
+            {
+                slug: "id",
+                title: "مفكك ومحلل الرقم القومي",
+                subtitle: "Egyptian ID Parser",
+                category: "tool",
+                desc: "أداة رصد ذكية لتفكيك تفاصيل ومحافظة وأعمار أصحاب الهويات المصرية فورياً.",
+                glowColor: "rgba(6, 182, 212, 0.4)", // Cyan
+                accentClass: "border-cyan-500/20 text-cyan-400 bg-cyan-500/10",
+                icon: "💳"
+            },
+            {
+                slug: "javaScript",
+                title: "مستودع جافا سكريبت",
+                subtitle: "JS Playground Core",
+                category: "dev",
+                desc: "مكتبة كود وتطبيقات ويب ديناميكية تعكس التقنيات المتقدمة في الـ ES6+.",
+                glowColor: "rgba(234, 179, 8, 0.4)", // Yellow
+                accentClass: "border-yellow-500/20 text-yellow-400 bg-yellow-500/10",
+                icon: "💛"
+            },
+            {
+                slug: "kanban",
+                title: "لوحة تنظيم المهام كانبان",
+                subtitle: "Premium Kanban Board",
+                category: "tool",
+                desc: "أداة تنظيمية متطورة تتيح سحب وإفلات المهام وتصنيف الأولويات الزمنية بدقة.",
+                glowColor: "rgba(16, 185, 129, 0.4)", // Emerald
+                accentClass: "border-emerald-500/20 text-emerald-400 bg-emerald-500/10",
+                icon: "📌"
+            },
+            {
+                slug: "memory-game",
+                title: "لعبة مطابقة العناصر والذاكرة",
+                subtitle: "Memory Match Master",
+                category: "game",
+                desc: "لعبة تحدي وتقوية الذاكرة بالبطاقات المتشابهة والمؤثرات الصوتية والعداد التنازلي.",
+                glowColor: "rgba(217, 70, 239, 0.4)", // Fuchsia
+                accentClass: "border-fuchsia-500/20 text-fuchsia-400 bg-fuchsia-500/10",
+                icon: "💎"
+            },
+            {
+                slug: "oop",
+                title: "البرمجة كائنية التوجه",
+                subtitle: "OOP Principles Guide",
+                category: "dev",
+                desc: "شروحات ونماذج هندسية لتطبيق مفاهيم OOP الكبرى (الفئات، التوريث، التعددية).",
+                glowColor: "rgba(99, 102, 241, 0.4)", // Indigo
+                accentClass: "border-indigo-500/20 text-indigo-400 bg-indigo-500/10",
+                icon: "🧬"
+            },
+            {
+                slug: "search",
+                title: "محرك البحث الذكي المخصص",
+                subtitle: "Smart Search Utility",
+                category: "tool",
+                desc: "نموذج بحث ذكي مخصص ومحسّن للفلترة السريعة وتوفير تجربة مستخدم فورية.",
+                glowColor: "rgba(59, 130, 246, 0.4)", // Blue
+                accentClass: "border-blue-500/20 text-blue-400 bg-blue-500/10",
+                icon: "🔎"
+            },
+            {
+                slug: "ToDo",
+                title: "مدير المهام والإنتاجية اليومية",
+                subtitle: "Advanced To-Do Planner",
+                category: "tool",
+                desc: "قائمة مهام ممتعة وتفاعلية بذكاء الرصد وحفظ البيانات بشكل مستمر.",
+                glowColor: "rgba(16, 185, 129, 0.4)", // Emerald
+                accentClass: "border-emerald-500/20 text-emerald-400 bg-emerald-500/10",
+                icon: "✅"
+            },
+            {
+                slug: "UML",
+                title: "مصمم مخططات الهيكلة UML",
+                subtitle: "UML Modeler Engine",
+                category: "dev",
+                desc: "شروحات ونماذج لبناء رسومات الهيكلية والتخطيطية للتطبيقات البرمجية الكبرى.",
+                glowColor: "rgba(168, 85, 247, 0.4)", // Purple
+                accentClass: "border-purple-500/20 text-purple-400 bg-purple-500/10",
+                icon: "📐"
+            },
+            {
+                slug: "weather",
+                title: "لوحة رصد الطقس المباشر",
+                subtitle: "Al-Weather Pro",
+                category: "tool",
+                desc: "لوحة طقس ذكية تعرض مناخ مدن العالم بالخرائط المباشرة وسجلات استعلام ذكية.",
+                glowColor: "rgba(6, 182, 212, 0.4)", // Cyan
+                accentClass: "border-cyan-500/20 text-cyan-400 bg-cyan-500/10",
+                icon: "🌤️"
+            },
+            {
+                slug: "whatsApp",
+                title: "واجهة محاكاة واتساب",
+                subtitle: "WhatsApp Web Clone",
+                category: "tool",
+                desc: "تصميم واجهة محادثات تفاعلية محاكية للويب لممارسة بناء مهارات التصاميم المتكاملة.",
+                glowColor: "rgba(16, 185, 129, 0.4)", // Emerald
+                accentClass: "border-emerald-500/20 text-emerald-400 bg-emerald-500/10",
+                icon: "💬"
+            },
+            {
+                slug: "xo",
+                title: "تحدي إكس أو الأسطوري",
+                subtitle: "XO Ultimate Challenge",
+                category: "game",
+                desc: "لعبة ذكاء اصطناعي بنمط Minimax ضد الكمبيوتر أو صديق وحفظ كلي للنتائج.",
+                glowColor: "rgba(244, 63, 94, 0.4)", // Rose
+                accentClass: "border-rose-500/20 text-rose-400 bg-rose-500/10",
+                icon: "❌"
+            },
+            {
+                slug: "zakat",
+                title: "حاسبة الزكاة الشرعية الذكية",
+                subtitle: "Zakat Smart Calculator",
+                category: "tool",
+                desc: "أداة فقهية برمجية متطورة لحساب زكاة الأموال والذهب عيارياً وديناميكياً للنصاب الحالي.",
+                glowColor: "rgba(16, 185, 129, 0.4)", // Emerald
+                accentClass: "border-emerald-500/20 text-emerald-400 bg-emerald-500/10",
+                icon: "🕌"
+            }
+        ];
+
+        // Global State Variables
+        let activeCategory = "all";
+        let searchQuery = "";
+
+        // DOM caching elements
+        const gridContainer = document.getElementById('projects-grid');
+        const badgeCount = document.getElementById('project-count-badge');
+        const emptyState = document.getElementById('empty-search-state');
+
+        // Page startup
+        window.addEventListener('DOMContentLoaded', () => {
+            badgeCount.textContent = projectsDatabase.length;
+            renderProjectCards();
+        });
+
+        // Filter and compile results
+        function getFilteredProjects() {
+            return projectsDatabase.filter(project => {
+                // Category Filter
+                const matchCategory = activeCategory === "all" || project.category === activeCategory;
+                // Query Filter
+                const matchSearch = project.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                                    project.slug.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                                    project.subtitle.toLowerCase().includes(searchQuery.toLowerCase());
+                
+                return matchCategory && matchSearch;
+            });
+        }
+
+        // Render project cards list inside the dashboard grid container
+        function renderProjectCards() {
+            const list = getFilteredProjects();
+            gridContainer.innerHTML = "";
+
+            if (list.length === 0) {
+                emptyState.classList.remove('hidden');
+                return;
+            }
+            emptyState.classList.add('hidden');
+
+            list.forEach((project, index) => {
+                const card = document.createElement('div');
+                // Staggered Slide animation logic
+                card.className = "animate-card glass-card rounded-[2.2rem] p-6 flex flex-col justify-between relative overflow-hidden group cursor-pointer border hover:border-slate-700 shadow-lg shadow-slate-950/20";
+                card.style.animationDelay = `${index * 0.04}s`; // Smooth staggered delay
+                
+                // Set mouse events for premium audio click/hover
+                card.setAttribute('onmouseenter', "playSfx('hover')");
+                // الإصلاح الجوهري: استدعاء دالة التوجيه الصحيحة ومطابقتها تماماً للاسم المعرّف بالأسفل
+                card.setAttribute('onclick', `MapsProject('${project.slug}')`);
+
+                card.innerHTML = `
+                    <!-- Invisible neon background glowing orb -->
+                    <div class="absolute -top-12 -left-12 w-24 h-24 rounded-full blur-2xl transition-all duration-300 group-hover:scale-[1.8] pointer-events-none opacity-10 group-hover:opacity-20" style="background-color: ${project.glowColor};"></div>
+                    
+                    <div class="space-y-4">
+                        <!-- Top details -->
+                        <div class="flex items-center justify-between">
+                            <span class="w-10 h-10 rounded-2xl bg-slate-900 border border-slate-800/80 flex items-center justify-center text-lg group-hover:scale-110 transition-transform duration-300">
+                                ${project.icon}
+                            </span>
+                            <span class="border text-[10px] font-black py-1 px-3.5 rounded-xl uppercase ${project.accentClass}">
+                                ${project.slug.toUpperCase()}
+                            </span>
+                        </div>
+
+                        <!-- Card text descriptions -->
+                        <div class="space-y-1">
+                            <h3 class="text-md font-extrabold text-white group-hover:text-cyan-400 transition-colors duration-300">${project.title}</h3>
+                            <p class="text-[10px] font-bold text-slate-400 tracking-wide font-mono">${project.subtitle}</p>
+                        </div>
+
+                        <p class="text-xs text-slate-500 leading-relaxed font-semibold">
+                            ${project.desc}
+                        </p>
+                    </div>
+
+                    <!-- Open indicators -->
+                    <div class="flex items-center justify-between text-[11px] font-bold text-slate-400 group-hover:text-cyan-400 transition-colors border-t border-slate-900 pt-4 mt-6">
+                        <span>انقر للدخول فورا</span>
+                        <span class="text-xs transition-transform duration-300 group-hover:translate-x-[-4px]">⮕</span>
+                    </div>
+                `;
+                gridContainer.appendChild(card);
+            });
+        }
+
+        // Search live filter
+        function handleSearch(val) {
+            searchQuery = val.trim();
+            renderProjectCards();
+        }
+
+        // Category filter switcher
+        function filterCategory(category) {
+            playSfx('click');
+            activeCategory = category;
+
+            // Update filters layout styles
+            const buttons = ["all", "game", "tool", "dev"];
+            buttons.forEach(btn => {
+                const el = document.getElementById(`filter-${btn}`);
+                if (btn === category) {
+                    el.className = "px-4 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-500 text-slate-950 shadow-md transition-all";
+                } else {
+                    el.className = "px-4 py-2.5 rounded-xl bg-slate-900/60 border border-slate-800 text-slate-400 hover:text-slate-200 hover:bg-slate-800/80 transition-all";
+                }
+            });
+
+            renderProjectCards();
+        }
+
+        // Main routing dynamic navigation handler (Perfect Vercel/GitHub Pages Support)
+        function navigateProject(folderSlug) {
+            playSfx('click');
+            // تأخير خفيف لسماع صوت التأثير الصوتي الممتع أولاً
+            setTimeout(() => {
+                // استخلاص رابط النطاق الأساسي
+                let baseUrl = window.location.origin;
+                // الحصول على المسار الحالي لمعالجة الحالات التي يكون فيها المشروع مرفوعاً في مجلد فرعي
+                let pathName = window.location.pathname;
+                
+                // تنظيف مسار pathname للتأكد من أنه يشير إلى المجلد الرئيسي للمشروع الخارجي
+                if (pathName.endsWith('index.html')) {
+                    pathName = pathName.slice(0, -10); // إزالة 'index.html'
+                }
+                if (!pathName.endsWith('/')) {
+                    pathName += '/';
+                }
+
+                // دمج النطاق مع المسار واسم المجلد المستهدف لإضافة الرابط بدقة
+                window.location.href = baseUrl + pathName + folderSlug + '/';
+            }, 250);
+        }
+    </script>
+</body>
+</html>

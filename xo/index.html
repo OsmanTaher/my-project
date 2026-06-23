@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لعبة إكس أو (XO) الاحترافية</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Cairo Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: radial-gradient(circle at center, #0f172a 0%, #020617 100%);
+        }
+        /* Glowing effects for X and O */
+        .glow-x {
+            text-shadow: 0 0 12px rgba(16, 185, 129, 0.6);
+        }
+        .glow-o {
+            text-shadow: 0 0 12px rgba(244, 63, 94, 0.6);
+        }
+        /* Custom animated backdrop blur */
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.45);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        /* Grid cell transitions */
+        .cell-btn {
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    </style>
+</head>
+<body class="text-slate-100 min-h-screen flex flex-col items-center justify-center p-4">
+
+    <!-- Main Container -->
+    <div class="w-full max-w-lg mx-auto space-y-6">
+        
+        <!-- Header Section -->
+        <div class="text-center space-y-2">
+            <h1 class="text-3xl md:text-4xl font-black bg-gradient-to-r from-emerald-400 via-teal-300 to-rose-400 bg-clip-text text-transparent">تحدي إكس أو (X - O)</h1>
+            <p class="text-xs text-slate-400">لعبة ذكية مع حفظ فوري للنتائج ومستويات ذكاء اصطناعي متعددة</p>
+        </div>
+
+        <!-- Dashboard Scoreboard (Glassmorphism) -->
+        <div class="glass-panel rounded-3xl p-5 grid grid-cols-3 gap-2 text-center shadow-2xl relative overflow-hidden">
+            <!-- X Score -->
+            <div class="bg-emerald-950/20 border border-emerald-500/10 rounded-2xl p-3">
+                <span class="text-xs text-emerald-400/80 font-bold block mb-1">اللاعب (X)</span>
+                <span id="score-x" class="text-2xl font-black text-emerald-400 glow-x">0</span>
+            </div>
+            <!-- Draws -->
+            <div class="bg-slate-900/40 border border-slate-500/10 rounded-2xl p-3">
+                <span class="text-xs text-slate-400 font-bold block mb-1">تعادل</span>
+                <span id="score-ties" class="text-2xl font-black text-slate-300">0</span>
+            </div>
+            <!-- O Score -->
+            <div class="bg-rose-950/20 border border-rose-500/10 rounded-2xl p-3">
+                <span id="label-score-o" class="text-xs text-rose-400/80 font-bold block mb-1">اللاعب (O)</span>
+                <span id="score-o" class="text-2xl font-black text-rose-400 glow-o">0</span>
+            </div>
+        </div>
+
+        <!-- Controls & Configuration Panel -->
+        <div class="glass-panel rounded-3xl p-5 space-y-4 shadow-xl">
+            <!-- Mode Switcher -->
+            <div class="grid grid-cols-2 gap-2 bg-slate-950/50 p-1.5 rounded-2xl">
+                <button id="btn-mode-computer" onclick="changeMode('computer')" class="py-2.5 px-4 rounded-xl text-xs font-bold transition-all-300 bg-gradient-to-r from-teal-500 to-emerald-500 text-slate-950 shadow-md">
+                    ضد الكمبيوتر
+                </button>
+                <button id="btn-mode-friend" onclick="changeMode('friend')" class="py-2.5 px-4 rounded-xl text-xs font-bold text-slate-400 hover:text-slate-100 transition-all-300">
+                    ضد صديق (ثنائي)
+                </button>
+            </div>
+
+            <!-- AI Difficulty Switcher (Visible only when Mode is Computer) -->
+            <div id="ai-settings" class="flex items-center justify-between bg-slate-900/30 p-3 rounded-2xl border border-slate-800">
+                <span class="text-xs text-slate-400 font-bold">مستوى الكمبيوتر:</span>
+                <div class="flex gap-2">
+                    <button id="diff-easy" onclick="changeDifficulty('easy')" class="px-3 py-1.5 rounded-lg text-xs font-bold border border-slate-700 hover:border-slate-500 text-slate-300">سهل</button>
+                    <button id="diff-hard" onclick="changeDifficulty('hard')" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-500/10 border border-amber-500 text-amber-400">مستحيل هزيمته</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Board Container -->
+        <div class="relative">
+            <!-- Overlay Notification Card for Win/Draw -->
+            <div id="overlay-result" class="absolute inset-0 bg-slate-950/90 rounded-3xl z-20 flex flex-col items-center justify-center space-y-4 scale-0 opacity-0 transition-all duration-300 backdrop-blur-md border border-slate-800">
+                <div id="result-animation" class="w-16 h-16 rounded-full flex items-center justify-center bg-slate-800 shadow-lg text-2xl font-bold"></div>
+                <h2 id="result-message" class="text-xl font-black text-white">تفوق اللاعب X!</h2>
+                <button onclick="restartGame()" class="bg-gradient-to-r from-teal-500 to-emerald-500 text-slate-950 font-bold text-sm px-6 py-3 rounded-2xl shadow-lg shadow-teal-500/20 hover:scale-105 transition-all">
+                    جولة جديدة
+                </button>
+            </div>
+
+            <!-- 3x3 Tic Tac Toe Grid -->
+            <div id="game-grid" class="grid grid-cols-3 gap-3 bg-slate-950/60 p-4 rounded-[2.5rem] border border-slate-800 shadow-2xl aspect-square">
+                <!-- Cell 0 -->
+                <button onclick="cellClicked(0)" class="cell-btn bg-slate-900/60 hover:bg-slate-800/80 rounded-2xl flex items-center justify-center text-4xl font-black focus:outline-none border border-slate-800/60"></button>
+                <!-- Cell 1 -->
+                <button onclick="cellClicked(1)" class="cell-btn bg-slate-900/60 hover:bg-slate-800/80 rounded-2xl flex items-center justify-center text-4xl font-black focus:outline-none border border-slate-800/60"></button>
+                <!-- Cell 2 -->
+                <button onclick="cellClicked(2)" class="cell-btn bg-slate-900/60 hover:bg-slate-800/80 rounded-2xl flex items-center justify-center text-4xl font-black focus:outline-none border border-slate-800/60"></button>
+                <!-- Cell 3 -->
+                <button onclick="cellClicked(3)" class="cell-btn bg-slate-900/60 hover:bg-slate-800/80 rounded-2xl flex items-center justify-center text-4xl font-black focus:outline-none border border-slate-800/60"></button>
+                <!-- Cell 4 -->
+                <button onclick="cellClicked(4)" class="cell-btn bg-slate-900/60 hover:bg-slate-800/80 rounded-2xl flex items-center justify-center text-4xl font-black focus:outline-none border border-slate-800/60"></button>
+                <!-- Cell 5 -->
+                <button onclick="cellClicked(5)" class="cell-btn bg-slate-900/60 hover:bg-slate-800/80 rounded-2xl flex items-center justify-center text-4xl font-black focus:outline-none border border-slate-800/60"></button>
+                <!-- Cell 6 -->
+                <button onclick="cellClicked(6)" class="cell-btn bg-slate-900/60 hover:bg-slate-800/80 rounded-2xl flex items-center justify-center text-4xl font-black focus:outline-none border border-slate-800/60"></button>
+                <!-- Cell 7 -->
+                <button onclick="cellClicked(7)" class="cell-btn bg-slate-900/60 hover:bg-slate-800/80 rounded-2xl flex items-center justify-center text-4xl font-black focus:outline-none border border-slate-800/60"></button>
+                <!-- Cell 8 -->
+                <button onclick="cellClicked(8)" class="cell-btn bg-slate-900/60 hover:bg-slate-800/80 rounded-2xl flex items-center justify-center text-4xl font-black focus:outline-none border border-slate-800/60"></button>
+            </div>
+        </div>
+
+        <!-- Footer Control Actions -->
+        <div class="flex items-center justify-between gap-3">
+            <!-- Reset Score (Local Storage) -->
+            <button id="btn-reset-scores" onclick="resetAllScores()" class="flex-1 py-3 px-4 rounded-2xl text-xs font-bold bg-slate-900 hover:bg-slate-800 text-rose-400 border border-rose-500/20 hover:border-rose-500/40 transition-all flex items-center justify-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-4v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                تصفير السجل والنتائج
+            </button>
+            <!-- Restart Current Match -->
+            <button onclick="restartGame()" class="py-3 px-6 rounded-2xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-all">
+                إعادة تشغيل الجولة
+            </button>
+        </div>
+
+    </div>
+
+    <!-- Gameplay Script -->
+    <script>
+        // Game State Variables
+        let board = ['', '', '', '', '', '', '', '', ''];
+        let currentPlayer = 'X'; // Human plays X
+        let gameMode = 'computer'; // Default: computer
+        let aiDifficulty = 'hard'; // Default: unbeatable minimax
+        let isGameActive = true;
+        let isAiThinking = false;
+
+        // Default Scores Structure
+        let scores = {
+            X: 0,
+            O: 0,
+            ties: 0
+        };
+
+        // DOM elements cache
+        const cells = document.querySelectorAll('.cell-btn');
+        const scoreXEl = document.getElementById('score-x');
+        const scoreOEl = document.getElementById('score-o');
+        const scoreTiesEl = document.getElementById('score-ties');
+        const overlayResult = document.getElementById('overlay-result');
+        const resultMessage = document.getElementById('result-message');
+        const resultAnimation = document.getElementById('result-animation');
+        const aiSettingsPanel = document.getElementById('ai-settings');
+        const btnModeComputer = document.getElementById('btn-mode-computer');
+        const btnModeFriend = document.getElementById('btn-mode-friend');
+        const diffEasyBtn = document.getElementById('diff-easy');
+        const diffHardBtn = document.getElementById('diff-hard');
+        const labelScoreO = document.getElementById('label-score-o');
+
+        // Initialization
+        window.addEventListener('DOMContentLoaded', () => {
+            loadSavedScores();
+            updateScoreboardUI();
+        });
+
+        // Winning combinations
+        const winningConditions = [
+            [0, 1, 2], [3, 4, 5], [6, 7, 8], // Horizontal
+            [0, 3, 6], [1, 4, 7], [2, 5, 8], // Vertical
+            [0, 4, 8], [2, 4, 6]             // Diagonal
+        ];
+
+        // Mode Controller switcher
+        function changeMode(mode) {
+            if (isAiThinking) return;
+            gameMode = mode;
+            if (mode === 'computer') {
+                btnModeComputer.className = "py-2.5 px-4 rounded-xl text-xs font-bold transition-all-300 bg-gradient-to-r from-teal-500 to-emerald-500 text-slate-950 shadow-md";
+                btnModeFriend.className = "py-2.5 px-4 rounded-xl text-xs font-bold text-slate-400 hover:text-slate-100 transition-all-300";
+                aiSettingsPanel.classList.remove('hidden');
+                labelScoreO.textContent = "الكمبيوتر (O)";
+            } else {
+                btnModeFriend.className = "py-2.5 px-4 rounded-xl text-xs font-bold transition-all-300 bg-gradient-to-r from-teal-500 to-emerald-500 text-slate-950 shadow-md";
+                btnModeComputer.className = "py-2.5 px-4 rounded-xl text-xs font-bold text-slate-400 hover:text-slate-100 transition-all-300";
+                aiSettingsPanel.classList.add('hidden');
+                labelScoreO.textContent = "الصديق (O)";
+            }
+            restartGame();
+        }
+
+        // Change Difficulty
+        function changeDifficulty(diff) {
+            if (isAiThinking) return;
+            aiDifficulty = diff;
+            if (diff === 'easy') {
+                diffEasyBtn.className = "px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-500/10 border border-amber-500 text-amber-400";
+                diffHardBtn.className = "px-3 py-1.5 rounded-lg text-xs font-bold border border-slate-700 hover:border-slate-500 text-slate-300";
+            } else {
+                diffHardBtn.className = "px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-500/10 border border-amber-500 text-amber-400";
+                diffEasyBtn.className = "px-3 py-1.5 rounded-lg text-xs font-bold border border-slate-700 hover:border-slate-500 text-slate-300";
+            }
+            restartGame();
+        }
+
+        // Cell Click action
+        function cellClicked(index) {
+            if (board[index] !== '' || !isGameActive || isAiThinking) return;
+
+            makeMove(index, currentPlayer);
+
+            if (checkWin(board, currentPlayer)) {
+                endGame(currentPlayer);
+                return;
+            }
+
+            if (checkTie(board)) {
+                endGame('tie');
+                return;
+            }
+
+            // Next Turn
+            currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+
+            // If computer's turn
+            if (gameMode === 'computer' && currentPlayer === 'O') {
+                isAiThinking = true;
+                setTimeout(computerMove, 550); // Natural delay for humanized thinking simulation
+            }
+        }
+
+        // Execute board marker placements
+        function makeMove(index, player) {
+            board[index] = player;
+            cells[index].textContent = player;
+            if (player === 'X') {
+                cells[index].className = "cell-btn bg-emerald-950/20 hover:bg-emerald-950/30 rounded-2xl flex items-center justify-center text-4xl font-extrabold focus:outline-none border border-emerald-500/30 text-emerald-400 glow-x";
+            } else {
+                cells[index].className = "cell-btn bg-rose-950/20 hover:bg-rose-950/30 rounded-2xl flex items-center justify-center text-4xl font-extrabold focus:outline-none border border-rose-500/30 text-rose-400 glow-o";
+            }
+        }
+
+        // AI Logic decisions
+        function computerMove() {
+            if (!isGameActive) {
+                isAiThinking = false;
+                return;
+            }
+
+            let bestIndex;
+            if (aiDifficulty === 'easy') {
+                // Pick a random available cell
+                let emptyIndices = [];
+                board.forEach((val, idx) => { if (val === '') emptyIndices.push(idx); });
+                bestIndex = emptyIndices[Math.floor(Math.random() * emptyIndices.length)];
+            } else {
+                // Smart move using Minimax Algorithm
+                bestIndex = getBestMinimaxMove();
+            }
+
+            if (bestIndex !== undefined) {
+                makeMove(bestIndex, 'O');
+
+                if (checkWin(board, 'O')) {
+                    endGame('O');
+                    isAiThinking = false;
+                    return;
+                }
+
+                if (checkTie(board)) {
+                    endGame('tie');
+                    isAiThinking = false;
+                    return;
+                }
+
+                currentPlayer = 'X';
+            }
+            isAiThinking = false;
+        }
+
+        // Get Best move utilizing Minimax
+        function getBestMinimaxMove() {
+            let bestScore = -Infinity;
+            let move;
+
+            for (let i = 0; i < 9; i++) {
+                if (board[i] === '') {
+                    board[i] = 'O';
+                    let score = minimax(board, 0, false);
+                    board[i] = '';
+                    if (score > bestScore) {
+                        bestScore = score;
+                        move = i;
+                    }
+                }
+            }
+            return move;
+        }
+
+        // Minimax recursive helper function
+        function minimax(tempBoard, depth, isMaximizing) {
+            if (checkWin(tempBoard, 'O')) return 10 - depth;
+            if (checkWin(tempBoard, 'X')) return depth - 10;
+            if (checkTie(tempBoard)) return 0;
+
+            if (isMaximizing) {
+                let bestScore = -Infinity;
+                for (let i = 0; i < 9; i++) {
+                    if (tempBoard[i] === '') {
+                        tempBoard[i] = 'O';
+                        let score = minimax(tempBoard, depth + 1, false);
+                        tempBoard[i] = '';
+                        bestScore = Math.max(score, bestScore);
+                    }
+                }
+                return bestScore;
+            } else {
+                let bestScore = Infinity;
+                for (let i = 0; i < 9; i++) {
+                    if (tempBoard[i] === '') {
+                        tempBoard[i] = 'X';
+                        let score = minimax(tempBoard, depth + 1, true);
+                        tempBoard[i] = '';
+                        bestScore = Math.min(score, bestScore);
+                    }
+                }
+                return bestScore;
+            }
+        }
+
+        // Check for wins on current board
+        function checkWin(tempBoard, player) {
+            return winningConditions.some(combination => {
+                return combination.every(index => {
+                    return tempBoard[index] === player;
+                });
+            });
+        }
+
+        // Check for ties
+        function checkTie(tempBoard) {
+            return tempBoard.every(cell => cell !== '');
+        }
+
+        // Highlighting winning series cells
+        function highlightWinningCells(winner) {
+            winningConditions.forEach(combination => {
+                if (combination.every(idx => board[idx] === winner)) {
+                    combination.forEach(idx => {
+                        if (winner === 'X') {
+                            cells[idx].className = "cell-btn bg-emerald-500 text-slate-950 rounded-2xl flex items-center justify-center text-4xl font-extrabold focus:outline-none border-2 border-emerald-300 animate-pulse";
+                        } else {
+                            cells[idx].className = "cell-btn bg-rose-500 text-slate-950 rounded-2xl flex items-center justify-center text-4xl font-extrabold focus:outline-none border-2 border-rose-300 animate-pulse";
+                        }
+                    });
+                }
+            });
+        }
+
+        // End Game execution logic
+        function endGame(winner) {
+            isGameActive = false;
+            
+            if (winner === 'tie') {
+                scores.ties++;
+                resultMessage.textContent = 'تعادل عادل بين الطرفين!';
+                resultAnimation.textContent = '🤝';
+                resultAnimation.className = "w-16 h-16 rounded-full flex items-center justify-center bg-slate-800 shadow-lg text-2xl animate-bounce";
+            } else {
+                scores[winner]++;
+                highlightWinningCells(winner);
+                
+                if (winner === 'X') {
+                    resultMessage.textContent = 'مبارك! انتصر اللاعب (X)';
+                    resultAnimation.textContent = 'X';
+                    resultAnimation.className = "w-16 h-16 rounded-full flex items-center justify-center bg-emerald-500 text-slate-950 shadow-lg text-2xl font-black glow-x animate-bounce";
+                } else {
+                    const rivalName = gameMode === 'computer' ? 'الكمبيوتر' : 'اللاعب (O)';
+                    resultMessage.textContent = `انتهت! انتصر ${rivalName}`;
+                    resultAnimation.textContent = 'O';
+                    resultAnimation.className = "w-16 h-16 rounded-full flex items-center justify-center bg-rose-500 text-slate-950 shadow-lg text-2xl font-black glow-o animate-bounce";
+                }
+            }
+
+            // Sync scores to storage and UI
+            saveScores();
+            updateScoreboardUI();
+
+            // Slide open result overlay
+            setTimeout(() => {
+                overlayResult.classList.remove('scale-0', 'opacity-0');
+                overlayResult.classList.add('scale-100', 'opacity-100');
+            }, 750);
+        }
+
+        // Restart current match iteration
+        function restartGame() {
+            board = ['', '', '', '', '', '', '', '', ''];
+            currentPlayer = 'X';
+            isGameActive = true;
+            isAiThinking = false;
+
+            cells.forEach(cell => {
+                cell.textContent = '';
+                cell.className = "cell-btn bg-slate-900/60 hover:bg-slate-800/80 rounded-2xl flex items-center justify-center text-4xl font-black focus:outline-none border border-slate-800/60";
+            });
+
+            overlayResult.classList.remove('scale-100', 'opacity-100');
+            overlayResult.classList.add('scale-0', 'opacity-0');
+        }
+
+        // Local Storage Utilities
+        function saveScores() {
+            localStorage.setItem('eg_xo_scores', JSON.stringify(scores));
+        }
+
+        function loadSavedScores() {
+            const saved = localStorage.getItem('eg_xo_scores');
+            if (saved) {
+                scores = JSON.parse(saved);
+            }
+        }
+
+        function updateScoreboardUI() {
+            scoreXEl.textContent = scores.X;
+            scoreOEl.textContent = scores.O;
+            scoreTiesEl.textContent = scores.ties;
+        }
+
+        // Wipe scoreboard (Reset All)
+        function resetAllScores() {
+            if (confirm('هل أنت متأكد من رغبتك في تصفير وحذف جميع نتائج السجلات الحالية؟')) {
+                scores = { X: 0, O: 0, ties: 0 };
+                saveScores();
+                updateScoreboardUI();
+                restartGame();
+            }
+        }
+    </script>
+</body>
+</html>

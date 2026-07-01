@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>جامع المكرمات والفضائل للقرآن الكريم</title>
+    <!-- Google Fonts for exquisite Arabic Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Tajawal:wght@300;400;500;700;800&family=Reem+Kufi:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for beautiful Islamic UI icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        parchment: {
+                            50: '#FCF9F2',
+                            100: '#FAF6EE',
+                            200: '#F5ECD7',
+                            300: '#EADBB6',
+                            800: '#5C4A31',
+                            900: '#3D3120',
+                            950: '#261F14',
+                        },
+                        goldAccent: {
+                            50: '#FDF8EC',
+                            600: '#B5892F',
+                            700: '#8C671E',
+                            800: '#694D14',
+                        },
+                        emeraldAccent: {
+                            800: '#1B4D3E',
+                            900: '#0F3026',
+                            950: '#052219'
+                        }
+                    },
+                    fontFamily: {
+                        'amiri': ['Amiri', 'serif'],
+                        'tajawal': ['Tajawal', 'sans-serif'],
+                        'kufi': ['Reem Kufi', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Force scholarly parchment theme natively */
+        body {
+            background-color: #FAF6EE;
+            color: #2D241E;
+            font-family: 'Tajawal', sans-serif;
+            transition: background-color 0.3s ease;
+        }
+        
+        /* Custom Scrollbar styled for parchment theme */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #FAF6EE;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #B5892F;
+            border-radius: 9999px;
+        }
+        
+        /* Quran Verse styling to mimic ancient Mushaf texts */
+        .quran-verse {
+            font-family: 'Amiri', serif;
+            font-weight: 700;
+            line-height: 2.3;
+            color: #1B4D3E;
+        }
+        
+        /* Glassmorphic paper effect */
+        .paper-card {
+            background: rgba(252, 249, 242, 0.95);
+            backdrop-filter: blur(4px);
+            border: 1px solid #EADBB6;
+        }
+
+        /* Active navigation state */
+        .nav-active {
+            background-color: #B5892F !important;
+            color: #ffffff !important;
+            font-weight: bold;
+            box-shadow: 0 4px 6px -1px rgba(181, 137, 47, 0.2);
+        }
+
+        /* Custom Hero Grid Pattern Matching image_ae9409.png */
+        .hero-grid {
+            background-color: #052219;
+            background-image: 
+                radial-gradient(circle at 50% 50%, rgba(11, 71, 54, 0.5) 0%, rgba(5, 34, 25, 0.98) 100%),
+                linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+            background-size: 100% 100%, 30px 30px, 30px 30px;
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen text-parchment-950 bg-parchment-100 transition-all duration-300">
+
+    <!-- Simple & Elegant Header -->
+    <header class="sticky top-0 z-40 paper-card shadow-sm border-b border-parchment-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+            <div class="flex items-center space-x-3 space-x-reverse">
+                <div class="bg-gradient-to-tr from-emeraldAccent-800 to-goldAccent-600 text-parchment-50 p-2.5 rounded-2xl shadow-md">
+                    <i class="fa-solid fa-book-quran text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="font-kufi text-lg md:text-xl font-bold bg-gradient-to-r from-emeraldAccent-800 to-goldAccent-700 bg-clip-text text-transparent">
+                        جامع المكرمات والفضائل للقرآن الكريم
+                    </h1>
+                </div>
+            </div>
+            
+            <!-- Mobile Menu Toggle Button (Visible only on small screens) -->
+            <button onclick="toggleMobileMenu()" class="block lg:hidden text-emeraldAccent-800 hover:text-goldAccent-600 p-2 rounded-xl border border-parchment-300 hover:bg-parchment-200 transition-colors focus:outline-none" aria-label="قائمة فصول الموسوعة">
+                <i class="fa-solid fa-bars text-xl"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Hero / Intro Banner matching image_ae9409.png -->
+    <section class="relative hero-grid text-parchment-50 overflow-hidden py-20 md:py-28 border-b-4 border-goldAccent-600">
+        <!-- Additional Ambient Glows mimicking image_ae9409.png -->
+        <div class="absolute -top-24 -left-24 w-96 h-96 bg-goldAccent-600/5 rounded-full filter blur-3xl"></div>
+        <div class="absolute -bottom-24 -right-24 w-96 h-96 bg-emeraldAccent-800/10 rounded-full filter blur-3xl"></div>
+
+        <div class="relative max-w-5xl mx-auto px-4 text-center">
+            <span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-950/60 border border-emerald-500/30 text-goldAccent-600 text-xs sm:text-sm font-semibold mb-6">
+                <i class="fa-solid fa-star-and-crescent text-goldAccent-600"></i> هدىً وبشرى للمؤمنين
+            </span>
+            <h2 class="font-kufi text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#FAF6EE] mb-6 leading-tight">
+                جامع المكرمات والفضائل للقرآن الكريم
+            </h2>
+            <p class="text-base sm:text-lg md:text-xl text-parchment-200 max-w-4xl mx-auto leading-relaxed font-light">
+                تأصيلٌ علميٌّ ودليلٌ عمليٌّ شاملٌ ومفصل يجمع ما ثبت في الوحيين وأقوال سلف الأمة عن فضائل قراءة وحفظ القرآن الكريم، أدب تلاوته، ومكرمات الشفاء والبركة والرفعة في القبر والآخرة.
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            <!-- Sidebar with navigation (Visible ONLY on Desktop, Hidden on Mobile/Tablet) -->
+            <aside class="hidden lg:block lg:col-span-3">
+                <div class="sticky top-24 paper-card rounded-2xl p-4 shadow-sm border border-parchment-300">
+                    <h3 class="font-kufi text-base font-bold text-parchment-900 border-b border-parchment-300 pb-3 mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-bars-staggered text-goldAccent-600"></i> فصول الموسوعة الشاملة
+                    </h3>
+                    <nav class="space-y-1.5 flex flex-col" id="sidebar-nav">
+                        <a href="#section-general-virtues" class="sidebar-item px-3 py-2.5 rounded-xl text-xs font-medium text-parchment-900 hover:bg-parchment-200 flex items-center gap-2 transition-all duration-200">
+                            <span class="w-5 h-5 flex items-center justify-center rounded bg-parchment-300 text-parchment-800 text-[10px] font-bold">١</span>
+                            فضائل القرآن ومقدمة الموسوعة
+                        </a>
+                        <a href="#section-ten-benefits" class="sidebar-item px-3 py-2.5 rounded-xl text-xs font-medium text-parchment-900 hover:bg-parchment-200 flex items-center gap-2 transition-all duration-200">
+                            <span class="w-5 h-5 flex items-center justify-center rounded bg-parchment-300 text-parchment-800 text-[10px] font-bold">٢</span>
+                            عشر فوائد عظيمة للتلاوة
+                        </a>
+                        <a href="#section-quran-status" class="sidebar-item px-3 py-2.5 rounded-xl text-xs font-medium text-parchment-900 hover:bg-parchment-200 flex items-center gap-2 transition-all duration-200">
+                            <span class="w-5 h-5 flex items-center justify-center rounded bg-parchment-300 text-parchment-800 text-[10px] font-bold">٣</span>
+                            فضل القرآن الكريم ومنزلته العظمى
+                        </a>
+                        <a href="#section-reading-virtues" class="sidebar-item px-3 py-2.5 rounded-xl text-xs font-medium text-parchment-900 hover:bg-parchment-200 flex items-center gap-2 transition-all duration-200">
+                            <span class="w-5 h-5 flex items-center justify-center rounded bg-parchment-300 text-parchment-800 text-[10px] font-bold">٤</span>
+                            فضل قراءة القرآن العظيم
+                        </a>
+                        <a href="#section-hifz-virtues" class="sidebar-item px-3 py-2.5 rounded-xl text-xs font-medium text-parchment-900 hover:bg-parchment-200 flex items-center gap-2 transition-all duration-200">
+                            <span class="w-5 h-5 flex items-center justify-center rounded bg-parchment-300 text-parchment-800 text-[10px] font-bold">٥</span>
+                            أجر وفضل حفظ القرآن الكريم
+                        </a>
+                        <a href="#section-learning-virtues" class="sidebar-item px-3 py-2.5 rounded-xl text-xs font-medium text-parchment-900 hover:bg-parchment-200 flex items-center gap-2 transition-all duration-200">
+                            <span class="w-5 h-5 flex items-center justify-center rounded bg-parchment-300 text-parchment-800 text-[10px] font-bold">٦</span>
+                            فضل تعلم وتعليم كتاب الله
+                        </a>
+                        <a href="#section-virtues-importance" class="sidebar-item px-3 py-2.5 rounded-xl text-xs font-medium text-parchment-900 hover:bg-parchment-200 flex items-center gap-2 transition-all duration-200">
+                            <span class="w-5 h-5 flex items-center justify-center rounded bg-parchment-300 text-parchment-800 text-[10px] font-bold">٧</span>
+                            أهمية العلم بفضائل القرآن
+                        </a>
+                        <a href="#section-ahl-quran" class="sidebar-item px-3 py-2.5 rounded-xl text-xs font-medium text-parchment-900 hover:bg-parchment-200 flex items-center gap-2 transition-all duration-200">
+                            <span class="w-5 h-5 flex items-center justify-center rounded bg-parchment-300 text-parchment-800 text-[10px] font-bold">٨</span>
+                            من هم أهل القرآن وخاصته؟
+                        </a>
+                        <a href="#section-reader-etiquette" class="sidebar-item px-3 py-2.5 rounded-xl text-xs font-medium text-parchment-900 hover:bg-parchment-200 flex items-center gap-2 transition-all duration-200">
+                            <span class="w-5 h-5 flex items-center justify-center rounded bg-parchment-300 text-parchment-800 text-[10px] font-bold">٩</span>
+                            هيئة القارئ وآداب التلاوة
+                        </a>
+                        <a href="#section-shifa" class="sidebar-item px-3 py-2.5 rounded-xl text-xs font-medium text-parchment-900 hover:bg-parchment-200 flex items-center gap-2 transition-all duration-200">
+                            <span class="w-5 h-5 flex items-center justify-center rounded bg-parchment-300 text-parchment-800 text-[10px] font-bold">١٠</span>
+                            الاستشفاء بالقرآن والنيات الخمس
+                        </a>
+                        <a href="#section-grave-afterlife" class="sidebar-item px-3 py-2.5 rounded-xl text-xs font-medium text-parchment-900 hover:bg-parchment-200 flex items-center gap-2 transition-all duration-200">
+                            <span class="w-5 h-5 flex items-center justify-center rounded bg-parchment-300 text-parchment-800 text-[10px] font-bold">١١</span>
+                            فضل القرآن في القبر والآخرة
+                        </a>
+                    </nav>
+
+                    <!-- Quote Box in sidebar -->
+                    <div class="mt-6 p-4 rounded-xl bg-goldAccent-50 border border-parchment-300 text-goldAccent-800 text-xs space-y-2">
+                        <div class="font-bold flex items-center gap-1.5 text-goldAccent-700">
+                            <i class="fa-solid fa-seedling"></i> تذكرة إيمانية:
+                        </div>
+                        <p class="leading-relaxed font-medium">
+                            «يقال لصاحب القرآن: اقرأ، وارْقَ، ورتل كما كنت ترتل في الدنيا؛ فإن منزلتك عند آخر آية تقرؤها».
+                        </p>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Content Area -->
+            <div class="col-span-12 lg:col-span-9 space-y-12">
+                
+                <!-- Section 1: فضائل القرآن ومقدمة الموسوعة -->
+                <section id="section-general-virtues" class="scroll-mt-24">
+                    <div class="border-l-4 border-goldAccent-600 pr-4 mb-6">
+                        <span class="text-goldAccent-700 text-xs font-bold uppercase tracking-widest">الفصل الأول</span>
+                        <h3 class="font-kufi text-2xl md:text-3xl font-extrabold text-parchment-900">فضائل القرآن ومقدمة الموسوعة</h3>
+                        <p class="text-parchment-850 mt-1 text-sm md:text-base">تأصيل إيماني شامل يعرّف بعظمة كلام الله تعالى ورسالة هذا التنزيل المبارك هداية وبشرى للعالمين.</p>
+                    </div>
+
+                    <div class="space-y-6">
+                        <div class="paper-card rounded-2xl p-6 shadow-sm border border-parchment-300 relative">
+                            <p class="text-sm text-parchment-900 leading-relaxed">
+                                فضائل القرآن كثيرة جدًّا، لا تعد ولا تحصى؛ فالقرآن الكريم عند المسلمين هو الكتاب الذي أنزله الله تعالى على محمد صلى الله عليه وسلم، هداية ورحمة للناس جميعًا، وهو كتاب الله الخالد، وحجته البالغة، وهو باق إلى أن تَفنى الحياة على الأرض.
+                            </p>
+                        </div>
+
+                        <div class="paper-card rounded-2xl p-6 shadow-sm border border-parchment-300">
+                            <p class="text-sm text-parchment-900 leading-relaxed mb-4">
+                                وقراءة القرآن فضلها عظيم، بها يحصل المسلم الحسنات، وينال الأجر العظيم، وفي ذلك يقول النبي صلى الله عليه وسلم:
+                            </p>
+                            <div class="quran-verse text-center text-lg py-4 leading-loose bg-parchment-50 rounded-xl border border-parchment-300 my-4">
+                                «من قرأ حرفًا من كتاب الله فله به حسنة، والحسنة بعشر أمثالها، لا أقول (الم) حرف، ولكن ألف حرف، ولام حرف، وميم حرف»
+                            </div>
+                            <p class="text-xs text-parchment-800 leading-relaxed mt-4">
+                                ولحافظ القرآن أجر عظيم عند الله؛ فإن القرآن يشفع لصاحبه يوم القيامة، ويعلي منزلته ودرجته في الجنة؛ فيكون مع الملائكة السفرة الكرام البررة. ومن فضائل تعلم القرآن وتعليمه: أن جعل الله مَن تعلم القرآن وعلمه غيره خير الناس وأفضلهم.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <hr class="border-parchment-300">
+
+                <!-- Section 2: عشر فوائد عظيمة لقراءة القرآن الكريم -->
+                <section id="section-ten-benefits" class="scroll-mt-24">
+                    <div class="border-l-4 border-goldAccent-600 pr-4 mb-6">
+                        <span class="text-goldAccent-700 text-xs font-bold uppercase tracking-widest">الفصل الثاني</span>
+                        <h3 class="font-kufi text-2xl md:text-3xl font-extrabold text-parchment-900">عشر فوائد عظيمة لقراءة القرآن الكريم</h3>
+                        <p class="text-parchment-850 mt-1 text-sm md:text-base">تتنزل البركة وتتسع الحياة بقراءة كلام الله؛ إليك أهم هذه الأجور والآثار الثابتة بوضوح:</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Benefit 1 -->
+                        <div class="paper-card rounded-2xl p-6 shadow-sm border border-parchment-300 flex flex-col justify-between">
+                            <div>
+                                <h4 class="font-bold text-emeraldAccent-800 text-sm flex items-center gap-2 mb-2 border-b border-parchment-200 pb-2">
+                                    <span class="w-6 h-6 rounded-full bg-emeraldAccent-800 text-parchment-50 flex items-center justify-center text-xs font-serif">١</span>
+                                    نيل الأجر والثواب في كل حرف
+                                </h4>
+                                <p class="text-xs text-parchment-900 leading-relaxed italic my-2 bg-parchment-100 p-2 rounded">
+                                    قال النبي ﷺ: "من قرأ حرفاً من كتاب الله فله به حسنة، والحسنة بعشر أمثالها" (رواه الترمذي).
+                                </p>
+                                <p class="text-xs text-parchment-800">كل حرف تقرؤه من القرآن يُكتب لك عشر حسنات، فكيف إن قرأته يوميًا وتعهدت تلاوته؟</p>
+                            </div>
+                        </div>
+
+                        <!-- Benefit 2 -->
+                        <div class="paper-card rounded-2xl p-6 shadow-sm border border-parchment-300 flex flex-col justify-between">
+                            <div>
+                                <h4 class="font-bold text-emeraldAccent-800 text-sm flex items-center gap-2 mb-2 border-b border-parchment-200 pb-2">
+                                    <span class="w-6 h-6 rounded-full bg-emeraldAccent-800 text-parchment-50 flex items-center justify-center text-xs font-serif">٢</span>
+                                    القرآن شفيع لصاحبه يوم القيامة
+                                </h4>
+                                <p class="text-xs text-parchment-900 leading-relaxed italic my-2 bg-parchment-100 p-2 rounded">
+                                    قال ﷺ: "اقرؤوا القرآن، فإنه يأتي يوم القيامة شفيعًا لأصحابه" (رواه مسلم).
+                                </p>
+                                <p class="text-xs text-parchment-800">القرآن لا يترك من كان معه؛ يدافع عنه يوم لا ينفع مال ولا بنون، ويشفع له بالنجاة.</p>
+                            </div>
+                        </div>
+
+                        <!-- Benefit 3 -->
+                        <div class="paper-card rounded-2xl p-6 shadow-sm border border-parchment-300 flex flex-col justify-between">
+                            <div>
+                                <h4 class="font-bold text-emeraldAccent-800 text-sm flex items-center gap-2 mb-2 border-b border-parchment-200 pb-2">
+                                    <span class="w-6 h-6 rounded-full bg-emeraldAccent-800 text-parchment-50 flex items-center justify-center text-xs font-serif">٣</span>
+                                    طمأنينة القلب وراحة النفس
+                                </h4>
+                                <div class="quran-verse text-center text-sm my-2">
+                                    ﴿أَلَا بِذِكْرِ اللَّهِ تَطْمَئِنُّ الْقُلُوبُ﴾ [الرعد: 28]
+                                </div>
+                                <p class="text-xs text-parchment-800">تلاوة القرآن بوعي وتدبر تطرد القلق والتوتر، وتُدخل السكينة الإلهية إلى النفس الحائرة.</p>
+                            </div>
+                        </div>
+
+                        <!-- Benefit 4 -->
+                        <div class="paper-card rounded-2xl p-6 shadow-sm border border-parchment-300 flex flex-col justify-between">
+                            <div>
+                                <h4 class="font-bold text-emeraldAccent-800 text-sm flex items-center gap-2 mb-2 border-b border-parchment-200 pb-2">
+                                    <span class="w-6 h-6 rounded-full bg-emeraldAccent-800 text-parchment-50 flex items-center justify-center text-xs font-serif">٤</span>
+                                    الارتقاء في درجات الجنة
+                                </h4>
+                                <p class="text-xs text-parchment-900 leading-relaxed italic my-2 bg-parchment-100 p-2 rounded">
+                                    قال ﷺ: "يُقال لصاحب القرآن: اقرأ وارقَ ورتّل كما كنتَ ترتّل في الدنيا، فإنّ منزلتك عند آخر آية تقرؤها" (رواه أبو داود).
+                                </p>
+                                <p class="text-xs text-parchment-800">تلاوة آيات الله تصعد بمقام العبد في الآخرة، وتورثه أعلى المنازل الإيمانية.</p>
+                            </div>
+                        </div>
+
+                        <!-- Benefit 5 -->
+                        <div class="paper-card rounded-2xl p-6 shadow-sm border border-parchment-300 flex flex-col justify-between">
+                            <div>
+                                <h4 class="font-bold text-emeraldAccent-800 text-sm flex items-center gap-2 mb-2 border-b border-parchment-200 pb-2">
+                                    <span class="w-6 h-6 rounded-full bg-emeraldAccent-800 text-parchment-50 flex items-center justify-center text-xs font-serif">٥</span>
+                                    القرآن نور في الدنيا والآخرة
+                                </h4>
+                                <div class="quran-verse text-center text-sm my-2">
+                                    ﴿قَدْ جَاءَكُمْ مِنَ اللَّهِ نُورٌ وَكِتَابٌ مُبِينٌ﴾ [المائدة: 15]
+                                </div>
+                                <p class="text-xs text-parchment-800">فالنور هنا يشمل نور الهداية للحق، ونور الطريق في الدنيا، ونور القبر الموحش، ونور الصراط يوم القيامة الحالك.</p>
+                            </div>
+                        </div>
+
+                        <!-- Benefit 6 -->
+                        <div class="paper-card rounded-2xl p-6 shadow-sm border border-parchment-300 flex flex-col justify-between">
+                            <div>
+                                <h4 class="font-bold text-emeraldAccent-800 text-sm flex items-center gap-2 mb-2 border-b border-parchment-200 pb-2">
+                                    <span class="w-6 h-6 rounded-full bg-emeraldAccent-800 text-parchment-50 flex items-center justify-center text-xs font-serif">٦</span>
+                                    زيادة الإيمان وتقوية العلاقة بالله
+                                </h4>
+                                <div class="quran-verse text-center text-xs my-1 leading-normal">
+                                    ﴿وَإِذَا مَا أُنزِلَتْ سُورَةٌ فَمِنْهُم مَّن يَقُولُ أَيُّكُمْ زَادَتْهُ هَذِهِ إِيمَانًا فَأَمَّا الَّذِينَ آمَنُوا فَزَادَتْهُمْ إِيمَانًا﴾ [التوبة: 124]
+                                </div>
+                                <p class="text-xs text-parchment-800">سماع آيات القرآن وتدبرها ريٌّ يسقي شجرة الإيمان في قلب المؤمن لتنمو وتثمر طمأنينة.</p>
+                            </div>
+                        </div>
+
+                        <!-- Benefit 7 -->
+                        <div class="paper-card rounded-2xl p-6 shadow-sm border border-parchment-300 flex flex-col justify-between">
+                            <div>
+                                <h4 class="font-bold text-emeraldAccent-800 text-sm flex items-center gap-2 mb-2 border-b border-parchment-200 pb-2">
+                                    <span class="w-6 h-6 rounded-full bg-emeraldAccent-800 text-parchment-50 flex items-center justify-center text-xs font-serif">٧</span>
+                                    حماية من الشيطان والوساوس
+                                </h4>
+                                <p class="text-xs text-parchment-900 leading-relaxed italic my-2 bg-parchment-100 p-2 rounded">
+                                    قال ﷺ: "إن الشيطان يفر من البيت الذي تُقرأ فيه سورة البقرة" (رواه مسلم).
+                                </p>
+                                <p class="text-xs text-parchment-800">فالقرآن حصنٌ مانع من مكائد الشيطان وحسد الإنس والجن وشرور الوساوس في الصدر.</p>
+                            </div>
+                        </div>
+
+                        <!-- Benefit 8 -->
+                        <div class="paper-card rounded-2xl p-6 shadow-sm border border-parchment-300 flex flex-col justify-between">
+                            <div>
+                                <h4 class="font-bold text-emeraldAccent-800 text-sm flex items-center gap-2 mb-2 border-b border-parchment-200 pb-2">
+                                    <span class="w-6 h-6 rounded-full bg-emeraldAccent-800 text-parchment-50 flex items-center justify-center text-xs font-serif">٨</span>
+                                    سبب للهداية والشفاء المطلق
+                                </h4>
+                                <div class="quran-verse text-center text-sm my-2">
+                                    ﴿وَنُنَزِّلُ مِنَ الْقُرْآنِ مَا هُوَ شِفَاءٌ وَرَحْمَةٌ لِّلْمُؤْمِنِينَ﴾ [الإسراء: 82]
+                                </div>
+                                <p class="text-xs text-parchment-800">شفاء حقيقي للقلوب من داء الشكوك والشرك والنفاق، وشفاء للأبدان والأمراض الجسدية بإذن الله تعالى.</p>
+                            </div>
+                        </div>
+
+                        <!-- Benefit 9 -->
+                        <div class="paper-card rounded-2xl p-6 shadow-sm border border-parchment-300 flex flex-col justify-between">
+                            <div>
+                                <h4 class="font-bold text-emeraldAccent-800 text-sm flex items-center gap-2 mb-2 border-b border-parchment-200 pb-2">
+                                    <span class="w-6 h-6 rounded-full bg-emeraldAccent-800 text-parchment-50 flex items-center justify-center text-xs font-serif">٩</span>
+                                    تيسير الأمور والبركة في الحياة
+                                </h4>
+                                <div class="quran-verse text-center text-sm my-2">
+                                    ﴿فاتَّبِعُوهُ وَاتَّقُوا لَعَلَّكُمْ تُرْحَمُونَ﴾ [الأنعام: 155]
+                                </div>
+                                <p class="text-xs text-parchment-800">من اتخذ القرآن دليلاً متبعاً في يومه ونهاره بارك الله له في وقته وعمره ورزقه وتيسرت شؤونه.</p>
+                            </div>
+                        </div>
+
+                        <!-- Benefit 10 -->
+                        <div class="paper-card rounded-2xl p-6 shadow-sm border border-parchment-300 flex flex-col justify-between">
+                            <div>
+                                <h4 class="font-bold text-emeraldAccent-800 text-sm flex items-center gap-2 mb-2 border-b border-parchment-200 pb-2">
+                                    <span class="w-6 h-6 rounded-full bg-emeraldAccent-800 text-parchment-50 flex items-center justify-center text-xs font-serif">١٠</span>
+                                    الانضمام إلى صفوف أهل الله وخاصته
+                                </h4>
+                                <p class="text-xs text-parchment-900 leading-relaxed italic my-2 bg-parchment-100 p-2 rounded">
+                                    قال ﷺ: "إنّ لله أهلين من الناس، قالوا: من هم يا رسول الله؟ قال: أهل القرآن، هم أهل الله وخاصته" (رواه ابن ماجه).
+                                </p>
+                                <p class="text-xs text-parchment-800">وهو شرف عظيم لا يدانيه شرف، يرتفع به العبد في الدنيا ليكون جندياً مقرباً وخادماً لكلام مولاه.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <hr class="border-parchment-300">
+
+                <!-- Section 3: فضل القرآن الكريم ومنزلته العظمى -->
+                <section id="section-quran-status" class="scroll-mt-24">
+                    <div class="border-l-4 border-goldAccent-600 pr-4 mb-6">
+                        <span class="text-goldAccent-700 text-xs font-bold uppercase tracking-widest">الفصل الثالث</span>
+                        <h3 class="font-kufi text-2xl md:text-3xl font-extrabold text-parchment-900">فضل القرآن الكريم ومنزلته العظمى</h3>
+                        <p class="text-parchment-850 mt-1 text-sm md:text-base">استعراض لجانب من عظمة القرآن الذي عجزت قوى الإنس والجن أن تضاهي بيانه الحكيم.</p>
+                    </div>
+
+                    <div class="space-y-6">
+                        <div class="paper-card rounded-2xl p-6 shadow-sm border border-parchment-300">
+                            <p class="text-sm text-parchment-900 leading-relaxed">
+                                يؤمن المسلمون أن القرآن الكريم هو الكتاب الذي أنزله الله تعالى على محمد صلى الله عليه وسلم، هداية ورحمة للناس جميعًا، وفيه سعادتهم وفلاحهم، وهو كتاب الله الخالد وحجته البالغة، وهو باق إلى أن تفنى الحياة على الأرض، وفيه أنزل الله شريعته وحُكمه التام الكامل؛ ليتخذه الناس شرعة ومنهاج حياة، وهو معجزة محمد صلى الله عليه وسلم التي عجز الجن والإنس جميعًا عن أن يأتوا بمثلها بعد أن تحداهم الله بذلك؛ فقال الله تعالى:
+                            </p>
+                            <div class="quran-verse text-center text-lg py-4 leading-loose bg-parchment-50 rounded-xl border border-parchment-300 my-4">
+                                {قُلْ لَئِنِ اجْتَمَعَتِ الْإِنْسُ وَالْجِنُّ عَلَى أَنْ يَأْتُوا بِمِثْلِ هَذَا الْقُرْآنِ لَا يَأْتُونَ بِمِثْلِهِ وَلَوْ كَانَ بَعْضُهُمْ لِبَعْضٍ ظَهِيرًا}
+                            </div>
+                            <p class="text-xs text-parchment-800">
+                                والقرآن الكريم له منزلة عظيمة جدًّا عند الله، حتى أنه تبارك وتعالى أقسم به تعظيماً لقدره وسمواً لمنزلته فقال: {ق وَالْقُرْآنِ الْمَجِيدِ} [سورة ق، آية: 1].
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <hr class="border-parchment-300">
+
+                <!-- Section 4: فضل قراءة القرآن الكريم -->
+                <section id="section-reading-virtues" class="scroll-mt-24">
+                    <div class="border-l-4 border-goldAccent-600 pr-4 mb-6">
+                        <span class="text-goldAccent-700 text-xs font-bold uppercase tracking-widest">الفصل الرابع</span>
+                        <h3 class="font-kufi text-2xl md:text-3xl font-extrabold text-parchment-900">فضل قراءة القرآن الكريم</h3>
+                        <p class="text-parchment-850 mt-1 text-sm md:text-base">مداومة التلاوة وملازمة الآيات شرف يعلو بالعبد متبقياً لنهج النبيين والصالحين.</p>
+                    </div>
+
+                    <div class="space-y-6">
+                        <div class="paper-card rounded-2xl p-6 shadow-sm border border-parchment-300">
+                            <p class="text-sm text-parchment-900 leading-relaxed mb-4">
+                                يستحب للمسلم أن يداوم على تلاوة القرآن الكريم، وأن يكثر منها، وهو بذلك يتبع سنة جليلة من سنن الإسلام، وقد بين الله سبحانه وتعالى ورسوله الكريم فضل تلاوة القرآن، قال تعالى:
+                            </p>
+                            <div class="quran-verse text-center text-base py-3 leading-loose bg-parchment-50 rounded-xl border border-parchment-300 my-4">
+                                {إِنَّ الَّذِينَ يَتْلُونَ كِتَابَ اللَّهِ وَأَقَامُوا الصَّلَاةَ وَأَنْفَقُوا مِمَّا رَزَقْنَاهُمْ سِرًّا وَعَلَانِيَةً يَرْجُونَ تِجَارَةً لَنْ تَبُورَ} [سورة فاطر، آية: 29]
+                            </div>
+                            <p class="text-sm text-parchment-900 leading-relaxed mt-4 mb-2">
+                                وقال الرسول الكريم صلى الله عليه وسلم:
+                            </p>
+                            <blockquote class="bg-[#FAF8F3] border-r-4 border-goldAccent-600 p-4 rounded-xl text-xs text-parchment-900 leading-relaxed italic mb-4">
+                                «وما اجتمع قوم في بيت من بيوت الله، يتلون كتاب الله، ويتدارسونه بينهم، إلا نزلت عليهم السكينة، وغشيتهم الرحمة وحفتهم الملائكة، وذكرهم الله فيمن عنده».
+                            </blockquote>
+                            <p class="text-xs text-parchment-800 leading-relaxed">
+                                وكذلك من فضل قراءة القرآن: تحصيل الحسنات، ونيل الأجر العظيم، وفي ذلك يقول النبي صلى الله عليه وسلم: «من قرأ حرفًا من كتاب الله فله به حسنة، والحسنة بعشر أمثالها، لا أقول (الم) حرف، ولكن ألف حرف، ولام حرف، وميم حرف».
+                            </p>
+                            <p class="text-xs text-parchment-800 leading-relaxed mt-2">
+                                ومنه أيضًا: علو شأن قارئ القرآن، ووصوله إلى المكانة العالية والدرجة الرفيعة التي لا تُعطَى لغيره، يقول النبي صلى الله عليه وسلم: «يُقال لصاحب القرآن: اقرأ، وارْقَ، ورتل كما كنت ترتل في الدنيا؛ فإن منزلتك عند آخر آية تقرؤها».
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <hr class="border-parchment-300">
+
+                <!-- Section 5: فضل حفظ القرآن الكريم -->
+                <section id="section-hifz-virtues" class="scroll-mt-24">
+                    <div class="border-l-4 border-goldAccent-600 pr-4 mb-6">
+                        <span class="text-goldAccent-700 text-xs font-bold uppercase tracking-widest">الفصل الخامس</span>
+                        <h3 class="font-kufi text-2xl md:text-3xl font-extrabold text-parchment-900">فضل حفظ القرآن الكريم</h3>
+                        <p class="text-parchment-850 mt-1 text-sm md:text-base">حامل القرآن وعاء للوحي يستحق الإجلال، وتفيض بركة حفظه على ذريته ووالديه يوم الحساب.</p>
+                    </div>
+
+                    <div class="space-y-6">
+                        <div class="paper-card rounded-2xl p-6 shadow-sm border border-parchment-300">
+                            <p class="text-sm text-parchment-900 leading-relaxed mb-4">
+                                إن لحافظ القرآن أجرًا عظيمًا عند الله؛ فإن القرآن يشفع لصاحبه يوم القيامة، ويُعلي منزلته ودرجته في الجنة؛ فيكون مع الملائكة السفرة الكرام البررة، ويتعدى نفعه لغيره في الدنيا والآخرة، ويكون له عظيم الأثر في حياته وبعد مماته، وفي هذا يقول النبي صلى الله عليه وسلم:
+                            </p>
+                            <div class="bg-[#FAF8F3] border-r-4 border-emeraldAccent-800 p-4 rounded-xl text-center text-sm text-emeraldAccent-900 font-bold italic mb-4">
+                                «مثل الذي يقرأ القرآن وهو حافظ له مع السفرة الكرام البررة».
+                            </div>
+                            <p class="text-xs text-parchment-900 leading-relaxed mb-4">
+                                كما أن حافظ القرآن يَلبس والداه تاجًا يوم القيامة؛ إكرامًا لهما على تربيته وتوجيهه على حفظ القرآن، يقول النبي صلى الله عليه وسلم:
+                            </p>
+                            <blockquote class="bg-[#FDFBF7] border-r-4 border-goldAccent-700 p-4 rounded-xl text-xs text-parchment-850 leading-relaxed italic mb-4">
+                                «من قرأ القرآن وعمل بما فيه، أُلبس والداه تاجًا يوم القيامة، ضوؤه أحسنُ من ضوء الشمس في بيوت الدنيا لو كانت فيكم، فما ظنكم بالذي عمل بهذا؟».
+                            </blockquote>
+                            <p class="text-xs text-parchment-900 leading-relaxed mb-4">
+                                وكذلك شفاعة القرآن لصاحبه وحفظه له من النار يوم القيامة، يقول النبي صلى الله عليه وسلم:
+                            </p>
+                            <blockquote class="bg-[#FDFBF7] border-r-4 border-goldAccent-700 p-4 rounded-xl text-xs text-parchment-850 leading-relaxed italic mb-4">
+                                «الصيام والقرآن يشفعان للعبد يوم القيامة، يقول الصيام: أي رب، منعته الطعام والشهوات بالنهار، فشفِّعني فيه، ويقول القرآن: منعته النوم بالليل، فشفِّعني فيه، قال: فيشفعان».
+                            </blockquote>
+                            <p class="text-xs text-parchment-800 leading-relaxed">
+                                وكذلك يُقدَّم حافظ القرآن على غيره في إمامة الصلاة، لأحقيته في ذلك، يقول النبي صلى الله عليه وسلم: «يؤم القوم أقرؤهم لكتاب الله».
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <hr class="border-parchment-300">
+
+                <!-- Section 6: فضل تعلم القرآن الكريم وتعليمه -->
+                <section id="section-learning-virtues" class="scroll-mt-24">
+                    <div class="border-l-4 border-goldAccent-600 pr-4 mb-6">
+                        <span class="text-goldAccent-700 text-xs font-bold uppercase tracking-widest">الفصل السادس</span>
+                        <h3 class="font-kufi text-2xl md:text-3xl font-extrabold text-parchment-900">فضل تعلم القرآن الكريم وتعليمه</h3>
+                        <p class="text-parchment-850 mt-1 text-sm md:text-base">المهمة الأسمى في الأمة، وضمان حفظ الصدور من جيل لآخر حتى يرث الله الأرض ومن عليها.</p>
+                    </div>
+
+                    <div class="space-y-6">
+                        <div class="paper-card rounded-2xl p-6 shadow-sm border border-parchment-300">
+                            <p class="text-sm text-parchment-900 leading-relaxed mb-4">
+                                ذهب علماء المسلمين إلى أن حفظ القرآن الكريم واجب كفائي على الأمة، حتى لا تدخله يد التحريف، فإن حفظته فئة من المسلمين سقط الواجب عن الباقي، وإن لم يحفظه أحد أثموا جميعًا، وكذلك تعليم القرآن للناس له نفس الحكم.
+                            </p>
+                            <p class="text-sm text-parchment-900 leading-relaxed mb-4">
+                                ومن فضائل تعلم القرآن وتعليمه أن جعل الله من تعلم القرآن وعلمه غيره خير الناس وأفضلهم، وفي ذلك يقول النبي صلى الله عليه وسلم:
+                            </p>
+                            <div class="bg-[#FAF8F3] border-r-4 border-goldAccent-600 p-4 rounded-xl text-center text-base text-goldAccent-800 font-bold italic">
+                                «خيركم من تعلم القرآن وعلمه»
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <hr class="border-parchment-300">
+
+                <!-- Section 7: أهمية العلم بفضل القرآن الكريم -->
+                <section id="section-virtues-importance" class="scroll-mt-24">
+                    <div class="border-l-4 border-goldAccent-600 pr-4 mb-6">
+                        <span class="text-goldAccent-700 text-xs font-bold uppercase tracking-widest">الفصل السابع</span>
+                        <h3 class="font-kufi text-2xl md:text-3xl font-extrabold text-parchment-900">أهمية العلم بفضل القرآن الكريم</h3>
+                        <p class="text-parchment-850 mt-1 text-sm md:text-base">الوعي بالمكاسب الإلهية هو الدافع الأكبر لثبات العبد وتمسكه بمصاحبة المصحف الشريف.</p>
+                    </div>
+
+                    <div class="space-y-6">
+                        <div class="paper-card rounded-2xl p-6 shadow-sm border border-parchment-300">
+                            <p class="text-sm text-parchment-900 leading-relaxed">
+                                المعرفة بفضل القرآن الكريم تجعل المسلم مقبلًا على مصاحبة القرآن؛ فمعرفته بثمرة تعلم القرآن يزيد تعظيمه لكتاب الله، ومراعاته لحرمته، ومعرفته بمكانته، والمؤمن الحق يتخذ القرآن هاديًا ومنيرًا ليميز به بين الحق والباطل؛ فيطمئن إليه وتسكن روحه عند تلاوته، وإذا وسوس له الشيطان ليصرفه عن تلاوته، فإن تذكره لفضل القرآن يجعله أكثر تمسكًا به؛ لرسوخ القرآن في قلبه، وهذا يجعله حريصًا على تعلم علومه؛ فيزيده فقهًا في الدين، ويجعله أعظم دراية بأحكامه.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <hr class="border-parchment-300">
+
+                <!-- Section 8: فضل أهل القرآن -->
+                <section id="section-ahl-quran" class="scroll-mt-24">
+                    <div class="border-l-4 border-goldAccent-600 pr-4 mb-6">
+                        <span class="text-goldAccent-700 text-xs font-bold uppercase tracking-widest">الفصل الثامن</span>
+                        <h3 class="font-kufi text-2xl md:text-3xl font-extrabold text-parchment-900">فضل أهل القرآن</h3>
+                        <p class="text-parchment-850 mt-1 text-sm md:text-base">من هم الذين اصطفاهم الله لنسبة بيانه العظيم إليهم وجعلهم خاصته في الأرض؟</p>
+                    </div>
+
+                    <div class="space-y-6">
+                        <div class="paper-card rounded-2xl p-6 shadow-sm border border-parchment-300">
+                            <p class="text-sm text-parchment-900 leading-relaxed mb-4">
+                                من فضل القرآن على صاحبه أنه ينسبه إليه؛ فيصير من أهل القرآن الذين هم أهل الله وخاصته، يقول النبي صلى الله عليه وسلم:
+                            </p>
+                            <div class="bg-[#FAF8F3] border-r-4 border-emeraldAccent-800 p-4 rounded-xl text-center text-sm text-emeraldAccent-900 font-bold italic mb-4">
+                                «أهل القرآن هم أهل الله وخاصته»
+                            </div>
+                            <p class="text-xs text-parchment-800 leading-relaxed">
+                                ولكي يتصف صاحب القرآن بهذه الصفة؛ فإنه لا بد أن يؤدي حق القرآن، ويُقبل عليه بقلبه وبدنه، ويتطهر من الذنوب، ويكثر من الطاعات والعمل بالآيات في شأنه كله؛ فإن شرف العلم من شرف المعلوم، فإن كان المعلوم والمحفوظ هو كتاب الله جل جلاله، فإن ذلك سبب لزيادة شأن حامله وارتفاع قدره بين البرية.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <hr class="border-parchment-300">
+
+                <!-- Section 9: حالة الشخص عند قراءة القرآن (الآداب والهيئة) -->
+                <section id="section-reader-etiquette" class="scroll-mt-24">
+                    <div class="border-l-4 border-goldAccent-600 pr-4 mb-6">
+                        <span class="text-goldAccent-700 text-xs font-bold uppercase tracking-widest">الفصل التاسع</span>
+                        <h3 class="font-kufi text-2xl md:text-3xl font-extrabold text-parchment-900">حالة الشخص عند قراءة القرآن (الآداب والهيئة)</h3>
+                        <p class="text-parchment-850 mt-1 text-sm md:text-base">آداب باطنية وخارجية تعظم المتكلم وتبرز حشمة العبد المستمع والمنصت لرب العزة.</p>
+                    </div>
+
+                    <div class="space-y-6">
+                        <div class="paper-card rounded-2xl p-6 shadow-sm border border-parchment-300">
+                            <p class="text-sm text-parchment-900 leading-relaxed mb-4">
+                                قراءة القرآن مناجاة بين العبد ورب العزة، ولها سمات وهيئات تليق بجلال الكلمات وعظمة الخالق.
+                            </p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-4">
+                                <div class="bg-parchment-50 p-4 rounded-xl border border-parchment-300">
+                                    <h4 class="font-bold text-xs text-emeraldAccent-800 mb-2">من القرآن الكريم:</h4>
+                                    <ul class="space-y-2 text-xs text-parchment-800">
+                                        <li>• {اللَّهُ نَزَّلَ أَحْسَنَ الْحَدِيثِ كِتَابًا مُتَشَابِهًا مَثَانِيَ تَقْشَعِرُّ مِنْهُ جُلُودُ الَّذِينَ يَخْشَوْنَ رَبَّهُمْ...} [الزمر: 23].</li>
+                                        <li>• {وَإِذَا قُرِئَ الْقُرْآنُ فَاسْتَمِعُوا لَهُ وَأَنْصِتُوا لَعَلَّكُمْ تُرْحَمُونَ} [الأعراف: 204].</li>
+                                    </ul>
+                                </div>
+                                <div class="bg-parchment-50 p-4 rounded-xl border border-parchment-300">
+                                    <h4 class="font-bold text-xs text-goldAccent-700 mb-2">من السنة النبوية:</h4>
+                                    <ul class="space-y-2 text-xs text-parchment-850">
+                                        <li>• بكاء النبي ﷺ عند سماع القرآن كما في حديث ابن مسعود: "فالتفتُّ إليه فإِذا عيناه تذرفان" [متفق عليه].</li>
+                                        <li>• «زَيِّنُوا الْقُرْآنَ بِأَصْوَاتِكُمْ» [رواه أبو داود].</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="bg-goldAccent-50/50 p-4 rounded-xl border border-parchment-300">
+                                <span class="text-xs font-bold text-goldAccent-800 block mb-1">من أقوال السلف المحققة:</span>
+                                <p class="text-xs text-parchment-900 leading-relaxed italic mb-2">
+                                    قال الإمام النووي رحمه الله في التبيان: "ينبغي للقارئ أن يكون على هيئة الأدب، مطرقاً، قابعاً، كجلوسه بين يدي معلّمه، ويكمل أكمل الصفات بالطهارة واستقبال القبلة."
+                                </p>
+                                <p class="text-xs text-parchment-900 leading-relaxed italic border-t border-parchment-300 pt-2">
+                                    عن نافع قال: "كان ابن عمر إذا قرأ القرآن لا يتكلم حتى يفرغ منه".
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <hr class="border-parchment-300">
+
+                <!-- Section 10: الشفاء بالقرآن، والنيات التي تضعها عند قراءة القرآن -->
+                <section id="section-shifa" class="scroll-mt-24">
+                    <div class="border-l-4 border-goldAccent-600 pr-4 mb-6">
+                        <span class="text-goldAccent-700 text-xs font-bold uppercase tracking-widest">الفصل العاشر</span>
+                        <h3 class="font-kufi text-2xl md:text-3xl font-extrabold text-parchment-900">الشفاء بالقرآن والنيات التي تضعها</h3>
+                        <p class="text-parchment-850 mt-1 text-sm md:text-base">استشفاء حقيقي بدني ونفسي مع تفصيل بالنيات الخمس التي ينبغي استحضارها قبل كل تلاوة.</p>
+                    </div>
+
+                    <div class="space-y-6">
+                        <div class="paper-card rounded-2xl p-6 shadow-sm border border-parchment-300">
+                            <p class="text-sm text-parchment-900 leading-relaxed mb-4">
+                                القرآن الكريم ليس كتاب بركة مجردة، بل هو دواء حسي ومعنوي شامل، والنية تجلب الأثر والبركة:
+                            </p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-parchment-800 mb-4">
+                                <div class="p-3.5 rounded-xl bg-parchment-50 border border-parchment-300">
+                                    <strong>من القرآن:</strong> {قُلْ هُوَ لِلَّذِينَ آمَنُوا هُدًى وَشِفَاءٌ} [فصلت: 44].
+                                </div>
+                                <div class="p-3.5 rounded-xl bg-parchment-50 border border-parchment-300">
+                                    <strong>من السنة:</strong> رقية النبي ﷺ لنفسه بالمعوذات عند الشكوى ونفثه بيده [متفق عليه].
+                                </div>
+                            </div>
+
+                            <!-- Intentions List explicitly compiled under Section 10 -->
+                            <div class="bg-parchment-50/70 p-5 rounded-2xl border border-parchment-300 mb-4">
+                                <h4 class="font-bold text-sm text-emeraldAccent-800 mb-3 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-heart text-goldAccent-600"></i> النيات الخمس المقترنة بالتلاوة والشفاء:
+                                </h4>
+                                <ul class="space-y-3.5 text-xs text-parchment-900 leading-relaxed">
+                                    <li><strong class="text-goldAccent-700 font-bold block mb-0.5">١. نية التعبد المحض:</strong> لطلب الأجر ومضاعفة الحسنات بكسب عشر حسنات على كل حرف يتلى.</li>
+                                    <li><strong class="text-goldAccent-700 font-bold block mb-0.5">٢. نية العلم والعمل:</strong> التماس الهداية وفهم مراد الله لتطبيقه في تفاصيل الحياة اليومية.</li>
+                                    <li><strong class="text-goldAccent-700 font-bold block mb-0.5">٣. نية الشفاء والرقية:</strong> استحضار أن الآيات ترفع الأسقام النفسية (كالحسد والضيق والتوتر) والجسدية والبدنية.</li>
+                                    <li><strong class="text-goldAccent-700 font-bold block mb-0.5">٤. نية المناجاة:</strong> استشعار وقوفك بين يدي الله وأن الباري يكلمك ويخاطبك بكلامه مباشرة.</li>
+                                    <li><strong class="text-goldAccent-700 font-bold block mb-0.5">٥. نية الهجر والتحصين:</strong> طرد الشياطين والوساوس من الجسد والبيت ومحل العيش بركةً للآيات والذكر.</li>
+                                </ul>
+                            </div>
+
+                            <blockquote class="bg-[#FDFBF7] border-r-4 border-goldAccent-700 p-4 rounded-xl text-xs text-parchment-850 leading-relaxed italic">
+                                قال ابن القيم رحمه الله: "فالقرآن هو الشفاء التام من جميع الأدواء القلبية والبدنية، وأدواء الدنيا والآخرة، وما كُلُّ أحدٍ يُؤَهَّلُ ولا يُوَفَّقُ للاستشفاء به."
+                            </blockquote>
+                        </div>
+                    </div>
+                </section>
+
+                <hr class="border-parchment-300">
+
+                <!-- Section 11: فضل القرآن على صاحبه وأهله وفي قبره -->
+                <section id="section-grave-afterlife" class="scroll-mt-24">
+                    <div class="border-l-4 border-goldAccent-600 pr-4 mb-6">
+                        <span class="text-goldAccent-700 text-xs font-bold uppercase tracking-widest">الفصل الحادي عشر</span>
+                        <h3 class="font-kufi text-2xl md:text-3xl font-extrabold text-parchment-900">فضل القرآن على صاحبه وأهله وفي قبره</h3>
+                        <p class="text-parchment-850 mt-1 text-sm md:text-base">مرافقة أبدية لآيات التنزيل لا تذر العبد وحيداً، من حلكة اللحد إلى منازل الجنان الكبرى.</p>
+                    </div>
+
+                    <div class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <!-- Parents Crown -->
+                            <div class="paper-card rounded-2xl p-5 shadow-sm border border-parchment-300 flex flex-col justify-between">
+                                <div>
+                                    <span class="bg-goldAccent-50 text-goldAccent-700 text-[10px] font-bold px-2 py-1 rounded">فضله على أهله ووالديه</span>
+                                    <h4 class="font-bold text-xs text-parchment-950 mt-3 mb-1">تاج وكساء الكرامة</h4>
+                                    <p class="text-[11px] text-parchment-800 leading-relaxed italic mb-4">
+                                        «ألبس والداه تاجاً يوم القيامة ضوؤه أحسن من ضوء الشمس...»
+                                    </p>
+                                </div>
+                                <span class="block border-t border-parchment-200 pt-2 text-[10px] text-parchment-800 text-left">[رواه أبو داود]</span>
+                            </div>
+
+                            <!-- day of judgment -->
+                            <div class="paper-card rounded-2xl p-5 shadow-sm border border-parchment-300 flex flex-col justify-between">
+                                <div>
+                                    <span class="bg-emeraldAccent-800/10 text-emeraldAccent-800 text-[10px] font-bold px-2 py-1 rounded">فضله يوم القيامة</span>
+                                    <h4 class="font-bold text-xs text-parchment-950 mt-3 mb-1">حلة وتاج الوقار</h4>
+                                    <p class="text-[11px] text-parchment-800 leading-relaxed italic mb-4">
+                                        «يجيء القرآن يوم القيامة فيقول: يا رب حله، فيُلبس تاج الكرامة...»
+                                    </p>
+                                </div>
+                                <span class="block border-t border-parchment-200 pt-2 text-[10px] text-parchment-800 text-left">[رواه الترمذي]</span>
+                            </div>
+
+                            <!-- Grave -->
+                            <div class="paper-card rounded-2xl p-5 shadow-sm border border-parchment-300 flex flex-col justify-between">
+                                <div>
+                                    <span class="bg-goldAccent-50 text-goldAccent-700 text-[10px] font-bold px-2 py-1 rounded">مؤانسته وحفظه بقبره</span>
+                                    <h4 class="font-bold text-xs text-parchment-950 mt-3 mb-1">الشافع والمدافع</h4>
+                                    <p class="text-[11px] text-parchment-800 leading-relaxed italic mb-4">
+                                        «إن سورة من القرآن ثلاثون آية شفعت لرجل حتى غُفر له...»
+                                    </p>
+                                </div>
+                                <span class="block border-t border-parchment-200 pt-2 text-[10px] text-parchment-800 text-left">[رواه الترمذي]</span>
+                            </div>
+                        </div>
+
+                        <!-- Ibn Masood Athar on Mulk protection -->
+                        <div class="bg-parchment-300/30 p-5 rounded-2xl border border-parchment-300">
+                            <span class="text-xs text-goldAccent-800 font-bold"><i class="fa-solid fa-shield"></i> دفاع القرآن عن صاحبه في وحشة القبر:</span>
+                            <p class="text-xs text-parchment-900 leading-relaxed italic mt-2">
+                                روي عن ابن مسعود رضي الله عنه موقوفاً بلفظ بديع يروي واقعية المدافعة:
+                            </p>
+                            <blockquote class="text-xs text-parchment-950 font-medium leading-relaxed bg-parchment-100 p-4 rounded-xl border border-parchment-300 mt-2">
+                                "يؤتى الرجل في قبره فتؤتى رجلاه، فتقول رجلاه: ليس لكم على ما قبلي سبيل، كان يقوم يقرأ بي سورة الملك، ثم يؤتى من قبل صدره أو قال بطنه، فيقول: ليس لكم على ما قبلي سبيل، كان يقرأ بي سورة الملك، ثم يؤتى رأسه فيقول: ليس لكم على ما قبلي سبيل، كان يقرأ بي سورة الملك. فهي المانعة تمنع من عذاب القبر."
+                            </blockquote>
+                        </div>
+                    </div>
+                </section>
+                
+            </div>
+        </div>
+    </main>
+
+    <!-- Mobile Side Drawer (Navigation for small screens) -->
+    <div id="mobile-drawer-overlay" class="fixed inset-0 bg-parchment-950/40 z-50 pointer-events-none opacity-0 backdrop-blur-sm transition-opacity duration-300 lg:hidden" onclick="toggleMobileMenu()"></div>
+    <div id="mobile-drawer" class="fixed top-0 right-0 w-80 h-full max-w-full bg-parchment-100 border-l border-parchment-300 shadow-2xl z-50 transform translate-x-full transition-transform duration-300 flex flex-col justify-between lg:hidden">
+        <div>
+            <!-- Header inside drawer -->
+            <div class="p-4 border-b border-parchment-300 flex items-center justify-between bg-parchment-50">
+                <span class="font-kufi text-emeraldAccent-800 font-bold text-sm">فصول الموسوعة الشاملة</span>
+                <button onclick="toggleMobileMenu()" class="text-parchment-800 hover:text-goldAccent-600 p-2 rounded-lg" aria-label="إغلاق القائمة">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            
+            <!-- Links List -->
+            <nav class="p-4 flex flex-col space-y-2 overflow-y-auto max-h-[75vh]" id="mobile-drawer-nav">
+                <a href="#section-general-virtues" onclick="toggleMobileMenu()" class="mobile-drawer-item px-3 py-3 rounded-xl text-xs font-semibold text-parchment-900 hover:bg-parchment-200 flex items-center gap-2">
+                    <span class="w-5 h-5 flex items-center justify-center rounded bg-parchment-300 text-parchment-850 text-[10px] font-bold">١</span>
+                    فضائل القرآن ومقدمة الموسوعة
+                </a>
+                <a href="#section-ten-benefits" onclick="toggleMobileMenu()" class="mobile-drawer-item px-3 py-3 rounded-xl text-xs font-semibold text-parchment-900 hover:bg-parchment-200 flex items-center gap-2">
+                    <span class="w-5 h-5 flex items-center justify-center rounded bg-parchment-300 text-parchment-850 text-[10px] font-bold">٢</span>
+                    عشر فوائد عظيمة للتلاوة
+                </a>
+                <a href="#section-quran-status" onclick="toggleMobileMenu()" class="mobile-drawer-item px-3 py-3 rounded-xl text-xs font-semibold text-parchment-900 hover:bg-parchment-200 flex items-center gap-2">
+                    <span class="w-5 h-5 flex items-center justify-center rounded bg-parchment-300 text-parchment-850 text-[10px] font-bold">٣</span>
+                    فضل القرآن الكريم ومنزلته العظمى
+                </a>
+                <a href="#section-reading-virtues" onclick="toggleMobileMenu()" class="mobile-drawer-item px-3 py-3 rounded-xl text-xs font-semibold text-parchment-900 hover:bg-parchment-200 flex items-center gap-2">
+                    <span class="w-5 h-5 flex items-center justify-center rounded bg-parchment-300 text-parchment-850 text-[10px] font-bold">٤</span>
+                    فضل قراءة القرآن الكريم
+                </a>
+                <a href="#section-hifz-virtues" onclick="toggleMobileMenu()" class="mobile-drawer-item px-3 py-3 rounded-xl text-xs font-semibold text-parchment-900 hover:bg-parchment-200 flex items-center gap-2">
+                    <span class="w-5 h-5 flex items-center justify-center rounded bg-parchment-300 text-parchment-850 text-[10px] font-bold">٥</span>
+                    فضل حفظ القرآن الكريم
+                </a>
+                <a href="#section-learning-virtues" onclick="toggleMobileMenu()" class="mobile-drawer-item px-3 py-3 rounded-xl text-xs font-semibold text-parchment-900 hover:bg-parchment-200 flex items-center gap-2">
+                    <span class="w-5 h-5 flex items-center justify-center rounded bg-parchment-300 text-parchment-850 text-[10px] font-bold">٦</span>
+                    فضل تعلم وتعليم كتاب الله
+                </a>
+                <a href="#section-virtues-importance" onclick="toggleMobileMenu()" class="mobile-drawer-item px-3 py-3 rounded-xl text-xs font-semibold text-parchment-900 hover:bg-parchment-200 flex items-center gap-2">
+                    <span class="w-5 h-5 flex items-center justify-center rounded bg-parchment-300 text-parchment-850 text-[10px] font-bold">٧</span>
+                    أهمية العلم بفضائل القرآن
+                </a>
+                <a href="#section-ahl-quran" onclick="toggleMobileMenu()" class="mobile-drawer-item px-3 py-3 rounded-xl text-xs font-semibold text-parchment-900 hover:bg-parchment-200 flex items-center gap-2">
+                    <span class="w-5 h-5 flex items-center justify-center rounded bg-parchment-300 text-parchment-850 text-[10px] font-bold">٨</span>
+                    من هم أهل القرآن وخاصته؟
+                </a>
+                <a href="#section-reader-etiquette" onclick="toggleMobileMenu()" class="mobile-drawer-item px-3 py-3 rounded-xl text-xs font-semibold text-parchment-900 hover:bg-parchment-200 flex items-center gap-2">
+                    <span class="w-5 h-5 flex items-center justify-center rounded bg-parchment-300 text-parchment-850 text-[10px] font-bold">٩</span>
+                    حالة القارئ وآداب التلاوة
+                </a>
+                <a href="#section-shifa" onclick="toggleMobileMenu()" class="mobile-drawer-item px-3 py-3 rounded-xl text-xs font-semibold text-parchment-900 hover:bg-parchment-200 flex items-center gap-2">
+                    <span class="w-5 h-5 flex items-center justify-center rounded bg-parchment-300 text-parchment-850 text-[10px] font-bold">١٠</span>
+                    الاستشفاء بالقرآن والنيات الخمس
+                </a>
+                <a href="#section-grave-afterlife" onclick="toggleMobileMenu()" class="mobile-drawer-item px-3 py-3 rounded-xl text-xs font-semibold text-parchment-900 hover:bg-parchment-200 flex items-center gap-2">
+                    <span class="w-5 h-5 flex items-center justify-center rounded bg-parchment-300 text-parchment-850 text-[10px] font-bold">١١</span>
+                    فضل القرآن في القبر والآخرة
+                </a>
+            </nav>
+        </div>
+
+        <!-- Drawer footer warning of sincerity -->
+        <div class="p-4 border-t border-parchment-300 bg-parchment-50 text-center text-[10px] text-parchment-800 leading-relaxed font-semibold">
+            «أهل القرآن هم أهل الله وخاصته»
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-emeraldAccent-950 text-parchment-100 mt-16 border-t-4 border-goldAccent-600">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center border-b border-emeraldAccent-900 pb-8">
+                <div>
+                    <h5 class="font-kufi text-xl font-bold text-[#E6DFD3] mb-2">جامع المكرمات والفضائل للقرآن الكريم</h5>
+                    <p class="text-parchment-300 text-xs max-w-md">مكتبة رقمية محققة تبرز مناقب كلام الله جل جلاله وكرامات حفظه وقراءته بالاستناد إلى الأدلة المعتبرة والآثار الثابتة.</p>
+                </div>
+                <div class="flex flex-wrap gap-4 md:justify-end text-xs text-parchment-300">
+                    <span class="px-3 py-1.5 rounded-lg bg-emeraldAccent-900/60 border border-emeraldAccent-800"><i class="fa-solid fa-heart text-goldAccent-600"></i> إخلاص النية</span>
+                    <span class="px-3 py-1.5 rounded-lg bg-emeraldAccent-900/60 border border-emeraldAccent-800"><i class="fa-solid fa-book-open text-goldAccent-600"></i> هدى وشفاء</span>
+                    <span class="px-3 py-1.5 rounded-lg bg-emeraldAccent-900/60 border border-emeraldAccent-800"><i class="fa-solid fa-shield text-goldAccent-600"></i> حماية من الشيطان</span>
+                </div>
+            </div>
+            <div class="pt-8 flex flex-col md:flex-row items-center justify-between text-[11px] text-parchment-300 gap-4">
+                <p>© رَبَّنَا تَقَبَّلْ مِنَّا إِنَّكَ أَنتَ السَّمِيعُ الْعَلِيمُ</p>
+                <div class="flex gap-4">
+                    <a href="#section-general-virtues" class="hover:text-goldAccent-600 transition-colors">عظمة القرآن</a>
+                    <a href="#section-ten-benefits" class="hover:text-goldAccent-600 transition-colors">عشر فوائد</a>
+                    <a href="#section-shifa" class="hover:text-goldAccent-600 transition-colors">أسرار النية</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts for Scrollspy Tracking and Mobile Menu Toggle -->
+    <script>
+        // Toggle mobile menu drawer visibility
+        function toggleMobileMenu() {
+            const drawer = document.getElementById('mobile-drawer');
+            const overlay = document.getElementById('mobile-drawer-overlay');
+            
+            if (drawer.classList.contains('translate-x-full')) {
+                // Open Menu
+                drawer.classList.remove('translate-x-full');
+                overlay.classList.remove('pointer-events-none', 'opacity-0');
+                overlay.classList.add('opacity-100');
+            } else {
+                // Close Menu
+                drawer.classList.add('translate-x-full');
+                overlay.classList.add('pointer-events-none', 'opacity-0');
+                overlay.classList.remove('opacity-100');
+            }
+        }
+
+        // Sidebar and Mobile Menu active scroll status tracker using IntersectionObserver
+        window.addEventListener('DOMContentLoaded', () => {
+            const observerOptions = {
+                root: null,
+                rootMargin: '-50px 0px -50px 0px', // Trigger slightly inside view limits
+                threshold: 0.15
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const id = entry.target.getAttribute('id');
+                        
+                        // Handle Desktop Navigation
+                        document.querySelectorAll('.sidebar-item').forEach(item => {
+                            if (item.getAttribute('href') === `#${id}`) {
+                                item.classList.add('nav-active');
+                            } else {
+                                item.classList.remove('nav-active');
+                            }
+                        });
+
+                        // Handle Mobile Drawer Navigation Active States
+                        document.querySelectorAll('.mobile-drawer-item').forEach(item => {
+                            if (item.getAttribute('href') === `#${id}`) {
+                                item.classList.add('nav-active');
+                            } else {
+                                item.classList.remove('nav-active');
+                            }
+                        });
+                    }
+                });
+            }, observerOptions);
+
+            // Observe all content sections in the document
+            document.querySelectorAll('section[id^="section-"]').forEach(sec => {
+                observer.observe(sec);
+            });
+        });
+    </script>
+</body>
+</html>

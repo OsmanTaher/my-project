@@ -1,0 +1,2012 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Profile Analyzer - Premium Dashboard</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brandBgDark: '#0f172a',
+                        brandCardDark: '#1e293b',
+                        brandPrimary: '#38bdf8',
+                        brandAccent: '#22d3ee',
+                        brandSuccess: '#22c55e',
+                        brandWarning: '#f59e0b',
+                        brandDanger: '#ef4444',
+                        brandTextDark: '#f8fafc',
+                        brandMutedDark: '#94a3b8'
+                    },
+                    boxShadow: {
+                        'glass': '0 8px 32px 0 rgba(0, 0, 0, 0.3)',
+                        'glow': '0 0 15px rgba(56, 189, 248, 0.25)'
+                    },
+                    backdropBlur: {
+                        'xs': '2px',
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome for additional icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- ChartJS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .code-font {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        /* تخصيص شريط التمرير */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.3);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(148, 163, 184, 0.3);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(148, 163, 184, 0.5);
+        }
+
+        /* كلاس تأثير الزجاج */
+        .glass-card {
+            background: rgba(30, 41, 59, 0.65);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* تأثير الشيمر للتحميل */
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        .skeleton-shimmer {
+            background: linear-gradient(90deg, rgba(30,41,59,0.5) 25%, rgba(51,65,85,0.7) 50%, rgba(30,41,59,0.5) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.6s infinite linear;
+        }
+
+        /* تأثير الارتفاع والتوهج للبطاقات */
+        .card-hover-lift:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px -10px rgba(56, 189, 248, 0.3);
+        }
+        .glow-input:focus {
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.35);
+            border-color: #38bdf8;
+        }
+        
+        #scroll-progress {
+            transform-origin: top left;
+        }
+    </style>
+</head>
+<body class="bg-brandBgDark text-brandTextDark transition-colors duration-300 min-h-screen flex flex-col selection:bg-brandPrimary selection:text-brandBgDark">
+    
+    <!-- شريط تقدم القراءة العلوي -->
+    <div class="fixed top-0 left-0 w-full h-1 bg-slate-800 z-50">
+        <div id="scroll-progress" class="h-full bg-gradient-to-r from-brandPrimary via-brandAccent to-brandSuccess w-0 transition-all duration-75"></div>
+    </div>
+
+    <!-- حاوية التنبيهات المباشرة -->
+    <div id="toast-container" class="fixed top-6 right-6 z-50 flex flex-col gap-3 max-w-sm w-full"></div>
+
+    <!-- الهيدر وشريط التنقل -->
+    <header class="sticky top-0 z-40 glass-card w-full border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3 cursor-pointer" onclick="resetToHome()">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brandPrimary to-brandAccent flex items-center justify-center text-brandBgDark font-black text-xl shadow-glow">
+                    <i class="fa-brands fa-github text-2xl"></i>
+                </div>
+                <div>
+                    <span class="font-extrabold text-lg sm:text-xl tracking-tight bg-gradient-to-r from-brandPrimary to-brandAccent bg-clip-text text-transparent">GitInsight</span>
+                    <span class="text-xs block text-brandMutedDark font-semibold tracking-wider -mt-1">PROFILE ANALYZER</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- مساحة العمل الرئيسية -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col gap-8">
+        
+        <!-- تنبيه معدل استهلاك الـ API -->
+        <div id="rate-limit-banner" class="hidden flex items-center justify-between p-3.5 rounded-2xl border border-brandWarning/30 bg-brandWarning/10 text-brandWarning text-sm transition-all animate-pulse">
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <span>معدل استخدام واجهة برمجة تطبيقات GitHub منخفض. تأكد من إعداد المفتاح في ملف .env لضمان استمرارية الخدمة.</span>
+            </div>
+        </div>
+
+        <!-- عنوان الصفحة الرئيسي -->
+        <section class="text-center py-6 sm:py-10 max-w-2xl mx-auto flex flex-col gap-3">
+            <h1 class="text-4xl sm:text-5xl font-black tracking-tight leading-none">
+                GitHub Profile <span class="bg-gradient-to-r from-brandPrimary via-brandAccent to-brandSuccess bg-clip-text text-transparent">Analyzer</span>
+            </h1>
+            <p class="text-brandMutedDark text-base sm:text-lg font-medium">
+                اكتشف إحصائيات المطورين، توزيع لغات البرمجة، تفاصيل المستودعات والنشاطات البرمجية لأي حساب عام بلمسة واحدة وبأداء فائق.
+            </p>
+        </section>
+
+        <!-- قسم البحث والسجل -->
+        <section class="max-w-3xl w-full mx-auto flex flex-col gap-4">
+            <div class="relative w-full">
+                <!-- نموذج البحث -->
+                <form id="search-form" onsubmit="handleSearchSubmit(event)" class="relative flex items-center bg-brandCardDark/50 border border-slate-800 p-2 rounded-2xl shadow-lg focus-within:border-brandPrimary transition-all duration-300">
+                    <div class="absolute left-4 text-brandMutedDark">
+                        <i class="fa-solid fa-magnifying-glass text-lg"></i>
+                    </div>
+                    <input 
+                        type="text" 
+                        id="search-input"
+                        placeholder="Search GitHub username..." 
+                        autocomplete="off"
+                        class="w-full bg-transparent pl-12 pr-44 py-3 outline-none text-brandTextDark font-medium text-base rounded-xl"
+                        onfocus="showSearchHistory()"
+                        onblur="setTimeout(hideSearchHistory, 250)"
+                    >
+                    <div class="absolute right-2 flex items-center gap-1.5">
+                        <button type="button" onclick="loadDemoProfile()" class="hidden sm:inline-flex px-3.5 py-2.5 rounded-xl text-xs font-semibold tracking-wider bg-slate-800 text-brandPrimary hover:bg-slate-700 hover:text-white transition-all">
+                            DEMO MODE
+                        </button>
+                        <button type="submit" id="search-btn" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-brandPrimary to-brandAccent text-brandBgDark font-bold text-sm tracking-wide shadow-glow hover:opacity-95 active:scale-95 transition-all flex items-center gap-2">
+                            <span>Analyze</span>
+                            <i class="fa-solid fa-arrow-right text-xs"></i>
+                        </button>
+                    </div>
+                </form>
+
+                <!-- القائمة المنسدلة لسجل البحث -->
+                <div id="history-dropdown" class="hidden absolute left-0 w-full mt-2 rounded-2xl glass-card bg-brandBgDark/95 border border-slate-800 shadow-2xl z-30 max-h-60 overflow-y-auto">
+                    <div class="p-3 border-b border-slate-800 flex justify-between items-center text-xs text-brandMutedDark">
+                        <span class="font-bold uppercase tracking-wider">Recent Searches</span>
+                        <button onclick="clearSearchHistory()" class="hover:text-brandDanger transition-colors font-medium">Clear All</button>
+                    </div>
+                    <ul id="history-list" class="divide-y divide-slate-800/50">
+                        <!-- العناصر الديناميكية -->
+                    </ul>
+                </div>
+            </div>
+
+            <!-- الحسابات المقترحة بناءً على طلبك -->
+            <div class="flex flex-wrap items-center justify-center gap-2 text-xs font-semibold text-brandMutedDark">
+                <span>Try Suggested:</span>
+                <button onclick="quickSearch('alaevate')" class="px-3 py-1.5 rounded-lg bg-slate-800/40 hover:bg-slate-800 text-brandPrimary transition-all">alaevate</button>
+                <button onclick="quickSearch('ZiadAtia5')" class="px-3 py-1.5 rounded-lg bg-slate-800/40 hover:bg-slate-800 text-brandPrimary transition-all">ZiadAtia5</button>
+                <button onclick="quickSearch('OsmanTaher')" class="px-3 py-1.5 rounded-lg bg-slate-800/40 hover:bg-slate-800 text-brandPrimary transition-all">OsmanTaher</button>
+                <button onclick="loadDemoProfile()" class="px-3 py-1.5 rounded-lg bg-brandPrimary/10 hover:bg-brandPrimary/20 text-brandPrimary transition-all flex items-center gap-1">
+                    <i class="fa-solid fa-wand-magic-sparkles text-[10px]"></i> Play Offline Demo
+                </button>
+            </div>
+        </section>
+
+        <!-- لوحة تصفية البيانات المخصصة -->
+        <section class="max-w-4xl w-full mx-auto glass-card rounded-2xl p-4 sm:p-5">
+            <div class="flex items-center justify-between cursor-pointer" onclick="toggleFilterPanel()">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-lg bg-brandPrimary/10 flex items-center justify-center text-brandPrimary">
+                        <i class="fa-solid fa-sliders text-sm"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-sm">Customise Analysis View</h3>
+                        <p class="text-xs text-brandMutedDark">Filter which cards and charts render below</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button type="button" onclick="selectAllFilters(true); event.stopPropagation();" class="text-[11px] font-bold text-brandPrimary hover:underline bg-transparent">Select All</button>
+                    <span class="text-xs text-slate-600">|</span>
+                    <button type="button" onclick="selectAllFilters(false); event.stopPropagation();" class="text-[11px] font-bold text-brandDanger hover:underline bg-transparent">Clear All</button>
+                    <i id="filter-chevron" class="fa-solid fa-chevron-down text-brandMutedDark transition-transform duration-300 ml-2"></i>
+                </div>
+            </div>
+
+            <!-- شبكة الفلاتر البرمجية -->
+            <div id="filter-grid" class="hidden grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 mt-4 pt-4 border-t border-slate-800 text-xs">
+                <label class="flex items-center gap-2 cursor-pointer group p-1">
+                    <input type="checkbox" id="filter-profile" checked class="rounded bg-slate-900 border-slate-700 text-brandPrimary focus:ring-brandPrimary h-4.5 w-4.5" onchange="applyFilters()">
+                    <span class="font-semibold text-brandTextDark group-hover:text-brandPrimary transition-colors">Profile Details</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer group p-1">
+                    <input type="checkbox" id="filter-stats" checked class="rounded bg-slate-900 border-slate-700 text-brandPrimary focus:ring-brandPrimary h-4.5 w-4.5" onchange="applyFilters()">
+                    <span class="font-semibold text-brandTextDark group-hover:text-brandPrimary transition-colors">Advanced Statistics</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer group p-1">
+                    <input type="checkbox" id="filter-charts" checked class="rounded bg-slate-900 border-slate-700 text-brandPrimary focus:ring-brandPrimary h-4.5 w-4.5" onchange="applyFilters()">
+                    <span class="font-semibold text-brandTextDark group-hover:text-brandPrimary transition-colors">Interactive Charts</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer group p-1">
+                    <input type="checkbox" id="filter-repos" checked class="rounded bg-slate-900 border-slate-700 text-brandPrimary focus:ring-brandPrimary h-4.5 w-4.5" onchange="applyFilters()">
+                    <span class="font-semibold text-brandTextDark group-hover:text-brandPrimary transition-colors">Repositories Explorer</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer group p-1">
+                    <input type="checkbox" id="filter-timeline" checked class="rounded bg-slate-900 border-slate-700 text-brandPrimary focus:ring-brandPrimary h-4.5 w-4.5" onchange="applyFilters()">
+                    <span class="font-semibold text-brandTextDark group-hover:text-brandPrimary transition-colors">Recent Event Timeline</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer group p-1">
+                    <input type="checkbox" id="filter-followers" checked class="rounded bg-slate-900 border-slate-700 text-brandPrimary focus:ring-brandPrimary h-4.5 w-4.5" onchange="applyFilters()">
+                    <span class="font-semibold text-brandTextDark group-hover:text-brandPrimary transition-colors">Followers Panel</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer group p-1">
+                    <input type="checkbox" id="filter-following" checked class="rounded bg-slate-900 border-slate-700 text-brandPrimary focus:ring-brandPrimary h-4.5 w-4.5" onchange="applyFilters()">
+                    <span class="font-semibold text-brandTextDark group-hover:text-brandPrimary transition-colors">Following Panel</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer group p-1">
+                    <input type="checkbox" id="filter-orgs" checked class="rounded bg-slate-900 border-slate-700 text-brandPrimary focus:ring-brandPrimary h-4.5 w-4.5" onchange="applyFilters()">
+                    <span class="font-semibold text-brandTextDark group-hover:text-brandPrimary transition-colors">Organizations Panel</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer group p-1">
+                    <input type="checkbox" id="filter-favorites" checked class="rounded bg-slate-900 border-slate-700 text-brandPrimary focus:ring-brandPrimary h-4.5 w-4.5" onchange="applyFilters()">
+                    <span class="font-semibold text-brandTextDark group-hover:text-brandPrimary transition-colors">Favorites Tracker</span>
+                </label>
+            </div>
+        </section>
+
+        <!-- شاشة الترحيب الافتراضية -->
+        <section id="welcome-placeholder" class="text-center py-16 flex flex-col items-center justify-center gap-5 glass-card rounded-3xl max-w-4xl mx-auto w-full">
+            <div class="w-24 h-24 rounded-full bg-slate-800/50 flex items-center justify-center text-5xl relative">
+                <i class="fa-brands fa-searchengin text-brandPrimary animate-bounce"></i>
+                <div class="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-brandAccent flex items-center justify-center text-xs text-slate-950 font-bold">
+                    <i class="fa-solid fa-chart-line"></i>
+                </div>
+            </div>
+            <div class="max-w-md flex flex-col gap-2">
+                <h2 class="text-2xl font-extrabold tracking-tight">Ready to Analyze</h2>
+                <p class="text-brandMutedDark text-sm leading-relaxed">
+                    Insert a public GitHub username above to map profile insights, total stars, repository distributions, custom language statistics, timelines, and downloadable charts.
+                </p>
+            </div>
+            <button onclick="loadDemoProfile()" class="px-6 py-3 rounded-2xl bg-gradient-to-tr from-brandPrimary via-brandAccent to-brandSuccess text-brandBgDark font-extrabold text-sm tracking-wider shadow-lg hover:shadow-brandPrimary/20 transition-all transform hover:-translate-y-1">
+                LAUNCH SAMPLE DEMO INSTANTLY
+            </button>
+        </section>
+
+        <!-- الهيكل العظمي المؤقت أثناء التحميل (Skeleton Loader) -->
+        <section id="skeleton-loader" class="hidden flex flex-col gap-8 max-w-7xl w-full mx-auto">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <!-- هيكل اللوحة اليسرى -->
+                <div class="lg:col-span-4 flex flex-col gap-6">
+                    <div class="glass-card rounded-3xl p-6 flex flex-col items-center gap-4">
+                        <div class="w-32 h-32 rounded-full skeleton-shimmer"></div>
+                        <div class="h-6 w-3/4 skeleton-shimmer rounded-lg"></div>
+                        <div class="h-4 w-1/2 skeleton-shimmer rounded-md"></div>
+                        <div class="h-10 w-full skeleton-shimmer rounded-xl mt-2"></div>
+                        <div class="w-full flex justify-around gap-2 mt-4">
+                            <div class="h-12 w-1/3 skeleton-shimmer rounded-xl"></div>
+                            <div class="h-12 w-1/3 skeleton-shimmer rounded-xl"></div>
+                            <div class="h-12 w-1/3 skeleton-shimmer rounded-xl"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- هيكل اللوحة اليمنى -->
+                <div class="lg:col-span-8 flex flex-col gap-8">
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                        <div class="h-24 glass-card rounded-2xl p-4 skeleton-shimmer"></div>
+                        <div class="h-24 glass-card rounded-2xl p-4 skeleton-shimmer"></div>
+                        <div class="h-24 glass-card rounded-2xl p-4 skeleton-shimmer"></div>
+                        <div class="h-24 glass-card rounded-2xl p-4 skeleton-shimmer"></div>
+                    </div>
+                    <div class="glass-card rounded-3xl p-6 h-64 skeleton-shimmer"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- شاشة الخطأ / المستخدم غير موجود -->
+        <section id="error-screen" class="hidden text-center py-16 flex flex-col items-center justify-center gap-6 glass-card rounded-3xl max-w-xl mx-auto w-full">
+            <div class="w-20 h-20 rounded-2xl bg-brandDanger/10 flex items-center justify-center text-brandDanger text-4xl">
+                <i class="fa-solid fa-circle-exclamation animate-pulse"></i>
+            </div>
+            <div class="flex flex-col gap-2">
+                <h3 id="error-title" class="text-2xl font-extrabold tracking-tight">Profile Not Found</h3>
+                <p id="error-message" class="text-brandMutedDark text-sm max-w-sm mx-auto">
+                    Please double-check the typed username or verify your network connection and try again.
+                </p>
+            </div>
+            <div class="flex items-center gap-3">
+                <button onclick="resetToHome()" class="px-5 py-2.5 rounded-xl bg-slate-800 text-white font-bold text-xs tracking-wider hover:bg-slate-700 transition-all">
+                    BACK HOME
+                </button>
+                <button onclick="loadDemoProfile()" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-brandPrimary to-brandAccent text-brandBgDark font-bold text-xs tracking-wider shadow-lg transition-all hover:scale-105">
+                    LOAD DEMO PROFILE
+                </button>
+            </div>
+        </section>
+
+        <!-- لوحة التحكم الرئيسية بعد جلب البيانات -->
+        <div id="dashboard-view" class="hidden flex flex-col gap-8">
+            
+            <!-- أشرطة تحكم اللوحة -->
+            <div class="flex flex-wrap items-center justify-between gap-4 glass-card p-4 rounded-2xl">
+                <div class="flex items-center gap-3">
+                    <span class="inline-block w-2.5 h-2.5 rounded-full bg-brandSuccess animate-ping"></span>
+                    <p class="text-xs text-brandMutedDark font-semibold">
+                        Profile loaded: <span id="current-analyzed-user" class="text-brandPrimary font-bold"></span>
+                    </p>
+                </div>
+                <div class="flex flex-wrap items-center gap-2">
+                    <!-- المفضلة فقط -->
+                    <button id="favorite-profile-btn" onclick="toggleFavoriteCurrent()" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 transition-all text-slate-200 flex items-center gap-1.5 border border-slate-700">
+                        <i class="fa-solid fa-star text-brandWarning"></i>
+                        <span id="fav-btn-label">Favorite</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- شبكة عرض البيانات التفصيلية -->
+            <div id="exportable-pdf-area" class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                
+                <!-- العمود الأيسر: كارت الحساب الأساسي -->
+                <div id="section-profile" class="lg:col-span-4 flex flex-col gap-6">
+                    <div class="glass-card rounded-3xl p-6 flex flex-col items-center text-center relative overflow-hidden shadow-glass">
+                        <div class="absolute -top-24 w-56 h-56 bg-brandPrimary/10 rounded-full blur-3xl"></div>
+                        
+                        <!-- الصورة الشخصية -->
+                        <div class="relative mb-4 group">
+                            <img id="profile-avatar" src="" alt="User Avatar" class="w-32 h-32 rounded-3xl border-2 border-brandPrimary object-cover shadow-lg relative z-10 transition-transform duration-300 group-hover:scale-105">
+                            <div class="absolute -inset-1 rounded-3xl bg-gradient-to-tr from-brandPrimary to-brandAccent blur opacity-35 z-0 group-hover:opacity-60 transition-opacity"></div>
+                        </div>
+
+                        <!-- الأسماء والنوع -->
+                        <h2 id="profile-name" class="text-2xl font-black text-brandTextDark"></h2>
+                        <div class="flex items-center gap-2 mt-1">
+                            <span id="profile-username" class="text-sm font-semibold text-brandPrimary code-font"></span>
+                            <span id="profile-type" class="px-2 py-0.5 rounded text-[10px] uppercase font-extrabold tracking-wider bg-slate-800 text-brandAccent">User</span>
+                        </div>
+
+                        <!-- السيرة الذاتية -->
+                        <p id="profile-bio" class="text-sm text-brandMutedDark mt-3 leading-relaxed italic max-w-sm"></p>
+
+                        <!-- الروابط الاجتماعية -->
+                        <div class="grid grid-cols-1 w-full gap-2 text-xs border-t border-slate-800 mt-5 pt-5 text-left font-semibold text-brandMutedDark">
+                            <div class="flex items-center gap-2.5 py-1">
+                                <i class="fa-solid fa-location-dot text-brandPrimary w-5 text-center"></i>
+                                <span id="profile-location">N/A</span>
+                            </div>
+                            <div class="flex items-center gap-2.5 py-1">
+                                <i class="fa-solid fa-building text-brandPrimary w-5 text-center"></i>
+                                <span id="profile-company">N/A</span>
+                            </div>
+                            <div class="flex items-center gap-2.5 py-1">
+                                <i class="fa-solid fa-globe text-brandPrimary w-5 text-center"></i>
+                                <a id="profile-blog" href="#" target="_blank" class="hover:text-white hover:underline truncate">N/A</a>
+                            </div>
+                            <div class="flex items-center gap-2.5 py-1">
+                                <i class="fa-brands fa-x-twitter text-brandPrimary w-5 text-center"></i>
+                                <a id="profile-twitter" href="#" target="_blank" class="hover:text-white hover:underline truncate">N/A</a>
+                            </div>
+                            <div class="flex items-center gap-2.5 py-1">
+                                <i class="fa-solid fa-envelope text-brandPrimary w-5 text-center"></i>
+                                <span id="profile-email">N/A</span>
+                            </div>
+                        </div>
+
+                        <!-- أرقام سريعة -->
+                        <div class="grid grid-cols-3 w-full gap-2 mt-5 border-t border-slate-800 pt-5">
+                            <div class="bg-slate-900/40 p-2.5 rounded-xl flex flex-col">
+                                <span class="text-xs text-brandMutedDark font-bold">Followers</span>
+                                <span id="stat-followers" class="text-base font-extrabold text-brandPrimary mt-0.5">0</span>
+                            </div>
+                            <div class="bg-slate-900/40 p-2.5 rounded-xl flex flex-col">
+                                <span class="text-xs text-brandMutedDark font-bold">Following</span>
+                                <span id="stat-following" class="text-base font-extrabold text-brandAccent mt-0.5">0</span>
+                            </div>
+                            <div class="bg-slate-900/40 p-2.5 rounded-xl flex flex-col">
+                                <span class="text-xs text-brandMutedDark font-bold">Gists</span>
+                                <span id="stat-gists" class="text-base font-extrabold text-brandSuccess mt-0.5">0</span>
+                            </div>
+                        </div>
+
+                        <!-- التواريخ -->
+                        <div class="w-full text-[10px] text-brandMutedDark flex flex-col gap-1 mt-4 italic">
+                            <div>Account Created: <span id="profile-created" class="font-bold"></span></div>
+                            <div>Last Updated: <span id="profile-updated" class="font-bold"></span></div>
+                        </div>
+
+                        <a id="profile-github-link" href="#" target="_blank" class="mt-5 w-full py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs tracking-wider transition-all flex items-center justify-center gap-2">
+                            <i class="fa-brands fa-github text-sm"></i>
+                            <span>VISIT GITHUB PROFILE</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- العمود الأيمن: لوحات التحليل المتطورة -->
+                <div class="lg:col-span-8 flex flex-col gap-8">
+                    
+                    <!-- الإحصائيات المتقدمة -->
+                    <div id="section-stats" class="flex flex-col gap-4">
+                        <div class="flex items-center gap-2">
+                            <div class="w-2.5 h-5 bg-brandPrimary rounded-full"></div>
+                            <h3 class="text-xl font-extrabold tracking-tight">Advanced Developer Statistics</h3>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                            <!-- المستودعات -->
+                            <div class="glass-card rounded-2xl p-4 flex flex-col gap-1 relative overflow-hidden group card-hover-lift">
+                                <div class="text-brandPrimary text-lg mb-1 flex items-center justify-between">
+                                    <i class="fa-solid fa-folder-open"></i>
+                                    <span class="text-[10px] font-bold text-brandPrimary uppercase tracking-wider bg-brandPrimary/10 px-1.5 py-0.5 rounded">Total</span>
+                                </div>
+                                <span class="text-xs font-bold text-brandMutedDark">Repositories</span>
+                                <span id="stat-total-repos" class="text-2xl font-black tracking-tight mt-1">0</span>
+                            </div>
+                            <!-- النجوم -->
+                            <div class="glass-card rounded-2xl p-4 flex flex-col gap-1 relative overflow-hidden group card-hover-lift">
+                                <div class="text-brandWarning text-lg mb-1 flex items-center justify-between">
+                                    <i class="fa-solid fa-star"></i>
+                                    <span class="text-[10px] font-bold text-brandWarning uppercase tracking-wider bg-brandWarning/10 px-1.5 py-0.5 rounded">Stars</span>
+                                </div>
+                                <span class="text-xs font-bold text-brandMutedDark">Total Stars Earned</span>
+                                <span id="stat-total-stars" class="text-2xl font-black tracking-tight mt-1">0</span>
+                            </div>
+                            <!-- التفريعات -->
+                            <div class="glass-card rounded-2xl p-4 flex flex-col gap-1 relative overflow-hidden group card-hover-lift">
+                                <div class="text-brandAccent text-lg mb-1 flex items-center justify-between">
+                                    <i class="fa-solid fa-code-fork"></i>
+                                    <span class="text-[10px] font-bold text-brandAccent uppercase tracking-wider bg-brandAccent/10 px-1.5 py-0.5 rounded">Forks</span>
+                                </div>
+                                <span class="text-xs font-bold text-brandMutedDark">Total Forked Repos</span>
+                                <span id="stat-total-forks" class="text-2xl font-black tracking-tight mt-1">0</span>
+                            </div>
+                            <!-- اللغة المفضلة -->
+                            <div class="glass-card rounded-2xl p-4 flex flex-col gap-1 relative overflow-hidden group card-hover-lift">
+                                <div class="text-brandSuccess text-lg mb-1 flex items-center justify-between">
+                                    <i class="fa-solid fa-terminal"></i>
+                                    <span class="text-[10px] font-bold text-brandSuccess uppercase tracking-wider bg-brandSuccess/10 px-1.5 py-0.5 rounded">Top</span>
+                                </div>
+                                <span class="text-xs font-bold text-brandMutedDark">Most Used Language</span>
+                                <span id="stat-primary-lang" class="text-base font-extrabold tracking-tight truncate mt-1">N/A</span>
+                            </div>
+                            <!-- أحدث مستودع -->
+                            <div class="glass-card rounded-2xl p-4 flex flex-col gap-1 relative overflow-hidden group card-hover-lift">
+                                <div class="text-sky-400 text-lg mb-1 flex items-center justify-between">
+                                    <i class="fa-solid fa-hourglass-start"></i>
+                                    <span class="text-[10px] font-bold text-sky-400 uppercase tracking-wider bg-sky-400/10 px-1.5 py-0.5 rounded">Newest</span>
+                                </div>
+                                <span class="text-xs font-bold text-brandMutedDark">Newest Repo Created</span>
+                                <span id="stat-newest-repo-date" class="text-xs font-black truncate mt-1">N/A</span>
+                                <span id="stat-newest-repo-name" class="text-[10px] text-brandMutedDark truncate">N/A</span>
+                            </div>
+                            <!-- أقدم مستودع -->
+                            <div class="glass-card rounded-2xl p-4 flex flex-col gap-1 relative overflow-hidden group card-hover-lift">
+                                <div class="text-amber-500 text-lg mb-1 flex items-center justify-between">
+                                    <i class="fa-solid fa-hourglass-end"></i>
+                                    <span class="text-[10px] font-bold text-amber-500 uppercase tracking-wider bg-amber-500/10 px-1.5 py-0.5 rounded">Oldest</span>
+                                </div>
+                                <span class="text-xs font-bold text-brandMutedDark">Oldest Repo Created</span>
+                                <span id="stat-oldest-repo-date" class="text-xs font-black truncate mt-1">N/A</span>
+                                <span id="stat-oldest-repo-name" class="text-[10px] text-brandMutedDark truncate">N/A</span>
+                            </div>
+                            <!-- متوسط الحجم -->
+                            <div class="glass-card rounded-2xl p-4 flex flex-col gap-1 relative overflow-hidden group card-hover-lift">
+                                <div class="text-cyan-400 text-lg mb-1 flex items-center justify-between">
+                                    <i class="fa-solid fa-database"></i>
+                                    <span class="text-[10px] font-bold text-cyan-400 uppercase tracking-wider bg-cyan-400/10 px-1.5 py-0.5 rounded">Average</span>
+                                </div>
+                                <span class="text-xs font-bold text-brandMutedDark">Repository Size</span>
+                                <span id="stat-avg-size" class="text-2xl font-black tracking-tight mt-1">0 KB</span>
+                            </div>
+                            <!-- الرخص البرمجية -->
+                            <div class="glass-card rounded-2xl p-4 flex flex-col gap-1 relative overflow-hidden group card-hover-lift">
+                                <div class="text-emerald-400 text-lg mb-1 flex items-center justify-between">
+                                    <i class="fa-solid fa-scale-balanced"></i>
+                                    <span class="text-[10px] font-bold text-emerald-400 uppercase tracking-wider bg-emerald-400/10 px-1.5 py-0.5 rounded">License</span>
+                                </div>
+                                <span class="text-xs font-bold text-brandMutedDark">Licensed Repositories</span>
+                                <span id="stat-license-ratio" class="text-2xl font-black tracking-tight mt-1">0%</span>
+                            </div>
+                        </div>
+
+                        <!-- إحصائيات ثانوية ومصغرة -->
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-1">
+                            <div class="bg-slate-900/30 border border-slate-800 p-3.5 rounded-2xl flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-400"><i class="fa-solid fa-circle-dot"></i></div>
+                                <div>
+                                    <div class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Open Issues</div>
+                                    <div id="stat-open-issues" class="text-base font-extrabold text-brandTextDark">0</div>
+                                </div>
+                            </div>
+                            <div class="bg-slate-900/30 border border-slate-800 p-3.5 rounded-2xl flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-pink-500/10 flex items-center justify-center text-pink-400"><i class="fa-solid fa-eye"></i></div>
+                                <div>
+                                    <div class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Watchers</div>
+                                    <div id="stat-watchers" class="text-base font-extrabold text-brandTextDark">0</div>
+                                </div>
+                            </div>
+                            <div class="bg-slate-900/30 border border-slate-800 p-3.5 rounded-2xl flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-indigo-500/10 flex items-center justify-center text-indigo-400"><i class="fa-solid fa-house-laptop"></i></div>
+                                <div>
+                                    <div class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Homepages Set</div>
+                                    <div id="stat-homepages" class="text-base font-extrabold text-brandTextDark">0</div>
+                                </div>
+                            </div>
+                            <div class="bg-slate-900/30 border border-slate-800 p-3.5 rounded-2xl flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-teal-500/10 flex items-center justify-center text-teal-400"><i class="fa-solid fa-folder-tree"></i></div>
+                                <div>
+                                    <div class="text-[10px] font-bold uppercase tracking-wider text-slate-500">Archived/Fork Ratio</div>
+                                    <div id="stat-fork-archived-ratio" class="text-xs font-extrabold text-brandTextDark">0 / 0</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- الرسوم البيانية التفاعلية -->
+                    <div id="section-charts" class="flex flex-col gap-4">
+                        <div class="flex items-center gap-2">
+                            <div class="w-2.5 h-5 bg-brandAccent rounded-full"></div>
+                            <h3 class="text-xl font-extrabold tracking-tight">Interactive Visual Metrics</h3>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- لغات البرمجة -->
+                            <div class="glass-card rounded-2xl p-5 flex flex-col gap-3">
+                                <h4 class="text-sm font-bold border-b border-slate-800 pb-2 flex items-center justify-between">
+                                    <span>Top Languages Breakdowns</span>
+                                    <i class="fa-solid fa-chart-pie text-brandPrimary"></i>
+                                </h4>
+                                <div class="relative h-60 w-full flex items-center justify-center">
+                                    <canvas id="chart-languages"></canvas>
+                                </div>
+                            </div>
+
+                            <!-- توزيع النجوم لأفضل 6 مستودعات -->
+                            <div class="glass-card rounded-2xl p-5 flex flex-col gap-3">
+                                <h4 class="text-sm font-bold border-b border-slate-800 pb-2 flex items-center justify-between">
+                                    <span>Top 6 Repositories by Star Count</span>
+                                    <i class="fa-solid fa-chart-bar text-brandWarning"></i>
+                                </h4>
+                                <div class="relative h-60 w-full flex items-center justify-center">
+                                    <canvas id="chart-stars"></canvas>
+                                </div>
+                            </div>
+
+                            <!-- توزيع التفريعات لأفضل 6 مستودعات -->
+                            <div class="glass-card rounded-2xl p-5 flex flex-col gap-3">
+                                <h4 class="text-sm font-bold border-b border-slate-800 pb-2 flex items-center justify-between">
+                                    <span>Top 6 Repositories by Fork Count</span>
+                                    <i class="fa-solid fa-code-branch text-brandAccent"></i>
+                                </h4>
+                                <div class="relative h-60 w-full flex items-center justify-center">
+                                    <canvas id="chart-forks"></canvas>
+                                </div>
+                            </div>
+
+                            <!-- الخط الزمني لإنشاء المستودعات تاريخياً -->
+                            <div class="glass-card rounded-2xl p-5 flex flex-col gap-3">
+                                <h4 class="text-sm font-bold border-b border-slate-800 pb-2 flex items-center justify-between">
+                                    <span>Creation Over Time</span>
+                                    <i class="fa-solid fa-chart-line text-brandSuccess"></i>
+                                </h4>
+                                <div class="relative h-60 w-full flex items-center justify-center">
+                                    <canvas id="chart-timeline"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- مستكشف المستودعات البرمجية -->
+                    <div id="section-repos" class="flex flex-col gap-4">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                            <div class="flex items-center gap-2">
+                                <div class="w-2.5 h-5 bg-brandSuccess rounded-full"></div>
+                                <h3 class="text-xl font-extrabold tracking-tight">Repository Dashboard Explorer</h3>
+                            </div>
+                        </div>
+
+                        <!-- أدوات البحث، الفرز والتصفية -->
+                        <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 glass-card p-4 rounded-2xl">
+                            <div class="sm:col-span-5 relative">
+                                <input 
+                                    type="text" 
+                                    id="repo-search-input" 
+                                    placeholder="Search repositories by name..." 
+                                    class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs outline-none text-brandTextDark focus:border-brandPrimary transition-all pl-8"
+                                    oninput="debounceRepoSearch()"
+                                >
+                                <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-[10px] text-brandMutedDark"></i>
+                            </div>
+                            <div class="sm:col-span-3">
+                                <select 
+                                    id="repo-lang-select" 
+                                    class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs outline-none text-brandTextDark focus:border-brandPrimary cursor-pointer"
+                                    onchange="handleRepoFilterChange()"
+                                >
+                                    <option value="All">All Languages</option>
+                                    <!-- يتم توليد الخيارات ديناميكياً -->
+                                </select>
+                            </div>
+                            <div class="sm:col-span-4">
+                                <select 
+                                    id="repo-sort-select" 
+                                    class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs outline-none text-brandTextDark focus:border-brandPrimary cursor-pointer"
+                                    onchange="handleRepoFilterChange()"
+                                >
+                                    <option value="stars-desc">Sort by: Stars (Highest First)</option>
+                                    <option value="stars-asc">Sort by: Stars (Lowest First)</option>
+                                    <option value="forks-desc">Sort by: Forks (Highest First)</option>
+                                    <option value="size-desc">Sort by: Storage Size (Largest First)</option>
+                                    <option value="updated-desc">Sort by: Last Updated (Newest First)</option>
+                                    <option value="name-asc">Sort by: Alphabetical (A-Z)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- شبكة المستودعات البرمجية النشطة -->
+                        <div id="repositories-grid-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- كروت المستودعات عن طريق الجافاسكريبت -->
+                        </div>
+
+                        <!-- نظام ترقيم الصفحات -->
+                        <div class="flex items-center justify-between p-4 glass-card rounded-2xl text-xs">
+                            <span class="font-semibold text-brandMutedDark" id="pagination-info">Showing 0-0 of 0 repositories</span>
+                            <div class="flex items-center gap-1">
+                                <button id="btn-prev-page" onclick="changeRepoPage(-1)" class="p-2 px-3.5 rounded-lg bg-slate-800 disabled:opacity-40 hover:bg-slate-700 font-bold transition-all disabled:pointer-events-none">
+                                    <i class="fa-solid fa-chevron-left mr-1"></i> Prev
+                                </button>
+                                <button id="btn-next-page" onclick="changeRepoPage(1)" class="p-2 px-3.5 rounded-lg bg-slate-800 disabled:opacity-40 hover:bg-slate-700 font-bold transition-all disabled:pointer-events-none">
+                                    Next <i class="fa-solid fa-chevron-right ml-1"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- السجل الزمني لأحدث النشاطات العامة -->
+                    <div id="section-timeline" class="flex flex-col gap-4">
+                        <div class="flex items-center gap-2">
+                            <div class="w-2.5 h-5 bg-purple-500 rounded-full"></div>
+                            <h3 class="text-xl font-extrabold tracking-tight">Recent Public Event Timeline</h3>
+                        </div>
+
+                        <div class="glass-card rounded-3xl p-6 relative">
+                            <div class="absolute left-10 top-10 bottom-10 w-0.5 bg-slate-800"></div>
+
+                            <div id="activity-timeline-container" class="flex flex-col gap-6 relative z-10">
+                                <!-- التوليد البرمجي الفوري -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- لوحات المتابعين والذين يتابعهم والمؤسسات -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        
+                        <!-- المتابِعون (عند الضغط يفتح حسابهم في تاب جديد) -->
+                        <div id="section-followers" class="flex flex-col gap-4">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-2.5 h-5 bg-teal-500 rounded-full"></div>
+                                    <h4 class="text-lg font-extrabold tracking-tight">Followers Panel</h4>
+                                </div>
+                                <span class="text-xs font-bold text-slate-500" id="followers-total-count">0 Loaded</span>
+                            </div>
+
+                            <div class="glass-card rounded-3xl p-4 max-h-[360px] overflow-y-auto flex flex-col gap-3" id="followers-cards-container">
+                                <!-- الكروت برمجياً -->
+                            </div>
+                        </div>
+
+                        <!-- الذين يتابعهم الحساب (عند الضغط يفتح حسابهم في تاب جديد) -->
+                        <div id="section-following" class="flex flex-col gap-4">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-2.5 h-5 bg-cyan-500 rounded-full"></div>
+                                    <h4 class="text-lg font-extrabold tracking-tight">Following Panel</h4>
+                                </div>
+                                <span class="text-xs font-bold text-slate-500" id="following-total-count">0 Loaded</span>
+                            </div>
+
+                            <div class="glass-card rounded-3xl p-4 max-h-[360px] overflow-y-auto flex flex-col gap-3" id="following-cards-container">
+                                <!-- الكروت برمجياً -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- المنظمات والمؤسسات البرمجية -->
+                    <div id="section-orgs" class="flex flex-col gap-4">
+                        <div class="flex items-center gap-2">
+                            <div class="w-2.5 h-5 bg-indigo-500 rounded-full"></div>
+                            <h3 class="text-lg font-extrabold tracking-tight">Belongs to Organizations</h3>
+                        </div>
+
+                        <div class="glass-card rounded-3xl p-5" id="orgs-panel-wrapper">
+                            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4" id="orgs-grid-container">
+                                <!-- العناصر البرمجية -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- لوحة الملفات المفضلة المحلية -->
+        <section id="section-favorites" class="glass-card rounded-3xl p-6 max-w-7xl mx-auto w-full flex flex-col gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-brandWarning/10 rounded-xl flex items-center justify-center text-brandWarning text-sm">
+                    <i class="fa-solid fa-star"></i>
+                </div>
+                <div>
+                    <h3 class="font-extrabold text-base">Your Favorite Profiles Hub</h3>
+                    <p class="text-xs text-brandMutedDark">Quick bookmarks saved on this computer browser</p>
+                </div>
+            </div>
+            <div id="favorites-grid-wrapper" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+                <!-- المفضلة المضافة مسبقاً -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- الفوتر البرمجي -->
+    <footer class="mt-12 glass-card py-8 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-semibold text-brandMutedDark">
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-chart-network text-brandPrimary text-sm"></i>
+                <span>Powered by official GitHub API endpoints. Client side caching applies.</span>
+            </div>
+            <div class="flex items-center gap-1">
+                <span>Built cleanly with HTML5, CSS3 Variables, Tailwind and Vanilla JS. Made with ❤️</span>
+            </div>
+            <div>
+                <span>&copy; 2026 GitInsight Dev. All rights reserved.</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- زر الصعود للأعلى -->
+    <button id="back-to-top" class="fixed bottom-6 right-6 p-3.5 rounded-2xl bg-brandPrimary text-brandBgDark shadow-lg hover:shadow-brandPrimary/30 translate-y-24 opacity-0 transition-all duration-300 z-40" onclick="scrollToTop()">
+        <i class="fa-solid fa-arrow-up text-base font-bold"></i>
+    </button>
+
+
+    <!-- جافا سكريبت إدارة التطبيق بالكامل -->
+    <script>
+        // --- حالة التطبيق الشاملة ---
+        const state = {
+            apiKey: "", // سيتم تعبئته تلقائياً من ملف .env بجانب الصفحة
+            activeProfile: null,
+            activeRepos: [],
+            activeFollowers: [],
+            activeFollowing: [],
+            activeOrgs: [],
+            activeEvents: [],
+            repoSearchQuery: "",
+            repoSelectedLang: "All",
+            repoSelectedSort: "stars-desc",
+            repoCurrentPage: 1,
+            repoPageSize: 6,
+            recentSearches: [],
+            favorites: [],
+            isDemoMode: false,
+            charts: {
+                languages: null,
+                stars: null,
+                forks: null,
+                timeline: null
+            }
+        };
+
+        // --- تهيئة التطبيق عند اكتمال تحميل الصفحة ---
+        window.addEventListener("DOMContentLoaded", async () => {
+            loadSearchHistory();
+            loadFavorites();
+            registerGlobalScroll();
+            
+            // قراءة توكن الـ GitHub من ملف .env تلقائياً
+            await loadTokenFromEnv();
+
+            // فحص وجود برامتر في رابط URL لمشاركة البيانات مباشرة
+            const urlParams = new URLSearchParams(window.location.search);
+            const queryUser = urlParams.get('user');
+            if (queryUser) {
+                document.getElementById('search-input').value = queryUser;
+                fetchGitHubProfile(queryUser);
+            }
+        });
+
+        // --- جلب التوكن من ملف .env البرمجي المحلي ---
+        async function loadTokenFromEnv() {
+            try {
+                const response = await fetch('.env');
+                if (response.ok) {
+                    const text = await response.text();
+                    // مطابقة واستخراج قيمة GITHUB_TOKEN
+                    const match = text.match(/GITHUB_TOKEN\s*=\s*["']?([^"'\r\n]+)["']?/);
+                    if (match && match[1]) {
+                        state.apiKey = match[1].trim();
+                        console.log("تم تحميل مفتاح GitHub بنجاح من ملف .env");
+                    }
+                }
+            } catch (error) {
+                console.warn("تنبيه: لم يتم العثور على ملف .env المحلي أو تعذر جلب التوكن تلقائياً.", error);
+            }
+        }
+
+        // --- إدارة تمرير الصفحة وصعودها ---
+        function registerGlobalScroll() {
+            const backToTopBtn = document.getElementById("back-to-top");
+            const progressBar = document.getElementById("scroll-progress");
+
+            window.addEventListener("scroll", () => {
+                const scrolled = window.scrollY;
+                const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+                const scrollPercent = docHeight > 0 ? (scrolled / docHeight) * 100 : 0;
+                
+                progressBar.style.width = `${scrollPercent}%`;
+
+                if (scrolled > 400) {
+                    backToTopBtn.classList.remove("translate-y-24", "opacity-0");
+                    backToTopBtn.classList.add("translate-y-0", "opacity-100");
+                } else {
+                    backToTopBtn.classList.add("translate-y-24", "opacity-0");
+                    backToTopBtn.classList.remove("translate-y-0", "opacity-100");
+                }
+            });
+        }
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function resetToHome() {
+            state.activeProfile = null;
+            state.activeRepos = [];
+            state.isDemoMode = false;
+            
+            document.getElementById("search-input").value = "";
+            document.getElementById("dashboard-view").classList.add("hidden");
+            document.getElementById("error-screen").classList.add("hidden");
+            document.getElementById("skeleton-loader").classList.add("hidden");
+            document.getElementById("welcome-placeholder").classList.remove("hidden");
+            
+            window.history.pushState({}, document.title, window.location.pathname);
+            scrollToTop();
+        }
+
+        // --- تفعيل لوحة تصفية العرض المخصصة ---
+        function toggleFilterPanel() {
+            const grid = document.getElementById("filter-grid");
+            const chevron = document.getElementById("filter-chevron");
+            if (grid.classList.contains("hidden")) {
+                grid.classList.remove("hidden");
+                chevron.classList.add("rotate-180");
+            } else {
+                grid.classList.add("hidden");
+                chevron.classList.remove("rotate-180");
+            }
+        }
+
+        function selectAllFilters(status) {
+            const filters = ["profile", "stats", "charts", "repos", "timeline", "followers", "following", "orgs", "favorites"];
+            filters.forEach(f => {
+                const el = document.getElementById(`filter-${f}`);
+                if (el) el.checked = status;
+            });
+            applyFilters();
+            showToast(status ? "All cards enabled" : "All cards hidden", "info");
+        }
+
+        function applyFilters() {
+            const filters = {
+                profile: document.getElementById("filter-profile")?.checked ?? true,
+                stats: document.getElementById("filter-stats")?.checked ?? true,
+                charts: document.getElementById("filter-charts")?.checked ?? true,
+                repos: document.getElementById("filter-repos")?.checked ?? true,
+                timeline: document.getElementById("filter-timeline")?.checked ?? true,
+                followers: document.getElementById("filter-followers")?.checked ?? true,
+                following: document.getElementById("filter-following")?.checked ?? true,
+                orgs: document.getElementById("filter-orgs")?.checked ?? true,
+                favorites: document.getElementById("filter-favorites")?.checked ?? true
+            };
+
+            toggleSectionVisibility("section-profile", filters.profile);
+            toggleSectionVisibility("section-stats", filters.stats);
+            toggleSectionVisibility("section-charts", filters.charts);
+            toggleSectionVisibility("section-repos", filters.repos);
+            toggleSectionVisibility("section-timeline", filters.timeline);
+            toggleSectionVisibility("section-followers", filters.followers);
+            toggleSectionVisibility("section-following", filters.following);
+            toggleSectionVisibility("section-orgs", filters.orgs);
+            toggleSectionVisibility("section-favorites", filters.favorites);
+        }
+
+        function toggleSectionVisibility(elementId, isVisible) {
+            const el = document.getElementById(elementId);
+            if (!el) return;
+            if (isVisible) {
+                el.classList.remove("hidden");
+            } else {
+                el.classList.add("hidden");
+            }
+        }
+
+        // --- نظام التنبيهات المنبثقة (Toasts) ---
+        function showToast(message, type = "success") {
+            const container = document.getElementById("toast-container");
+            const toast = document.createElement("div");
+            
+            let bgClass = "bg-slate-900 border-slate-800 text-brandTextDark";
+            let icon = "fa-solid fa-circle-info text-brandPrimary";
+            
+            if (type === "success") {
+                bgClass = "bg-slate-900 border-brandSuccess/20 text-brandTextDark";
+                icon = "fa-solid fa-circle-check text-brandSuccess";
+            } else if (type === "warning") {
+                bgClass = "bg-slate-900 border-brandWarning/20 text-brandTextDark";
+                icon = "fa-solid fa-triangle-exclamation text-brandWarning";
+            } else if (type === "danger") {
+                bgClass = "bg-slate-900 border-brandDanger/20 text-brandTextDark";
+                icon = "fa-solid fa-circle-xmark text-brandDanger";
+            }
+
+            toast.className = `flex items-center gap-3 p-3.5 rounded-2xl border ${bgClass} shadow-2xl transition-all duration-300 transform translate-y-2 opacity-0 z-50 text-xs font-semibold backdrop-blur-md`;
+            toast.innerHTML = `
+                <i class="${icon} text-base"></i>
+                <div class="flex-grow">${message}</div>
+                <button onclick="this.parentElement.remove()" class="text-slate-400 hover:text-white transition-colors">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            `;
+            
+            container.appendChild(toast);
+            
+            requestAnimationFrame(() => {
+                toast.classList.remove("translate-y-2", "opacity-0");
+                toast.classList.add("translate-y-0", "opacity-100");
+            });
+
+            setTimeout(() => {
+                toast.classList.remove("translate-y-0", "opacity-100");
+                toast.classList.add("translate-y-2", "opacity-0");
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+
+        // --- مستكشف ومفلتر المستودعات ---
+        let debounceTimer;
+        function debounceRepoSearch() {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => {
+                state.repoSearchQuery = document.getElementById("repo-search-input").value.trim().toLowerCase();
+                state.repoCurrentPage = 1;
+                renderRepositories();
+            }, 300);
+        }
+
+        // --- السجل وحفظ عمليات البحث السابقة ---
+        function loadSearchHistory() {
+            const saved = localStorage.getItem("github_analyzer_history");
+            state.recentSearches = saved ? JSON.parse(saved) : [];
+            renderSearchHistoryDropdown();
+        }
+
+        function saveSearchToHistory(username) {
+            const user = username.trim().toLowerCase();
+            if (!user) return;
+            
+            state.recentSearches = state.recentSearches.filter(s => s !== user);
+            state.recentSearches.unshift(user);
+            
+            if (state.recentSearches.length > 10) state.recentSearches.pop();
+            
+            localStorage.setItem("github_analyzer_history", JSON.stringify(state.recentSearches));
+            renderSearchHistoryDropdown();
+        }
+
+        function clearSearchHistory() {
+            state.recentSearches = [];
+            localStorage.removeItem("github_analyzer_history");
+            renderSearchHistoryDropdown();
+            showToast("Search history cleared", "info");
+        }
+
+        function renderSearchHistoryDropdown() {
+            const list = document.getElementById("history-list");
+            list.innerHTML = "";
+            
+            if (state.recentSearches.length === 0) {
+                list.innerHTML = `<li class="p-4 text-center text-xs text-brandMutedDark italic">No recent lookups recorded yet.</li>`;
+                return;
+            }
+
+            state.recentSearches.forEach(search => {
+                const li = document.createElement("li");
+                li.className = "flex items-center justify-between p-3 hover:bg-slate-800/40 cursor-pointer text-xs transition-colors";
+                li.setAttribute("onclick", `quickSearch('${search}')`);
+                li.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-clock-rotate-left text-brandPrimary"></i>
+                        <span class="font-semibold text-brandTextDark">${search}</span>
+                    </div>
+                    <button onclick="deleteSingleHistoryItem(event, '${search}')" class="text-slate-500 hover:text-brandDanger transition-colors p-1">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                `;
+                list.appendChild(li);
+            });
+        }
+
+        function deleteSingleHistoryItem(event, search) {
+            event.stopPropagation();
+            state.recentSearches = state.recentSearches.filter(item => item !== search);
+            localStorage.setItem("github_analyzer_history", JSON.stringify(state.recentSearches));
+            renderSearchHistoryDropdown();
+            showToast(`Deleted "${search}" from history`, "info");
+        }
+
+        function showSearchHistory() {
+            const dropdown = document.getElementById("history-dropdown");
+            dropdown.classList.remove("hidden");
+        }
+
+        function hideSearchHistory() {
+            const dropdown = document.getElementById("history-dropdown");
+            dropdown.classList.add("hidden");
+        }
+
+        function quickSearch(username) {
+            document.getElementById("search-input").value = username;
+            fetchGitHubProfile(username);
+        }
+
+        function handleSearchSubmit(event) {
+            event.preventDefault();
+            const input = document.getElementById("search-input").value.trim();
+            if (!input) {
+                showToast("Please enter a valid GitHub username to search.", "warning");
+                return;
+            }
+            fetchGitHubProfile(input);
+        }
+
+        // --- إدارة حسابات المفضلة المحلية ---
+        function loadFavorites() {
+            const saved = localStorage.getItem("github_analyzer_favorites");
+            state.favorites = saved ? JSON.parse(saved) : [];
+            renderFavoritesGrid();
+        }
+
+        function toggleFavoriteCurrent() {
+            if (!state.activeProfile) return;
+            const user = state.activeProfile;
+            const alreadyFavorited = state.favorites.some(f => f.login.toLowerCase() === user.login.toLowerCase());
+            
+            if (alreadyFavorited) {
+                state.favorites = state.favorites.filter(f => f.login.toLowerCase() !== user.login.toLowerCase());
+                showToast(`Removed "${user.name || user.login}" from bookmarks.`, "info");
+            } else {
+                state.favorites.push({
+                    login: user.login,
+                    avatar_url: user.avatar_url,
+                    name: user.name || user.login,
+                    bio: user.bio || "No bio set",
+                    public_repos: user.public_repos,
+                    followers: user.followers
+                });
+                showToast(`Saved "${user.name || user.login}" to bookmarks!`, "success");
+            }
+            
+            localStorage.setItem("github_analyzer_favorites", JSON.stringify(state.favorites));
+            updateFavoriteButtonState();
+            renderFavoritesGrid();
+        }
+
+        function updateFavoriteButtonState() {
+            const btn = document.getElementById("favorite-profile-btn");
+            const label = document.getElementById("fav-btn-label");
+            if (!state.activeProfile) return;
+            
+            const isFav = state.favorites.some(f => f.login.toLowerCase() === state.activeProfile.login.toLowerCase());
+            if (isFav) {
+                btn.className = "px-4 py-2 rounded-xl text-xs font-bold bg-brandWarning text-slate-950 flex items-center gap-1.5 hover:opacity-90 transition-all";
+                label.textContent = "Bookmarked";
+            } else {
+                btn.className = "px-4 py-2 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 transition-all text-slate-200 flex items-center gap-1.5 border border-slate-700";
+                label.textContent = "Favorite";
+            }
+        }
+
+        function renderFavoritesGrid() {
+            const wrapper = document.getElementById("favorites-grid-wrapper");
+            wrapper.innerHTML = "";
+            
+            if (state.favorites.length === 0) {
+                wrapper.className = "block text-center p-6 bg-slate-900/30 rounded-2xl text-xs text-brandMutedDark italic";
+                wrapper.innerHTML = `<p>No favorites tracked yet. Click "Favorite" inside any analyzed profile dashboard to bookmark them here.</p>`;
+                return;
+            }
+            
+            wrapper.className = "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4";
+            state.favorites.forEach(fav => {
+                const card = document.createElement("div");
+                card.className = "glass-card p-4 rounded-2xl flex flex-col items-center justify-between gap-3 text-center relative overflow-hidden group";
+                card.innerHTML = `
+                    <div class="absolute -top-12 -right-12 w-20 h-20 bg-brandPrimary/5 rounded-full blur-xl group-hover:bg-brandPrimary/15 transition-all"></div>
+                    <img src="${fav.avatar_url}" alt="${fav.name}" class="w-14 h-14 rounded-xl border border-brandPrimary object-cover shadow">
+                    <div>
+                        <h4 class="font-extrabold text-sm truncate max-w-[150px] text-brandTextDark">${fav.name}</h4>
+                        <span class="text-[10px] text-brandPrimary code-font block -mt-0.5">@${fav.login}</span>
+                    </div>
+                    <p class="text-[11px] text-brandMutedDark line-clamp-2 leading-tight">${fav.bio || "No description loaded."}</p>
+                    <div class="grid grid-cols-2 gap-2 w-full text-[10px] text-slate-400 bg-slate-950/40 p-1.5 rounded-lg">
+                        <div>
+                            <span class="block text-brandAccent font-bold">${fav.public_repos}</span>
+                            <span>Repos</span>
+                        </div>
+                        <div>
+                            <span class="block text-brandSuccess font-bold">${fav.followers}</span>
+                            <span>Followers</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-1.5 w-full mt-1.5">
+                        <button onclick="quickSearch('${fav.login}')" class="flex-grow py-1.5 rounded-lg bg-brandPrimary/15 text-brandPrimary hover:bg-brandPrimary text-[10px] font-bold hover:text-brandBgDark transition-all">
+                            Load
+                        </button>
+                        <button onclick="removeFavorite('${fav.login}')" class="px-2.5 py-1.5 rounded-lg bg-brandDanger/10 text-brandDanger hover:bg-brandDanger/20 text-[10px]" title="Remove favorite">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>
+                `;
+                wrapper.appendChild(card);
+            });
+        }
+
+        function removeFavorite(login) {
+            state.favorites = state.favorites.filter(f => f.login.toLowerCase() !== login.toLowerCase());
+            localStorage.setItem("github_analyzer_favorites", JSON.stringify(state.favorites));
+            renderFavoritesGrid();
+            updateFavoriteButtonState();
+            showToast(`Deleted ${login} from bookmarks.`, "info");
+        }
+
+        // --- الاتصال بـ GitHub API ومعالجة الطلبات ---
+        async function fetchGitHubProfile(username) {
+            state.isDemoMode = false;
+            toggleMainViews("loader");
+            scrollToTop();
+
+            const userClean = username.trim();
+            const headers = {};
+            if (state.apiKey) {
+                headers["Authorization"] = `token ${state.apiKey}`;
+            }
+
+            try {
+                const profileRes = await fetch(`https://api.github.com/users/${userClean}`, { headers });
+                
+                // تتبع حدود الاستخدام
+                updateRateLimitHeaders(profileRes.headers);
+
+                if (profileRes.status === 404) {
+                    showErrorState("User Not Found", `We searched far and wide but couldn't locate any GitHub account named "${userClean}". Please verify syntax and retry.`);
+                    return;
+                }
+                if (profileRes.status === 403) {
+                    showErrorState("Rate Limit Exceeded", "The GitHub API limits unauthenticated requests to 60/hour. Please configure GITHUB_TOKEN inside your local .env file to load this data instantly.");
+                    return;
+                }
+                if (!profileRes.ok) {
+                    throw new Error(`API returned status ${profileRes.status}`);
+                }
+
+                const profileData = await profileRes.json();
+                state.activeProfile = profileData;
+
+                const [reposRes, followersRes, followingRes, orgsRes, eventsRes] = await Promise.all([
+                    fetch(`https://api.github.com/users/${userClean}/repos?per_page=100`, { headers }).catch(() => null),
+                    fetch(`https://api.github.com/users/${userClean}/followers?per_page=60`, { headers }).catch(() => null),
+                    fetch(`https://api.github.com/users/${userClean}/following?per_page=60`, { headers }).catch(() => null),
+                    fetch(`https://api.github.com/users/${userClean}/orgs`, { headers }).catch(() => null),
+                    fetch(`https://api.github.com/users/${userClean}/events?per_page=30`, { headers }).catch(() => null)
+                ]);
+
+                state.activeRepos = reposRes && reposRes.ok ? await reposRes.json() : [];
+                state.activeFollowers = followersRes && followersRes.ok ? await followersRes.json() : [];
+                state.activeFollowing = followingRes && followingRes.ok ? await followingRes.json() : [];
+                state.activeOrgs = orgsRes && orgsRes.ok ? await orgsRes.json() : [];
+                state.activeEvents = eventsRes && eventsRes.ok ? await eventsRes.json() : [];
+
+                saveSearchToHistory(userClean);
+                renderAllDashboardViews();
+                showToast(`Success! Analyzed profile for ${profileData.name || profileData.login}.`, "success");
+
+            } catch (error) {
+                console.error(error);
+                showErrorState("Network / API Error", `An issue occurred while fetching developer data (${error.message}). Please verify your connection status and reload.`);
+            }
+        }
+
+        function updateRateLimitHeaders(headers) {
+            const remaining = headers.get("x-ratelimit-remaining");
+            const banner = document.getElementById("rate-limit-banner");
+            
+            if (remaining !== null) {
+                const remNum = parseInt(remaining, 10);
+                if (remNum <= 15) {
+                    banner.classList.remove("hidden");
+                } else {
+                    banner.classList.add("hidden");
+                }
+            }
+        }
+
+        function toggleMainViews(target) {
+            const welcome = document.getElementById("welcome-placeholder");
+            const loader = document.getElementById("skeleton-loader");
+            const err = document.getElementById("error-screen");
+            const dash = document.getElementById("dashboard-view");
+
+            welcome.classList.add("hidden");
+            loader.classList.add("hidden");
+            err.classList.add("hidden");
+            dash.classList.add("hidden");
+
+            if (target === "welcome") welcome.classList.remove("hidden");
+            else if (target === "loader") loader.classList.remove("hidden");
+            else if (target === "error") err.classList.remove("hidden");
+            else if (target === "dashboard") dash.classList.remove("hidden");
+        }
+
+        function showErrorState(title, description) {
+            toggleMainViews("error");
+            document.getElementById("error-title").textContent = title;
+            document.getElementById("error-message").textContent = description;
+        }
+
+        // --- عداد الأرقام التفاعلي المتحرك ---
+        function animateValue(id, start, end, duration) {
+            const obj = document.getElementById(id);
+            if (!obj) return;
+            
+            if (start === end) {
+                obj.textContent = end;
+                return;
+            }
+            
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                obj.textContent = Math.floor(progress * (end - start) + start);
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        // --- توزيع البيانات على لوحة التحكم ---
+        function renderAllDashboardViews() {
+            toggleMainViews("dashboard");
+            applyFilters();
+            
+            document.getElementById("current-analyzed-user").textContent = `@${state.activeProfile.login}`;
+            updateFavoriteButtonState();
+
+            document.getElementById("profile-avatar").src = state.activeProfile.avatar_url;
+            document.getElementById("profile-name").textContent = state.activeProfile.name || state.activeProfile.login;
+            document.getElementById("profile-username").textContent = `@${state.activeProfile.login}`;
+            document.getElementById("profile-type").textContent = state.activeProfile.type;
+            document.getElementById("profile-bio").textContent = state.activeProfile.bio || `Developer hasn't defined their bio information yet.`;
+            
+            document.getElementById("profile-location").textContent = state.activeProfile.location || "Earth (Not Specified)";
+            document.getElementById("profile-company").textContent = state.activeProfile.company || "Independent/Freelance";
+            
+            const blogEl = document.getElementById("profile-blog");
+            if (state.activeProfile.blog) {
+                let cleanUrl = state.activeProfile.blog;
+                if (!cleanUrl.startsWith("http://") && !cleanUrl.startsWith("https://")) {
+                    cleanUrl = `https://${cleanUrl}`;
+                }
+                blogEl.href = cleanUrl;
+                blogEl.textContent = state.activeProfile.blog;
+                blogEl.classList.remove("pointer-events-none");
+            } else {
+                blogEl.href = "#";
+                blogEl.textContent = "No website linked";
+                blogEl.classList.add("pointer-events-none");
+            }
+
+            const twitterEl = document.getElementById("profile-twitter");
+            if (state.activeProfile.twitter_username) {
+                twitterEl.href = `https://twitter.com/${state.activeProfile.twitter_username}`;
+                twitterEl.textContent = `@${state.activeProfile.twitter_username}`;
+                twitterEl.classList.remove("pointer-events-none");
+            } else {
+                twitterEl.href = "#";
+                twitterEl.textContent = "No Twitter profile";
+                twitterEl.classList.add("pointer-events-none");
+            }
+
+            document.getElementById("profile-email").textContent = state.activeProfile.email || "Private Address / N/A";
+            
+            const opt = { year: 'numeric', month: 'long', day: 'numeric' };
+            const createdRaw = new Date(state.activeProfile.created_at);
+            const updatedRaw = new Date(state.activeProfile.updated_at);
+            document.getElementById("profile-created").textContent = createdRaw.toLocaleDateString('en-US', opt);
+            document.getElementById("profile-updated").textContent = updatedRaw.toLocaleDateString('en-US', opt);
+            
+            document.getElementById("profile-github-link").href = state.activeProfile.html_url;
+
+            animateValue("stat-followers", 0, state.activeProfile.followers, 800);
+            animateValue("stat-following", 0, state.activeProfile.following, 800);
+            animateValue("stat-gists", 0, state.activeProfile.public_gists, 800);
+
+            calculateDeepStatistics();
+            renderAllCharts();
+            populateRepositoryOptions();
+            state.repoCurrentPage = 1;
+            renderRepositories();
+            renderActivityTimeline();
+            renderFollowersSection();
+            renderFollowingSection();
+            renderOrganizations();
+        }
+
+        // --- احتساب الإحصائيات المعقدة للمستودعات ---
+        function calculateDeepStatistics() {
+            const repos = state.activeRepos;
+            
+            const totalCount = repos.length;
+            let starCount = 0;
+            let forkCount = 0;
+            let sizeSum = 0;
+            let licenseCount = 0;
+            let homepageCount = 0;
+            let openIssuesSum = 0;
+            let watchersSum = 0;
+            let archivedCount = 0;
+            let isForkCount = 0;
+            
+            const languagesMap = {};
+            let oldestRepo = null;
+            let newestRepo = null;
+
+            repos.forEach(repo => {
+                starCount += repo.stargazers_count;
+                forkCount += repo.forks_count;
+                sizeSum += repo.size;
+                openIssuesSum += repo.open_issues_count;
+                watchersSum += repo.watchers_count;
+                if (repo.license) licenseCount++;
+                if (repo.homepage) homepageCount++;
+                if (repo.archived) archivedCount++;
+                if (repo.fork) isForkCount++;
+
+                if (repo.language) {
+                    languagesMap[repo.language] = (languagesMap[repo.language] || 0) + 1;
+                }
+
+                const repoDate = new Date(repo.created_at);
+                if (!oldestRepo || repoDate < new Date(oldestRepo.created_at)) {
+                    oldestRepo = repo;
+                }
+                if (!newestRepo || repoDate > new Date(newestRepo.created_at)) {
+                    newestRepo = repo;
+                }
+            });
+
+            animateValue("stat-total-repos", 0, state.activeProfile.public_repos, 800);
+            animateValue("stat-total-stars", 0, starCount, 800);
+            animateValue("stat-total-forks", 0, forkCount, 800);
+            animateValue("stat-open-issues", 0, openIssuesSum, 800);
+            animateValue("stat-watchers", 0, watchersSum, 800);
+            animateValue("stat-homepages", 0, homepageCount, 800);
+
+            const licenseRatio = totalCount > 0 ? Math.round((licenseCount / totalCount) * 100) : 0;
+            document.getElementById("stat-license-ratio").textContent = `${licenseRatio}%`;
+
+            document.getElementById("stat-fork-archived-ratio").textContent = `${isForkCount} / ${archivedCount}`;
+
+            let topLanguage = "None";
+            let topCount = 0;
+            for (const [lang, cnt] of Object.entries(languagesMap)) {
+                if (cnt > topCount) {
+                    topCount = cnt;
+                    topLanguage = lang;
+                }
+            }
+            document.getElementById("stat-primary-lang").textContent = topLanguage;
+
+            const averageSize = totalCount > 0 ? Math.round(sizeSum / totalCount) : 0;
+            if (averageSize > 1024) {
+                document.getElementById("stat-avg-size").textContent = `${(averageSize / 1024).toFixed(1)} MB`;
+            } else {
+                document.getElementById("stat-avg-size").textContent = `${averageSize} KB`;
+            }
+
+            if (oldestRepo) {
+                const oDate = new Date(oldestRepo.created_at);
+                document.getElementById("stat-oldest-repo-date").textContent = oDate.getFullYear();
+                document.getElementById("stat-oldest-repo-name").textContent = oldestRepo.name;
+            } else {
+                document.getElementById("stat-oldest-repo-date").textContent = "N/A";
+                document.getElementById("stat-oldest-repo-name").textContent = "N/A";
+            }
+
+            if (newestRepo) {
+                const nDate = new Date(newestRepo.created_at);
+                document.getElementById("stat-newest-repo-date").textContent = nDate.getFullYear();
+                document.getElementById("stat-newest-repo-name").textContent = newestRepo.name;
+            } else {
+                document.getElementById("stat-newest-repo-date").textContent = "N/A";
+                document.getElementById("stat-newest-repo-name").textContent = "N/A";
+            }
+        }
+
+        // --- إنشاء الرسوم البيانية التفاعلية الرائعة ---
+        function renderAllCharts() {
+            const gridColor = "rgba(255, 255, 255, 0.06)";
+            const labelColor = "#94a3b8";
+            const fontStack = "'Plus Jakarta Sans', sans-serif";
+
+            if (state.charts.languages) state.charts.languages.destroy();
+            if (state.charts.stars) state.charts.stars.destroy();
+            if (state.charts.forks) state.charts.forks.destroy();
+            if (state.charts.timeline) state.charts.timeline.destroy();
+
+            const repos = state.activeRepos;
+
+            // 1. رسم توزيع اللغات
+            const languagesCount = {};
+            repos.forEach(repo => {
+                if (repo.language) {
+                    languagesCount[repo.language] = (languagesCount[repo.language] || 0) + 1;
+                }
+            });
+            const topLangs = Object.entries(languagesCount)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 6);
+
+            const langLabels = topLangs.map(l => l[0]);
+            const langData = topLangs.map(l => l[1]);
+
+            const ctxLang = document.getElementById("chart-languages").getContext("2d");
+            state.charts.languages = new Chart(ctxLang, {
+                type: 'doughnut',
+                data: {
+                    labels: langLabels.length > 0 ? langLabels : ["No Language"],
+                    datasets: [{
+                        data: langData.length > 0 ? langData : [1],
+                        backgroundColor: [
+                            '#38bdf8', '#22d3ee', '#22c55e', '#a855f7', '#ec4899', '#f59e0b'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { color: labelColor, font: { family: fontStack, size: 10, weight: '600' } }
+                        }
+                    },
+                    cutout: '65%'
+                }
+            });
+
+            // 2. رسم توزيع النجوم
+            const topStarredRepos = [...repos]
+                .sort((a, b) => b.stargazers_count - a.stargazers_count)
+                .slice(0, 6);
+
+            const starLabels = topStarredRepos.map(r => r.name);
+            const starValues = topStarredRepos.map(r => r.stargazers_count);
+
+            const ctxStars = document.getElementById("chart-stars").getContext("2d");
+            state.charts.stars = new Chart(ctxStars, {
+                type: 'bar',
+                data: {
+                    labels: starLabels.length > 0 ? starLabels : ["Empty"],
+                    datasets: [{
+                        label: 'Stars count',
+                        data: starValues.length > 0 ? starValues : [0],
+                        backgroundColor: 'rgba(56, 189, 248, 0.85)',
+                        hoverBackgroundColor: '#38bdf8',
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { color: labelColor, font: { family: fontStack, size: 9 } } },
+                        y: { grid: { color: gridColor }, ticks: { color: labelColor, font: { family: fontStack, size: 9 } } }
+                    }
+                }
+            });
+
+            // 3. رسم توزيع التفريعات
+            const topForkedRepos = [...repos]
+                .sort((a, b) => b.forks_count - a.forks_count)
+                .slice(0, 6);
+
+            const forkLabels = topForkedRepos.map(r => r.name);
+            const forkValues = topForkedRepos.map(r => r.forks_count);
+
+            const ctxForks = document.getElementById("chart-forks").getContext("2d");
+            state.charts.forks = new Chart(ctxForks, {
+                type: 'bar',
+                data: {
+                    labels: forkLabels.length > 0 ? forkLabels : ["Empty"],
+                    datasets: [{
+                        label: 'Forks Count',
+                        data: forkValues.length > 0 ? forkValues : [0],
+                        backgroundColor: 'rgba(34, 211, 238, 0.85)',
+                        hoverBackgroundColor: '#22d3ee',
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { color: labelColor, font: { family: fontStack, size: 9 } } },
+                        y: { grid: { color: gridColor }, ticks: { color: labelColor, font: { family: fontStack, size: 9 } } }
+                    }
+                }
+            });
+
+            // 4. الخط الزمني للإنشاء
+            const timelineMap = {};
+            repos.forEach(repo => {
+                const year = new Date(repo.created_at).getFullYear();
+                timelineMap[year] = (timelineMap[year] || 0) + 1;
+            });
+            const sortedYears = Object.keys(timelineMap).sort();
+            const yearValues = sortedYears.map(yr => timelineMap[yr]);
+
+            const ctxTimeline = document.getElementById("chart-timeline").getContext("2d");
+            state.charts.timeline = new Chart(ctxTimeline, {
+                type: 'line',
+                data: {
+                    labels: sortedYears.length > 0 ? sortedYears : ["None"],
+                    datasets: [{
+                        label: 'Repos Created',
+                        data: yearValues.length > 0 ? yearValues : [0],
+                        borderColor: '#22c55e',
+                        backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                        fill: true,
+                        tension: 0.4,
+                        borderWidth: 2,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#22c55e'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { color: labelColor, font: { family: fontStack, size: 9 } } },
+                        y: { grid: { color: gridColor }, ticks: { color: labelColor, font: { family: fontStack, size: 9 } } }
+                    }
+                }
+            });
+        }
+
+        // --- تهيئة مستكشف المستودعات ---
+        function populateRepositoryOptions() {
+            const select = document.getElementById("repo-lang-select");
+            select.innerHTML = '<option value="All">All Languages</option>';
+            
+            const languages = new Set();
+            state.activeRepos.forEach(repo => {
+                if (repo.language) languages.add(repo.language);
+            });
+
+            Array.from(languages).sort().forEach(lang => {
+                const option = document.createElement("option");
+                option.value = lang;
+                option.textContent = lang;
+                select.appendChild(option);
+            });
+
+            document.getElementById("repo-search-input").value = "";
+            document.getElementById("repo-lang-select").value = "All";
+            document.getElementById("repo-sort-select").value = "stars-desc";
+            state.repoSearchQuery = "";
+            state.repoSelectedLang = "All";
+            state.repoSelectedSort = "stars-desc";
+        }
+
+        function handleRepoFilterChange() {
+            state.repoSelectedLang = document.getElementById("repo-lang-select").value;
+            state.repoSelectedSort = document.getElementById("repo-sort-select").value;
+            state.repoCurrentPage = 1;
+            renderRepositories();
+        }
+
+        function renderRepositories() {
+            const container = document.getElementById("repositories-grid-container");
+            container.innerHTML = "";
+
+            let filtered = [...state.activeRepos];
+
+            if (state.repoSelectedLang !== "All") {
+                filtered = filtered.filter(r => r.language === state.repoSelectedLang);
+            }
+
+            if (state.repoSearchQuery) {
+                filtered = filtered.filter(r => r.name.toLowerCase().includes(state.repoSearchQuery));
+            }
+
+            filtered.sort((a, b) => {
+                if (state.repoSelectedSort === "stars-desc") return b.stargazers_count - a.stargazers_count;
+                if (state.repoSelectedSort === "stars-asc") return a.stargazers_count - b.stargazers_count;
+                if (state.repoSelectedSort === "forks-desc") return b.forks_count - a.forks_count;
+                if (state.repoSelectedSort === "size-desc") return b.size - a.size;
+                if (state.repoSelectedSort === "updated-desc") return new Date(b.updated_at) - new Date(a.updated_at);
+                if (state.repoSelectedSort === "name-asc") return a.name.localeCompare(b.name);
+                return 0;
+            });
+
+            const total = filtered.length;
+            const startIdx = (state.repoCurrentPage - 1) * state.repoPageSize;
+            const endIdx = Math.min(startIdx + state.repoPageSize, total);
+
+            const paginated = filtered.slice(startIdx, endIdx);
+
+            if (total === 0) {
+                container.className = "block col-span-2 text-center py-10 text-brandMutedDark italic glass-card rounded-2xl";
+                container.innerHTML = `
+                    <i class="fa-solid fa-folder-open text-3xl mb-2 text-slate-600"></i>
+                    <p class="text-xs font-semibold">No repositories found matching current explorer query filters.</p>
+                `;
+                document.getElementById("pagination-info").textContent = `Showing 0 of 0 repositories`;
+                document.getElementById("btn-prev-page").disabled = true;
+                document.getElementById("btn-next-page").disabled = true;
+                return;
+            }
+
+            container.className = "grid grid-cols-1 md:grid-cols-2 gap-4";
+            
+            paginated.forEach(repo => {
+                const card = document.createElement("div");
+                card.className = "glass-card rounded-2xl p-5 flex flex-col justify-between gap-4 card-hover-lift";
+                
+                const langColor = getLanguageColorClass(repo.language);
+                const desc = repo.description || "No description provided for this repository.";
+
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-start justify-between gap-2">
+                            <h4 class="font-bold text-base truncate max-w-[70%] text-brandTextDark hover:text-brandPrimary transition-colors">
+                                <a href="${repo.html_url}" target="_blank">${repo.name}</a>
+                            </h4>
+                            <span class="px-2 py-0.5 rounded text-[10px] bg-slate-800 text-brandAccent code-font font-semibold uppercase">
+                                ${repo.default_branch}
+                            </span>
+                        </div>
+                        <p class="text-xs text-brandMutedDark line-clamp-2 mt-2 leading-relaxed">${desc}</p>
+                    </div>
+
+                    <div class="flex flex-col gap-3 mt-4 border-t border-slate-800/60 pt-3 text-xs">
+                        <div class="flex flex-wrap items-center justify-between gap-2 text-slate-400">
+                            <div class="flex items-center gap-3">
+                                ${repo.language ? `
+                                    <div class="flex items-center gap-1.5">
+                                        <span class="w-2.5 h-2.5 rounded-full ${langColor}"></span>
+                                        <span class="font-bold text-[10px] text-brandTextDark">${repo.language}</span>
+                                    </div>
+                                ` : ''}
+                                <div class="flex items-center gap-1" title="Stars count">
+                                    <i class="fa-solid fa-star text-brandWarning"></i>
+                                    <span class="font-semibold">${repo.stargazers_count}</span>
+                                </div>
+                                <div class="flex items-center gap-1" title="Forks count">
+                                    <i class="fa-solid fa-code-fork text-brandAccent"></i>
+                                    <span class="font-semibold">${repo.forks_count}</span>
+                                </div>
+                            </div>
+                            <span class="text-[10px] text-slate-500 font-medium">Size: ${(repo.size / 1024).toFixed(1)} MB</span>
+                        </div>
+
+                        ${repo.topics && repo.topics.length > 0 ? `
+                            <div class="flex flex-wrap gap-1.5">
+                                ${repo.topics.slice(0, 4).map(t => `<span class="bg-slate-900/80 text-brandPrimary px-2 py-0.5 rounded-lg text-[9px] font-bold">#${t}</span>`).join('')}
+                            </div>
+                        ` : ''}
+
+                        <div class="flex items-center gap-2 pt-1 border-t border-slate-800/40 mt-1">
+                            <a href="${repo.html_url}" target="_blank" class="flex-grow py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-[10px] tracking-wider text-center transition-all flex items-center justify-center gap-1">
+                                <i class="fa-solid fa-square-arrow-up-right"></i>
+                                <span>OPEN REPO</span>
+                            </a>
+                            <button onclick="copyToClipboard('${repo.clone_url}')" class="px-3.5 py-2 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-brandPrimary hover:text-white transition-all text-[11px]" title="Copy Clone URL">
+                                <i class="fa-solid fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            document.getElementById("pagination-info").textContent = `Showing ${startIdx + 1}-${endIdx} of ${total} repositories`;
+            document.getElementById("btn-prev-page").disabled = (state.repoCurrentPage === 1);
+            document.getElementById("btn-next-page").disabled = (endIdx >= total);
+        }
+
+        function changeRepoPage(offset) {
+            state.repoCurrentPage += offset;
+            renderRepositories();
+        }
+
+        function getLanguageColorClass(lang) {
+            if (!lang) return "bg-slate-600";
+            const colors = {
+                "javascript": "bg-yellow-400",
+                "typescript": "bg-blue-500",
+                "python": "bg-emerald-500",
+                "html": "bg-orange-600",
+                "css": "bg-indigo-600",
+                "c++": "bg-pink-600",
+                "php": "bg-purple-600",
+                "ruby": "bg-rose-600",
+                "go": "bg-cyan-500",
+                "rust": "bg-amber-600",
+                "java": "bg-red-500"
+            };
+            return colors[lang.toLowerCase()] || "bg-slate-400";
+        }
+
+        function copyToClipboard(text) {
+            const input = document.createElement("textarea");
+            input.value = text;
+            document.body.appendChild(input);
+            input.select();
+            document.execCommand("copy");
+            document.body.removeChild(input);
+            showToast("Repository Clone URL Copied to clipboard!", "success");
+        }
+
+        // --- الخط الزمني للأحداث والنشاطات ---
+        function renderActivityTimeline() {
+            const container = document.getElementById("activity-timeline-container");
+            container.innerHTML = "";
+
+            if (!state.activeEvents || state.activeEvents.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-6 text-xs text-brandMutedDark italic">
+                        No recent public activity logs reported for this account on GitHub.
+                    </div>
+                `;
+                return;
+            }
+
+            state.activeEvents.slice(0, 8).forEach(ev => {
+                const item = document.createElement("div");
+                item.className = "flex items-start gap-4 relative";
+
+                let icon = "fa-solid fa-circle-notch text-slate-500";
+                let actionDesc = `Performed an action`;
+                let iconBg = "bg-slate-800/80";
+
+                const relativeTime = getRelativeTime(new Date(ev.created_at));
+
+                switch (ev.type) {
+                    case "PushEvent":
+                        icon = "fa-solid fa-code-commit text-brandSuccess";
+                        iconBg = "bg-brandSuccess/10";
+                        const commitMsg = ev.payload?.commits?.[0]?.message || "pushed updates";
+                        actionDesc = `Pushed commits with: <span class="text-brandTextDark italic font-medium">"${commitMsg}"</span> to`;
+                        break;
+                    case "CreateEvent":
+                        icon = "fa-solid fa-folder-plus text-brandAccent";
+                        iconBg = "bg-brandAccent/10";
+                        actionDesc = `Created a new ${ev.payload?.ref_type || "resource"} at`;
+                        break;
+                    case "WatchEvent":
+                        icon = "fa-solid fa-star text-brandWarning";
+                        iconBg = "bg-brandWarning/10";
+                        actionDesc = `Starred repository`;
+                        break;
+                    case "IssuesEvent":
+                        icon = "fa-solid fa-circle-dot text-brandDanger";
+                        iconBg = "bg-brandDanger/10";
+                        actionDesc = `${ev.payload?.action || "modified"} issue #${ev.payload?.issue?.number || ""} on`;
+                        break;
+                    case "PullRequestEvent":
+                        icon = "fa-solid fa-code-pull-request text-purple-400";
+                        iconBg = "bg-purple-400/10";
+                        actionDesc = `${ev.payload?.action || "updated"} Pull Request on`;
+                        break;
+                    case "ForkEvent":
+                        icon = "fa-solid fa-code-fork text-pink-400";
+                        iconBg = "bg-pink-400/10";
+                        actionDesc = `Forked repository`;
+                        break;
+                    case "ReleaseEvent":
+                        icon = "fa-solid fa-tag text-emerald-400";
+                        iconBg = "bg-emerald-400/10";
+                        actionDesc = `Published version ${ev.payload?.release?.tag_name || ""} on`;
+                        break;
+                }
+
+                item.innerHTML = `
+                    <div class="w-9 h-9 rounded-xl flex items-center justify-center text-xs ${iconBg} shrink-0 z-10 border border-slate-700/30">
+                        <i class="${icon}"></i>
+                    </div>
+                    <div class="flex-grow">
+                        <p class="text-xs text-brandTextDark">
+                            ${actionDesc} <a href="https://github.com/${ev.repo.name}" target="_blank" class="font-extrabold text-brandPrimary hover:underline">${ev.repo.name}</a>
+                        </p>
+                        <span class="text-[10px] text-brandMutedDark font-semibold">${relativeTime}</span>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function getRelativeTime(date) {
+            const now = new Date();
+            const diffMs = now - date;
+            const diffSec = Math.floor(diffMs / 1000);
+            const diffMin = Math.floor(diffSec / 60);
+            const diffHrs = Math.floor(diffMin / 60);
+            const diffDays = Math.floor(diffHrs / 24);
+
+            if (diffSec < 60) return "Just now";
+            if (diffMin < 60) return `${diffMin} min ago`;
+            if (diffHrs < 24) return `${diffHrs} hours ago`;
+            if (diffDays === 1) return `Yesterday`;
+            return `${diffDays} days ago`;
+        }
+
+        // --- المتابِعون والمتابَعون (تفتح حساباتهم في نافذة جديدة مباشرة) ---
+        function renderFollowersSection() {
+            const container = document.getElementById("followers-cards-container");
+            document.getElementById("followers-total-count").textContent = `${state.activeFollowers.length} Loaded`;
+            container.innerHTML = "";
+
+            if (state.activeFollowers.length === 0) {
+                container.innerHTML = `<p class="text-xs text-brandMutedDark italic py-4 text-center">No followers linked.</p>`;
+                return;
+            }
+
+            state.activeFollowers.forEach(f => {
+                const row = document.createElement("div");
+                row.className = "flex items-center justify-between p-2 rounded-xl bg-slate-900/40 border border-slate-800/40 hover:border-brandPrimary/30 transition-all cursor-pointer"
+                // فتح حساب الشخص في تاب جديد عند الضغط
+                row.setAttribute("onclick", `window.open('https://github.com/${f.login}', '_blank')`);
+                row.innerHTML = `
+                    <div class="flex items-center gap-2.5">
+                        <img src="${f.avatar_url}" alt="${f.login}" class="w-8 h-8 rounded-lg object-cover">
+                        <span class="text-xs font-bold text-brandTextDark">${f.login}</span>
+                    </div>
+                    <i class="fa-solid fa-square-arrow-up-right text-[10px] text-slate-500 mr-1.5"></i>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        function renderFollowingSection() {
+            const container = document.getElementById("following-cards-container");
+            document.getElementById("following-total-count").textContent = `${state.activeFollowing.length} Loaded`;
+            container.innerHTML = "";
+
+            if (state.activeFollowing.length === 0) {
+                container.innerHTML = `<p class="text-xs text-brandMutedDark italic py-4 text-center">Not following anyone yet.</p>`;
+                return;
+            }
+
+            state.activeFollowing.forEach(f => {
+                const row = document.createElement("div");
+                row.className = "flex items-center justify-between p-2 rounded-xl bg-slate-900/40 border border-slate-800/40 hover:border-brandAccent/30 transition-all cursor-pointer"
+                // فتح حساب الشخص في تاب جديد عند الضغط
+                row.setAttribute("onclick", `window.open('https://github.com/${f.login}', '_blank')`);
+                row.innerHTML = `
+                    <div class="flex items-center gap-2.5">
+                        <img src="${f.avatar_url}" alt="${f.login}" class="w-8 h-8 rounded-lg object-cover">
+                        <span class="text-xs font-bold text-brandTextDark">${f.login}</span>
+                    </div>
+                    <i class="fa-solid fa-square-arrow-up-right text-[10px] text-slate-500 mr-1.5"></i>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        function renderOrganizations() {
+            const grid = document.getElementById("orgs-grid-container");
+            const section = document.getElementById("section-orgs");
+            grid.innerHTML = "";
+
+            if (state.activeOrgs.length === 0) {
+                section.classList.add("hidden");
+                return;
+            }
+
+            section.classList.remove("hidden");
+            state.activeOrgs.forEach(org => {
+                const card = document.createElement("a");
+                card.href = `https://github.com/${org.login}`;
+                card.target = "_blank";
+                card.className = "flex flex-col items-center gap-2 p-3.5 bg-slate-900/30 border border-slate-800/60 rounded-2xl hover:border-brandPrimary/40 transition-all text-center";
+                card.innerHTML = `
+                    <img src="${org.avatar_url}" alt="${org.login}" class="w-10 h-10 rounded-xl object-cover shadow border border-slate-700/20">
+                    <span class="text-xs font-bold text-brandTextDark truncate max-w-full">${org.login}</span>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // --- محرك توليد الحساب الافتراضي غير المتصل بالإنترنت ---
+        function loadDemoProfile() {
+            state.isDemoMode = true;
+            state.activeProfile = {
+                login: "emmawatson",
+                id: 42109405,
+                avatar_url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200",
+                type: "User",
+                name: "Emma Watson",
+                company: "GitInsight Labs Inc.",
+                blog: "https://gitinsight-labs.io",
+                location: "Berlin, Germany",
+                email: "emma.watsonr@example.com",
+                bio: "Full Stack Engineer & OSS Architect | Passionate about premium Web Applications, analytics dashboards, glassmorphic UX designs and secure APIs.",
+                twitter_username: "emmawatson_Dev",
+                public_repos: 42,
+                public_gists: 14,
+                followers: 1250,
+                following: 480,
+                created_at: "2018-06-26T15:30:00Z",
+                updated_at: "2026-03-26T18:45:00Z",
+                html_url: "https://github.com"
+            };
+
+            state.activeRepos = [
+                { name: "gitinsight-core", description: "The core analysis algorithms engine powering comprehensive developer report cards and visualization pipelines.", stargazers_count: 512, forks_count: 88, size: 4500, default_branch: "main", language: "TypeScript", created_at: "2020-04-12T00:00:00Z", updated_at: "2026-02-15T00:00:00Z", html_url: "https://github.com", clone_url: "https://github.com", topics: ["analytics", "github-api", "charts", "dashboard"] },
+                { name: "glassmorphism-tailwind-ui", description: "A highly reusable modern styling kit containing premium card gradients, glowing effects, and responsive navigation modules.", stargazers_count: 320, forks_count: 42, size: 1200, default_branch: "beta", language: "CSS", created_at: "2021-09-05T00:00:00Z", updated_at: "2025-12-10T00:00:00Z", html_url: "https://github.com", clone_url: "https://github.com", topics: ["tailwind", "ux", "design-tokens", "glassmorphism"] },
+                { name: "secure-api-gateway", description: "Microservices gateway implementation featuring multi-tenant rate limiting, custom token caching and authorization headers protection.", stargazers_count: 245, forks_count: 56, size: 18500, default_branch: "master", language: "Go", created_at: "2019-11-20T00:00:00Z", updated_at: "2026-01-30T00:00:00Z", html_url: "https://github.com", clone_url: "https://github.com", topics: ["security", "auth", "api", "microservices"] },
+                { name: "react-dynamic-dashboard", description: "A drag-and-drop live metrics canvas dashboard with asynchronous rendering logic and custom visual analytics widgets.", stargazers_count: 198, forks_count: 29, size: 8400, default_branch: "main", language: "JavaScript", created_at: "2022-02-18T00:00:00Z", updated_at: "2026-03-01T00:00:00Z", html_url: "https://github.com", clone_url: "https://github.com", topics: ["react", "dashboard", "charts", "drag-drop"] },
+                { name: "automated-backup-cron", description: "Minimalistic scripts designed to backup database states to multiple secure cloud infrastructure points natively.", stargazers_count: 95, forks_count: 14, size: 340, default_branch: "main", language: "Python", created_at: "2018-08-01T00:00:00Z", updated_at: "2024-11-15T00:00:00Z", html_url: "https://github.com", clone_url: "https://github.com", topics: ["automation", "cron", "aws-s3", "backup"] },
+                { name: "developer-portfolio-template", description: "A minimal and ultra-responsive developer template engineered utilizing clean semantic layout patterns and modern micro-interactions.", stargazers_count: 84, forks_count: 22, size: 980, default_branch: "main", language: "HTML", created_at: "2023-05-10T00:00:00Z", updated_at: "2026-03-20T00:00:00Z", html_url: "https://github.com", clone_url: "https://github.com", topics: ["portfolio", "seo", "responsive", "cv-template"] }
+            ];
+
+            state.activeEvents = [
+                { type: "PushEvent", created_at: new Date(Date.now() - 3600000).toISOString(), repo: { name: "emmawatson/gitinsight-core" }, payload: { commits: [{ message: "Refactor core analytics & ChartJS responsive callbacks" }] } },
+                { type: "CreateEvent", created_at: new Date(Date.now() - 7200000).toISOString(), repo: { name: "emmawatson/secure-api-gateway" }, payload: { ref_type: "branch" } },
+                { type: "WatchEvent", created_at: new Date(Date.now() - 14400000).toISOString(), repo: { name: "torvalds/linux" } },
+                { type: "PullRequestEvent", created_at: new Date(Date.now() - 86400000).toISOString(), repo: { name: "emmawatson/react-dynamic-dashboard" }, payload: { action: "merged" } }
+            ];
+
+            state.activeFollowers = [
+                { login: "gaearon", avatar_url: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=100" },
+                { login: "yyx990803", avatar_url: "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&q=80&w=100" },
+                { login: "torvalds", avatar_url: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=100" }
+            ];
+
+            state.activeFollowing = [
+                { login: "taylorotwell", avatar_url: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&q=80&w=100" },
+                { login: "dhh", avatar_url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=100" }
+            ];
+
+            state.activeOrgs = [
+                { login: "GitHubEnterprise", avatar_url: "https://images.unsplash.com/photo-1620121692029-d088224ddc74?auto=format&fit=crop&q=80&w=100" },
+                { login: "W3C-Standards", avatar_url: "https://images.unsplash.com/photo-1620121692029-d088224ddc74?auto=format&fit=crop&q=80&w=100" }
+            ];
+
+            renderAllDashboardViews();
+            showToast("Demo Profile Mode Loaded offline!", "success");
+        }
+    </script>
+</body>
+</html>

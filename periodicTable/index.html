@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الجدول الدوري التفاعلي</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Tajawal & Cairo -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;850&family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Tajawal', 'Cairo', sans-serif;
+            background-color: #f0f9ff; /* لون أزرق سماوي ناعم يساعد على التركيز والمذاكرة */
+        }
+
+        /* بطاقات الـ Flip التفاعلية */
+        .flip-card {
+            background-color: transparent;
+            perspective: 1000px;
+        }
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.5s;
+            transform-style: preserve-3d;
+        }
+        .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 1rem;
+        }
+        .flip-card-back {
+            transform: rotateY(180deg);
+        }
+
+        /* تخصيص شريط التمرير للبساطة */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #e0f2fe;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #bae6fd;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="min-h-screen text-slate-800 flex flex-col">
+
+    <!-- شريط التنقل العلوي المتجاوب بالكامل -->
+    <header class="bg-slate-900 text-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center relative">
+            
+            <!-- الضغط على الهيدر يذهب لبداية الصفحة الرئيسية -->
+            <div class="flex items-center gap-3 cursor-pointer select-none active:scale-95 transition-transform" onclick="goToStart()">
+                <span class="text-2xl">🧪</span>
+                <div>
+                    <h1 class="text-xl md:text-2xl font-black tracking-wide">الجدول الدوري التفاعلي</h1>
+                    <p class="text-xs text-slate-400">مراجعة واختبار لطلاب الثانوية العامة</p>
+                </div>
+            </div>
+            
+            <!-- أزرار التصفح للشاشات الكبيرة -->
+            <nav class="hidden md:flex gap-2 bg-slate-800 p-1 rounded-xl">
+                <button onclick="switchTab('summary')" id="tab-summary" class="tab-btn px-4 py-2 rounded-lg text-sm font-bold transition-all bg-amber-500 text-slate-950 shadow">📚 الملخص الذكي</button>
+                <button onclick="switchTab('cards')" id="tab-cards" class="tab-btn px-4 py-2 rounded-lg text-sm font-bold transition-all text-white hover:bg-slate-700">📇 بطاقات العناصر</button>
+                <button onclick="switchTab('quiz-sym')" id="tab-quiz-sym" class="tab-btn px-4 py-2 rounded-lg text-sm font-bold transition-all text-white hover:bg-slate-700">📝 اختبار الرموز</button>
+            </nav>
+
+            <!-- زر القائمة المتجاوب للهواتف والشاشات الصغيرة -->
+            <button onclick="toggleMobileMenu(event)" id="mobile-menu-btn" class="md:hidden flex items-center justify-center p-2 rounded-lg bg-slate-800 hover:bg-slate-700 transition-all">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+
+            <!-- القائمة المنسدلة للهواتف -->
+            <div id="mobile-menu" class="hidden absolute top-full left-0 right-0 bg-slate-900 border-t border-slate-800 p-4 shadow-xl flex flex-col gap-2 md:hidden">
+                <button onclick="selectTabMobile('summary')" class="w-full text-right px-4 py-2.5 rounded-lg text-sm font-bold bg-amber-500 text-slate-950">📚 الملخص الذكي</button>
+                <button onclick="selectTabMobile('cards')" class="w-full text-right px-4 py-2.5 rounded-lg text-sm font-bold text-white hover:bg-slate-800">📇 بطاقات العناصر</button>
+                <button onclick="selectTabMobile('quiz-sym')" class="w-full text-right px-4 py-2.5 rounded-lg text-sm font-bold text-white hover:bg-slate-800">📝 اختبار الرموز</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- المحتوى الرئيسي -->
+    <main class="flex-grow max-w-7xl w-full mx-auto p-4 md:p-6">
+
+        <!-- ================= قسم 1: الملخص المنهجي الذكي ================= -->
+        <section id="section-summary" class="tab-content block space-y-8">
+            
+            <!-- شبكة معلومات الهيكل والتقسيم المبسطة -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="bg-blue-50 border-r-4 border-blue-600 p-4 rounded-xl shadow-sm">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="text-xl">⚡</span>
+                        <h3 class="text-base font-bold text-blue-900">الهيكل العام</h3>
+                    </div>
+                    <p class="text-xs text-slate-700 leading-relaxed">يتكون الجدول الدوري الحديث من <strong>7 دورات أفقية</strong> و <strong>18 مجموعة رأسية</strong> مرتبة تصاعدياً حسب الأعداد الذرية وطريقة ملء مستويات الطاقة الفرعية.</p>
+                </div>
+                <div class="bg-emerald-50 border-r-4 border-emerald-600 p-4 rounded-xl shadow-sm">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="text-xl">🟢</span>
+                        <h3 class="text-base font-bold text-emerald-900">الفئة s (يسار الجدول)</h3>
+                    </div>
+                    <p class="text-xs text-slate-700 leading-relaxed">تضم المجموعتين <strong>1A و 2A</strong>، وتتميز بملء المستوى الفرعي s الخارجي بالإلكترونات.</p>
+                </div>
+                <div class="bg-amber-50 border-r-4 border-amber-600 p-4 rounded-xl shadow-sm">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="text-xl">🟡</span>
+                        <h3 class="text-base font-bold text-amber-900">الفئة p (يمين الجدول)</h3>
+                    </div>
+                    <p class="text-xs text-slate-700 leading-relaxed">تضم المجموعات من <strong>3A إلى 7A</strong> بالإضافة للمجموعة الصفرية التي تشمل كافة الغات الخاملة.</p>
+                </div>
+                <div class="bg-rose-50 border-r-4 border-rose-600 p-4 rounded-xl shadow-sm">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="text-xl">🔴</span>
+                        <h3 class="text-base font-bold text-rose-900">الفئتان d و f</h3>
+                    </div>
+                    <p class="text-xs text-slate-700 leading-relaxed">الفئة <strong>d</strong> في الوسط (العناصر الانتقالية الرئيسية)، والفئة <strong>f</strong> أسفل الجدول (العناصر الانتقالية الداخلية).</p>
+                </div>
+            </div>
+
+            <!-- التوزيع الإلكتروني الشاذ ومفهوم العنصر الانتقالي -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- كرت التوزيع والشواذ -->
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-sky-100">
+                    <span class="bg-rose-100 text-rose-800 text-[10px] font-bold px-2.5 py-1 rounded-full">تنبيه امتحاني ⚠️</span>
+                    <h3 class="text-lg font-bold mt-3 text-slate-900 mb-4">التوزيع الإلكتروني لعناصر السلسلة 3d وشواذه</h3>
+                    <p class="text-xs text-slate-600 mb-4">تعتمد عناصر السلسلة الانتقالية الأولى بالكامل على غاز <strong>الأرجون [<sub>18</sub>Ar]</strong> كقاعدة للتوزيع الإلكتروني:</p>
+                    <div class="bg-slate-900 text-emerald-400 font-mono text-center py-2 px-4 rounded-xl text-base mb-6 shadow-inner">
+                        [<sub>18</sub>Ar] 4s<sup>2</sup> 3d<sup>n</sup>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="p-4 bg-amber-50 rounded-xl border border-amber-200">
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="font-bold text-xs text-amber-900">1. الكروم (Cr<sub>24</sub>) - شذوذ التوزيع</span>
+                                <span class="text-[10px] bg-amber-200 text-amber-800 font-semibold px-2 py-0.5 rounded">نصف ممتلئ d<sup>5</sup></span>
+                            </div>
+                            <div class="font-mono text-xs text-slate-700 bg-white p-2 rounded border border-amber-100 mt-1">
+                                [<sub>18</sub>Ar] 4s<sup>1</sup> 3d<sup>5</sup>
+                            </div>
+                            <p class="text-[11px] text-slate-600 mt-2">ينتقل إلكترون من 4s إلى 3d ليصبح المستوى الفرعي 3d نصف ممتلئ، مما يعطي الذرة استقراراً كيميائياً أعلى.</p>
+                        </div>
+
+                        <div class="p-4 bg-amber-50 rounded-xl border border-amber-200">
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="font-bold text-xs text-amber-900">2. النحاس (Cu<sub>29</sub>) - شذوذ التوزيع</span>
+                                <span class="text-[10px] bg-amber-200 text-amber-800 font-semibold px-2 py-0.5 rounded">تام الامتلاء d<sup>10</sup></span>
+                            </div>
+                            <div class="font-mono text-xs text-slate-700 bg-white p-2 rounded border border-amber-100 mt-1">
+                                [<sub>18</sub>Ar] 4s<sup>1</sup> 3d<sup>10</sup>
+                            </div>
+                            <p class="text-[11px] text-slate-600 mt-2">ينتقل إلكترون من 4s إلى 3d ليصبح المستوى الفرعي 3d تام الامتلاء، وهي حالة تجعل طاقة الذرة في أدنى مستوياتها وأكثر استقراراً.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- كرت تعريف العنصر الانتقالي وموقع الخارصين وحالات التأكسد -->
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-sky-100 flex flex-col justify-between">
+                    <div>
+                        <span class="bg-blue-100 text-blue-800 text-[10px] font-bold px-2.5 py-1 rounded-full">المفاهيم المنهجية 🎯</span>
+                        <h3 class="text-lg font-bold mt-3 text-slate-900 mb-2">تعريف العنصر الانتقالي واللغز الكيميائي</h3>
+                        
+                        <blockquote class="border-r-4 border-blue-500 bg-blue-50 p-3 text-xs text-blue-900 rounded-l-lg mb-4 leading-relaxed">
+                            <strong>العنصر الانتقالي:</strong> هو العنصر الذي تكون فيه فلكات d أو f مشغولة بالإلكترونات ولكنها <strong>غير ممتلئة تماماً</strong>، سواء في الحالة الذرية أو في أي حالة من حالات تأكسده.
+                        </blockquote>
+
+                        <div class="p-4 bg-rose-50 rounded-xl border border-rose-100 mb-4">
+                            <h4 class="font-bold text-rose-950 text-xs flex items-center gap-2">
+                                <span>⚠️</span> لغز الخارصين (Zn<sub>30</sub>): لماذا يعتبر غير انتقالي؟
+                            </h4>
+                            <p class="text-[11px] text-slate-600 mt-1.5 leading-relaxed">
+                                يعتبر الخارصين وعناصر مجموعته 2B (كالكلادميوم Cd والزئبق Hg) عناصر <strong>غير انتقالية</strong> لأن المستوى الفرعي 3d يكون تام الامتلاء بالإلكترونات (3d<sup>10</sup>) سواء في الحالة الذرية أو في حالة تأكسده الوحيدة المستقرة وهي (+2).
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <h4 class="font-bold text-slate-900 text-xs mb-2">حالات التأكسد السريعة 🏷️</h4>
+                        <ul class="text-[11px] space-y-1.5 text-slate-700 list-disc list-inside">
+                            <li>تفقد العناصر الإلكترونات من المدار الخارجي <strong>4s أولاً</strong> ثم من <strong>3d بالتتابع</strong> لتقاربهما في الطاقة.</li>
+                            <li><strong>السكانديوم (Sc)</strong> له حالة تأكسد وحيدة وهي <span class="font-bold text-blue-600">+3</span>.</li>
+                            <li><strong>الخارصين (Zn)</strong> له حالة تأكسد وحيدة وهي <span class="font-bold text-blue-600">+2</span>.</li>
+                            <li><strong>المنجنيز (Mn<sub>25</sub>)</strong> يعطي أعلى حالة تأكسد في السلسلة وتساوي <span class="font-bold text-rose-600">+7</span>.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= قسم الحديد الجديد (تم حذف الرموز الخاصة بالكامل) ================= -->
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-sky-100 space-y-6">
+                <div class="border-b border-sky-100 pb-4">
+                    <span class="bg-blue-100 text-blue-900 text-xs font-bold px-3 py-1 rounded-full">الدرس الخامس والمنهج الشامل 🎓</span>
+                    <h3 class="text-2xl font-black text-slate-900 mt-2">درس الحديد المتكامل (Fe 26) وأكاسيده</h3>
+                    <p class="text-xs text-slate-500 mt-1">شرح كيميائي دقيق للحديد بأسلوب منظم ومبسط يركز على امتحانات الثانوية العامة بدون رموز معقدة.</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- التوزيع وحالات التأكسد للحديد -->
+                    <div class="bg-sky-50/50 p-5 rounded-xl border border-sky-100 space-y-3">
+                        <h4 class="font-bold text-blue-950 text-sm flex items-center gap-2">
+                            <span>🧪</span> أولاً: التوزيع وحالات التأكسد للحديد
+                        </h4>
+                        <p class="text-xs text-slate-700 leading-relaxed">
+                            يقع الحديد في السلسلة الانتقالية الأولى (المجموعة 8)، وتوزيعه الإلكتروني هو:
+                        </p>
+                        <div class="bg-slate-900 text-emerald-400 font-mono text-center py-2 px-3 rounded-lg text-sm">
+                            [Ar] 4s<sup>2</sup> 3d<sup>6</sup>
+                        </div>
+                        <ul class="text-xs space-y-2 text-slate-700 pt-2">
+                            <li><strong>حالة التأكسد (+2):</strong> تفقد الذرة إلكتروني المستوى الفرعي 4s ليصبح التوزيع: [Ar] 3d<sup>6</sup>.</li>
+                            <li><strong>حالة التأكسد (+3):</strong> تفقد الذرة إلكتروناً ثالثاً من المستوى الفرعي 3d ليصبح التوزيع: [Ar] 3d<sup>5</sup>.</li>
+                        </ul>
+                        <div class="bg-amber-50 p-3 rounded-lg border border-amber-200 text-xs text-amber-900 leading-relaxed">
+                            <strong>ملاحظة هامة جداً:</strong> حالة التأكسد (+3) هي <strong>الأكثر استقراراً وثباتاً</strong> في الحديد لأن المستوى الفرعي 3d يكون نصف ممتلئ (مستقر تماماً)، ولذلك <strong>يسهل أكسدة أملاح الحديد (II) إلى أملاح الحديد (III)</strong> بينما يصعب الاختزال.
+                        </div>
+                    </div>
+
+                    <!-- الخواص الفيزيائية للحديد -->
+                    <div class="bg-sky-50/50 p-5 rounded-xl border border-sky-100 space-y-3">
+                        <h4 class="font-bold text-blue-950 text-sm flex items-center gap-2">
+                            <span>🔩</span> ثانياً: الخواص الفيزيائية للحديد
+                        </h4>
+                        <ul class="text-xs space-y-3 text-slate-700">
+                            <li class="bg-white p-2 rounded-lg border border-sky-100">
+                                <strong>الحديد النقي:</strong> ليس له أهمية صناعية كبيرة لأنه لين نسبياً، وليس شديد الصلابة، ويمكن تشكيله بسهولة (قابل للسحب والطرق).
+                            </li>
+                            <li class="bg-white p-2 rounded-lg border border-sky-100">
+                                <strong>السبائك:</strong> تزداد صلابة الحديد وتتغير خواصه المغناطيسية والكهربائية عند إضافة عناصر أخرى إليه لتكوين سبائك (مثل الصلب والحديد الزهر).
+                            </li>
+                            <li class="bg-white p-2 rounded-lg border border-sky-100">
+                                <strong>درجة الانصهار والكثافة:</strong> ينصهر عند درجة حرارة عالية تبلغ 1538 درجة سيليزية، وكثافته تبلغ 7.87 جم / سم مكعب.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- الخواص الكيميائية للحديد وتفاعلاته -->
+                    <div class="bg-sky-50/50 p-5 rounded-xl border border-sky-100 space-y-3">
+                        <h4 class="font-bold text-blue-950 text-sm flex items-center gap-2">
+                            <span>🔥</span> ثالثاً: الخواص الكيميائية للحديد
+                        </h4>
+                        <p class="text-xs text-slate-700 leading-relaxed">
+                            الحديد فلز متوسط النشاط (أقل نشاطاً من السكانديوم وأكثر نشاطاً من النحاس). يتفاعل مع الهواء، وبخار الماء، واللافلزات، والأحماض المختلفة.
+                        </p>
+                        <div class="space-y-1">
+                            <span class="text-[10px] bg-blue-200 text-blue-900 px-2 py-0.5 rounded font-bold">معادلة الهواء الجوي عند 500 درجة:</span>
+                            <div class="text-xs font-mono bg-white p-2 rounded border border-sky-100 text-slate-800 text-center">
+                                3Fe + 2O<sub>2</sub> → Fe<sub>3</sub>O<sub>4</sub>
+                            </div>
+                        </div>
+                        <div class="space-y-1">
+                            <span class="text-[10px] bg-blue-200 text-blue-900 px-2 py-0.5 rounded font-bold">معادلة بخار الماء الساخن:</span>
+                            <div class="text-xs font-mono bg-white p-2 rounded border border-sky-100 text-slate-800 text-center">
+                                3Fe + 4H<sub>2</sub>O → Fe<sub>3</sub>O<sub>4</sub> + 4H<sub>2</sub>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- تفاعلات الحديد التفصيلية والمستمرة -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-sky-150">
+                    <div class="space-y-4">
+                        <h4 class="font-bold text-slate-900 text-sm">🧪 التفاعل مع اللافلزات والأحماض المخففة</h4>
+                        
+                        <div class="bg-slate-50 p-4 rounded-xl space-y-3 border border-slate-200">
+                            <div>
+                                <span class="text-xs font-bold text-blue-900">التفاعل مع الكلور (عامل مؤكسد قوي):</span>
+                                <p class="text-[11px] text-slate-600">ينتج كلوريد الحديد (III) وليس (II) لأن الكلور عامل مؤكسد قوي يؤكسد الثنائي المتكون مباشرة.</p>
+                                <div class="bg-white p-2 rounded border border-slate-100 mt-1 font-mono text-xs text-center">
+                                    2Fe + 3Cl<sub>2</sub> → 2FeCl<sub>3</sub>
+                                </div>
+                            </div>
+
+                            <div>
+                                <span class="text-xs font-bold text-blue-900">التفاعل مع الكبريت:</span>
+                                <div class="bg-white p-2 rounded border border-slate-100 mt-1 font-mono text-xs text-center">
+                                    Fe + S → FeS (كبريتيد الحديد II)
+                                </div>
+                            </div>
+
+                            <div>
+                                <span class="text-xs font-bold text-blue-900">التفاعل مع الأحماض المخففة:</span>
+                                <p class="text-[11px] text-slate-600">ينتج ملح حديد (II) وغاز الهيدروجين الذي يختزل أي حديد (III) قد يتكون.</p>
+                                <div class="bg-white p-2 rounded border border-slate-100 mt-1 font-mono text-xs space-y-2 text-center">
+                                    <p>Fe + 2HCl (مخفف) → FeCl<sub>2</sub> + H<sub>2</sub> ↑</p>
+                                    <p>Fe + H<sub>2</sub>SO<sub>4</sub> (مخفف) → FeSO<sub>4</sub> + H<sub>2</sub> ↑</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <h4 class="font-bold text-slate-900 text-sm">🧪 التفاعل مع الأحماض المركزة الساخنة والخمول</h4>
+                        
+                        <div class="bg-slate-50 p-4 rounded-xl space-y-3 border border-slate-200">
+                            <div>
+                                <span class="text-xs font-bold text-blue-900">مع حمض الكبريتيك المركز الساخن:</span>
+                                <p class="text-[11px] text-slate-600">ينتج خليط من كبريتات الحديد (II) وكبريتات الحديد (III) وغاز ثاني أكسيد الكبريت SO<sub>2</sub> ذو الرائحة النفاذة وبخار الماء.</p>
+                                <div class="bg-white p-2 rounded border border-slate-100 mt-1 font-mono text-xs text-center">
+                                    3Fe + 8H<sub>2</sub>SO<sub>4</sub> (مركز) → FeSO<sub>4</sub> + Fe<sub>2</sub>(SO<sub>4</sub>)<sub>3</sub> + 4SO<sub>2</sub> + 8H<sub>2</sub>O
+                                </div>
+                            </div>
+
+                            <div class="p-3 bg-red-50 rounded-lg border border-red-200">
+                                <span class="text-xs font-bold text-red-900">ظاهرة الخمول الكيميائي (مع حمض النيتريك المركز):</span>
+                                <p class="text-[11px] text-slate-700 mt-1">
+                                    عند إضافة حمض النيتريك المركز للحديد يتوقف التفاعل فوراً نتيجة تكون طبقة رقيقة جداً وغير مسامية من الأكسيد على سطح الحديد تحميه من استمرار التفاعل.
+                                </p>
+                                <p class="text-[10px] text-slate-600 mt-1.5 font-bold">
+                                    * طريقة إزالة طبقة الخمول: إما بالحك الميكانيكي أو بإضافة حمض الهيدروكلوريك المخفف (HCl).
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- تحضيرات وتفاعلات أكاسيد الحديد الثلاثة -->
+                <div class="pt-6 border-t border-sky-150 space-y-4">
+                    <h4 class="font-bold text-slate-900 text-base">🔬 مخطط تحضيرات وتفاعلات أكاسيد الحديد</h4>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <!-- أكسيد الحديد II -->
+                        <div class="bg-white p-4 rounded-xl border border-slate-200 space-y-3 shadow-sm">
+                            <span class="bg-emerald-100 text-emerald-800 text-[10px] px-2 py-0.5 rounded font-black">أكسيد الحديد II (FeO)</span>
+                            <div class="space-y-2">
+                                <div class="text-xs font-bold">طرق التحضير:</div>
+                                <p class="text-[11px] text-slate-600 leading-relaxed">
+                                    1. تسخين أكسالات الحديد II بمعزل عن الهواء:
+                                </p>
+                                <div class="bg-slate-50 p-2 rounded font-mono text-xs text-center text-slate-700">
+                                    (COO)<sub>2</sub>Fe → FeO + CO + CO<sub>2</sub>
+                                </div>
+                                <p class="text-[11px] text-slate-600 leading-relaxed mt-2">
+                                    2. اختزال الأكاسيد الأعلى بالهيدروجين عند 400 - 700 درجة:
+                                </p>
+                                <div class="bg-slate-50 p-2 rounded font-mono text-xs text-center text-slate-700">
+                                    Fe<sub>2</sub>O<sub>3</sub> + H<sub>2</sub> → 2FeO + H<sub>2</sub>O
+                                </div>
+
+                                <div class="text-xs border-t border-slate-100 pt-2 space-y-1">
+                                    <div class="font-bold">التفاعلات المنهجية:</div>
+                                    <p class="text-[11px] text-slate-600">أكسدة بالحرارة: 4FeO + O<sub>2</sub> → 2Fe<sub>2</sub>O<sub>3</sub></p>
+                                    <p class="text-[11px] text-slate-600">مع حمض مخفف: FeO + H<sub>2</sub>SO<sub>4</sub> → FeSO<sub>4</sub> + H<sub>2</sub>O</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- أكسيد الحديد III -->
+                        <div class="bg-white p-4 rounded-xl border border-slate-200 space-y-3 shadow-sm">
+                            <span class="bg-rose-100 text-rose-800 text-[10px] px-2 py-0.5 rounded font-black">أكسيد الحديد III (الهيماتيت - Fe₂O₃)</span>
+                            <div class="space-y-2">
+                                <div class="text-xs font-bold">طرق التحضير:</div>
+                                <p class="text-[11px] text-slate-600 leading-relaxed">
+                                    1. تسخين هيدروكسيد الحديد III لأعلى من 200 درجة:
+                                </p>
+                                <div class="bg-slate-50 p-2 rounded font-mono text-xs text-center text-slate-700">
+                                    2Fe(OH)<sub>3</sub> → Fe<sub>2</sub>O<sub>3</sub> + 3H<sub>2</sub>O
+                                </div>
+                                <p class="text-[11px] text-slate-600 leading-relaxed mt-2">
+                                    2. تسخين كبريتات الحديد II بشدة:
+                                </p>
+                                <div class="bg-slate-50 p-2 rounded font-mono text-xs text-center text-slate-700">
+                                    2FeSO<sub>4</sub> → Fe<sub>2</sub>O<sub>3</sub> + SO<sub>2</sub> + SO<sub>3</sub>
+                                </div>
+
+                                <div class="text-xs border-t border-slate-100 pt-2 space-y-1">
+                                    <div class="font-bold">التفاعلات المنهجية:</div>
+                                    <p class="text-[11px] text-slate-600">يتفاعل مع الأحماض المركزة الساخنة فقط:</p>
+                                    <div class="bg-slate-50 p-1.5 rounded font-mono text-[11px] text-center text-slate-700">
+                                        Fe<sub>2</sub>O<sub>3</sub> + 3H<sub>2</sub>SO<sub>4</sub> → Fe<sub>2</sub>(SO<sub>4</sub>)<sub>3</sub> + 3H<sub>2</sub>O
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- أكسيد الحديد المغناطيسي -->
+                        <div class="bg-white p-4 rounded-xl border border-slate-200 space-y-3 shadow-sm">
+                            <span class="bg-indigo-100 text-indigo-800 text-[10px] px-2 py-0.5 rounded font-black">أكسيد مغناطيسي (المغناطيت - Fe₃O₄)</span>
+                            <div class="space-y-2">
+                                <div class="text-xs font-bold">طرق التحضير:</div>
+                                <p class="text-[11px] text-slate-600 leading-relaxed">
+                                    1. تفاعل الحديد الساخن مع الأكسجين أو بخار الماء.
+                                </p>
+                                <p class="text-[11px] text-slate-600 leading-relaxed mt-1">
+                                    2. اختزال أكسيد الحديد III بالـ CO عند 230 - 300 درجة:
+                                </p>
+                                <div class="bg-slate-50 p-2 rounded font-mono text-xs text-center text-slate-700">
+                                    3Fe<sub>2</sub>O<sub>3</sub> + CO → 2Fe<sub>3</sub>O<sub>4</sub> + CO<sub>2</sub>
+                                </div>
+
+                                <div class="text-xs border-t border-slate-100 pt-2 space-y-1">
+                                    <div class="font-bold">تفاعل الحمض المركز (أكسيد مختلط):</div>
+                                    <p class="text-[11px] text-slate-600">بما أنه أكسيد مختلط، فإنه يعطي كبريتات حديد II وكبريتات حديد III وماء:</p>
+                                    <div class="bg-slate-50 p-1.5 rounded font-mono text-[10px] text-center text-slate-700">
+                                        Fe<sub>3</sub>O<sub>4</sub> + 4H<sub>2</sub>SO<sub>4</sub> → FeSO<sub>4</sub> + Fe<sub>2</sub>(SO<sub>4</sub>)<sub>3</sub> + 4H<sub>2</sub>O
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- مفاتيح امتحانات "كيف تحصل على..." للحديد وأكاسيده -->
+                <div class="bg-amber-50/50 p-4 rounded-xl border border-amber-200 space-y-3">
+                    <h5 class="text-xs font-bold text-amber-950 flex items-center gap-1">
+                        <span>🔑</span> مفاتيح سريعة لحل أسئلة التفرقة والتحويلات في الامتحان:
+                    </h5>
+                    <ul class="text-[11px] space-y-1 text-slate-850 list-decimal list-inside leading-relaxed">
+                        <li><strong>حمض مخفف:</strong> يتفاعل مع الحديد الفلز Fe وأكسيد الحديد الثنائي FeO فقط، ولا يؤثر على الثلاثي والمغناطيسي.</li>
+                        <li><strong>حمض مركز:</strong> يتفاعل مع الحديد الفلز Fe وجميع أكاسيد الحديد الأعلى (Fe<sub>2</sub>O<sub>3</sub>, Fe<sub>3</sub>O<sub>4</sub>).</li>
+                        <li><strong>للتمييز بين حمض الكبريتيك المخفف والمركز:</strong> تضاف برادة حديد؛ يتصاعد مع المخفف غاز الهيدروجين الذي يشتعل بفرقعة، ومع المركز يتصاعد غاز SO<sub>2</sub> ذو الرائحة النفاذة والذي يخضر ورقة محمضة بثاني كرومات البوتاسيوم.</li>
+                        <li><strong>التحكم بالنواتج والاختزال:</strong> للتحكم في الناتج النهائي للأكاسيد، قم بتغيير درجة حرارة الاختزال للـ CO أو H<sub>2</sub> كما يلي:
+                            <ul class="list-disc list-inside mr-4 text-slate-600 mt-1 space-y-0.5">
+                                <li>من 230 إلى 300 درجة مئوية ينتج أكسيد مغناطيسي Fe<sub>3</sub>O<sub>4</sub></li>
+                                <li>من 400 إلى 700 درجة مئوية ينتج أكسيد حديد ثنائي FeO</li>
+                                <li>أعلى من 700 درجة مئوية ينتج حديد نقي Fe</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- الأهمية الاقتصادية السريعة والتفاعلية لعناصر 3d -->
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-sky-100">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+                    <div>
+                        <span class="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2.5 py-1 rounded-full">الأهمية الاقتصادية 💰</span>
+                        <h3 class="text-xl font-bold mt-2 text-slate-900">الأهمية الاقتصادية لفلزات السلسلة 3d</h3>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto rounded-xl border border-slate-100">
+                    <table class="min-w-full divide-y divide-slate-200" id="summary-table">
+                        <thead class="bg-slate-50">
+                            <tr>
+                                <th class="px-4 py-3 text-right text-xs font-bold text-slate-500 uppercase">العنصر</th>
+                                <th class="px-4 py-3 text-right text-xs font-bold text-slate-500 uppercase">الرمز والعدد</th>
+                                <th class="px-4 py-3 text-right text-xs font-bold text-slate-500 uppercase">أهم الاستخدامات والسبائك الكيميائية</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 text-xs md:text-sm">
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-4 py-3 font-bold text-blue-900">السكانديوم</td>
+                                <td class="px-4 py-3 font-mono text-slate-600">Sc (21)</td>
+                                <td class="px-4 py-3 text-slate-700">يضاف للألومنيوم لصناعة طائرات الميج المقاتلة، ويستخدم في مصابيح أبخرة الزئبق للحصول على ضوء عالي الكفاءة يشبه ضوء الشمس للتصوير التلفزيوني الليلي.</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-4 py-3 font-bold text-blue-900">التيتانيوم</td>
+                                <td class="px-4 py-3 font-mono text-slate-600">Ti (22)</td>
+                                <td class="px-4 py-3 text-slate-700">صناعة المفاصل الصناعية وزراعة الأسنان (لأن الجسم لا يلفظه ولا يسبب تسمماً). سبائكه مع الألومنيوم تحافظ على متانتها في درجات الحرارة العالية. يدخل TiO<sub>2</sub> في مستحضرات الحماية من أشعة الشمس.</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-4 py-3 font-bold text-blue-900">الفانديوم</td>
+                                <td class="px-4 py-3 font-mono text-slate-600">V (23)</td>
+                                <td class="px-4 py-3 text-slate-700">يضاف للصلب لتكوين سبيكة ذات قساوة عالية ومقاومة للتآكل لزمبركات السيارات. مركب V<sub>2</sub>O<sub>5</sub> يستخدم كصبغة وعامل حفاز في صناعة حمض الكبريتيك بطريقة التلامس.</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-4 py-3 font-bold text-blue-900">الكروم</td>
+                                <td class="px-4 py-3 font-mono text-slate-600">Cr (24)</td>
+                                <td class="px-4 py-3 text-slate-700">يقاوم العوامل الجوية بسبب طبقة الأكسيد غير المسامية المتكونة على سطحه. يستخدم في طلاء المعادن ودباغة الجلود. مركب Cr<sub>2</sub>O<sub>3</sub> للأصباغ و K<sub>2</sub>Cr<sub>2</sub>O<sub>7</sub> كمادة مؤكسدة.</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-4 py-3 font-bold text-blue-900">المنجنيز</td>
+                                <td class="px-4 py-3 font-mono text-slate-600">Mn (25)</td>
+                                <td class="px-4 py-3 text-slate-700">لا يستخدم في حالته النقية لشدة هشاشته. سبيكته مع الحديد أصلب من الصلب لقضبان السكك الحديدية. سبيكته مع الألومنيوم لمقاومة التآكل في علب الكنز. مركب MnO<sub>2</sub> عامل مؤكسد قوي و KMnO<sub>4</sub> مادة مطهرة.</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50 border-2 border-sky-400 bg-sky-50/50">
+                                <td class="px-4 py-3 font-bold text-blue-950 text-base">الحديد (Fe)</td>
+                                <td class="px-4 py-3 font-mono text-slate-700 font-bold">Fe (26)</td>
+                                <td class="px-4 py-3 text-slate-900 font-medium">الخرسانات المسلحة، أبراج الكهرباء، الأدوات الجراحية. عامل حفاز في صناعة غاز النشادر بطريقة هابر-بوش وفي تحويل الغاز المائي إلى وقود سائل بطريقة فيشر-تروبش. (راجع قسم درس الحديد المفصل أعلاه).</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-4 py-3 font-bold text-blue-900">الكوبالت</td>
+                                <td class="px-4 py-3 font-mono text-slate-600">Co (27)</td>
+                                <td class="px-4 py-3 text-slate-700">قابل للمغنطة كالحديد. يدخل في صناعة المغناطيسيات والبطاريات الجافة في السيارات الحديثة. الكوبالت-60 المشع تصدر منه أشعة جاما لحفظ الأغذية والكشف عن عيوب الصناعة وفي الطب.</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-4 py-3 font-bold text-blue-900">النيكل</td>
+                                <td class="px-4 py-3 font-mono text-slate-600">Ni (28)</td>
+                                <td class="px-4 py-3 text-slate-700">حماية المعادن من الصدأ والتآكل والأحماض. بطاريات النيكل-كادميوم القابلة لإعادة الشحن. النيكل المجزأ في هدرجة الزيوت. سبيكة النيكل-كروم لمقاومة الحرارة العالية في ملفات التسخين.</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-4 py-3 font-bold text-blue-900">النحاس</td>
+                                <td class="px-4 py-3 font-mono text-slate-600">Cu (29)</td>
+                                <td class="px-4 py-3 text-slate-700">كابلات كهربائية وسبائك العملات. سبيكة البرونز (نحاس وقصدير). محلول فهلنج للكشف عن سكر الجلوكوز (يتحول لونه من الأزرق إلى البرتقالي). كبريتات النحاس كمبيد للفطريات.</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-4 py-3 font-bold text-blue-900">الخارصين</td>
+                                <td class="px-4 py-3 font-mono text-slate-600">Zn (30)</td>
+                                <td class="px-4 py-3 text-slate-700">جلفنة المعادن لحمايتها من التآكل والصدأ. مركب ZnO في الدهانات والمطاط ومستحضرات التجميل. مركب ZnS في الطلائات المضيئة وشاشات الأشعة السينية.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- الخواص العامة لعناصر السلسلة 3d -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <!-- الخاصية المغناطيسية -->
+                <div class="bg-gradient-to-br from-indigo-50 to-white border border-indigo-100 rounded-2xl p-5 shadow-sm">
+                    <span class="bg-indigo-100 text-indigo-800 text-[10px] font-bold px-2.5 py-1 rounded-full">مغناطيسية دقيقة 🧲</span>
+                    <h4 class="text-base font-bold text-indigo-950 mt-3 mb-2">1. الخواص المغناطيسية</h4>
+                    <p class="text-[11px] text-slate-600 leading-relaxed mb-3">تتنوع حسب وجود إلكترونات مفردة في المستوى d:</p>
+                    <ul class="text-[11px] space-y-2 text-slate-700">
+                        <li class="bg-white p-2 rounded border border-indigo-50"><strong class="text-rose-700">البارامغناطيسية:</strong> مادة تتجاذب مع المجال المغناطيسي الخارجي لوجود إلكترونات مفردة في d (عزم مغناطيسي أكبر من صفر).</li>
+                        <li class="bg-white p-2 rounded border border-indigo-50"><strong class="text-blue-700">الدايامغناطيسية:</strong> مادة تتنافر مع المجال الخارجي لازدواج جميع الإلكترونات (العزم صفر) مثل الخارصين.</li>
+                    </ul>
+                </div>
+
+                <!-- النشاط الحفزي الممتاز -->
+                <div class="bg-gradient-to-br from-emerald-50 to-white border border-emerald-100 rounded-2xl p-5 shadow-sm">
+                    <span class="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2.5 py-1 rounded-full">كفاءة التفاعل ⚙️</span>
+                    <h4 class="text-base font-bold text-emerald-950 mt-3 mb-2">2. النشاط الحفزي المثالي</h4>
+                    <p class="text-[11px] text-slate-600 leading-relaxed mb-3">تعتبر عوامل حفز مثالية ومحفزة للتفاعلات الصناعية:</p>
+                    <div class="bg-white p-3 rounded-xl border border-emerald-50 text-[11px] text-slate-700 space-y-2 leading-relaxed">
+                        <p><strong>السبب العلمي:</strong> تشترك إلكترونات 4s و 3d في تكوين روابط مع الجزيئات المتفاعلة، مما يرفع تركيزها على سطح الحافز ويضعف الروابط فيها، فتقل طاقة التنشيط وتزداد سرعة التفاعل.</p>
+                        <p class="text-emerald-700 font-semibold">أمثلة: النيكل المجزأ في الهدرجة، الحديد في هابر-بوش.</p>
+                    </div>
+                </div>
+
+                <!-- الألوان المبهجة -->
+                <div class="bg-gradient-to-br from-amber-50 to-white border border-amber-100 rounded-2xl p-5 shadow-sm">
+                    <span class="bg-amber-100 text-amber-800 text-[10px] font-bold px-2.5 py-1 rounded-full">طيف الضوء 🎨</span>
+                    <h4 class="text-base font-bold text-amber-950 mt-3 mb-2">3. الألوان والبريق</h4>
+                    <p class="text-[11px] text-slate-600 leading-relaxed mb-3">تتميز مركبات السلسلة بكونها ملونة وجذابة بصرياً:</p>
+                    <div class="bg-white p-3 rounded-xl border border-amber-50 text-[11px] text-slate-700 space-y-2 leading-relaxed">
+                        <p><strong>السبب العلمي:</strong> الطاقة اللازمة لإثارة إلكترونات d المفردة تتفق مع طاقة الضوء المرئي. عندما يمتص المركب طيفاً معيناً، تعكس عين الإنسان اللون المتمم له.</p>
+                        <p class="text-amber-700 font-semibold">أمثلة: أيونات النحاس الثنائي تظهر باللون الأزرق المهدئ.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= قسم 2: بطاقات العناصر التفاعلية ================= -->
+        <section id="section-cards" class="tab-content hidden space-y-6">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-sky-100">
+                <h2 class="text-lg font-bold text-slate-900">بطاقات مراجعة العناصر التفاعلية</h2>
+                <p class="text-xs text-slate-500 mt-1">اضغط على البطاقة لتكشف عن الاسم العربي والعدد الذري</p>
+            </div>
+
+            <!-- شبكة البطاقات التفاعلية القابلة للقلب -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4" id="cards-grid">
+                <!-- سيتم ملئها تفاعلياً بواسطة JavaScript -->
+            </div>
+        </section>
+
+        <!-- ================= قسم 3: اختبار الرموز والأعداد الكيميائية ================= -->
+        <section id="section-quiz-sym" class="tab-content hidden space-y-6">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-sky-100 max-w-2xl mx-auto">
+                <div class="text-center mb-6">
+                    <span class="bg-blue-100 text-blue-800 text-[10px] font-black px-3 py-1 rounded-full uppercase">الاختبار الكيميائي</span>
+                    <h2 class="text-xl font-bold text-slate-900 mt-2">اختبار الرموز الكيميائية والأعداد الذرية</h2>
+                    <p class="text-xs text-slate-500 mt-1">اختبر مهارات حفظ الرموز والأعداد للعناصر المنهجية المحددة.</p>
+                </div>
+
+                <!-- إعدادات التقييم -->
+                <div id="quiz-sym-setup" class="space-y-4">
+                    <div class="p-4 bg-slate-50 rounded-xl space-y-3 border border-slate-200">
+                        <label class="block text-xs font-bold text-slate-700">حدد نطاق العناصر للاختبار:</label>
+                        <select id="quiz-sym-scope" class="w-full text-xs px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                            <option value="first30">أول 30 عنصر (الهيدروجين إلى الخارصين)</option>
+                            <option value="added">العناصر الثقيلة الإضافية فقط</option>
+                            <option value="all">كل العناصر المطلوبة معاً (53 عنصراً)</option>
+                        </select>
+                    </div>
+                    <button onclick="startQuiz('sym')" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-xl transition-all shadow-sm">ابدأ الاختبار الآن 🚀</button>
+                </div>
+
+                <!-- ساحة الاختبار الفعلي -->
+                <div id="quiz-sym-arena" class="hidden space-y-6">
+                    <div class="flex justify-between items-center text-xs bg-slate-100 p-2.5 rounded-lg font-bold">
+                        <span id="quiz-sym-progress">السؤال: 1/10</span>
+                        <span id="quiz-sym-score" class="text-emerald-700">الدرجة: 0</span>
+                    </div>
+
+                    <div class="bg-blue-50 border border-blue-100 rounded-2xl p-6 text-center space-y-4 shadow-inner">
+                        <span id="quiz-sym-question-title" class="text-[10px] bg-blue-200 text-blue-800 font-bold px-3 py-1 rounded-full">ما هو رمز هذا العنصر؟</span>
+                        <h3 id="quiz-sym-question-text" class="text-2xl font-black text-slate-900 mt-2">عنصر الكالسيوم</h3>
+                    </div>
+
+                    <!-- الأزرار للتفاعل -->
+                    <div class="grid grid-cols-2 gap-3" id="quiz-sym-options">
+                        <!-- الخيارات سيتم حقنها برمجياً -->
+                    </div>
+
+                    <div id="quiz-sym-feedback" class="hidden p-3 text-center text-xs font-bold rounded-xl transition-all"></div>
+                </div>
+
+                <!-- صفحة نهاية الاختبار والنتيجة -->
+                <div id="quiz-sym-results" class="hidden text-center space-y-4 py-6">
+                    <span class="text-4xl">🏆</span>
+                    <h3 class="text-lg font-bold text-slate-900">اكتمل الاختبار بنجاح!</h3>
+                    <p id="quiz-sym-final-score" class="text-xl font-black text-emerald-600">درجتك النهائية: 8 / 10</p>
+                    <p id="quiz-sym-message" class="text-xs text-slate-600">ممتاز! أنت تحفظ هذه العناصر بكفاءة بالغة.</p>
+                    <button onclick="resetQuiz('sym')" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2 rounded-xl transition-all shadow-sm">أعد المحاولة 🔄</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- تذييل الصفحة المبسط للغاية -->
+    <footer class="bg-slate-900 text-slate-500 py-4 border-t border-slate-800 text-center text-xs mt-12">
+        <div class="max-w-7xl mx-auto px-4">
+            <p>الجدول الدوري التفاعلي لطلاب الثانوية العامة © 2026</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript التفاعلي والبيانات -->
+    <script>
+        // قاعدة البيانات الكيميائية للعناصر المطلوبة
+        const elementsDataset = [
+            // أول 30 عنصر بالترتيب
+            { num: 1, sym: "H", name: "هيدروجين", type: "nonmetal", block: "s", arabicType: "لا فلزات أخرى" },
+            { num: 2, sym: "He", name: "هيليوم", type: "noble", block: "p", arabicType: "غازات خاملة" },
+            { num: 3, sym: "Li", name: "ليثيوم", type: "alkali", block: "s", arabicType: "فلزات الأقلاء" },
+            { num: 4, sym: "Be", name: "بريليوم", type: "alkaline-earth", block: "s", arabicType: "فلزات الأقلاء الأرضية" },
+            { num: 5, sym: "B", name: "بورون", type: "metalloid", block: "p", arabicType: "أشباه فلزات" },
+            { num: 6, sym: "C", name: "كربون", type: "nonmetal", block: "p", arabicType: "لا فلزات أخرى" },
+            { num: 7, sym: "N", name: "نيتروجين", type: "nonmetal", block: "p", arabicType: "لا فلزات أخرى" },
+            { num: 8, sym: "O", name: "أكسجين", type: "nonmetal", block: "p", arabicType: "لا فلزات أخرى" },
+            { num: 9, sym: "F", name: "فلور", type: "halogen", block: "p", arabicType: "الهالوجينات" },
+            { num: 10, sym: "Ne", name: "نيون", type: "noble", block: "p", arabicType: "غازات خاملة" },
+            { num: 11, sym: "Na", name: "صوديوم", type: "alkali", block: "s", arabicType: "فلزات الأقلاء" },
+            { num: 12, sym: "Mg", name: "ماغنيسيوم", type: "alkaline-earth", block: "s", arabicType: "فلزات الأقلاء الأرضية" },
+            { num: 13, sym: "Al", name: "ألومنيوم", type: "post-transition", block: "p", arabicType: "فلزات أخرى (بعد انتقالية)" },
+            { num: 14, sym: "Si", name: "سيليكون", type: "metalloid", block: "p", arabicType: "أشباه فلزات" },
+            { num: 15, sym: "P", name: "فسفور", type: "nonmetal", block: "p", arabicType: "لا فلزات أخرى" },
+            { num: 16, sym: "S", name: "كبريت", type: "nonmetal", block: "p", arabicType: "لا فلزات أخرى" },
+            { num: 17, sym: "Cl", name: "كلور", type: "halogen", block: "p", arabicType: "الهالوجينات" },
+            { num: 18, sym: "Ar", name: "أرجون", type: "noble", block: "p", arabicType: "غازات خاملة" },
+            { num: 19, sym: "K", name: "بوتاسيوم", type: "alkali", block: "s", arabicType: "فلزات الأقلاء" },
+            { num: 20, sym: "Ca", name: "كالسيوم", type: "alkaline-earth", block: "s", arabicType: "فلزات الأقلاء الأرضية" },
+            { num: 21, sym: "Sc", name: "سكانديوم", type: "transition", block: "d", arabicType: "فلزات انتقالية رئيسية" },
+            { num: 22, sym: "Ti", name: "تيتانيوم", type: "transition", block: "d", arabicType: "فلزات انتقالية رئيسية" },
+            { num: 23, sym: "V", name: "فانديوم", type: "transition", block: "d", arabicType: "فلزات انتقالية رئيسية" },
+            { num: 24, sym: "Cr", name: "كروم", type: "transition", block: "d", arabicType: "فلزات انتقالية رئيسية" },
+            { num: 25, sym: "Mn", name: "منجنيز", type: "transition", block: "d", arabicType: "فلزات انتقالية رئيسية" },
+            { num: 26, sym: "Fe", name: "حديد", type: "transition", block: "d", arabicType: "فلزات انتقالية رئيسية" },
+            { num: 27, sym: "Co", name: "كوبالت", type: "transition", block: "d", arabicType: "فلزات انتقالية رئيسية" },
+            { num: 28, sym: "Ni", name: "نيكل", type: "transition", block: "d", arabicType: "فلزات انتقالية رئيسية" },
+            { num: 29, sym: "Cu", name: "نحاس", type: "transition", block: "d", arabicType: "فلزات انتقالية رئيسية" },
+            { num: 30, sym: "Zn", name: "خارصين", type: "non-transition-d", block: "d", arabicType: "فلزات غير انتقالية (الفئة d)" },
+            
+            // الصف الأول المضاف
+            { num: 31, sym: "Ga", name: "جاليوم", type: "post-transition", block: "p", arabicType: "فلزات أخرى (بعد انتقالية)" },
+            { num: 32, sym: "Ge", name: "جيرمانيوم", type: "metalloid", block: "p", arabicType: "أشباه فلزات" },
+            { num: 33, sym: "As", name: "زرنيخ", type: "metalloid", block: "p", arabicType: "أشباه فلزات" },
+            { num: 34, sym: "Se", name: "سيلينيوم", type: "nonmetal", block: "p", arabicType: "لا فلزات أخرى" },
+            { num: 35, sym: "Br", name: "بروم", type: "halogen", block: "p", arabicType: "الهالوجينات" },
+            { num: 36, sym: "Kr", name: "كريبتون", type: "noble", block: "p", arabicType: "غازات خاملة" },
+            
+            // الصف الثاني المضاف
+            { num: 47, sym: "Ag", name: "فضة", type: "transition", block: "d", arabicType: "فلزات انتقالية رئيسية" },
+            { num: 48, sym: "Cd", name: "كادميوم", type: "non-transition-d", block: "d", arabicType: "فلزات غير انتقالية (الفئة d)" },
+            { num: 49, sym: "In", name: "إنديوم", type: "post-transition", block: "p", arabicType: "فلزات أخرى (بعد انتقالية)" },
+            { num: 50, sym: "Sn", name: "قصدير", type: "post-transition", block: "p", arabicType: "فلزات أخرى (بعد انتقالية)" },
+            { num: 51, sym: "Sb", name: "أنتيمون", type: "metalloid", block: "p", arabicType: "أشباه فلزات" },
+            { num: 52, sym: "Te", name: "تيلوريوم", type: "metalloid", block: "p", arabicType: "أشباه فلزات" },
+            { num: 53, sym: "I", name: "يود", type: "halogen", block: "p", arabicType: "الهالوجينات" },
+            { num: 54, sym: "Xe", name: "زينون", type: "noble", block: "p", arabicType: "غازات خاملة" },
+
+            // الصف الثالث المضاف
+            { num: 79, sym: "Au", name: "ذهب", type: "transition", block: "d", arabicType: "فلزات انتقالية رئيسية" },
+            { num: 80, sym: "Hg", name: "زئبق", type: "non-transition-d", block: "d", arabicType: "فلزات غير انتقالية (الفئة d)" },
+            { num: 81, sym: "Tl", name: "تاليوم", type: "post-transition", block: "p", arabicType: "فلزات أخرى (بعد انتقالية)" },
+            { num: 82, sym: "Pb", name: "رصاص", type: "post-transition", block: "p", arabicType: "فلزات أخرى (بعد انتقالية)" },
+            { num: 83, sym: "Bi", name: "بزموت", type: "post-transition", block: "p", arabicType: "فلزات أخرى (بعد انتقالية)" },
+            { num: 84, sym: "Po", name: "بولونيوم", type: "post-transition", block: "p", arabicType: "فلزات أخرى (بعد انتقالية)" },
+            { num: 85, sym: "At", name: "أستاتين", type: "halogen", block: "p", arabicType: "الهالوجينات" },
+            { num: 86, sym: "Rn", name: "رادون", type: "noble", block: "p", arabicType: "غازات خاملة" },
+
+            // الصورة الثانية المضافة
+            { num: 37, sym: "Rb", name: "روبيديوم", type: "alkali", block: "s", arabicType: "فلزات الأقلاء" },
+            { num: 38, sym: "Sr", name: "سترانشيوم", type: "alkaline-earth", block: "s", arabicType: "فلزات الأقلاء الأرضية" },
+            { num: 39, sym: "Y", name: "يتريوم", type: "transition", block: "d", arabicType: "فلزات انتقالية رئيسية" },
+            { num: 55, sym: "Cs", name: "سيزيوم", type: "alkali", block: "s", arabicType: "فلزات الأقلاء" },
+            { num: 56, sym: "Ba", name: "باريوم", type: "alkaline-earth", block: "s", arabicType: "فلزات الأقلاء الأرضية" },
+            { num: 57, sym: "La", name: "لانثانيوم", type: "lanthanide", block: "f", arabicType: "اللانثانيدات" },
+            { num: 87, sym: "Fr", name: "فرانسيوم", type: "alkali", block: "s", arabicType: "فلزات الأقلاء" },
+            { num: 88, sym: "Ra", name: "راديوم", type: "alkaline-earth", block: "s", arabicType: "فلزات الأقلاء الأرضية" },
+            { num: 89, sym: "Ac", name: "أكتينيوم", type: "actinide", block: "f", arabicType: "الأكتينيدات" }
+        ];
+
+        // تهيئة المتغيرات عند بدء التحميل
+        window.addEventListener('DOMContentLoaded', () => {
+            renderAllCards();
+            resetQuiz('sym');
+        });
+
+        // الانتقال للبداية والتحول للرئيسية
+        function goToStart() {
+            switchTab('summary');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // تشغيل وإخفاء قائمة الجوال لمنع انتشار حدث الضغط
+        function toggleMobileMenu(event) {
+            if (event) event.stopPropagation();
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // إغلاق قائمة الجوال عند الضغط بالخارج
+        window.addEventListener('click', function(e) {
+            const menu = document.getElementById('mobile-menu');
+            const menuBtn = document.getElementById('mobile-menu-btn');
+            if (menu && !menu.classList.contains('hidden')) {
+                if (!menu.contains(e.target) && !menuBtn.contains(e.target)) {
+                    menu.classList.add('hidden');
+                }
+            }
+        });
+
+        // اختيار تبويب من قائمة الجوال
+        function selectTabMobile(tabId) {
+            switchTab(tabId);
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.add('hidden'); // إغلاق بعد الاختيار فوراً
+        }
+
+        // التبديل بين التبويبات والمقاطع
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(section => {
+                section.classList.add('hidden');
+                section.classList.remove('block');
+            });
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.className = "tab-btn px-4 py-2 rounded-lg text-sm font-bold transition-all text-white hover:bg-slate-700";
+            });
+
+            document.getElementById(`section-${tabId}`).classList.remove('hidden');
+            document.getElementById(`section-${tabId}`).classList.add('block');
+            
+            let btn = document.getElementById(`tab-${tabId}`);
+            if (btn) {
+                if(tabId === 'summary') {
+                    btn.className = "tab-btn px-4 py-2 rounded-lg text-sm font-bold transition-all bg-amber-500 text-slate-950 shadow";
+                } else if (tabId === 'cards') {
+                    btn.className = "tab-btn px-4 py-2 rounded-lg text-sm font-bold transition-all bg-emerald-600 text-white shadow";
+                } else if (tabId === 'quiz-sym') {
+                    btn.className = "tab-btn px-4 py-2 rounded-lg text-sm font-bold transition-all bg-blue-600 text-white shadow";
+                }
+            }
+        }
+
+        // رسم كروت الـ Flip لجميع العناصر تفاعلياً
+        function renderAllCards() {
+            const grid = document.getElementById('cards-grid');
+            grid.innerHTML = '';
+
+            elementsDataset.forEach(el => {
+                let borderTheme = "border-blue-300 bg-blue-50";
+                let textTheme = "text-blue-900";
+                
+                if (el.type === 'transition' || el.type === 'non-transition-d') {
+                    borderTheme = "border-rose-300 bg-rose-50";
+                    textTheme = "text-rose-900";
+                } else if (el.type === 'noble') {
+                    borderTheme = "border-amber-300 bg-amber-50";
+                    textTheme = "text-amber-900";
+                } else if (el.type === 'halogen' || el.type === 'nonmetal') {
+                    borderTheme = "border-emerald-300 bg-emerald-50";
+                    textTheme = "text-emerald-950";
+                }
+
+                const card = document.createElement('div');
+                card.className = `flip-card h-32 cursor-pointer relative`;
+                card.setAttribute('data-sym', el.sym);
+                card.setAttribute('data-name', el.name);
+                card.setAttribute('data-num', el.num);
+
+                // تصميم البطاقة: الوجه الأمامي يحتوي فقط على الرمز الكيميائي والفئة دون الرقم الذري
+                card.innerHTML = `
+                    <div class="flip-card-inner shadow-sm rounded-2xl w-full h-full duration-500" onclick="this.parentElement.classList.toggle('flipped')">
+                        <!-- الواجهة: الرمز الكيميائي وفئته فقط (بدون رقم ذري) -->
+                        <div class="flip-card-front flex flex-col justify-between p-4 border-2 ${borderTheme} absolute w-full h-full rounded-2xl">
+                            <div class="flex justify-start text-left">
+                                <span class="text-[9px] uppercase font-bold text-slate-400">الفئة ${el.block}</span>
+                            </div>
+                            <div class="text-3xl font-black ${textTheme} my-auto">${el.sym}</div>
+                            <div class="text-[10px] text-slate-500 font-semibold truncate">${el.arabicType}</div>
+                        </div>
+                        <!-- الخلف: الاسم بالكامل والعدد الذري والنوع -->
+                        <div class="flip-card-back flex flex-col justify-center items-center p-3 border-2 border-slate-300 bg-slate-900 text-white absolute w-full h-full rounded-2xl">
+                            <div class="text-xs text-amber-300 font-bold">العدد الذري: ${el.num}</div>
+                            <div class="text-lg font-black text-white mt-1">${el.name}</div>
+                            <div class="text-[9px] text-emerald-400 font-mono mt-1">${el.arabicType}</div>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // ================= نظام المحرك الأساسي للاختبار =================
+
+        let quizState = {
+            currentQuiz: '', 
+            questions: [],
+            currentIndex: 0,
+            score: 0,
+            answered: false
+        };
+
+        function startQuiz(quizType) {
+            quizState.currentQuiz = quizType;
+            quizState.currentIndex = 0;
+            quizState.score = 0;
+            quizState.answered = false;
+
+            generateSymQuestions();
+
+            // تحديث واجهات الاستخدام
+            document.getElementById(`quiz-${quizType}-setup`).classList.add('hidden');
+            document.getElementById(`quiz-${quizType}-arena`).classList.remove('hidden');
+            document.getElementById(`quiz-${quizType}-results`).classList.add('hidden');
+
+            showNextQuestion();
+        }
+
+        function resetQuiz(quizType) {
+            document.getElementById(`quiz-${quizType}-setup`).classList.remove('hidden');
+            document.getElementById(`quiz-${quizType}-arena`).classList.add('hidden');
+            document.getElementById(`quiz-${quizType}-results`).classList.add('hidden');
+        }
+
+        // توليد أسئلة الرموز والأعداد
+        function generateSymQuestions() {
+            let scope = document.getElementById('quiz-sym-scope').value;
+            let filtered = [];
+
+            if (scope === 'first30') {
+                filtered = elementsDataset.filter(e => e.num <= 30);
+            } else if(scope === 'added') {
+                filtered = elementsDataset.filter(e => e.num > 30);
+            } else {
+                filtered = [...elementsDataset];
+            }
+
+            shuffleArray(filtered);
+            quizState.questions = [];
+
+            let selected = filtered.slice(0, 10);
+            selected.forEach(el => {
+                let qType = Math.floor(Math.random() * 3);
+                let q = {};
+
+                if (qType === 0) {
+                    q.title = "ما هو الرمز الكيميائي الصحيح لهذا العنصر؟";
+                    q.text = `عنصر ${el.name}`;
+                    q.correctAnswer = el.sym;
+                    q.options = [el.sym];
+                    
+                    let wrongs = elementsDataset.filter(x => x.sym !== el.sym);
+                    shuffleArray(wrongs);
+                    for(let i=0; i<3; i++) q.options.push(wrongs[i].sym);
+                } else if(qType === 1) {
+                    q.title = "ما هو العدد الذري الدقيق لهذا العنصر؟";
+                    q.text = `عنصر ${el.name} (${el.sym})`;
+                    q.correctAnswer = el.num.toString();
+                    q.options = [el.num.toString()];
+                    
+                    let wrongs = elementsDataset.filter(x => x.num !== el.num);
+                    shuffleArray(wrongs);
+                    for(let i=0; i<3; i++) q.options.push(wrongs[i].num.toString());
+                } else {
+                    q.title = "ما هو الاسم العربي لهذا الرمز المنهجي؟";
+                    q.text = `رمز العنصر: ${el.sym}`;
+                    q.correctAnswer = el.name;
+                    q.options = [el.name];
+                    
+                    let wrongs = elementsDataset.filter(x => x.name !== el.name);
+                    shuffleArray(wrongs);
+                    for(let i=0; i<3; i++) q.options.push(wrongs[i].name);
+                }
+
+                shuffleArray(q.options);
+                q.explain = `العنصر هو ${el.name}، رمزه الكيميائي ${el.sym}، وعدده الذري هو ${el.num}.`;
+                quizState.questions.push(q);
+            });
+        }
+
+        // إظهار السؤال التالي
+        function showNextQuestion() {
+            let t = quizState.currentQuiz;
+            quizState.answered = false;
+
+            let feedback = document.getElementById(`quiz-${t}-feedback`);
+            feedback.className = "hidden p-3 text-center text-xs font-bold rounded-xl transition-all";
+            feedback.innerText = "";
+
+            if(quizState.currentIndex >= quizState.questions.length) {
+                document.getElementById(`quiz-${t}-arena`).classList.add('hidden');
+                document.getElementById(`quiz-${t}-results`).classList.remove('hidden');
+                document.getElementById(`quiz-${t}-final-score`).innerText = `النتيجة الإجمالية: ${quizState.score} / ${quizState.questions.length}`;
+                
+                let msg = document.getElementById(`quiz-${t}-message`);
+                if(msg) {
+                    let percent = (quizState.score / quizState.questions.length) * 100;
+                    if(percent === 100) {
+                        msg.innerText = "أداء مثالي وممتاز! لقد حصلت على الدرجة الكاملة بنجاح.";
+                        msg.className = "text-xs text-emerald-600 font-bold";
+                    } else if (percent >= 70) {
+                        msg.innerText = "عمل رائع وموفق! مهارات الحفظ والمراجعة لديك بمستوى ممتاز.";
+                        msg.className = "text-xs text-blue-600 font-bold";
+                    } else {
+                        msg.innerText = "ننصحك بمراجعة بطاقات العناصر التفاعلية والملخص لتثبيت معلوماتك.";
+                        msg.className = "text-xs text-amber-600 font-bold";
+                    }
+                }
+                return;
+            }
+
+            let q = quizState.questions[quizState.currentIndex];
+
+            document.getElementById(`quiz-${t}-progress`).innerText = `السؤال: ${quizState.currentIndex + 1}/${quizState.questions.length}`;
+            document.getElementById(`quiz-${t}-score`).innerText = `الدرجة: ${quizState.score}`;
+            document.getElementById(`quiz-${t}-question-title`).innerText = q.title;
+            document.getElementById(`quiz-${t}-question-text`).innerText = q.text;
+
+            let optionsDiv = document.getElementById(`quiz-${t}-options`);
+            optionsDiv.innerHTML = '';
+
+            q.options.forEach(opt => {
+                let btn = document.createElement('button');
+                btn.className = "quiz-opt-btn bg-white hover:bg-slate-50 text-slate-800 text-xs font-semibold py-3 px-4 rounded-xl border border-slate-200 text-right transition-all duration-150 shadow-sm";
+                btn.innerText = opt;
+                btn.onclick = () => checkAnswer(opt, btn);
+                optionsDiv.appendChild(btn);
+            });
+        }
+
+        // فحص الإجابة المختارة
+        function checkAnswer(selectedOpt, selectedBtn) {
+            if(quizState.answered) return;
+            quizState.answered = true;
+
+            let t = quizState.currentQuiz;
+            let q = quizState.questions[quizState.currentIndex];
+            let feedback = document.getElementById(`quiz-${t}-feedback`);
+            feedback.classList.remove('hidden');
+
+            let optButtons = document.querySelectorAll(`#quiz-${t}-options .quiz-opt-btn`);
+
+            if (selectedOpt === q.correctAnswer) {
+                quizState.score++;
+                selectedBtn.className = "quiz-opt-btn bg-emerald-500 text-white text-xs font-semibold py-3 px-4 rounded-xl border border-emerald-600 text-right transition-all";
+                feedback.className = "p-4 text-emerald-800 bg-emerald-100 border border-emerald-200 rounded-xl text-xs text-right space-y-1 shadow-sm";
+                feedback.innerHTML = `<strong>🟢 إجابة صحيحة!</strong> <br> <span class="text-slate-600">${q.explain}</span>`;
+            } else {
+                selectedBtn.className = "quiz-opt-btn bg-rose-500 text-white text-xs font-semibold py-3 px-4 rounded-xl border border-rose-600 text-right transition-all";
+                feedback.className = "p-4 text-rose-800 bg-rose-100 border border-rose-200 rounded-xl text-xs text-right space-y-1 shadow-sm";
+                feedback.innerHTML = `<strong>🔴 إجابة خاطئة:</strong> الإجابة الصحيحة هي [${q.correctAnswer}]. <br> <span class="text-slate-600">${q.explain}</span>`;
+                
+                optButtons.forEach(btn => {
+                    if(btn.innerText === q.correctAnswer) {
+                        btn.className = "quiz-opt-btn bg-emerald-100 text-emerald-800 text-xs font-semibold py-3 px-4 rounded-xl border border-emerald-300 text-right transition-all";
+                    }
+                });
+            }
+
+            let nextBtn = document.createElement('button');
+            nextBtn.className = "w-full mt-3 bg-slate-900 text-white hover:bg-slate-800 text-xs font-bold py-2.5 rounded-lg transition-all";
+            nextBtn.innerText = "انتقل إلى السؤال التالي ◀";
+            nextBtn.onclick = () => {
+                quizState.currentIndex++;
+                showNextQuestion();
+            };
+            feedback.appendChild(nextBtn);
+        }
+
+        // دالة المساعدة لخلط المصفوفات عشوائياً
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,1400 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الحاسبة الذهبية المصرية الذكية - دليل وشريك المستهلك في سوق الذهب</title>
+    <!-- استيراد خطوط عربية متميزة من جوجل -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* تعريف متغيرات الألوان لتسهيل التخصيص والمظهر الداكن والفاتح */
+        :root {
+            --bg-primary: #f8f6f0;
+            --bg-secondary: #ffffff;
+            --text-main: #2d2a22;
+            --text-muted: #5c584f;
+            --gold-primary: #c5a059;
+            --gold-secondary: #aa843d;
+            --gold-light: #f4ece1;
+            --gold-dark: #826229;
+            --border-color: #e5dec9;
+            --card-shadow: 0 10px 30px rgba(197, 160, 89, 0.08);
+            --danger: #dc3545;
+            --success: #28a745;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* متغيرات المظهر الداكن */
+        body.dark-mode {
+            --bg-primary: #121210;
+            --bg-secondary: #1a1a17;
+            --text-main: #f4ece1;
+            --text-muted: #bdae95;
+            --gold-primary: #d4b26f;
+            --gold-secondary: #c5a059;
+            --gold-light: #2c2921;
+            --gold-dark: #e8ca90;
+            --border-color: #3a372e;
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-main);
+            transition: var(--transition);
+            line-height: 1.7;
+            padding-bottom: 60px;
+        }
+
+        /* الهيكل والتنسيق العام */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* الهيدر العلوي */
+        header {
+            background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold-secondary) 100%);
+            color: #ffffff;
+            padding: 40px 0;
+            text-align: center;
+            border-bottom: 5px solid var(--gold-primary);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(0,0,0,0.2) 100%);
+            z-index: 1;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .header-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        /* زر تبديل الوضع الليلي */
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 30px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* شبكة التحكم الرئيسية */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        @media (min-width: 992px) {
+            .main-grid {
+                grid-template-columns: 1.2fr 0.8fr;
+            }
+        }
+
+        /* تصميم الكروت والبطاقات */
+        .card {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--gold-secondary);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--gold-light);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* عناصر الإدخال والاستمارات */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-main);
+        }
+
+        .form-label span {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 16px;
+            background-color: var(--bg-primary);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-main);
+            font-size: 1.05rem;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--gold-primary);
+            box-shadow: 0 0 0 4px rgba(197, 160, 89, 0.15);
+        }
+
+        .input-suffix {
+            position: absolute;
+            left: 16px;
+            font-weight: 700;
+            color: var(--gold-secondary);
+            pointer-events: none;
+        }
+
+        /* تنبيهات التحقق من المدخلات */
+        .input-error-msg {
+            color: var(--danger);
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .has-error .form-control {
+            border-color: var(--danger);
+        }
+
+        .has-error .input-error-msg {
+            display: block;
+        }
+
+        /* أزرار اختيار نوع العملية (شراء - بيع - استبدال) */
+        .operation-selector {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        .op-btn {
+            background-color: var(--bg-primary);
+            border: 2px solid var(--border-color);
+            padding: 15px 10px;
+            border-radius: 14px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: var(--text-muted);
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .op-btn:hover {
+            border-color: var(--gold-primary);
+            color: var(--gold-secondary);
+        }
+
+        .op-btn.active {
+            background-color: var(--gold-light);
+            border-color: var(--gold-primary);
+            color: var(--gold-dark);
+            box-shadow: 0 4px 12px rgba(197, 160, 89, 0.15);
+        }
+
+        /* العرض المشروط للحقول */
+        .conditional-section {
+            display: none;
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+
+        .conditional-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* صندوق المعادلة التوضيحي */
+        .equation-box {
+            background-color: var(--gold-light);
+            border-right: 4px solid var(--gold-primary);
+            padding: 15px 20px;
+            border-radius: 0 12px 12px 0;
+            margin-bottom: 25px;
+            font-size: 0.95rem;
+        }
+
+        .equation-box strong {
+            color: var(--gold-dark);
+            display: block;
+            margin-bottom: 5px;
+            font-size: 1rem;
+        }
+
+        .equation-text {
+            font-size: 1.05rem;
+            color: var(--text-main);
+            direction: rtl;
+            display: inline-block;
+            font-weight: 600;
+        }
+
+        /* ملاحظات التوضيح */
+        .info-note {
+            background-color: rgba(197, 160, 89, 0.08);
+            border: 1px dashed var(--gold-primary);
+            padding: 12px 15px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-top: 15px;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        /* بطاقة النتائج المتميزة */
+        .results-panel {
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--gold-light) 100%);
+            border: 2px solid var(--gold-primary);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-label {
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .result-value {
+            font-weight: 700;
+            font-size: 1.15rem;
+            color: var(--text-main);
+        }
+
+        .result-value.highlight {
+            font-size: 1.8rem;
+            color: var(--gold-dark);
+            font-weight: 800;
+        }
+
+        /* تقدير الأسعار التلقائي للعيارات الأخرى */
+        .carat-estimates {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px dashed var(--border-color);
+        }
+
+        .estimates-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--gold-secondary);
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .estimates-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .est-badge {
+            background-color: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            padding: 8px 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 0.85rem;
+        }
+
+        .est-badge strong {
+            display: block;
+            color: var(--gold-dark);
+            font-size: 1rem;
+        }
+
+        /* قسم جدول عيارات الذهب ونسب النقاء */
+        .carats-table-section {
+            margin-top: 40px;
+        }
+
+        .gold-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            background-color: var(--bg-secondary);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+        }
+
+        .gold-table th, .gold-table td {
+            padding: 15px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+
+        .gold-table th {
+            background-color: var(--gold-light);
+            color: var(--gold-dark);
+            font-weight: 700;
+        }
+
+        .gold-table tr:nth-child(even) {
+            background-color: var(--bg-primary);
+        }
+
+        /* قسم المصطلحات التعليمية */
+        .glossary-section {
+            margin-top: 40px;
+        }
+
+        .glossary-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        @media (min-width: 768px) {
+            .glossary-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            @media (min-width: 1100px) {
+                .glossary-grid {
+                    grid-template-columns: repeat(3, 1fr);
+                }
+            }
+        }
+
+        .glossary-card {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 20px;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+        }
+
+        .glossary-card:hover {
+            border-color: var(--gold-primary);
+            transform: translateY(-3px);
+        }
+
+        .glossary-term {
+            color: var(--gold-secondary);
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .glossary-definition {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            text-align: justify;
+        }
+
+        /* قسم الشرح النهائي المفصل */
+        .detailed-guide-section {
+            margin-top: 40px;
+        }
+
+        .guide-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        @media (min-width: 768px) {
+            .guide-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .guide-card {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .guide-card h3 {
+            color: var(--gold-secondary);
+            font-size: 1.15rem;
+            margin-bottom: 12px;
+            font-weight: 700;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+
+        .guide-card p, .guide-card li {
+            font-size: 0.92rem;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
+
+        .guide-card ul {
+            padding-right: 20px;
+            margin-bottom: 15px;
+        }
+
+        .example-box {
+            background-color: var(--bg-primary);
+            border-left: 3px solid var(--success);
+            border-right: 3px solid var(--success);
+            padding: 12px 15px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            margin-top: 15px;
+        }
+
+        .example-box strong {
+            color: var(--success);
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        /* التذييل */
+        footer {
+            margin-top: 50px;
+            text-align: center;
+            color: var(--text-muted);
+            padding: 30px 0;
+            border-top: 1px solid var(--border-color);
+            font-size: 0.9rem;
+        }
+
+        /* أيقونات SVG مدمجة */
+        .icon {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            stroke-width: 2;
+            stroke: currentColor;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            vertical-align: middle;
+        }
+
+        /* كلاس مخصص لتجاوب شبكة التحكم والمدخلات الثنائية */
+        .responsive-grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        /* التحديثات المتجاوبة للأجهزة الذكية والشاشات الصغيرة */
+        @media (max-width: 600px) {
+            .responsive-grid-2 {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            .operation-selector {
+                grid-template-columns: 1fr;
+                gap: 8px;
+                margin-bottom: 20px;
+            }
+            .op-btn {
+                padding: 12px 10px;
+                font-size: 0.95rem;
+                flex-direction: row;
+                justify-content: center;
+                gap: 10px;
+            }
+            .header-title {
+                font-size: 1.6rem;
+            }
+            .card {
+                padding: 20px 15px;
+                border-radius: 16px;
+            }
+            .card-title {
+                font-size: 1.2rem;
+                margin-bottom: 15px;
+            }
+            .form-control {
+                padding: 12px 14px;
+                font-size: 0.95rem;
+            }
+            .equation-box {
+                padding: 12px 15px;
+                margin-bottom: 20px;
+            }
+            .equation-text {
+                font-size: 0.9rem;
+            }
+            .result-value.highlight {
+                font-size: 1.5rem;
+            }
+            .gold-table th, .gold-table td {
+                padding: 10px 8px;
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- الهيدر العلوي -->
+    <header>
+        <button class="theme-toggle" id="themeToggleBtn" onclick="toggleTheme()">
+            <svg class="icon" viewBox="0 0 24 24" id="themeIcon">
+                <path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m11.314 11.314l.707.707M12 8a4 4 0 110 8 4 4 0 010-8z" />
+            </svg>
+            <span id="themeText">الوضع الداكن</span>
+        </button>
+        <div class="header-content container">
+            <h1 class="header-title">
+                <svg class="icon" viewBox="0 0 24 24" style="width:36px; height:36px; stroke: #fff;">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                </svg>
+                الحاسبة الذهبية المصرية الذكية
+            </h1>
+        </div>
+    </header>
+
+    <main class="container">
+        
+        <!-- قسم شبكة التفاعل والحسابات -->
+        <div class="main-grid">
+            
+            <!-- لوحة المدخلات -->
+            <div class="card">
+                <h2 class="card-title">
+                    <svg class="icon" viewBox="0 0 24 24" style="stroke: var(--gold-secondary)">
+                        <path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" />
+                    </svg>
+                    خيارات الذهب والعملية المالية
+                </h2>
+
+                <!-- 1. اختيار العيار الأساسي والسعر الخام -->
+                <div class="operation-selector" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 20px;">
+                    <div style="grid-column: span 3; text-align: center; font-weight: 700; font-size: 0.95rem; margin-bottom: 5px; color: var(--gold-secondary);">
+                        اختر عيار الذهب الأساسي الذي تتعامل به:
+                    </div>
+                </div>
+                
+                <div class="responsive-grid-2" style="margin-bottom: 25px;">
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label class="form-label" for="goldCarat">العيار المطلوب</label>
+                        <select class="form-control" id="goldCarat" onchange="handleCaratChange()">
+                            <option value="24">عيار 24 (الأكثر نقاءً)</option>
+                            <option value="21" selected>عيار 21 (الأكثر انتشاراً)</option>
+                            <option value="18">عيار 18 (الأحدث والأكثر تشكيلاً)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="grpRawPrice" style="margin-bottom: 0;">
+                        <label class="form-label" for="rawPrice">
+                            سعر الجرام الحالي 
+                            <span>(بدون مصنعية)</span>
+                        </label>
+                        <div class="input-wrapper">
+                            <input type="number" class="form-control" id="rawPrice" placeholder="مثال: 3200" oninput="validateAndCalculate()" min="0">
+                            <span class="input-suffix">ج.م</span>
+                        </div>
+                        <div class="input-error-msg">الرجاء إدخال سعر صحيح أكبر من الصفر.</div>
+                    </div>
+                </div>
+
+                <!-- 2. اختيار نوع العملية -->
+                <div class="form-group">
+                    <label class="form-label">نوع العملية المالية:</label>
+                    <div class="operation-selector">
+                        <button class="op-btn active" id="btn-buy" onclick="switchOperation('buy')">
+                            <svg class="icon" viewBox="0 0 24 24"><path d="M9 20a1 1 0 100 2 1 1 0 000-2zM20 20a1 1 0 100 2 1 1 0 000-2zM1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6" /></svg>
+                            شــــراء ذهب جديد
+                        </button>
+                        <button class="op-btn" id="btn-sell" onclick="switchOperation('sell')">
+                            <svg class="icon" viewBox="0 0 24 24"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" /></svg>
+                            بـــيع ذهب مستعمل
+                        </button>
+                        <button class="op-btn" id="btn-exchange" onclick="switchOperation('exchange')">
+                            <svg class="icon" viewBox="0 0 24 24"><path d="M17 1l4 4-4 4M7 23l-4-4 4-4M21 5H9a4 4 0 00-4 4v3M3 19h12a4 4 0 004-4v-3" /></svg>
+                            استبدال ذهب بذهب
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ================= قســم الشــــراء ================= -->
+                <div id="section-buy" class="conditional-section active">
+                    <div class="equation-box">
+                        <strong>المعادلة الرياضية المطبقة للشراء:</strong>
+                        <div class="equation-text">سعر الشراء = (سعر الجرام + المصنعية) × عدد الجرامات</div>
+                    </div>
+
+                    <div class="responsive-grid-2">
+                        <div class="form-group">
+                            <label class="form-label" for="buyMaking">
+                                المصنعية والدمغة والضريبة
+                                <span>(لكل جرام)</span>
+                            </label>
+                            <div class="input-wrapper">
+                                <input type="number" class="form-control" id="buyMaking" placeholder="مثال: 150" oninput="validateAndCalculate()" min="0">
+                                <span class="input-suffix">ج.م</span>
+                            </div>
+                            <div class="input-error-msg">الرجاء إدخال مصنعية صحيحة.</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="buyWeight">عدد الجرامات (الوزن)</label>
+                            <div class="input-wrapper">
+                                <input type="number" class="form-control" id="buyWeight" placeholder="مثال: 10" oninput="validateAndCalculate()" min="0">
+                                <span class="input-suffix">جرام</span>
+                            </div>
+                            <div class="input-error-msg">الوزن يجب أن يكون قيمة موجبة.</div>
+                        </div>
+                    </div>
+                    <div class="info-note">
+                        <svg class="icon" style="flex-shrink: 0;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+                        <span>تتراوح المصنعية والدمغة للذهب العادي في مصر بين 80 إلى 250 جنيهاً مصرياً حسب جودة الشغل وصعوبته، بينما تزداد في السبائك والمشغولات الفاخرة المستوردة.</span>
+                    </div>
+                </div>
+
+                <!-- ================= قســم الـبيــــع ================= -->
+                <div id="section-sell" class="conditional-section">
+                    <div class="equation-box">
+                        <strong>المعادلة الرياضية المطبقة للبيع:</strong>
+                        <div class="equation-text">سعر البيع = (سعر الجرام - سعر الكسر) × عدد الجرامات</div>
+                    </div>
+
+                    <div class="responsive-grid-2">
+                        <div class="form-group">
+                            <label class="form-label" for="sellScrap">
+                                قيمة خصم الكسر للجرام
+                                <span>(إن وُجد)</span>
+                            </label>
+                            <div class="input-wrapper">
+                                <input type="number" class="form-control" id="sellScrap" placeholder="مثال: 10" value="0" oninput="validateAndCalculate()" min="0">
+                                <span class="input-suffix">ج.م</span>
+                            </div>
+                            <div class="input-error-msg">قيمة الخصم لا يمكن أن تكون سالبة.</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="sellWeight">عدد الجرامات (الوزن)</label>
+                            <div class="input-wrapper">
+                                <input type="number" class="form-control" id="sellWeight" placeholder="مثال: 20" oninput="validateAndCalculate()" min="0">
+                                <span class="input-suffix">جرام</span>
+                            </div>
+                            <div class="input-error-msg">الوزن يجب أن يكون قيمة موجبة.</div>
+                        </div>
+                    </div>
+                    <div class="info-note">
+                        <svg class="icon" style="flex-shrink: 0;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+                        <span>الكسر هو المبلغ الصغير الذي يخصمه بعض التجار لتغطية الأتربة والشوائب في الذهب القديم المستعمل، وغالباً ما يكون ما بين 5 إلى 20 جنيهاً في الجرام.</span>
+                    </div>
+                </div>
+
+                <!-- ================= قســم الاستبــدال ================= -->
+                <div id="section-exchange" class="conditional-section">
+                    <div class="equation-box">
+                        <strong>المعادلات المطبقة للاستبدال:</strong>
+                        <div class="equation-text">
+                            قيمة الذهب القديم = وزن القديم × سعر شراء الجرام<br>
+                            قيمة الذهب الجديد = وزن الجديد × سعر الجرام الجديد<br>
+                            فرق الاستبدال = قيمة الذهب الجديد - قيمة الذهب القديم
+                        </div>
+                    </div>
+
+                    <div class="responsive-grid-2" style="gap: 20px;">
+                        <!-- الذهب القديم (للعميل) -->
+                        <div style="border: 1px solid var(--border-color); padding: 15px; border-radius: 12px; background-color: rgba(197, 160, 89, 0.03);">
+                            <h4 style="margin-bottom: 12px; color: var(--gold-secondary); border-bottom: 1px solid var(--border-color); padding-bottom: 5px;">الذهب القديم (المستبدَل)</h4>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="exchOldWeight">وزن الذهب القديم</label>
+                                <div class="input-wrapper">
+                                    <input type="number" class="form-control" id="exchOldWeight" placeholder="الوزن" oninput="validateAndCalculate()" min="0">
+                                    <span class="input-suffix">جرام</span>
+                                </div>
+                                <div class="input-error-msg">قيمة صحيحة مطلوبة.</div>
+                            </div>
+
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label class="form-label" for="exchOldPrice">سعر شراء التاجر للجرام القديم</label>
+                                <div class="input-wrapper">
+                                    <input type="number" class="form-control" id="exchOldPrice" placeholder="السعر" oninput="validateAndCalculate()" min="0">
+                                    <span class="input-suffix">ج.م</span>
+                                </div>
+                                <div class="input-error-msg">قيمة صحيحة مطلوبة.</div>
+                            </div>
+                        </div>
+
+                        <!-- الذهب الجديد (المراد شراؤه) -->
+                        <div style="border: 1px solid var(--border-color); padding: 15px; border-radius: 12px; background-color: rgba(197, 160, 89, 0.03);">
+                            <h4 style="margin-bottom: 12px; color: var(--gold-secondary); border-bottom: 1px solid var(--border-color); padding-bottom: 5px;">الذهب الجديد (المشتَرى)</h4>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="exchNewWeight">وزن الذهب الجديد</label>
+                                <div class="input-wrapper">
+                                    <input type="number" class="form-control" id="exchNewWeight" placeholder="الوزن" oninput="validateAndCalculate()" min="0">
+                                    <span class="input-suffix">جرام</span>
+                                </div>
+                                <div class="input-error-msg">قيمة صحيحة مطلوبة.</div>
+                            </div>
+
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label class="form-label" for="exchNewPrice">سعر الجديد شاملاً المصنعية</label>
+                                <div class="input-wrapper">
+                                    <input type="number" class="form-control" id="exchNewPrice" placeholder="السعر الكلي" oninput="validateAndCalculate()" min="0">
+                                    <span class="input-suffix">ج.م</span>
+                                </div>
+                                <div class="input-error-msg">قيمة صحيحة مطلوبة.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-note">
+                        <svg class="icon" style="flex-shrink: 0;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+                        <span>ملحوظة تجارية: في حالة الاستبدال المباشر، لا يطبق التجار كسر البيع النقدي المعتاد على ذهبك القديم غالباً، بل يسعرون الذهب القديم بسعر البيع الكامل الحالي تشجيعاً لك على إتمام الصفقة، وتدفع أنت فقط فارق الصياغة والمصنعية للذهب الجديد.</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- لوحة النتائج الفورية والتقديرية -->
+            <div class="card results-panel" id="resultsCard">
+                <div>
+                    <h2 class="card-title">
+                        <svg class="icon" viewBox="0 0 24 24" style="stroke: var(--gold-secondary)">
+                            <path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" />
+                        </svg>
+                        تقرير النتائج والتحليل المالي
+                    </h2>
+
+                    <!-- نتائج الشراء -->
+                    <div id="results-buy" class="conditional-section active">
+                        <div class="result-item">
+                            <span class="result-label">قيمة الذهب الخام الكلي:</span>
+                            <span class="result-value" id="buy-raw-total">0.00 ج.م</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">إجمالي تكاليف المصنعية والدمغة:</span>
+                            <span class="result-value" id="buy-making-total">0.00 ج.م</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">المبلغ النهائي المطلوب دفعه:</span>
+                            <span class="result-value highlight" id="buy-final-total">0.00 ج.م</span>
+                        </div>
+                    </div>
+
+                    <!-- نتائج البيع -->
+                    <div id="results-sell" class="conditional-section">
+                        <div class="result-item">
+                            <span class="result-label">قيمة الذهب قبل خصم الكسر:</span>
+                            <span class="result-value" id="sell-pre-total">0.00 ج.م</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">إجمالي قيمة خصم الكسر:</span>
+                            <span class="result-value" id="sell-scrap-total">0.00 ج.م</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">المبلغ الصافي المستلم للعميل:</span>
+                            <span class="result-value highlight" id="sell-final-total">0.00 ج.م</span>
+                        </div>
+                    </div>
+
+                    <!-- نتائج الاستبدال -->
+                    <div id="results-exchange" class="conditional-section">
+                        <div class="result-item">
+                            <span class="result-label">القيمة التقديرية للذهب القديم:</span>
+                            <span class="result-value" id="exch-old-total">0.00 ج.م</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">القيمة الإجمالية للذهب الجديد:</span>
+                            <span class="result-value" id="exch-new-total">0.00 ج.م</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label" id="exch-diff-label">الفارق المالي المستحق (المطلوب دفعه):</span>
+                            <span class="result-value highlight" id="exch-final-diff">0.00 ج.م</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- تقديرات الأسعار للعيارات الأخرى بناءً على السعر المُدخل -->
+                <div class="carat-estimates">
+                    <div class="estimates-title">أسعار العيارات المقدرة في السوق بناءً على مدخلاتك</div>
+                    <div class="estimates-grid">
+                        <div class="est-badge">
+                            عيار 24 (99.9%)
+                            <strong id="est-carat-24">-</strong>
+                        </div>
+                        <div class="est-badge">
+                            عيار 21 (87.5%)
+                            <strong id="est-carat-21">-</strong>
+                        </div>
+                        <div class="est-badge" style="grid-column: span 2;">
+                            عيار 18 (75.0%)
+                            <strong id="est-carat-18">-</strong>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- قسم جدول عيارات الذهب ونسب النقاء -->
+        <section class="carats-table-section">
+            <div class="card">
+                <h2 class="card-title">
+                    <svg class="icon" viewBox="0 0 24 24" style="stroke: var(--gold-secondary)">
+                        <path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-8.06 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946l.73.73a3.42 3.42 0 010 4.838l-.73.73a3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806l-.73.73a3.42 3.42 0 01-4.838 0l-.73-.73a3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946l-.73-.73a3.42 3.42 0 010-4.838l.73-.73a3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138 3.42 3.42 0 001.946-.806l.73-.73z" />
+                    </svg>
+                    دليل نقاء عيارات الذهب وحساباتها
+                </h2>
+                <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 15px;">
+                    يتم تقسيم عيار الذهب بناءً على نسبة الذهب الخالص فيه من أصل 24 جزءًا. إليك جدول يوضح نسبة نقاء الذهب لكل عيار وكيفية التحويل والاحتساب الفني:
+                </p>
+                
+                <table class="gold-table">
+                    <thead>
+                        <tr>
+                            <th>العيار</th>
+                            <th>نسبة النقاء الفنية</th>
+                            <th>معادلة الاحتساب والتحويل الفني</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>عيار 24</strong></td>
+                            <td>99.9% (ذهب خالص بالكامل)</td>
+                            <td>نقطة المرجعية الكلية للتحويل للعيارات الأخرى</td>
+                        </tr>
+                        <tr>
+                            <td><strong>عيار 21</strong></td>
+                            <td>87.5% ذهب نقي + 12.5% معادن أخرى</td>
+                            <td>سعر عيار 21 = سعر عيار 24 × (21 ÷ 24)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>عيار 18</strong></td>
+                            <td>75.0% ذهب نقي + 25.0% معادن أخرى</td>
+                            <td>سعر عيار 18 = سعر عيار 24 × (18 ÷ 24)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- قسم المصطلحات التعليمية لسوق الذهب المصرى -->
+        <section class="glossary-section">
+            <div class="card">
+                <h2 class="card-title">
+                    <svg class="icon" viewBox="0 0 24 24" style="stroke: var(--gold-secondary)">
+                        <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                    أهم مصطلحات سوق الذهب المصرية
+                </h2>
+                <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 20px;">
+                    فهم لغة تجار الذهب في مصر يحميك من أي تلاعب ويساعدك على التفاوض بشكل صحيح للحصول على أفضل صفقة:
+                </p>
+
+                <div class="glossary-grid">
+                    <div class="glossary-card">
+                        <div class="glossary-term">💰 الذهب الخام</div>
+                        <div class="glossary-definition">هو الذهب النقي قبل خلطه وصياغته وتشكيله لمشغولات. يُباع الذهب الخام في البورصة على أساس عيار 24 وهو خالي تماماً من المصنعيات المرتفعة.</div>
+                    </div>
+                    <div class="glossary-card">
+                        <div class="glossary-term">🛠️ المصنعية</div>
+                        <div class="glossary-definition">هي الأجرة المالية التي يتقاضاها الصائغ والمصنع مقابل الجهد الفني والتشكيلي المبذول لتحويل قطعة الذهب الخام الصماء إلى قطعة حُلي فنية رائعة.</div>
+                    </div>
+                    <div class="glossary-card">
+                        <div class="glossary-term">⚖️ الدمغة</div>
+                        <div class="glossary-definition">الختم الحكومي الرسمي الذي يوضع على قطعة الذهب من قبل مصلحة الدمغة والموازين المصرية كإثبات رسمي لعيار القطعة ونقائها وضمان عدم تزييفها.</div>
+                    </div>
+                    <div class="glossary-card">
+                        <div class="glossary-term">🏛️ الضريبة</div>
+                        <div class="glossary-definition">نسبة مئوية مفروضة من وزارة المالية كضريبة قيمة مضافة على الذهب والمشغولات عند الشراء، وغالباً ما يتم دمجها مع قيمة المصنعية لتسهيل الدفع.</div>
+                    </div>
+                    <div class="glossary-card">
+                        <div class="glossary-term">📉 الكسر</div>
+                        <div class="glossary-definition">قيمة مالية صغيرة تُخصم من ثمن الجرام عند بيع المستهلك لذهبه القديم كنسبة أتربة أو شوائب، ويفضل دائماً تنظيف الذهب لتفادي خصم نسبة كبيرة.</div>
+                    </div>
+                    <div class="glossary-card">
+                        <div class="glossary-term">🔄 الاسترداد (Cashback)</div>
+                        <div class="glossary-definition">ميزة تقدمها الشركات الكبرى على السبائك وبعض الجنيهات الذهبية عند إعادة بيعها لنفس الشركة حيث يُسترد جزء من قيمة المصنعية المدفوعة مسبقاً.</div>
+                    </div>
+                    <div class="glossary-card">
+                        <div class="glossary-term">🔀 الاستبدال</div>
+                        <div class="glossary-definition">عملية مقايضة ذهب قديم بذهب جديد في نفس اللحظة حيث يقوم الصائغ بحساب قيمة الذهب القديم كسيولة وخصمها من قيمة المشتريات الجديدة مباشرة.</div>
+                    </div>
+                    <div class="glossary-card">
+                        <div class="glossary-term">💍 المشغولات الذهبية</div>
+                        <div class="glossary-definition">هي الحلي والذهب الجاهز للزينة والارتداء كالخواتم والسلاسل والأساور، وتتميز بارتفاع مصنعيتها نتيجة الجهد العالي المبذول في تفاصيل صياغتها.</div>
+                    </div>
+                    <div class="glossary-card">
+                        <div class="glossary-term">🧱 السبائك</div>
+                        <div class="glossary-definition">قطع من الذهب الخام عيار 24 وتكون مربعة أو مستطيلة الأبعاد وبأوزان محددة تتراوح بين جرام وواحد كيلو، ومصنعيتها منخفضة جداً مما يجعلها خياراً ممتازاً للاستثمار.</div>
+                    </div>
+                    <div class="glossary-card">
+                        <div class="glossary-term">🌐 الأونصة (الأوقية)</div>
+                        <div class="glossary-definition">الوزن العالمي القياسي للذهب بالبورصة وتزن تحديداً 31.1035 جراماً من الذهب النقي عيار 24، وهي المرجع الأساسي لتحديد اتجاه صعود وهبوط الأسعار عالمياً ومحلياً.</div>
+                    </div>
+                    <div class="glossary-card" style="grid-column: span 1;">
+                        <div class="glossary-term">🔄 إعادة الشراء (Buy Back)</div>
+                        <div class="glossary-definition">سياسة تضمن لك أن المتجر أو الشركة ستقوم بشراء نفس القطعة المشتراة بأسعار السوق الحقيقية وبأقل قدر ممكن من التكلفة الإضافية والخصومات.</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- قسم الشرح التعليمي النهائي الشامل والمفصل -->
+            <section class="detailed-guide-section">
+                <div class="card">
+                    <h2 class="card-title">
+                        <svg class="icon" viewBox="0 0 24 24" style="stroke: var(--gold-secondary)">
+                            <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                        </svg>
+                        دليل المستهلك الشامل للتعامل مع الذهب في مصر
+                    </h2>
+                    
+                    <div class="guide-grid">
+                        
+                        <!-- البطاقة الأولى: الشراء والبيع والكسر -->
+                        <div class="guide-card">
+                            <h3>كيفية حساب سعر شراء الذهب بالتفصيل</h3>
+                            <p>عند شراء قطعة ذهب من أي محل صاغة، فإنك تدفع مقابلين منفصلين مجتمعين:</p>
+                            <ul>
+                                <li><strong>ثمن الذهب الخام:</strong> وزن القطعة بالجرام مضروباً في سعر الجرام الحالي لعيار القطعة بالبورصة.</li>
+                                <li><strong>تكلفة المصنعية والخدمات:</strong> أجرة المصنع، الدمغة الحكومية، والضرائب على كل جرام.</li>
+                            </ul>
+                            <div class="example-box">
+                                <strong>مثال رقمي واقعي للشراء:</strong>
+                                تريد شراء خاتم عيار 21 يزن 5 جرامات. سعر عيار 21 في السوق اليوم 3200 جنيه مصري، ومصنعية الخاتم المتفق عليها 150 جنيهاً مصرياً شاملة الدمغة.<br>
+                                سعر الشراء للجرام = 3200 + 150 = 3350 ج.م<br>
+                                الإجمالي الكلي = 5 × 3350 = 16750 ج.م
+                            </div>
+                        </div>
+
+                        <!-- البطاقة الثانية: البيع وخسارة المصنعية -->
+                        <div class="guide-card">
+                            <h3>كيفية حساب سعر بيع الذهب وسبب خسارة المصنعية</h3>
+                            <p>لماذا نخسر المصنعية عند البيع؟ الإجابة واضحة؛ المصنعية هي "أجرة" الصياغة والتشكيل الفني التي ذهبت للمصنع والصائغ، وبمجرد بيعك للقطعة تصبح "ذهباً مستعملاً" يُصهر ليعاد تشكيله من جديد، بالتالي تفقد القيمة الفنية وتتحول لقيمتها كذهب خام فقط.</p>
+                            <p>يتم البيع بموجب المعادلة التالية:</p>
+                            <ul>
+                                <li>سعر البيع = وزن الذهب × (سعر الجرام الحالي - كسر التاجر).</li>
+                            </ul>
+                            <div class="example-box">
+                                <strong>مثال رقمي واقعي للبيع:</strong>
+                                تملك نفس الخاتم عيار 21 ووزنه 5 جرامات وتريد بيعه. سعر عيار 21 للشراء من التاجر اليوم هو 3180 جنيهاً مصرياً، وقام الصائغ بخصم 10 جنيهات ككسر لتعويض الفاقد.<br>
+                                صافي سعر جرام البيع = 3180 - 10 = 3170 ج.م<br>
+                                المبلغ المستحق للعميل = 5 × 3170 = 15850 ج.م
+                            </div>
+                        </div>
+
+                        <!-- البطاقة الثالثة: الاستبدال والفرق المالي -->
+                        <div class="guide-card">
+                            <h3>حساب فرق الاستبدال والفرق بينه وبين البيع النقدي</h3>
+                            <p>الاستبدال هو خيار مفضل وموفر جداً للعملاء الذين يمتلكون ذهباً قديماً ويريدون التحديث بموديلات أحدث. تتم العملية بخطوتين متلازمتين في اللحظة ذاتها:</p>
+                            <ul>
+                                <li><strong>تقييم الذهب القديم:</strong> يقوم الصائغ بوزن الذهب القديم وتثمينه بأعلى سعر ممكن (دون تطبيق الخصومات القاسية للبيع النقدي).</li>
+                                <li><strong>حساب الذهب الجديد:</strong> يُحتسب الذهب الجديد بسعره الكامل شاملاً المصنعية الجديدة والدمغة.</li>
+                                <li>تدفع أنت فقط فارق السعر المالي بين القيمتين.</li>
+                            </ul>
+                            <div class="example-box">
+                                <strong>مثال رقمي واقعي للاستبدال:</strong>
+                                تملك إسورة قديمة عيار 21 تزن 20 جراماً وسعر شراء الجرام 3180 ج.م. وتريد استبدالها بإسورة جديدة تزن 18 جراماً عيار 21 وسعر الجرام الجديد بالمصنعية 3320 ج.م.<br>
+                                قيمة الذهب القديم = 20 × 3180 = 63600 ج.م<br>
+                                قيمة الذهب الجديد = 18 × 3320 = 59760 ج.م<br>
+                                الفارق المالي = 59760 - 63600 = -3840 ج.م (التاجر يدفع لك الفارق المالي لأن قيمة قديمك أعلى).
+                            </div>
+                        </div>
+
+                        <!-- البطاقة الرابعة: نصائح المستثمرين والتحويل بين العيارات -->
+                        <div class="guide-card">
+                            <h3>لماذا يفضل المستثمرون السبائك وكيفية التحويل بين العيارات</h3>
+                            <p><strong>السبائك وجنيهات الذهب:</strong> يفضلها المستثمرون لأن مصنعيتها منخفضة جداً مقارنة بالمشغولات الذهبية العادية، كما يتوفر عليها ميزة "الاسترداد أو الكاش باك" عند البيع مما يجعل الخسارة عند الخروج من الاستثمار تكاد تكون منعدمة.</p>
+                            <p><strong>التحويل الرياضي بين عيارات الذهب:</strong></p>
+                            <ul>
+                                <li>للتحويل من عيار 24 إلى عيار 21: نضرب السعر في (21 ÷ 24) (أي في 0.875).</li>
+                                <li>للتحويل من عيار 24 إلى عيار 18: نضرب السعر في (18 ÷ 24) (أي في 0.750).</li>
+                                <li>للتحويل المباشر من عيار 21 إلى عيار 18: نضرب السعر في (18 ÷ 21) (أي في 0.857).</li>
+                            </ul>
+                            <div class="example-box">
+                                <strong>مثال رقمي واقعي للتحويل:</strong>
+                                إذا كان سعر جرام عيار 24 حالياً هو 3600 جنيهاً مصرياً:<br>
+                                سعر عيار 21 = 3600 × 0.875 = 3150 ج.م<br>
+                                سعر عيار 18 = 3600 × 0.75 = 2700 ج.م
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+    </main>
+
+    <!-- تذييل الصفحة -->
+    <footer>
+        <div class="container">
+            <p>© 2026 الحاسبة الذهبية المصرية الذكية. جميع الحقوق محفوظة.</p>
+            <p style="font-size: 0.8rem; margin-top: 5px; opacity: 0.8;">تم التطوير لتبسيط الحسابات المالية وزيادة الشفافية والوعي المالي للمستهلك المصري في سوق الذهب الصاخب.</p>
+        </div>
+    </footer>
+
+    <!-- البرمجة التفاعلية (JavaScript) -->
+    <script>
+        // تتبع العملية الحالية النشطة
+        let currentOperation = 'buy';
+
+        // دالة تبديل المظهر الداكن والفاتح
+        function toggleTheme() {
+            const body = document.body;
+            const themeText = document.getElementById('themeText');
+            const themeIcon = document.getElementById('themeIcon');
+            
+            body.classList.toggle('dark-mode');
+            
+            if (body.classList.contains('dark-mode')) {
+                themeText.textContent = "الوضع الفاتح";
+                // تغيير مسار أيقونة الشمس للمظهر الداكن
+                themeIcon.innerHTML = `<path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m0-12.728l.707.707m11.314 11.314l.707.707M12 8a4 4 0 110 8 4 4 0 010-8z" />`;
+            } else {
+                themeText.textContent = "الوضع الداكن";
+                // تغيير مسار الأيقونة للقمر للمظهر الفاتح
+                themeIcon.innerHTML = `<path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />`;
+            }
+        }
+
+        // دالة تبديل العمليات المالية (شراء - بيع - استبدال) وتغيير الحقول المعروضة فوراً
+        function switchOperation(operation) {
+            currentOperation = operation;
+
+            // تحديث حالة الأزرار
+            document.querySelectorAll('.op-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`btn-${operation}`).classList.add('active');
+
+            // إخفاء وعرض نماذج المدخلات المطلوبة
+            document.querySelectorAll('.conditional-section').forEach(sec => sec.classList.remove('active'));
+            document.getElementById(`section-${operation}`).classList.add('active');
+
+            // إخفاء وعرض لوحات نتائج التحليل المالي الموافقة للعملية
+            document.getElementById(`results-buy`).classList.remove('active');
+            document.getElementById(`results-sell`).classList.remove('active');
+            document.getElementById(`results-exchange`).classList.remove('active');
+            document.getElementById(`results-${operation}`).classList.add('active');
+
+            // تصفير الأخطاء والقيام بالحسابات مجدداً بناءً على المدخلات الحالية
+            clearAllErrors();
+            validateAndCalculate();
+        }
+
+        // دالة لتنظيف وإخفاء رسائل أخطاء المدخلات السابقة
+        function clearAllErrors() {
+            document.querySelectorAll('.form-group').forEach(grp => grp.classList.remove('has-error'));
+        }
+
+        // دالة عند تغيير العيار المختار
+        function handleCaratChange() {
+            validateAndCalculate();
+        }
+
+        // دالة التحقق من صحة المدخلات والقيام بالعملية الحسابية تلقائياً وبشكل فوري
+        function validateAndCalculate() {
+            clearAllErrors();
+            let isValid = true;
+
+            // الحصول على العيار الأساسي المختار
+            const selectedCarat = parseInt(document.getElementById('goldCarat').value);
+            const rawPriceInput = document.getElementById('rawPrice');
+            const rawPrice = parseFloat(rawPriceInput.value);
+
+            // التحقق من صحة سعر الجرام الأساسي
+            if (isNaN(rawPrice) || rawPrice <= 0) {
+                if (rawPriceInput.value !== "") {
+                    showInputError('grpRawPrice');
+                    isValid = false;
+                } else {
+                    isValid = false; // لا نحسب لو الحقل فارغ تماماً
+                }
+            }
+
+            // نقوم بتقدير أسعار العيارات الأخرى حتى لو لم تكن الحسابات التفصيلية مكتملة
+            if (!isNaN(rawPrice) && rawPrice > 0) {
+                calculateCaratEstimates(rawPrice, selectedCarat);
+            } else {
+                resetCaratEstimates();
+            }
+
+            // نقوم بالحسابات المخصصة لكل عملية بناءً على التبويب المفتوح
+            if (currentOperation === 'buy') {
+                const buyMakingInput = document.getElementById('buyMaking');
+                const buyWeightInput = document.getElementById('buyWeight');
+                const buyMaking = parseFloat(buyMakingInput.value);
+                const buyWeight = parseFloat(buyWeightInput.value);
+
+                if (buyMakingInput.value !== "" && (isNaN(buyMaking) || buyMaking < 0)) {
+                    showInputError(buyMakingInput.parentElement.parentElement);
+                    isValid = false;
+                }
+                if (buyWeightInput.value !== "" && (isNaN(buyWeight) || buyWeight <= 0)) {
+                    showInputError(buyWeightInput.parentElement.parentElement);
+                    isValid = false;
+                }
+
+                if (isValid && !isNaN(rawPrice) && !isNaN(buyMaking) && !isNaN(buyWeight)) {
+                    executeBuyCalculation(rawPrice, buyMaking, buyWeight);
+                } else {
+                    resetBuyResults();
+                }
+
+            } else if (currentOperation === 'sell') {
+                const sellScrapInput = document.getElementById('sellScrap');
+                const sellWeightInput = document.getElementById('sellWeight');
+                const sellScrap = parseFloat(sellScrapInput.value);
+                const sellWeight = parseFloat(sellWeightInput.value);
+
+                if (sellScrapInput.value !== "" && (isNaN(sellScrap) || sellScrap < 0)) {
+                    showInputError(sellScrapInput.parentElement.parentElement);
+                    isValid = false;
+                }
+                if (sellWeightInput.value !== "" && (isNaN(sellWeight) || sellWeight <= 0)) {
+                    showInputError(sellWeightInput.parentElement.parentElement);
+                    isValid = false;
+                }
+
+                if (isValid && !isNaN(rawPrice) && !isNaN(sellScrap) && !isNaN(sellWeight)) {
+                    executeSellCalculation(rawPrice, sellScrap, sellWeight);
+                } else {
+                    resetSellResults();
+                }
+
+            } else if (currentOperation === 'exchange') {
+                const exchOldWeightInput = document.getElementById('exchOldWeight');
+                const exchOldPriceInput = document.getElementById('exchOldPrice');
+                const exchNewWeightInput = document.getElementById('exchNewWeight');
+                const exchNewPriceInput = document.getElementById('exchNewPrice');
+
+                const oldWeight = parseFloat(exchOldWeightInput.value);
+                const oldPrice = parseFloat(exchOldPriceInput.value);
+                const newWeight = parseFloat(exchNewWeightInput.value);
+                const newPrice = parseFloat(exchNewPriceInput.value);
+
+                if (exchOldWeightInput.value !== "" && (isNaN(oldWeight) || oldWeight <= 0)) {
+                    showInputError(exchOldWeightInput.parentElement.parentElement);
+                    isValid = false;
+                }
+                if (exchOldPriceInput.value !== "" && (isNaN(oldPrice) || oldPrice <= 0)) {
+                    showInputError(exchOldPriceInput.parentElement.parentElement);
+                    isValid = false;
+                }
+                if (exchNewWeightInput.value !== "" && (isNaN(newWeight) || newWeight <= 0)) {
+                    showInputError(exchNewWeightInput.parentElement.parentElement);
+                    isValid = false;
+                }
+                if (exchNewPriceInput.value !== "" && (isNaN(newPrice) || newPrice <= 0)) {
+                    showInputError(exchNewPriceInput.parentElement.parentElement);
+                    isValid = false;
+                }
+
+                if (isValid && !isNaN(oldWeight) && !isNaN(oldPrice) && !isNaN(newWeight) && !isNaN(newPrice)) {
+                    executeExchangeCalculation(oldWeight, oldPrice, newWeight, newPrice);
+                } else {
+                    resetExchangeResults();
+                }
+            }
+        }
+
+        // دالة مساعدة لإبراز الخطأ في المدخلات
+        function showInputError(elementOrId) {
+            if (typeof elementOrId === 'string') {
+                document.getElementById(elementOrId).classList.add('has-error');
+            } else {
+                elementOrId.classList.add('has-error');
+            }
+        }
+
+        // دالة تقدير أسعار عيارات الذهب والتحويل بينها بناءً على عيار المدخلات
+        function calculateCaratEstimates(price, carat) {
+            let price24 = 0;
+
+            // تحديد القيمة المرجعية لعيار 24
+            if (carat === 24) {
+                price24 = price;
+            } else if (carat === 21) {
+                price24 = price * (24 / 21);
+            } else if (carat === 18) {
+                price24 = price * (24 / 18);
+            }
+
+            // حساب التقديرات لباقي العيارات بدقة مئوية مناسبة
+            const price21 = price24 * (21 / 24);
+            const price18 = price24 * (18 / 24);
+
+            document.getElementById('est-carat-24').textContent = `${formatCurrency(price24)} ج.م`;
+            document.getElementById('est-carat-21').textContent = `${formatCurrency(price21)} ج.م`;
+            document.getElementById('est-carat-18').textContent = `${formatCurrency(price18)} ج.م`;
+        }
+
+        // إعادة تصفير تقديرات العيارات
+        function resetCaratEstimates() {
+            document.getElementById('est-carat-24').textContent = "-";
+            document.getElementById('est-carat-21').textContent = "-";
+            document.getElementById('est-carat-18').textContent = "-";
+        }
+
+        // دالة الحساب التفصيلي للشراء
+        function executeBuyCalculation(price, making, weight) {
+            const rawTotal = price * weight;
+            const makingTotal = making * weight;
+            const finalTotal = (price + making) * weight;
+
+            document.getElementById('buy-raw-total').textContent = `${formatCurrency(rawTotal)} ج.م`;
+            document.getElementById('buy-making-total').textContent = `${formatCurrency(makingTotal)} ج.م`;
+            document.getElementById('buy-final-total').textContent = `${formatCurrency(finalTotal)} ج.م`;
+        }
+
+        function resetBuyResults() {
+            document.getElementById('buy-raw-total').textContent = "0.00 ج.م";
+            document.getElementById('buy-making-total').textContent = "0.00 ج.م";
+            document.getElementById('buy-final-total').textContent = "0.00 ج.م";
+        }
+
+        // دالة الحساب التفصيلي للبيع
+        function executeSellCalculation(price, scrap, weight) {
+            const preTotal = price * weight;
+            const scrapTotal = scrap * weight;
+            const finalTotal = (price - scrap) * weight;
+
+            document.getElementById('sell-pre-total').textContent = `${formatCurrency(preTotal)} ج.م`;
+            document.getElementById('sell-scrap-total').textContent = `${formatCurrency(scrapTotal)} ج.م`;
+            document.getElementById('sell-final-total').textContent = `${formatCurrency(finalTotal)} ج.م`;
+        }
+
+        function resetSellResults() {
+            document.getElementById('sell-pre-total').textContent = "0.00 ج.م";
+            document.getElementById('sell-scrap-total').textContent = "0.00 ج.م";
+            document.getElementById('sell-final-total').textContent = "0.00 ج.m";
+        }
+
+        // دالة الحساب التفصيلي للاستبدال
+        function executeExchangeCalculation(oldWeight, oldPrice, newWeight, newPrice) {
+            const oldTotal = oldWeight * oldPrice;
+            const newTotal = newWeight * newPrice;
+            const diff = newTotal - oldTotal;
+
+            document.getElementById('exch-old-total').textContent = `${formatCurrency(oldTotal)} ج.م`;
+            document.getElementById('exch-new-total').textContent = `${formatCurrency(newTotal)} ج.م`;
+
+            const diffLabel = document.getElementById('exch-diff-label');
+            const diffVal = document.getElementById('exch-final-diff');
+
+            if (diff > 0) {
+                diffLabel.textContent = "الفارق المالي المستحق (المطلوب دفعه للتاجر):";
+                diffVal.textContent = `${formatCurrency(diff)} ج.م`;
+                diffVal.style.color = "var(--danger)";
+            } else if (diff < 0) {
+                diffLabel.textContent = "الفارق المالي المستحق (المستلم من التاجر):";
+                diffVal.textContent = `${formatCurrency(Math.abs(diff))} ج.م`;
+                diffVal.style.color = "var(--success)";
+            } else {
+                diffLabel.textContent = "الفارق المالي المستحق:";
+                diffVal.textContent = "0.00 ج.م (تعادل تام للقيمة)";
+                diffVal.style.color = "var(--text-main)";
+            }
+        }
+
+        function resetExchangeResults() {
+            document.getElementById('exch-old-total').textContent = "0.00 ج.م";
+            document.getElementById('exch-new-total').textContent = "0.00 ج.م";
+            document.getElementById('exch-final-diff').textContent = "0.00 ج.م";
+            document.getElementById('exch-diff-label').textContent = "الفارق المالي المستحق (المطلوب دفعه):";
+            document.getElementById('exch-final-diff').style.color = "var(--gold-dark)";
+        }
+
+        // تنسيق الأرقام لتظهر بصورة عملة احترافية
+        function formatCurrency(num) {
+            return num.toLocaleString('ar-EG', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+    </script>
+</body>
+</html>

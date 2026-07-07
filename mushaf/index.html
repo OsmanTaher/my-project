@@ -1,0 +1,1646 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ختمة | مُتابِع الحِفْظِ وَالتَّقَدُّمِ فِي القُرآنِ الكَرِيمِ</title>
+
+    <!-- أيقونة الموقع (Favicon) الذهبية الفاخرة للقرآن الكريم -->
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2280%22>📖</text></svg>"
+    />
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Tajawal & Cairo -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&family=Tajawal:wght@400;500;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Font Awesome Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              brand: {
+                light: "#f4fbf7",
+                cream: "#fdfbf7",
+                accent: "#dfb76c", 
+                emerald: "#0d5c46", 
+                mint: "#10b981",
+                dark: "#062c22",
+              },
+            },
+            fontFamily: {
+              cairo: ["Cairo", "sans-serif"],
+              tajawal: ["Tajawal", "sans-serif"],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        font-family: "Tajawal", "Cairo", sans-serif;
+        background-color: #f7f9f6;
+        background-image: radial-gradient(#e2ece9 1px, transparent 1px);
+        background-size: 24px 24px;
+      }
+      .quran-border {
+        border: 8px double #dfb76c;
+      }
+      
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #f1f5f9;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #0d5c46;
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #062c22;
+      }
+      
+      html {
+        scroll-behavior: smooth;
+      }
+    </style>
+  </head>
+  <body class="text-slate-800 min-h-screen flex flex-col">
+    <!-- Header Navbar -->
+    <header class="bg-brand-emerald text-white shadow-lg sticky top-0 z-40">
+      <div
+        class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center gap-4"
+      >
+        <!-- الشعار التفاعلي للصعود التدريجي السلس -->
+        <div
+          onclick="scrollToTop()"
+          class="flex items-center gap-3 cursor-pointer hover:opacity-90 active:scale-95 transition-all duration-300 group"
+          title="العودة للرئيسية"
+        >
+          <div
+            class="bg-brand-accent/20 p-2 rounded-full border border-brand-accent/40 group-hover:border-brand-accent group-hover:bg-brand-accent/30 transition-all duration-300"
+          >
+            <svg
+              class="w-8 h-8 text-brand-accent transform group-hover:scale-110 transition-transform duration-300"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+              ></path>
+            </svg>
+          </div>
+          <div>
+            <h1
+              class="text-2xl font-black tracking-wide text-brand-cream font-cairo flex items-center gap-1"
+            >
+              خَتْمَة
+            </h1>
+          </div>
+        </div>
+
+        <!-- Quick Stats & Actions -->
+        <div class="flex items-center gap-3">
+          <div
+            class="bg-brand-dark/50 px-4 py-1.5 rounded-full border border-emerald-700/50 flex items-center gap-2"
+          >
+            <span class="text-amber-400 font-bold" id="header-streak-num"
+              >0</span
+            >
+            <i class="fa-solid fa-fire text-amber-500 animate-pulse"></i>
+            <span class="text-xs text-emerald-100">أيام متتالية</span>
+          </div>
+          <button
+            onclick="openResetModal()"
+            class="bg-red-700 hover:bg-red-800 text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1.5"
+          >
+            <i class="fa-solid fa-rotate-left"></i>
+            تهيئة <span class="hidden sm:block">الحساب</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- شريط التقدم التفاعلي الذي يملأ كلما تم التمرير لأسفل -->
+      <div class="w-full h-1 bg-brand-dark/30 overflow-hidden relative">
+        <div
+          id="scroll-progress"
+          class="h-full bg-brand-accent shadow-[0_0_8px_#dfb76c] transition-all duration-75 ease-out"
+          style="width: 0%"
+        ></div>
+      </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 mt-6 w-full flex-grow pb-12">
+      <!-- Welcome banner & Dynamic Target of the day -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        <!-- Target of the day card -->
+        <div
+          class="bg-gradient-to-br from-brand-emerald to-emerald-900 text-white rounded-2xl p-6 shadow-md border-r-8 border-brand-accent relative overflow-hidden flex flex-col justify-between col-span-1 lg:col-span-2"
+        >
+          <div class="absolute -left-10 -bottom-10 opacity-10 text-9xl">
+            <i class="fa-solid fa-book-quran"></i>
+          </div>
+          <div>
+            <div class="flex justify-between items-center mb-4">
+              <span
+                class="bg-brand-accent text-brand-dark text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1"
+              >
+                <i class="fa-solid fa-star"></i> وِرْدُ اليَوْمِ (معدل وجهين)
+              </span>
+              <span class="text-xs text-emerald-200">الوتيرة المقترحة</span>
+            </div>
+            <h3
+              class="text-2xl font-bold mb-2 text-brand-cream"
+              id="today-target-title"
+            >
+              جاري تحديد الورد المناسب...
+            </h3>
+            <p
+              class="text-emerald-100 text-sm mb-4 leading-relaxed"
+              id="today-target-desc"
+            >
+              بمجرد بدئك للتتبع، سنقترح عليك الوجهين التاليين لحفظهما للتقدم
+              بانتظام.
+            </p>
+          </div>
+          <div class="flex gap-2 mt-2 flex-wrap">
+            <button
+              onclick="completeTodayTarget()"
+              id="btn-target-complete"
+              class="bg-brand-accent hover:bg-amber-500 text-brand-dark font-bold px-4 py-2 rounded-xl text-sm transition flex items-center gap-2"
+            >
+              <i class="fa-solid fa-check"></i> تم إنجاز ورد اليوم!
+            </button>
+            <button
+              onclick="scrollToActiveSurah()"
+              class="bg-emerald-800/80 hover:bg-emerald-800 text-white border border-emerald-600 px-4 py-2 rounded-xl text-sm transition"
+            >
+              انتقل إلى السورة الحالية
+            </button>
+          </div>
+        </div>
+
+        <!-- Finish Date Calculator Card -->
+        <div
+          class="bg-white rounded-2xl p-6 shadow-sm border border-emerald-100 flex flex-col justify-between"
+        >
+          <div>
+            <h3
+              class="text-lg font-bold text-brand-emerald mb-2 flex items-center gap-2 border-b pb-2"
+            >
+              <i class="fa-regular fa-calendar-check text-brand-accent"></i>
+              التاريخ المتوقع للختام
+            </h3>
+            <p class="text-slate-500 text-xs mb-4">
+              يُحسب بناءً على عدد الصفحات المتبقية بمعدل وجهين يومياً:
+            </p>
+            <div
+              class="text-center py-4 bg-brand-light rounded-xl border border-emerald-50 mb-3"
+            >
+              <span class="block text-slate-400 text-xs"
+                >تاريخ الختم التقريبي</span
+              >
+              <span
+                class="text-xl font-extrabold text-brand-emerald"
+                id="estimated-date"
+                >بانتظار البيانات</span
+              >
+              <span
+                class="block text-xs text-brand-mint mt-1 font-semibold"
+                id="remaining-days-count"
+                >متبقي 604 صفحات</span
+              >
+            </div>
+          </div>
+          <p class="text-[11px] text-slate-400 text-center italic">
+            "قليلٌ دائمٌ خيرٌ من كثيرٍ منقطع" • التزم بوردك اليومي لتصل لختمتك
+            في الوقت المحدد.
+          </p>
+        </div>
+      </div>
+
+      <!-- Global Dashboard Indicators -->
+      <section
+        class="bg-white rounded-2xl p-6 shadow-sm border border-emerald-100 mb-8"
+      >
+        <h3
+          class="text-lg font-bold text-brand-emerald mb-4 flex items-center gap-2"
+        >
+          <i class="fa-solid fa-chart-line text-brand-accent"></i>
+          مؤشرات الإنجاز العام (604 صفحة)
+        </h3>
+
+        <!-- Progress Bar Stacked -->
+        <div class="mb-6">
+          <div
+            class="flex justify-between text-xs font-semibold mb-2 text-slate-500"
+          >
+            <span>نسبة الإنجاز الفعلي للمصحف</span>
+            <span
+              class="text-brand-emerald font-bold"
+              id="global-progress-percent"
+              >0%</span
+            >
+          </div>
+          <!-- Progress container with layered bars -->
+          <div
+            class="w-full bg-slate-100 h-6 rounded-full overflow-hidden flex relative shadow-inner"
+          >
+            <!-- Completed pages (Emerald Green) -->
+            <div
+              id="progress-bar-completed"
+              class="bg-brand-mint h-full transition-all duration-500 relative"
+              style="width: 0%"
+            >
+              <div
+                class="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent"
+              ></div>
+            </div>
+            <!-- Revision pages (Orange/Amber) -->
+            <div
+              id="progress-bar-revision"
+              class="bg-amber-400 h-full transition-all duration-500"
+              style="width: 0%"
+            ></div>
+            <!-- Active Memorization pages (Blue) -->
+            <div
+              id="progress-bar-memorizing"
+              class="bg-sky-400 h-full transition-all duration-500"
+              style="width: 0%"
+            ></div>
+          </div>
+          <!-- Color legends -->
+          <div
+            class="flex flex-wrap gap-x-6 gap-y-2 mt-3 text-xs justify-center md:justify-start"
+          >
+            <span class="flex items-center gap-1.5 text-slate-600">
+              <span
+                class="w-3.5 h-3.5 bg-brand-mint rounded-full inline-block border border-green-300"
+              ></span>
+              تم الحفظ والمراجعة العميقة (<span id="legend-completed-cnt"
+                >0</span
+              >
+              صفحة)
+            </span>
+            <span class="flex items-center gap-1.5 text-slate-600">
+              <span
+                class="w-3.5 h-3.5 bg-amber-400 rounded-full inline-block border border-amber-200"
+              ></span>
+              قيد المراجعة الدورية (<span id="legend-revision-cnt">0</span>
+              صفحة)
+            </span>
+            <span class="flex items-center gap-1.5 text-slate-600">
+              <span
+                class="w-3.5 h-3.5 bg-sky-400 rounded-full inline-block border border-sky-300"
+              ></span>
+              جاري حفظه الآن حديثاً (<span id="legend-memorizing-cnt">0</span>
+              صفحة)
+            </span>
+            <span class="flex items-center gap-1.5 text-slate-600">
+              <span
+                class="w-3.5 h-3.5 bg-slate-200 rounded-full inline-block border border-slate-300"
+              ></span>
+              غير مبدوء بعد (<span id="legend-unstarted-cnt">604</span> صفحة)
+            </span>
+          </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div
+            class="p-4 rounded-xl bg-green-50/50 border border-green-100 flex flex-col justify-center"
+          >
+            <span class="text-xs text-green-700 font-semibold mb-1"
+              >الصفحات التامة</span
+            >
+            <div class="flex items-baseline gap-1">
+              <span
+                class="text-2xl font-extrabold text-green-800"
+                id="stat-completed-pages"
+                >0</span
+              >
+              <span class="text-xs text-slate-400">/ 604</span>
+            </div>
+          </div>
+          <div
+            class="p-4 rounded-xl bg-amber-50/50 border border-amber-100 flex flex-col justify-center"
+          >
+            <span class="text-xs text-amber-700 font-semibold mb-1"
+              >تحت المراجعة</span
+            >
+            <div class="flex items-baseline gap-1">
+              <span
+                class="text-2xl font-extrabold text-amber-800"
+                id="stat-revision-pages"
+                >0</span
+              >
+              <span class="text-xs text-slate-400">/ 604</span>
+            </div>
+          </div>
+          <div
+            class="p-4 rounded-xl bg-sky-50/50 border border-sky-100 flex flex-col justify-center"
+          >
+            <span class="text-xs text-sky-700 font-semibold mb-1"
+              >جاري الحفظ</span
+            >
+            <div class="flex items-baseline gap-1">
+              <span
+                class="text-2xl font-extrabold text-sky-800"
+                id="stat-memorizing-pages"
+                >0</span
+              >
+              <span class="text-xs text-slate-400">/ 604</span>
+            </div>
+          </div>
+          <div
+            class="p-4 rounded-xl bg-slate-50 border border-slate-200/60 flex flex-col justify-center"
+          >
+            <span class="text-xs text-slate-500 font-semibold mb-1"
+              >متبقي كامل الحفظ</span
+            >
+            <div class="flex items-baseline gap-1">
+              <span
+                class="text-2xl font-extrabold text-slate-700"
+                id="stat-remaining-pages"
+                >604</span
+              >
+              <span class="text-xs text-slate-400">صفحة</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Main Workspace Tabs -->
+      <div
+        class="mb-6 flex border-b border-slate-200 gap-2 overflow-x-auto pb-1"
+      >
+        <button
+          onclick="switchTab('surahs')"
+          id="tab-btn-surahs"
+          class="px-5 py-3 font-semibold text-sm transition-all duration-200 border-b-2 border-brand-emerald text-brand-emerald flex items-center gap-2 whitespace-nowrap"
+        >
+          <i class="fa-solid fa-list-ol"></i>
+          سور القرآن الكريم (114)
+        </button>
+        <button
+          onclick="switchTab('juzs')"
+          id="tab-btn-juzs"
+          class="px-5 py-3 font-semibold text-sm transition-all duration-200 border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2 whitespace-nowrap"
+        >
+          <i class="fa-solid fa-grip-vertical"></i>
+          تتبع بالأجزاء الثلاثين
+        </button>
+        <button
+          onclick="switchTab('history')"
+          id="tab-btn-history"
+          class="px-5 py-3 font-semibold text-sm transition-all duration-200 border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2 whitespace-nowrap"
+        >
+          <i class="fa-solid fa-clock-rotate-left"></i>
+          سجل إنجازاتك
+        </button>
+      </div>
+
+      <!-- TAB CONTENT: SURAHS -->
+      <section id="tab-content-surahs" class="space-y-6">
+        <!-- Search and Filtering -->
+        <div
+          class="bg-white p-4 rounded-xl shadow-sm border border-emerald-50 flex flex-col md:flex-row gap-4 justify-between items-center"
+        >
+          <!-- Search bar -->
+          <div class="relative w-full md:w-96">
+            <span
+              class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400"
+            >
+              <i class="fa-solid fa-magnifying-glass"></i>
+            </span>
+            <input
+              type="text"
+              id="search-surah-input"
+              oninput="filterSurahs()"
+              placeholder="ابحث باسم السورة (مثال: البقرة)..."
+              class="w-full pr-10 pl-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-emerald text-sm"
+            />
+          </div>
+          <!-- Status Filter -->
+          <div
+            class="flex flex-wrap gap-2 w-full md:w-auto justify-start md:justify-end"
+          >
+            <button
+              onclick="filterByStatus('all')"
+              id="filter-btn-all"
+              class="bg-brand-emerald text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition"
+            >
+              الكل
+            </button>
+            <button
+              onclick="filterByStatus('completed')"
+              id="filter-btn-completed"
+              class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1.5 rounded-lg text-xs font-semibold transition"
+            >
+              تم الحفظ
+            </button>
+            <button
+              onclick="filterByStatus('revision')"
+              id="filter-btn-revision"
+              class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1.5 rounded-lg text-xs font-semibold transition"
+            >
+              قيد المراجعة
+            </button>
+            <button
+              onclick="filterByStatus('memorizing')"
+              id="filter-btn-memorizing"
+              class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1.5 rounded-lg text-xs font-semibold transition"
+            >
+              جاري الحفظ
+            </button>
+            <button
+              onclick="filterByStatus('unstarted')"
+              id="filter-btn-unstarted"
+              class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1.5 rounded-lg text-xs font-semibold transition"
+            >
+              لم يبدأ
+            </button>
+          </div>
+        </div>
+
+        <!-- Surahs Grid -->
+        <div
+          id="surahs-container"
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+        >
+          <!-- Javascript will inject surah cards here -->
+        </div>
+      </section>
+
+      <!-- TAB CONTENT: JUZ'S -->
+      <section
+        id="tab-content-juzs"
+        class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+      >
+        <!-- Dynamic Parts Cards populated by JS -->
+      </section>
+
+      <!-- TAB CONTENT: HISTORY / LOG -->
+      <section id="tab-content-history" class="hidden max-w-2xl mx-auto">
+        <div
+          class="bg-white rounded-2xl p-6 shadow-sm border border-emerald-50"
+        >
+          <div class="flex justify-between items-center border-b pb-4 mb-6">
+            <h3
+              class="font-bold text-brand-emerald text-lg flex items-center gap-2"
+            >
+              <i class="fa-solid fa-list-check"></i>
+              خط زمني لإنجازاتك الأخيرة
+            </h3>
+            <button
+              onclick="clearHistoryLogs()"
+              class="text-slate-400 hover:text-red-600 transition text-xs flex items-center gap-1"
+            >
+              <i class="fa-solid fa-trash-can"></i> مسح السجل
+            </button>
+          </div>
+
+          <div id="history-logs-container" class="space-y-4">
+            <!-- History log elements go here -->
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Custom Dialog Modal (Replace alert() according to system prompt) -->
+    <div
+      id="custom-modal"
+      class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden opacity-0 transition-opacity duration-300"
+    >
+      <div
+        class="bg-white rounded-2xl w-full max-w-md p-6 shadow-2xl border-t-8 border-brand-accent transform translate-y-4 transition-transform duration-300"
+        id="modal-card"
+      >
+        <div class="flex items-start gap-4">
+          <div
+            class="p-3 bg-amber-50 rounded-full text-brand-accent text-2xl"
+            id="modal-icon-container"
+          >
+            <i class="fa-solid fa-triangle-exclamation"></i>
+          </div>
+          <div class="flex-grow">
+            <h3 class="text-lg font-bold text-slate-800" id="modal-title">
+              تنبيه
+            </h3>
+            <p class="text-sm text-slate-500 mt-2" id="modal-message">
+              رسالة التنبيه الافتراضية هنا...
+            </p>
+          </div>
+        </div>
+        <div class="flex gap-2 justify-end mt-6">
+          <button
+            id="modal-cancel-btn"
+            onclick="closeCustomModal()"
+            class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-semibold rounded-xl transition"
+          >
+            إلغاء
+          </button>
+          <button
+            id="modal-confirm-btn"
+            class="px-4 py-2 bg-brand-emerald hover:bg-brand-dark text-white text-sm font-semibold rounded-xl transition"
+          >
+            تأكيد
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Page Status Action Sheet Modal for quick single page changes -->
+    <div
+      id="status-modal"
+      class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden"
+    >
+      <div
+        class="bg-white rounded-2xl w-full max-w-sm p-6 shadow-2xl border-t-8 border-brand-accent"
+      >
+        <h3
+          class="text-lg font-bold text-brand-emerald border-b pb-3 mb-4 text-center"
+          id="status-modal-title"
+        >
+          تعديل حالة الصفحة
+        </h3>
+        <div class="space-y-2.5">
+          <button
+            onclick="setSpecificPageState(3)"
+            class="w-full flex items-center justify-between p-3 rounded-xl border border-slate-100 hover:bg-green-50 text-slate-700 hover:text-green-800 font-semibold transition group"
+          >
+            <span class="flex items-center gap-2">
+              <span
+                class="w-4 h-4 bg-brand-mint rounded-full inline-block border border-green-300"
+              ></span>
+              تم الحفظ والمراجعة (كامل التثبيت)
+            </span>
+            <i
+              class="fa-solid fa-chevron-left text-slate-300 group-hover:translate-x-[-4px] transition-transform"
+            ></i>
+          </button>
+          <button
+            onclick="setSpecificPageState(2)"
+            class="w-full flex items-center justify-between p-3 rounded-xl border border-slate-100 hover:bg-amber-50 text-slate-700 hover:text-amber-800 font-semibold transition group"
+          >
+            <span class="flex items-center gap-2">
+              <span
+                class="w-4 h-4 bg-amber-400 rounded-full inline-block border border-amber-200"
+              ></span>
+              قيد المراجعة الدورية
+            </span>
+            <i
+              class="fa-solid fa-chevron-left text-slate-300 group-hover:translate-x-[-4px] transition-transform"
+            ></i>
+          </button>
+          <button
+            onclick="setSpecificPageState(1)"
+            class="w-full flex items-center justify-between p-3 rounded-xl border border-slate-100 hover:bg-sky-50 text-slate-700 hover:text-sky-800 font-semibold transition group"
+          >
+            <span class="flex items-center gap-2">
+              <span
+                class="w-4 h-4 bg-sky-400 rounded-full inline-block border border-sky-300"
+              ></span>
+              جاري الحفظ الآن
+            </span>
+            <i
+              class="fa-solid fa-chevron-left text-slate-300 group-hover:translate-x-[-4px] transition-transform"
+            ></i>
+          </button>
+          <button
+            onclick="setSpecificPageState(0)"
+            class="w-full flex items-center justify-between p-3 rounded-xl border border-slate-100 hover:bg-slate-50 text-slate-700 hover:text-slate-800 font-semibold transition group"
+          >
+            <span class="flex items-center gap-2">
+              <span
+                class="w-4 h-4 bg-slate-200 rounded-full inline-block border border-slate-300"
+              ></span>
+              غير مبدوء (تهيئة الحالة)
+            </span>
+            <i
+              class="fa-solid fa-chevron-left text-slate-300 group-hover:translate-x-[-4px] transition-transform"
+            ></i>
+          </button>
+        </div>
+        <div class="mt-5 text-center">
+          <button
+            onclick="closeStatusModal()"
+            class="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold rounded-xl text-sm transition"
+          >
+            تراجع
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer المطور عثمان بألوان متناسقة مع التطبيق مع أنيميشن الهوفر -->
+    <footer
+      dir="ltr"
+      class="bg-brand-dark text-slate-300 py-6 border-t-4 border-brand-accent/50 text-center font-cairo"
+    >
+      <div
+        class="max-w-7xl mx-auto px-4 flex flex-wrap justify-center items-center gap-3 text-sm md:text-base tracking-wider font-semibold"
+      >
+        <!-- الرمز البرمجي والاسم المطابق للصورة المرجعية تماماً -->
+        <span class="text-brand-accent">&lt; Developed By &gt;</span>
+        <a
+          href="https://www.facebook.com/twshkndy.qlashy"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="bg-[#1b4d54] hover:bg-[#256c75] text-white font-bold px-2 py-1 rounded-xl transition-all duration-300 transform hover:scale-110 hover:-translate-y-0.5 active:scale-95 inline-block shadow-[0_4px_10px_rgba(0,0,0,0.3)] border border-brand-accent/30 font-mono tracking-wide"
+          title="زيارة صفحة المطور Osman على فيسبوك"
+        >
+          Osman
+        </a>
+        <span class="text-brand-accent hidden sm:block"
+          >&lt;All Copy Rights Reserved @2026 &gt;</span
+        >
+        <span class="sm:hidden">&lt;/&gt;</span>
+      </div>
+    </footer>
+
+    <!-- JS Logic and Data -->
+    <script>
+      
+      const SuraHs = [
+        { id: 1, name: "الفاتحة", start: 1, end: 1, type: "مكية" },
+        { id: 2, name: "البقرة", start: 2, end: 49, type: "مدنية" },
+        { id: 3, name: "آل عمران", start: 50, end: 76, type: "مدنية" },
+        { id: 4, name: "النساء", start: 77, end: 106, type: "مدنية" },
+        { id: 5, name: "المائدة", start: 107, end: 127, type: "مدنية" },
+        { id: 6, name: "الأنعام", start: 128, end: 150, type: "مكية" },
+        { id: 7, name: "الأعراف", start: 151, end: 176, type: "مكية" },
+        { id: 8, name: "الأنفال", start: 177, end: 186, type: "مدنية" },
+        { id: 9, name: "التوبة", start: 187, end: 207, type: "مدنية" },
+        { id: 10, name: "يونس", start: 208, end: 221, type: "مكية" },
+        { id: 11, name: "هود", start: 222, end: 235, type: "مكية" },
+        { id: 12, name: "يوسف", start: 236, end: 248, type: "مكية" },
+        { id: 13, name: "الرعد", start: 249, end: 255, type: "مدنية" },
+        { id: 14, name: "إبراهيم", start: 256, end: 261, type: "مكية" },
+        { id: 15, name: "الحجر", start: 262, end: 267, type: "مكية" },
+        { id: 16, name: "النحل", start: 268, end: 281, type: "مكية" },
+        { id: 17, name: "الإسراء", start: 282, end: 293, type: "مكية" },
+        { id: 18, name: "الكهف", start: 294, end: 304, type: "مكية" },
+        { id: 19, name: "مريم", start: 305, end: 312, type: "مكية" },
+        { id: 20, name: "طه", start: 313, end: 321, type: "مكية" },
+        { id: 21, name: "الأنبياء", start: 322, end: 331, type: "مكية" },
+        { id: 22, name: "الحج", start: 332, end: 341, type: "مدنية" },
+        { id: 23, name: "المؤمنون", start: 342, end: 349, type: "مكية" },
+        { id: 24, name: "النور", start: 350, end: 359, type: "مدنية" },
+        { id: 25, name: "الفرقان", start: 360, end: 366, type: "مكية" },
+        { id: 26, name: "الشعراء", start: 367, end: 376, type: "مكية" },
+        { id: 27, name: "النمل", start: 377, end: 385, type: "مكية" },
+        { id: 28, name: "القصص", start: 386, end: 395, type: "مكية" },
+        { id: 29, name: "العنكبوت", start: 396, end: 404, type: "مكية" },
+        { id: 30, name: "الروم", start: 405, end: 410, type: "مكية" },
+        { id: 31, name: "لقمان", start: 411, end: 414, type: "مكية" },
+        { id: 32, name: "السجدة", start: 415, end: 417, type: "مكية" },
+        { id: 33, name: "الأحزاب", start: 418, end: 427, type: "مدنية" },
+        { id: 34, name: "سبأ", start: 428, end: 433, type: "مكية" },
+        { id: 35, name: "فاطر", start: 434, end: 439, type: "مكية" },
+        { id: 36, name: "يس", start: 440, end: 445, type: "مكية" },
+        { id: 37, name: "الصافات", start: 446, end: 452, type: "مكية" },
+        { id: 38, name: "ص", start: 453, end: 458, type: "مكية" },
+        { id: 39, name: "الزمر", start: 459, end: 467, type: "مكية" },
+        { id: 40, name: "غافر", start: 468, end: 476, type: "مكية" },
+        { id: 41, name: "فصلت", start: 477, end: 482, type: "مكية" },
+        { id: 42, name: "الشورى", start: 483, end: 489, type: "مكية" },
+        { id: 43, name: "الزخرف", start: 490, end: 495, type: "مكية" },
+        { id: 44, name: "الدخان", start: 496, end: 498, type: "مكية" },
+        { id: 45, name: "الجاثية", start: 499, end: 501, type: "مكية" },
+        { id: 46, name: "الأحقاف", start: 502, end: 506, type: "مكية" },
+        { id: 47, name: "محمد", start: 507, end: 510, type: "مدنية" },
+        { id: 48, name: "الفتح", start: 511, end: 515, type: "مدنية" },
+        { id: 49, name: "الحجرات", start: 516, end: 517, type: "مدنية" },
+        { id: 50, name: "ق", start: 518, end: 520, type: "مكية" },
+        { id: 51, name: "الذاريات", start: 521, end: 523, type: "مكية" },
+        { id: 52, name: "الطور", start: 524, end: 525, type: "مكية" },
+        { id: 53, name: "النجم", start: 526, end: 527, type: "مكية" },
+        { id: 54, name: "القمر", start: 528, end: 530, type: "مكية" },
+        { id: 55, name: "الرحمن", start: 531, end: 534, type: "مدنية" },
+        { id: 56, name: "الواقعة", start: 535, end: 537, type: "مكية" },
+        { id: 57, name: "الحديد", start: 538, end: 541, type: "مدنية" },
+        { id: 58, name: "المجادلة", start: 542, end: 545, type: "مدنية" },
+        { id: 59, name: "الحشر", start: 546, end: 548, type: "مدنية" },
+        { id: 60, name: "الممتحنة", start: 549, end: 551, type: "مدنية" },
+        { id: 61, name: "الصف", start: 552, end: 553, type: "مدنية" },
+        { id: 62, name: "الجمعة", start: 554, end: 555, type: "مدنية" },
+        { id: 63, name: "المنافقون", start: 556, end: 557, type: "مدنية" },
+        { id: 64, name: "التغابن", start: 558, end: 559, type: "مدنية" },
+        { id: 65, name: "الطلاق", start: 560, end: 561, type: "مدنية" },
+        { id: 66, name: "التحريم", start: 562, end: 563, type: "مدنية" },
+        { id: 67, name: "الملك", start: 564, end: 565, type: "مكية" },
+        { id: 68, name: "القلم", start: 566, end: 568, type: "مكية" },
+        { id: 69, name: "الحاقة", start: 569, end: 571, type: "مكية" },
+        { id: 70, name: "المعارج", start: 572, end: 573, type: "مكية" },
+        { id: 71, name: "نوح", start: 574, end: 575, type: "مكية" },
+        { id: 72, name: "الجن", start: 576, end: 577, type: "مكية" },
+        { id: 73, name: "المزمل", start: 578, end: 579, type: "مكية" },
+        { id: 74, name: "المدثر", start: 580, end: 581, type: "مكية" },
+        { id: 75, name: "القيامة", start: 582, end: 583, type: "مكية" },
+        { id: 76, name: "الإنسان", start: 584, end: 585, type: "مدنية" },
+        { id: 77, name: "المرسلات", start: 586, end: 587, type: "مكية" },
+        { id: 78, name: "النبأ", start: 588, end: 589, type: "مكية" },
+        { id: 79, name: "النازعات", start: 590, end: 591, type: "مكية" },
+        { id: 80, name: "عبس", start: 592, end: 593, type: "مكية" },
+        { id: 81, name: "التكوير", start: 594, end: 594, type: "مكية" },
+        { id: 82, name: "الانفطار", start: 595, end: 595, type: "مكية" },
+        { id: 83, name: "المطففين", start: 596, end: 597, type: "مكية" },
+        { id: 84, name: "الانشقاق", start: 598, end: 599, type: "مكية" },
+        { id: 85, name: "البروج", start: 600, end: 600, type: "مكية" },
+        { id: 86, name: "الطارق", start: 601, end: 601, type: "مكية" },
+        { id: 87, name: "الأعلى", start: 601, end: 602, type: "مكية" },
+        { id: 88, name: "الغاشية", start: 602, end: 603, type: "مكية" },
+        { id: 89, name: "الفجر", start: 603, end: 604, type: "مكية" },
+        { id: 90, name: "البلد", start: 605, end: 605, type: "مكية" },
+        { id: 91, name: "الشمس", start: 605, end: 605, type: "مكية" },
+        { id: 92, name: "الليل", start: 605, end: 605, type: "مكية" },
+        { id: 93, name: "الضحى", start: 606, end: 606, type: "مكية" },
+        { id: 94, name: "الشرح", start: 606, end: 606, type: "مكية" },
+        { id: 95, name: "التين", start: 606, end: 606, type: "مكية" },
+        { id: 96, name: "العلق", start: 607, end: 607, type: "مكية" },
+        { id: 97, name: "القدر", start: 607, end: 607, type: "مكية" },
+        { id: 98, name: "البينة", start: 608, end: 608, type: "مدنية" },
+        { id: 99, name: "الزلزلة", start: 608, end: 608, type: "مدنية" },
+        { id: 100, name: "العاديات", start: 609, end: 609, type: "مكية" },
+        { id: 101, name: "القارعة", start: 609, end: 609, type: "مكية" },
+        { id: 102, name: "التكاثر", start: 610, end: 610, type: "مكية" },
+        { id: 103, name: "العصر", start: 610, end: 610, type: "مكية" },
+        { id: 104, name: "الهمزة", start: 611, end: 611, type: "مكية" },
+        { id: 105, name: "الفيل", start: 611, end: 611, type: "مكية" },
+        { id: 106, name: "قريش", start: 612, end: 612, type: "مكية" },
+        { id: 107, name: "الماعون", start: 612, end: 612, type: "مكية" },
+        { id: 108, name: "الكوثر", start: 612, end: 612, type: "مكية" },
+        { id: 109, name: "الكافرون", start: 613, end: 613, type: "مكية" },
+        { id: 110, name: "النصر", start: 613, end: 613, type: "مدنية" },
+        { id: 111, name: "المسد", start: 613, end: 613, type: "مكية" },
+        { id: 112, name: "الإخلاص", start: 614, end: 614, type: "مكية" },
+        { id: 113, name: "الفلق", start: 614, end: 614, type: "مكية" },
+        { id: 114, name: "الناس", start: 614, end: 614, type: "مكية" },
+      ];
+
+      SuraHs.forEach((s) => {
+        if (s.start > 604) s.start = 604;
+        if (s.end > 604) s.end = 604;
+      });
+
+      
+      const JuzsData = Array.from({ length: 30 }, (_, i) => {
+        const index = i + 1;
+        let start = 1 + (index - 1) * 20;
+        let end = index * 20;
+
+        if (index === 1) {
+          start = 1;
+          end = 21;
+        } else if (index === 2) {
+          start = 22;
+          end = 41;
+        } else if (index === 30) {
+          end = 604;
+        } else {
+          start = (index - 1) * 20 + 2;
+          end = index * 20 + 1;
+        }
+        return {
+          id: index,
+          name: `الجزء ${index}`,
+          start: start,
+          end: end,
+        };
+      });
+
+      
+      let pageStates = {}; 
+      let streakCount = 0;
+      let lastActivityDate = "";
+      let historyLogs = [];
+      let activeTab = "surahs";
+      let currentStatusFilter = "all";
+      let activePageForStatusChange = null;
+
+      
+      window.onload = function () {
+        loadFromLocalStorage();
+        renderDashboard();
+        renderSurahsGrid();
+        renderJuzGrid();
+        renderHistoryLogs();
+        updateDailyTarget();
+
+        
+        updateScrollProgress();
+      };
+
+      
+      function loadFromLocalStorage() {
+        const savedPages = localStorage.getItem("quran_tracker_pages");
+        const savedStreak = localStorage.getItem("quran_tracker_streak");
+        const savedLastDate = localStorage.getItem("quran_tracker_last_date");
+        const savedLogs = localStorage.getItem("quran_tracker_logs");
+
+        if (savedPages) {
+          pageStates = JSON.parse(savedPages);
+        } else {
+          for (let p = 1; p <= 604; p++) {
+            pageStates[p] = 0;
+          }
+          
+          pageStates[1] = 3;
+          pageStates[2] = 1;
+          pageStates[3] = 1;
+          pageStates[4] = 2;
+          pageStates[5] = 2;
+          saveToLocalStorage();
+        }
+
+        streakCount = savedStreak ? parseInt(savedStreak) : 0;
+        lastActivityDate = savedLastDate ? savedLastDate : "";
+        historyLogs = savedLogs
+          ? JSON.parse(savedLogs)
+          : [
+              {
+                id: 1,
+                date: new Date().toLocaleDateString("ar-EG"),
+                text: "تم إنشاء حساب تتبع ختمة بنجاح. ابدأ مسيرتك المباركة اليوم!",
+              },
+            ];
+
+        checkStreakBreak();
+      }
+
+      
+      function saveToLocalStorage() {
+        localStorage.setItem("quran_tracker_pages", JSON.stringify(pageStates));
+        localStorage.setItem("quran_tracker_streak", streakCount.toString());
+        localStorage.setItem("quran_tracker_last_date", lastActivityDate);
+        localStorage.setItem("quran_tracker_logs", JSON.stringify(historyLogs));
+      }
+
+      
+      function checkStreakBreak() {
+        if (lastActivityDate) {
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+          const lastDateObj = new Date(lastActivityDate);
+          lastDateObj.setHours(0, 0, 0, 0);
+
+          const diffTime = Math.abs(today - lastDateObj);
+          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+          if (diffDays > 1) {
+            streakCount = 0;
+            saveToLocalStorage();
+          }
+        }
+      }
+
+      
+      function scrollToTop() {
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth",
+        });
+      }
+
+      
+      function updateScrollProgress() {
+        const winScroll =
+          document.body.scrollTop || document.documentElement.scrollTop;
+        const height =
+          document.documentElement.scrollHeight -
+          document.documentElement.clientHeight;
+        const scrolled = height > 0 ? (winScroll / height) * 100 : 0;
+        const progressBar = document.getElementById("scroll-progress");
+        if (progressBar) {
+          progressBar.style.width = scrolled + "%";
+        }
+      }
+
+      
+      window.addEventListener("scroll", updateScrollProgress);
+
+      
+      function updateStreak() {
+        const todayStr = new Date().toDateString();
+        if (lastActivityDate !== todayStr) {
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+          const lastDateObj = lastActivityDate
+            ? new Date(lastActivityDate)
+            : null;
+          if (lastDateObj) lastDateObj.setHours(0, 0, 0, 0);
+
+          if (
+            lastDateObj &&
+            Math.ceil(Math.abs(today - lastDateObj) / (1000 * 60 * 60 * 24)) ===
+              1
+          ) {
+            streakCount++;
+          } else if (
+            !lastDateObj ||
+            Math.ceil(Math.abs(today - lastDateObj) / (1000 * 60 * 60 * 24)) > 1
+          ) {
+            streakCount = 1;
+          }
+          lastActivityDate = todayStr;
+          saveToLocalStorage();
+          document.getElementById("header-streak-num").innerText = streakCount;
+        }
+      }
+
+      
+      function addHistoryLog(text) {
+        const newLog = {
+          id: Date.now(),
+          date: new Date().toLocaleString("ar-EG", {
+            hour: "2-digit",
+            minute: "2-digit",
+            day: "numeric",
+            month: "numeric",
+          }),
+          text: text,
+        };
+        historyLogs.unshift(newLog);
+        if (historyLogs.length > 20) historyLogs.pop();
+        saveToLocalStorage();
+        renderHistoryLogs();
+      }
+
+      
+      function clearHistoryLogs() {
+        openCustomConfirm(
+          "مسح سجل النشاط",
+          "هل أنت متأكد من رغبتك في مسح سجل نشاط الحفظ؟ هذا لن يؤثر على صفحاتك المحفوظة بل سيمسح قائمة التواريخ الزمنية فقط.",
+          function () {
+            historyLogs = [
+              {
+                id: Date.now(),
+                date: new Date().toLocaleDateString("ar-EG"),
+                text: "تم تنظيف سجل الإنجازات.",
+              },
+            ];
+            saveToLocalStorage();
+            renderHistoryLogs();
+          },
+        );
+      }
+
+      
+      function renderDashboard() {
+        let completed = 0;
+        let revision = 0;
+        let memorizing = 0;
+        let unstarted = 0;
+
+        for (let p = 1; p <= 604; p++) {
+          if (pageStates[p] === 3) completed++;
+          else if (pageStates[p] === 2) revision++;
+          else if (pageStates[p] === 1) memorizing++;
+          else unstarted++;
+        }
+
+        const compPercent = ((completed / 604) * 100).toFixed(1);
+        const revPercent = ((revision / 604) * 100).toFixed(1);
+        const memPercent = ((memorizing / 604) * 100).toFixed(1);
+
+        document.getElementById("global-progress-percent").innerText =
+          `${compPercent}%`;
+        document.getElementById("progress-bar-completed").style.width =
+          `${compPercent}%`;
+        document.getElementById("progress-bar-revision").style.width =
+          `${revPercent}%`;
+        document.getElementById("progress-bar-memorizing").style.width =
+          `${memPercent}%`;
+
+        document.getElementById("stat-completed-pages").innerText = completed;
+        document.getElementById("stat-revision-pages").innerText = revision;
+        document.getElementById("stat-memorizing-pages").innerText = memorizing;
+        document.getElementById("stat-remaining-pages").innerText =
+          604 - completed;
+
+        document.getElementById("legend-completed-cnt").innerText = completed;
+        document.getElementById("legend-revision-cnt").innerText = revision;
+        document.getElementById("legend-memorizing-cnt").innerText = memorizing;
+        document.getElementById("legend-unstarted-cnt").innerText = unstarted;
+
+        document.getElementById("header-streak-num").innerText = streakCount;
+
+        const remaining = 604 - completed;
+        document.getElementById("remaining-days-count").innerText =
+          `متبقي لك ${remaining} صفحة`;
+
+        if (remaining === 0) {
+          document.getElementById("estimated-date").innerText =
+            "مبارك! لقد تم ختم المصحف 🎉";
+        } else {
+          const daysNeeded = Math.ceil(remaining / 2);
+          const estDate = new Date();
+          estDate.setDate(estDate.getDate() + daysNeeded);
+          const options = {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          };
+          document.getElementById("estimated-date").innerText =
+            estDate.toLocaleDateString("ar-EG", options);
+        }
+      }
+
+      
+      function updateDailyTarget() {
+        let startPage = -1;
+        let endPage = -1;
+
+        for (let p = 1; p <= 604; p++) {
+          if (pageStates[p] !== 3) {
+            startPage = p;
+            break;
+          }
+        }
+
+        if (startPage === -1) {
+          document.getElementById("today-target-title").innerText =
+            "الحمد لله! لقد ختمت القرآن كاملاً";
+          document.getElementById("today-target-desc").innerText =
+            "تستطيع الاستمرار في وضع صفحاتك بالكامل قيد المراجعة الدورية وتصفيتها في أي وقت لمراجعة الختمة.";
+          document
+            .getElementById("btn-target-complete")
+            .classList.add("hidden");
+          return;
+        }
+
+        endPage =
+          startPage < 604 && pageStates[startPage + 1] !== 3
+            ? startPage + 1
+            : startPage;
+
+        const surah1Obj = SuraHs.find(
+          (s) => startPage >= s.start && startPage <= s.end,
+        );
+        const surah2Obj = SuraHs.find(
+          (s) => endPage >= s.start && endPage <= s.end,
+        );
+
+        let locationText = `سورة ${surah1Obj.name}`;
+        if (surah1Obj.id !== surah2Obj.id) {
+          locationText += ` و سورة ${surah2Obj.name}`;
+        }
+
+        const pageRangeText =
+          startPage === endPage
+            ? `صفحة ${startPage}`
+            : `الصفحات ${startPage} - ${endPage}`;
+
+        document.getElementById("today-target-title").innerText =
+          `${pageRangeText} (${locationText})`;
+        document.getElementById("today-target-desc").innerText =
+          `وردك اليوم يقع في الأجزاء المقابلة لهذه السور. ركز جيداً، استمع للقراءة، ثم قم بحفظ وتثبيت الوجهين لتحديث تقدمك.`;
+        document
+          .getElementById("btn-target-complete")
+          .classList.remove("hidden");
+
+        document.getElementById("btn-target-complete").dataset.start =
+          startPage;
+        document.getElementById("btn-target-complete").dataset.end = endPage;
+      }
+
+      
+      function completeTodayTarget() {
+        const btn = document.getElementById("btn-target-complete");
+        const start = parseInt(btn.dataset.start);
+        const end = parseInt(btn.dataset.end);
+
+        for (let p = start; p <= end; p++) {
+          pageStates[p] = 3;
+        }
+
+        const surahObj = SuraHs.find((s) => start >= s.start && start <= s.end);
+        addHistoryLog(
+          `إنجاز ورد اليوم: تم حفظ الصفحات (${start} - ${end}) من سورة ${surahObj.name}.`,
+        );
+        updateStreak();
+        saveToLocalStorage();
+        renderDashboard();
+        renderSurahsGrid();
+        renderJuzGrid();
+        updateDailyTarget();
+
+        const banner = btn.parentElement.parentElement;
+        banner.classList.add("scale-[1.02]", "bg-emerald-600");
+        setTimeout(() => {
+          banner.classList.remove("scale-[1.02]", "bg-emerald-600");
+        }, 300);
+      }
+
+      
+      function renderSurahsGrid() {
+        const container = document.getElementById("surahs-container");
+        container.innerHTML = "";
+
+        SuraHs.forEach((surah) => {
+          let sComplete = 0;
+          let sRevision = 0;
+          let sMemorizing = 0;
+          const totalPages = surah.end - surah.start + 1;
+
+          for (let p = surah.start; p <= surah.end; p++) {
+            if (pageStates[p] === 3) sComplete++;
+            else if (pageStates[p] === 2) sRevision++;
+            else if (pageStates[p] === 1) sMemorizing++;
+          }
+
+          let statusBadge = "";
+          let cardBorder = "border-slate-200";
+          let computedStatus = "unstarted";
+
+          if (sComplete === totalPages) {
+            statusBadge = `<span class="bg-green-100 text-green-800 text-xs font-semibold px-2.5 py-0.5 rounded-full"><i class="fa-solid fa-circle-check"></i> تم الحفظ</span>`;
+            cardBorder = "border-green-200 hover:border-green-300";
+            computedStatus = "completed";
+          } else if (sRevision > 0 && sComplete === 0 && sMemorizing === 0) {
+            statusBadge = `<span class="bg-amber-100 text-amber-800 text-xs font-semibold px-2.5 py-0.5 rounded-full"><i class="fa-solid fa-clock-rotate-left"></i> قيد المراجعة</span>`;
+            cardBorder = "border-amber-200 hover:border-amber-300";
+            computedStatus = "revision";
+          } else if (
+            sMemorizing > 0 ||
+            (sComplete > 0 && sComplete < totalPages)
+          ) {
+            statusBadge = `<span class="bg-sky-100 text-sky-800 text-xs font-semibold px-2.5 py-0.5 rounded-full"><i class="fa-solid fa-pen-nib animate-pulse"></i> جاري الحفظ</span>`;
+            cardBorder = "border-sky-200 hover:border-sky-300";
+            computedStatus = "memorizing";
+          } else {
+            statusBadge = `<span class="bg-slate-100 text-slate-500 text-xs px-2.5 py-0.5 rounded-full">لم تبدأ</span>`;
+            computedStatus = "unstarted";
+          }
+
+          const startingJuz = JuzsData.find(
+            (j) => surah.start >= j.start && surah.start <= j.end,
+          );
+
+          const card = document.createElement("div");
+          card.id = `surah-card-${surah.id}`;
+          card.className = `bg-white rounded-2xl p-5 border ${cardBorder} shadow-sm transition-all duration-200 hover:shadow-md flex flex-col justify-between`;
+          card.dataset.status = computedStatus;
+          card.dataset.name = surah.name;
+
+          let pagesHtml = "";
+          for (let p = surah.start; p <= surah.end; p++) {
+            let pageBg = "bg-slate-100 hover:bg-slate-200 text-slate-500";
+            if (pageStates[p] === 3)
+              pageBg = "bg-brand-mint text-white border-green-300";
+            else if (pageStates[p] === 2)
+              pageBg = "bg-amber-400 text-slate-800 border-amber-300";
+            else if (pageStates[p] === 1)
+              pageBg = "bg-sky-400 text-white border-sky-300";
+
+            pagesHtml += `
+                        <button onclick="triggerPageStatusChange(${p}, event)" title="صفحة ${p} - اضغط للتعديل" class="w-8 h-8 rounded-lg text-xs font-bold border transition flex items-center justify-center ${pageBg}">
+                            ${p}
+                        </button>
+                    `;
+          }
+
+          card.innerHTML = `
+                    <div>
+                        <div class="flex justify-between items-start mb-3">
+                            <div class="flex items-center gap-2">
+                                <span class="bg-brand-emerald text-brand-cream text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center font-cairo">
+                                    ${surah.id}
+                                </span>
+                                <h4 class="font-bold text-lg text-brand-dark font-cairo">${surah.name}</h4>
+                            </div>
+                            <span class="text-xs text-slate-400 font-medium">${surah.type} | الجزء ${startingJuz ? startingJuz.id : "..."}</span>
+                        </div>
+                        
+                        <div class="flex justify-between items-center text-xs mb-4">
+                            <span class="text-slate-500">من صفحة ${surah.start} إلى ${surah.end} (${totalPages} ${totalPages > 10 ? "صفحة" : "صفحات"})</span>
+                            ${statusBadge}
+                        </div>
+
+                        <div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden mb-4">
+                            <div class="bg-brand-mint h-full" style="width: ${(sComplete / totalPages) * 100}%"></div>
+                        </div>
+
+                        <div id="pages-detail-${surah.id}" class="hidden mt-4 pt-4 border-t border-slate-100">
+                            <div class="flex justify-between items-center mb-3">
+                                <span class="text-xs font-bold text-slate-600">اختر صفحة لتعديل حالتها الفردية:</span>
+                                <span class="text-[10px] text-slate-400">انقر للتعديل السريع</span>
+                            </div>
+                            <div class="flex flex-wrap gap-2 justify-center">
+                                ${pagesHtml}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-5 pt-3 border-t border-slate-100 flex gap-2 justify-between items-center">
+                        <button onclick="toggleSurahDetails(${surah.id})" class="text-xs text-brand-emerald hover:text-brand-dark font-bold flex items-center gap-1">
+                            <i class="fa-solid fa-expand" id="expand-icon-${surah.id}"></i>
+                            <span id="expand-text-${surah.id}">عرض الصفحات</span>
+                        </button>
+
+                        <div class="relative">
+                            <select onchange="bulkSetSurahStatus(${surah.id}, this)" class="bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 text-xs px-2 py-1 rounded-lg focus:outline-none focus:ring-1 focus:ring-brand-emerald">
+                                <option value="" disabled selected>تعيين سريع لجميع صفحاتها...</option>
+                                <option value="3">تم الحفظ كاملاً</option>
+                                <option value="2">قيد المراجعة</option>
+                                <option value="1">قيد الحفظ الآن</option>
+                                <option value="0">لم تبدأ بعد</option>
+                            </select>
+                        </div>
+                    </div>
+                `;
+
+          container.appendChild(card);
+        });
+      }
+
+      function toggleSurahDetails(id) {
+        const detailDiv = document.getElementById(`pages-detail-${id}`);
+        const textSpan = document.getElementById(`expand-text-${id}`);
+        const icon = document.getElementById(`expand-icon-${id}`);
+
+        if (detailDiv.classList.contains("hidden")) {
+          detailDiv.classList.remove("hidden");
+          textSpan.innerText = "إخفاء الصفحات";
+          icon.className = "fa-solid fa-compress";
+        } else {
+          detailDiv.classList.add("hidden");
+          textSpan.innerText = "عرض الصفحات";
+          icon.className = "fa-solid fa-expand";
+        }
+      }
+
+      function scrollToActiveSurah() {
+        const startPage = parseInt(
+          document.getElementById("btn-target-complete").dataset.start,
+        );
+        if (!startPage) return;
+
+        const activeSurah = SuraHs.find(
+          (s) => startPage >= s.start && startPage <= s.end,
+        );
+        if (activeSurah) {
+          switchTab("surahs");
+          const card = document.getElementById(`surah-card-${activeSurah.id}`);
+          if (card) {
+            card.scrollIntoView({ behavior: "smooth", block: "center" });
+            const detailDiv = document.getElementById(
+              `pages-detail-${activeSurah.id}`,
+            );
+            if (detailDiv.classList.contains("hidden")) {
+              toggleSurahDetails(activeSurah.id);
+            }
+            card.classList.add("ring-2", "ring-brand-accent");
+            setTimeout(() => {
+              card.classList.remove("ring-2", "ring-brand-accent");
+            }, 1500);
+          }
+        }
+      }
+
+      function triggerPageStatusChange(page, event) {
+        event.stopPropagation();
+        activePageForStatusChange = page;
+        document.getElementById("status-modal-title").innerText =
+          `تعديل حالة الصفحة رقم ${page}`;
+        document.getElementById("status-modal").classList.remove("hidden");
+      }
+
+      function closeStatusModal() {
+        document.getElementById("status-modal").classList.add("hidden");
+        activePageForStatusChange = null;
+      }
+
+      function setSpecificPageState(state) {
+        if (activePageForStatusChange === null) return;
+        const page = activePageForStatusChange;
+
+        pageStates[page] = state;
+
+        const statesNames = {
+          0: "غير مبدوء",
+          1: "جاري الحفظ",
+          2: "قيد المراجعة",
+          3: "تم الحفظ",
+        };
+        const surahObj = SuraHs.find((s) => page >= s.start && page <= s.end);
+        addHistoryLog(
+          `تم تعديل حالة صفحة ${page} بسورة ${surahObj.name} إلى: ${statesNames[state]}`,
+        );
+
+        updateStreak();
+        saveToLocalStorage();
+        renderDashboard();
+        renderSurahsGrid();
+        renderJuzGrid();
+        updateDailyTarget();
+        closeStatusModal();
+      }
+
+      function bulkSetSurahStatus(surahId, selectElement) {
+        const state = parseInt(selectElement.value);
+        if (isNaN(state)) return;
+
+        const surah = SuraHs.find((s) => s.id === surahId);
+        if (!surah) return;
+
+        for (let p = surah.start; p <= surah.end; p++) {
+          pageStates[p] = state;
+        }
+
+        const statesNames = {
+          0: "غير مبدوء",
+          1: "جاري حفظه",
+          2: "قيد المراجعة",
+          3: "تم حفظه",
+        };
+        addHistoryLog(
+          `تم تعيين حالة سورة ${surah.name} بالكامل كـ: ${statesNames[state]}.`,
+        );
+
+        updateStreak();
+        saveToLocalStorage();
+        renderDashboard();
+        renderSurahsGrid();
+        renderJuzGrid();
+        updateDailyTarget();
+
+        selectElement.selectedIndex = 0;
+      }
+
+      function renderJuzGrid() {
+        const container = document.getElementById("tab-content-juzs");
+        container.innerHTML = "";
+
+        JuzsData.forEach((juz) => {
+          let total = juz.end - juz.start + 1;
+          let completed = 0;
+
+          for (let p = juz.start; p <= juz.end; p++) {
+            if (pageStates[p] === 3) completed++;
+          }
+
+          const percent = ((completed / total) * 100).toFixed(0);
+
+          const card = document.createElement("div");
+          card.className =
+            "bg-white p-5 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all flex flex-col justify-between";
+          card.innerHTML = `
+                    <div>
+                        <div class="flex justify-between items-center mb-3">
+                            <h4 class="font-bold text-brand-emerald font-cairo text-lg">${juz.name}</h4>
+                            <span class="text-xs bg-brand-light text-brand-emerald font-bold px-2.5 py-0.5 rounded-full">${percent}%</span>
+                        </div>
+                        <p class="text-xs text-slate-400 mb-4">من صفحة ${juz.start} إلى صفحة ${juz.end} (${total} صفحة)</p>
+                        
+                        <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden mb-4">
+                            <div class="bg-brand-accent h-full" style="width: ${percent}%"></div>
+                        </div>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="setWholeJuzState(${juz.id}, 3)" class="flex-grow bg-green-50 hover:bg-green-100 text-green-700 text-xs font-semibold py-2 rounded-lg transition">تم حفظ الجزء</button>
+                        <button onclick="filterSurahListByJuz(${juz.start}, ${juz.end})" class="bg-brand-emerald hover:bg-brand-dark text-white text-xs px-3 py-2 rounded-lg transition" title="عرض سور الجزء">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
+                `;
+          container.appendChild(card);
+        });
+      }
+
+      function setWholeJuzState(juzId, state) {
+        const juz = JuzsData.find((j) => j.id === juzId);
+        if (!juz) return;
+
+        openCustomConfirm(
+          `حفظ الجزء ${juzId} كاملاً`,
+          `هل تود بالفعل تحديد جميع الصفحات من ${juz.start} إلى ${juz.end} (الجزء ${juzId}) كحالة "تم الحفظ"؟`,
+          function () {
+            for (let p = juz.start; p <= juz.end; p++) {
+              pageStates[p] = state;
+            }
+            addHistoryLog(`تم تعيين الجزء رقم ${juzId} بالكامل كـ تم الحفظ.`);
+            updateStreak();
+            saveToLocalStorage();
+            renderDashboard();
+            renderSurahsGrid();
+            renderJuzGrid();
+            updateDailyTarget();
+          },
+        );
+      }
+
+      function filterSurahListByJuz(startPage, endPage) {
+        switchTab("surahs");
+
+        const cards = document.querySelectorAll("#surahs-container > div");
+        cards.forEach((card) => {
+          const surahName = card.dataset.name;
+          const surah = SuraHs.find((s) => s.name === surahName);
+          if (
+            surah &&
+            ((surah.start >= startPage && surah.start <= endPage) ||
+              (surah.end >= startPage && surah.end <= endPage))
+          ) {
+            card.classList.remove("hidden");
+          } else {
+            card.classList.add("hidden");
+          }
+        });
+
+        document.querySelectorAll('[id^="filter-btn-"]').forEach((btn) => {
+          btn.className =
+            "bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1.5 rounded-lg text-xs font-semibold transition";
+        });
+      }
+
+      function renderHistoryLogs() {
+        const container = document.getElementById("history-logs-container");
+        container.innerHTML = "";
+
+        if (historyLogs.length === 0) {
+          container.innerHTML = `
+                    <div class="text-center py-8 text-slate-400">
+                        <i class="fa-solid fa-scroll text-4xl mb-2 block"></i>
+                        سجل نشاطك فارغ الآن، ابدأ الحفظ ومستويات التفاعل لتظهر هنا.
+                    </div>
+                `;
+          return;
+        }
+
+        historyLogs.forEach((log) => {
+          const element = document.createElement("div");
+          element.className =
+            "flex gap-3 items-start p-3 hover:bg-slate-50 rounded-xl transition border-b border-dashed border-slate-100 last:border-none";
+          element.innerHTML = `
+                    <div class="bg-emerald-100 text-brand-emerald p-1.5 rounded-full text-xs mt-0.5">
+                        <i class="fa-solid fa-heart-pulse"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs text-slate-400 font-medium">${log.date}</p>
+                        <p class="text-sm text-slate-700 mt-0.5 font-medium">${log.text}</p>
+                    </div>
+                `;
+          container.appendChild(element);
+        });
+      }
+
+      function filterSurahs() {
+        const query = document
+          .getElementById("search-surah-input")
+          .value.trim();
+        const cards = document.querySelectorAll("#surahs-container > div");
+
+        cards.forEach((card) => {
+          const name = card.dataset.name;
+          if (name.includes(query) || query === "") {
+            if (
+              currentStatusFilter === "all" ||
+              card.dataset.status === currentStatusFilter
+            ) {
+              card.classList.remove("hidden");
+            } else {
+              card.classList.add("hidden");
+            }
+          } else {
+            card.classList.add("hidden");
+          }
+        });
+      }
+
+      function filterByStatus(status) {
+        currentStatusFilter = status;
+
+        document.querySelectorAll('[id^="filter-btn-"]').forEach((btn) => {
+          btn.className =
+            "bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1.5 rounded-lg text-xs font-semibold transition";
+        });
+        document.getElementById(`filter-btn-${status}`).className =
+          "bg-brand-emerald text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition";
+
+        const cards = document.querySelectorAll("#surahs-container > div");
+        cards.forEach((card) => {
+          const matchesStatus =
+            status === "all" || card.dataset.status === status;
+          const query = document
+            .getElementById("search-surah-input")
+            .value.trim();
+          const matchesSearch =
+            query === "" || card.dataset.name.includes(query);
+
+          if (matchesStatus && matchesSearch) {
+            card.classList.remove("hidden");
+          } else {
+            card.classList.add("hidden");
+          }
+        });
+      }
+
+      function switchTab(tabId) {
+        activeTab = tabId;
+
+        document.querySelectorAll('[id^="tab-btn-"]').forEach((btn) => {
+          btn.className =
+            "px-5 py-3 font-semibold text-sm transition-all duration-200 border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2 whitespace-nowrap";
+        });
+        document.getElementById(`tab-btn-${tabId}`).className =
+          "px-5 py-3 font-semibold text-sm transition-all duration-200 border-b-2 border-brand-emerald text-brand-emerald flex items-center gap-2 whitespace-nowrap";
+
+        document.getElementById("tab-content-surahs").classList.add("hidden");
+        document.getElementById("tab-content-juzs").classList.add("hidden");
+        document.getElementById("tab-content-history").classList.add("hidden");
+
+        document
+          .getElementById(`tab-content-${tabId}`)
+          .classList.remove("hidden");
+      }
+
+      let currentConfirmCallback = null;
+
+      function openCustomConfirm(title, message, onConfirm) {
+        document.getElementById("modal-title").innerText = title;
+        document.getElementById("modal-message").innerText = message;
+
+        const confirmBtn = document.getElementById("modal-confirm-btn");
+        confirmBtn.className =
+          "px-4 py-2 bg-brand-emerald hover:bg-brand-dark text-white text-sm font-semibold rounded-xl transition";
+        confirmBtn.innerText = "تأكيد الإجراء";
+
+        currentConfirmCallback = onConfirm;
+
+        const modal = document.getElementById("custom-modal");
+        modal.classList.remove("hidden");
+        setTimeout(() => {
+          modal.classList.remove("opacity-0");
+          document
+            .getElementById("modal-card")
+            .classList.remove("translate-y-4");
+        }, 50);
+
+        confirmBtn.onclick = function () {
+          if (currentConfirmCallback) currentConfirmCallback();
+          closeCustomModal();
+        };
+      }
+
+      function openResetModal() {
+        openCustomConfirm(
+          "تهيئة وتصفير الحساب",
+          "تحذير هام: هل أنت متأكد من رغبتك في إعادة ضبط وإعادة تصفير جميع الصفحات المحفوظة وحذف تقدمك في القرآن الكريم؟ لا يمكن التراجع عن هذا الإجراء مطلقاً.",
+          function () {
+            for (let p = 1; p <= 604; p++) {
+              pageStates[p] = 0;
+            }
+            streakCount = 0;
+            lastActivityDate = "";
+            historyLogs = [
+              {
+                id: Date.now(),
+                date: new Date().toLocaleDateString("ar-EG"),
+                text: "تمت تهيئة تتبع التقدم بالكامل وإعادة المصحف لحالته الأولى.",
+              },
+            ];
+
+            saveToLocalStorage();
+            renderDashboard();
+            renderSurahsGrid();
+            renderJuzGrid();
+            renderHistoryLogs();
+            updateDailyTarget();
+          },
+        );
+      }
+
+      function closeCustomModal() {
+        const modal = document.getElementById("custom-modal");
+        modal.classList.add("opacity-0");
+        document.getElementById("modal-card").classList.add("translate-y-4");
+        setTimeout(() => {
+          modal.classList.add("hidden");
+        }, 300);
+        currentConfirmCallback = null;
+      }
+    </script>
+  </body>
+</html>

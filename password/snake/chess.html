@@ -1,0 +1,794 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quantum Chess - Tactical Training Core</title>
+    <style>
+      :root {
+        --bg-main: #0b1121;
+        --panel-bg: #10172a;
+        --border-neon: #00f0ff;
+        --accent-pink: #ff007f;
+        --neon-green: #39ff14;
+        --neon-red: #ff3333;
+        --cell-light: rgba(0, 240, 255, 0.03);
+        --cell-dark: rgba(16, 23, 42, 0.8);
+        --text-muted: #64748b;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        user-select: none;
+      }
+
+      body {
+        background-color: var(--bg-main);
+        color: #ffffff;
+        font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+      }
+
+      .app-wrapper {
+        display: grid;
+        grid-template-columns: 360px 1fr;
+        gap: 30px;
+        width: 95vw;
+        max-width: 1200px;
+        height: 90vh;
+        max-height: 800px;
+      }
+
+      /* Sidebar / Control Panel Styling */
+      .control-panel {
+        background: var(--panel-bg);
+        border: 1px solid rgba(0, 240, 255, 0.15);
+        border-radius: 16px;
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+      }
+
+      .brand-header h1 {
+        font-size: 1.8rem;
+        letter-spacing: 2px;
+      }
+      .brand-header .subtitle {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-top: 4px;
+      }
+
+      .panel-card {
+        background: rgba(0, 0, 0, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+        padding: 16px;
+      }
+
+      .panel-card h3 {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        letter-spacing: 1px;
+        margin-bottom: 12px;
+      }
+
+      .badge {
+        background: rgba(255, 0, 127, 0.15);
+        color: var(--accent-pink);
+        border: 1px solid var(--accent-pink);
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 0.65rem;
+        font-weight: bold;
+        letter-spacing: 1px;
+      }
+
+      #puzzle-title {
+        font-size: 1.3rem;
+        margin-top: 8px;
+        font-weight: 600;
+      }
+      #puzzle-desc {
+        font-size: 0.85rem;
+        color: #94a3b8;
+        margin-top: 6px;
+        line-height: 1.4;
+      }
+
+      /* Metrics Architecture */
+      .metrics-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+      .metric-item {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        padding: 10px;
+        border-radius: 6px;
+        display: flex;
+        flex-direction: column;
+      }
+      .metric-item span {
+        font-size: 0.7rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+      }
+      .metric-item strong {
+        font-size: 1.2rem;
+        margin-top: 4px;
+      }
+
+      /* Analysis Log */
+      .history-container {
+        height: 110px;
+        overflow-y: auto;
+        font-family: monospace;
+        font-size: 0.85rem;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        padding-right: 4px;
+      }
+      .log-entry {
+        padding: 4px 8px;
+        background: rgba(0, 240, 255, 0.03);
+        border-left: 2px solid var(--border-neon);
+        border-radius: 0 4px 4px 0;
+      }
+
+      .action-row {
+        display: flex;
+        gap: 10px;
+        margin-top: auto;
+      }
+
+      /* Interaction Controls */
+      .btn {
+        padding: 12px 20px;
+        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-align: center;
+        font-size: 0.9rem;
+      }
+      .btn-neon {
+        background: transparent;
+        border: 2px solid var(--border-neon);
+        color: #fff;
+        box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
+      }
+      .btn-neon:hover {
+        background: var(--border-neon);
+        color: var(--bg-main);
+        box-shadow: 0 0 20px var(--border-neon);
+      }
+      .btn-outline {
+        background: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        color: #fff;
+        flex: 1;
+      }
+      .btn-outline:hover {
+        border-color: var(--border-neon);
+        color: var(--border-neon);
+      }
+      .btn-danger-sm {
+        background: transparent;
+        border: 1px solid rgba(255, 51, 51, 0.2);
+        color: var(--neon-red);
+        font-size: 0.75rem;
+        padding: 6px 12px;
+      }
+      .btn-danger-sm:hover {
+        background: var(--neon-red);
+        color: #fff;
+      }
+
+      /* Chessboard Processing Grid */
+      .board-viewport {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: rgba(5, 8, 16, 0.4);
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.03);
+      }
+
+      .chessboard-container {
+        position: relative;
+        width: 90%;
+        aspect-ratio: 1/1;
+        max-width: 520px;
+        border: 4px solid var(--panel-bg);
+        box-shadow:
+          0 0 40px rgba(0, 0, 0, 0.6),
+          0 0 20px rgba(0, 240, 255, 0.1);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      .chess-grid {
+        display: grid;
+        grid-template-columns: repeat(8, 1fr);
+        grid-template-rows: repeat(8, 1fr);
+        width: 100%;
+        height: 100%;
+      }
+
+      .square {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        cursor: pointer;
+      }
+      .square.light {
+        background-color: var(--cell-light);
+        border: 0.5px solid rgba(0, 240, 255, 0.02);
+      }
+      .square.dark {
+        background-color: var(--cell-dark);
+        border: 0.5px solid rgba(0, 0, 0, 0.2);
+      }
+
+      /* Holographic Pieces Typography Rendering */
+      .piece {
+        font-size: 2.8rem;
+        z-index: 2;
+        transition: transform 0.2s ease;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+      }
+      .piece.white {
+        color: #ffffff;
+        text-shadow:
+          0 0 10px rgba(255, 255, 255, 0.6),
+          0 0 20px var(--border-neon);
+      }
+      .piece.black {
+        color: #1e293b;
+        text-shadow:
+          0 0 4px #000,
+          0 0 12px var(--accent-pink);
+      }
+
+      /* Selection and Contextual Path Overlays */
+      .square.selected {
+        background: rgba(0, 240, 255, 0.15) !important;
+        box-shadow: inset 0 0 12px var(--border-neon);
+      }
+      .square.hint-glow {
+        box-shadow: inset 0 0 15px var(--neon-green) !important;
+      }
+
+      /* System Engine Screen Overlays */
+      .board-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(11, 17, 33, 0.96);
+        backdrop-filter: blur(8px);
+        display: none;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+        z-index: 10;
+      }
+      .board-overlay.active {
+        display: flex;
+      }
+
+      /* Text Shadow Neon Enhancements */
+      .neon-text-cyan {
+        text-shadow: 0 0 10px var(--border-neon);
+        color: var(--border-neon);
+      }
+      .neon-text-green {
+        text-shadow: 0 0 10px var(--neon-green);
+        color: var(--neon-green);
+      }
+      .neon-text-red {
+        text-shadow: 0 0 10px var(--neon-red);
+        color: var(--neon-red);
+      }
+
+      /* Responsive Media Breakdown Adjustments */
+      @media (max-width: 800px) {
+        .app-wrapper {
+          grid-template-columns: 1fr;
+          height: auto;
+          max-height: none;
+          padding: 10px;
+        }
+        .control-panel {
+          height: auto;
+        }
+        .chessboard-container {
+          max-width: 95vw;
+          margin: 0 auto;
+        }
+        .piece {
+          font-size: 2.2rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-wrapper">
+      <aside class="control-panel">
+        <div class="brand-header">
+          <h1 class="neon-text-cyan">QUANTUM CHESS</h1>
+          <p class="subtitle">Tactical Neural Training Core</p>
+        </div>
+
+        <div class="panel-card">
+          <div class="puzzle-meta">
+            <span class="badge" id="puzzle-category">TACTICAL CHALLENGE</span>
+            <h2 id="puzzle-title">Loading Objective...</h2>
+            <p id="puzzle-desc">
+              Initialize the system to parse current grid tactical vectors.
+            </p>
+          </div>
+        </div>
+
+        <div class="panel-card">
+          <h3>📊 SESSION METRICS</h3>
+          <div class="metrics-grid">
+            <div class="metric-item">
+              <span>Current Level</span><strong id="lvl-val">1</strong>
+            </div>
+            <div class="metric-item">
+              <span>Score Core</span
+              ><strong id="score-val" class="neon-text-green">0</strong>
+            </div>
+            <div class="metric-item">
+              <span>Time Vector</span
+              ><strong id="timer-val" class="neon-text-red">00:00</strong>
+            </div>
+            <div class="metric-item">
+              <span>Moves Allowed</span><strong id="moves-left-val">--</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel-card">
+          <h3>📜 MOVES ANALYSIS LOG</h3>
+          <div id="history-log" class="history-container"></div>
+        </div>
+
+        <div class="action-row">
+          <button id="hint-btn" class="btn btn-outline">💡 REQUEST HINT</button>
+          <button id="reset-progress-btn" class="btn btn-danger-sm">
+            RESET DATA
+          </button>
+        </div>
+      </aside>
+
+      <main class="board-viewport">
+        <div class="chessboard-container">
+          <div id="chessboard" class="chess-grid"></div>
+
+          <div id="pause-overlay" class="board-overlay">
+            <h2 class="neon-text-cyan">CORE PAUSED</h2>
+            <button id="resume-btn" class="btn btn-neon">RESUME CORE</button>
+          </div>
+
+          <div id="completion-overlay" class="board-overlay">
+            <h2 id="completion-title" class="neon-text-green">
+              VECTOR RESOLVED
+            </h2>
+            <p id="completion-subtitle">Neural matrix logic intact.</p>
+            <button id="next-btn" class="btn btn-neon">
+              NEXT TACTICAL NODE
+            </button>
+          </div>
+        </div>
+      </main>
+    </div>
+    <script>
+      // --- Declarative Immutable Database Matrix: Tactical Datasets ---
+      const PUZZLE_DATABASE = [
+        {
+          id: 1,
+          title: "Back-Rank Annihilation",
+          category: "CHECKMATE IN 1",
+          description:
+            "Exploit the structural confinement of the enemy king behind its own defensive shield.",
+          // FEN Matrix Translation mapping [r][c]
+          boardState: [
+            ["", "", "", "", "", "", "", "k"],
+            ["", "", "", "", "", "p", "p", "p"],
+            ["", "", "", "", "", "", "", ""],
+            ["", "", "", "", "", "", "", ""],
+            ["", "", "", "", "", "", "", ""],
+            ["", "", "", "", "", "", "", ""],
+            ["", "", "", "", "", "", "", ""],
+            ["R", "", "", "", "K", "", "", ""],
+          ],
+          // Expected Linear Move Execution Chains (Zero Index Formats)
+          solution: [{ from: "7,0", to: "0,0", response: null }],
+          hint: "Target the completely undefended back rank terminal terminal baseline square directly ahead of your white rook.",
+        },
+        {
+          id: 2,
+          title: "The Philidor Deflection",
+          category: "CHECKMATE IN 2",
+          description:
+            "Deliver an offensive forced check trajectory sacrificing absolute vector values to isolate processing nodes.",
+          boardState: [
+            ["", "", "", "", "", "", "k", ""],
+            ["", "", "", "", "", "p", "p", "p"],
+            ["", "", "", "", "", "", "", ""],
+            ["", "", "B", "", "", "", "", "Q"],
+            ["", "", "", "", "", "", "", ""],
+            ["", "", "", "", "", "", "", ""],
+            ["", "", "", "", "", "", "", ""],
+            ["", "", "", "", "K", "", "", ""],
+          ],
+          solution: [
+            // Sequence step 1 -> Auto execution engine response triggers -> Sequence step 2 validation
+            {
+              from: "3,7",
+              to: "1,5",
+              response: { from: "0,6", to: "0,7", piece: "♔" },
+            },
+            { from: "1,5", to: "1,7", response: null },
+          ],
+          hint: "Initiate checking trajectories via your primary high value node Queen targeted straight into the F7 matrix boundary.",
+        },
+        {
+          id: 3,
+          title: "Strategic Interception",
+          category: "DEFEND THE KING",
+          description:
+            "Intercept incoming check threads targeting your terminal operational sector Node directly.",
+          boardState: [
+            ["", "", "", "", "", "", "", ""],
+            ["", "", "", "", "", "", "", ""],
+            ["", "", "", "", "", "", "", ""],
+            ["", "", "", "", "", "", "", ""],
+            ["", "", "", "", "", "", "", ""],
+            ["", "", "", "", "", "", "", ""],
+            ["", "", "", "", "", "", "", ""],
+            ["R", "", "", "r", "", "K", "", ""],
+          ],
+          solution: [{ from: "7,0", to: "7,3", response: null }],
+          hint: "Eliminate the offensive checking element on D8 directly utilizing structural system resources.",
+        },
+        {
+          id: 4,
+          title: "The Quantum Fork Node",
+          category: "FIND THE BEST MOVE",
+          description:
+            "Deploy a spatial multi-vector structural branch attack striking both key processing registers concurrently.",
+          boardState: [
+            ["", "", "", "", "", "", "", ""],
+            ["", "", "", "", "", "", "", ""],
+            ["", "", "q", "", "", "", "", ""],
+            ["", "", "", "N", "", "", "", ""],
+            ["", "", "", "", "", "", "", ""],
+            ["", "", "", "", "", "", "", ""],
+            ["", "", "", "", "k", "", "", ""],
+            ["", "", "", "", "K", "", "", ""],
+          ],
+          solution: [{ from: "3,3", to: "2,2", response: null }],
+          hint: "Calculate Knight jumping structural capabilities to assert positional control directly over the enemy queen asset.",
+        },
+      ];
+
+      // --- Map Render Character Set Encoding Entities ---
+      const PIECE_SYMBOLS = {
+        R: { symbol: "♖", color: "white" },
+        N: { symbol: "♘", color: "white" },
+        B: { symbol: "♗", color: "white" },
+        Q: { symbol: "♕", color: "white" },
+        K: { symbol: "♔", color: "white" },
+        p: { symbol: "♟", color: "black" },
+        r: { symbol: "♜", color: "black" },
+        q: { symbol: "♛", color: "black" },
+        k: { symbol: "♚", color: "black" },
+      };
+
+      // --- Application Core Class Logic Architecture Engine ---
+      class ChessPuzzleEngine {
+        constructor() {
+          this.boardElement = document.getElementById("chessboard");
+          this.currentLevelIndex = 0;
+          this.currentStepIndex = 0;
+          this.selectedSquare = null;
+
+          // System Metrics Engine State
+          this.score = 0;
+          this.timer = 0;
+          this.timerInterval = null;
+
+          this.activeGridState = [];
+
+          this.initDOMEvents();
+          this.loadProfilePersistence();
+          this.initializePuzzleNode();
+        }
+
+        initDOMEvents() {
+          document
+            .getElementById("next-btn")
+            .addEventListener("click", () => this.transitionNextLevel());
+          document
+            .getElementById("hint-btn")
+            .addEventListener("click", () => this.revealTacticalHint());
+          document
+            .getElementById("reset-progress-btn")
+            .addEventListener("click", () => this.clearPersistenceLayer());
+        }
+
+        initializePuzzleNode() {
+          this.puzzle = PUZZLE_DATABASE[this.currentLevelIndex];
+          this.currentStepIndex = 0;
+          this.selectedSquare = null;
+
+          // Deep Clone Database Structural Matrix Parameters
+          this.activeGridState = this.puzzle.boardState.map((row) => [...row]);
+
+          // UI Metadata Injections
+          document.getElementById("puzzle-category").innerText =
+            this.puzzle.category;
+          document.getElementById("puzzle-title").innerText = this.puzzle.title;
+          document.getElementById("puzzle-desc").innerText =
+            this.puzzle.description;
+          document.getElementById("lvl-val").innerText =
+            this.currentLevelIndex + 1;
+          document.getElementById("moves-left-val").innerText =
+            this.puzzle.solution.length - this.currentStepIndex;
+
+          document
+            .getElementById("completion-overlay")
+            .classList.remove("active");
+          document.getElementById("history-log").innerHTML = "";
+
+          this.buildChessboardGridUI();
+          this.resetSystemClock();
+        }
+
+        buildChessboardGridUI() {
+          this.boardElement.innerHTML = "";
+          for (let r = 0; r < 8; r++) {
+            for (let c = 0; c < 8; c++) {
+              const square = document.createElement("div");
+              square.className = `square ${(r + c) % 2 === 0 ? "light" : "dark"}`;
+              square.setAttribute("data-coord", `${r},${c}`);
+
+              const pieceKey = this.activeGridState[r][c];
+              if (pieceKey && PIECE_SYMBOLS[pieceKey]) {
+                const pieceEl = document.createElement("div");
+                pieceEl.className = `piece ${PIECE_SYMBOLS[pieceKey].color}`;
+                pieceEl.innerText = PIECE_SYMBOLS[pieceKey].symbol;
+                square.appendChild(pieceEl);
+              }
+
+              square.addEventListener("click", (e) =>
+                this.handleSquareInteraction(e.currentTarget),
+              );
+              this.boardElement.appendChild(square);
+            }
+          }
+        }
+
+        handleSquareInteraction(squareElement) {
+          const coord = squareElement.getAttribute("data-coord");
+          const [r, c] = coord.split(",").map(Number);
+          const piece = this.activeGridState[r][c];
+
+          // First Click Matrix Selection Rule Block
+          if (!this.selectedSquare) {
+            if (piece && PIECE_SYMBOLS[piece].color === "white") {
+              this.selectedSquare = squareElement;
+              squareElement.classList.add("selected");
+            }
+          } else {
+            // Second Click Matrix Evaluation Execution Step
+            const sourceCoord = this.selectedSquare.getAttribute("data-coord");
+
+            if (sourceCoord === coord) {
+              // Deselect logic loop path trace trigger
+              this.selectedSquare.classList.remove("selected");
+              this.selectedSquare = null;
+              return;
+            }
+
+            this.evaluateProposedMove(sourceCoord, coord);
+          }
+        }
+
+        evaluateProposedMove(fromCoord, toCoord) {
+          const expectedStep = this.puzzle.solution[this.currentStepIndex];
+
+          if (fromCoord === expectedStep.from && toCoord === expectedStep.to) {
+            // Target Move Sequence Node Validated Successfully
+            this.executeMoveOnUIMatrix(fromCoord, toCoord);
+            this.logMovementEvent("White", fromCoord, toCoord);
+
+            // Clear Highlight Modifiers
+            this.removeVisualGlowHints();
+
+            if (expectedStep.response) {
+              // Scripted AI Automation Thread Counter-Response Pipeline
+              this.currentStepIndex++;
+              document.getElementById("moves-left-val").innerText =
+                this.puzzle.solution.length - this.currentStepIndex;
+
+              setTimeout(() => {
+                this.executeMoveOnUIMatrix(
+                  expectedStep.response.from,
+                  expectedStep.response.to,
+                );
+                this.logMovementEvent(
+                  "Black",
+                  expectedStep.response.from,
+                  expectedStep.response.to,
+                );
+              }, 700);
+            } else {
+              // Endpoint Sequence Trajectory Termination Achieved
+              this.triggerPuzzleResolutionWin();
+            }
+          } else {
+            // Bad Sequence Exception Interceptor Trigger
+            this.triggerSystemErrorFeedback(fromCoord);
+          }
+        }
+
+        executeMoveOnUIMatrix(from, to) {
+          const [fr, fc] = from.split(",").map(Number);
+          const [tr, tc] = to.split(",").map(Number);
+
+          const pieceKey = this.activeGridState[fr][fc];
+          this.activeGridState[tr][tc] = pieceKey;
+          this.activeGridState[fr][fc] = "";
+
+          if (this.selectedSquare) {
+            this.selectedSquare.classList.remove("selected");
+            this.selectedSquare = null;
+          }
+
+          this.buildChessboardGridUI();
+        }
+
+        triggerSystemErrorFeedback(sourceCoordinate) {
+          const square = this.boardElement.querySelector(
+            `[data-coord="${sourceCoordinate}"]`,
+          );
+          if (square) {
+            square.classList.add("neon-text-red");
+            setTimeout(() => square.classList.remove("neon-text-red"), 400);
+          }
+          if (this.selectedSquare) {
+            this.selectedSquare.classList.remove("selected");
+            this.selectedSquare = null;
+          }
+          this.score = Math.max(0, this.score - 75);
+          document.getElementById("score-val").innerText = this.score;
+        }
+
+        triggerPuzzleResolutionWin() {
+          clearInterval(this.timerInterval);
+
+          // Base Calculation Score Multiplex Matrix Values
+          const timeBonus = Math.max(50, 300 - this.timer);
+          this.score += 500 + timeBonus;
+          document.getElementById("score-val").innerText = this.score;
+
+          document.getElementById("moves-left-val").innerText = 0;
+
+          // Trigger Overlay Display Screen State Channels
+          document.getElementById("completion-title").innerText =
+            "VECTOR RESOLVED";
+          document.getElementById("completion-overlay").classList.add("active");
+          this.saveProfilePersistence();
+        }
+
+        revealTacticalHint() {
+          const expectedStep = this.puzzle.solution[this.currentStepIndex];
+          const sourceSquare = this.boardElement.querySelector(
+            `[data-coord="${expectedStep.from}"]`,
+          );
+
+          if (sourceSquare) {
+            sourceSquare.classList.add("hint-glow");
+            alert(`ANALYSIS VECTOR HINT: ${this.puzzle.hint}`);
+          }
+          this.score = Math.max(0, this.score - 150);
+          document.getElementById("score-val").innerText = this.score;
+        }
+
+        removeVisualGlowHints() {
+          document
+            .querySelectorAll(".square")
+            .forEach((el) => el.classList.remove("hint-glow"));
+        }
+
+        logMovementEvent(actor, from, to) {
+          const container = document.getElementById("history-log");
+          const entry = document.createElement("div");
+          entry.className = "log-entry";
+          entry.innerText = `[LOG] ${actor.toUpperCase()} : Matrix ${from.replace(",", ":")} -> Target ${to.replace(",", ":")}`;
+          container.appendChild(entry);
+          container.scrollTop = container.scrollHeight;
+        }
+
+        transitionNextLevel() {
+          if (this.currentLevelIndex < PUZZLE_DATABASE.length - 1) {
+            this.currentLevelIndex++;
+          } else {
+            // Loop configuration bounds mapping fallback reset loop
+            this.currentLevelIndex = 0;
+          }
+          this.initializePuzzleNode();
+        }
+
+        resetSystemClock() {
+          clearInterval(this.timerInterval);
+          this.timer = 0;
+          this.timerInterval = setInterval(() => {
+            this.timer++;
+            const mins = Math.floor(this.timer / 60)
+              .toString()
+              .padStart(2, "0");
+            const secs = (this.timer % 60).toString().padStart(2, "0");
+            document.getElementById("timer-val").innerText = `${mins}:${secs}`;
+          }, 1000);
+        }
+
+        // --- Core Persistence Mechanics Engine Layer ---
+        saveProfilePersistence() {
+          const cacheBundle = {
+            levelIndex: this.currentLevelIndex,
+            currentScore: this.score,
+          };
+          localStorage.setItem(
+            "quantum_chess_save",
+            JSON.stringify(cacheBundle),
+          );
+        }
+
+        loadProfilePersistence() {
+          const raw = localStorage.getItem("quantum_chess_save");
+          if (raw) {
+            const data = JSON.parse(raw);
+            this.currentLevelIndex = data.levelIndex || 0;
+            this.score = data.currentScore || 0;
+            document.getElementById("score-val").innerText = this.score;
+          }
+        }
+
+        clearPersistenceLayer() {
+          localStorage.removeItem("quantum_chess_save");
+          this.currentLevelIndex = 0;
+          this.score = 0;
+          document.getElementById("score-val").innerText = 0;
+          this.initializePuzzleNode();
+        }
+      }
+
+      // Global Scope Event Listener Context Thread Execution Setup
+      document.addEventListener("DOMContentLoaded", () => {
+        new ChessPuzzleEngine();
+      });
+    </script>
+  </body>
+</html>

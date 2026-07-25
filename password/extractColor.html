@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مستخرج لوحة الألوان الذكي</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.0/color-thief.umd.js"></script>
+    <style>
+        :root {
+            --bg-main: #0B1121;
+            --bg-card: #131B2E;
+            --accent: #4AE2DC;
+            --text-main: #F8FAFC;
+            --text-muted: #94A3B8;
+            --border: #1E293B;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2.5rem 1rem;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* منطقة السحب والإفلات */
+        .drop-zone {
+            background-color: var(--bg-card);
+            border: 2px dashed var(--border);
+            border-radius: 12px;
+            padding: 3rem 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        .drop-zone:hover, .drop-zone.drag-over {
+            border-color: var(--accent);
+            background-color: rgba(74, 226, 220, 0.02);
+        }
+
+        .drop-zone p {
+            color: var(--text-muted);
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .drop-zone .browse-btn {
+            background-color: var(--border);
+            color: var(--text-main);
+            padding: 0.5rem 1.2rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            display: inline-block;
+            transition: background 0.2s;
+        }
+
+        .drop-zone:hover .browse-btn {
+            background-color: var(--accent);
+            color: var(--bg-main);
+            font-weight: 600;
+        }
+
+        #file-input {
+            display: none;
+        }
+
+        /* حاوية العرض والنتائج */
+        .workspace {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        @media (min-width: 768px) {
+            .workspace {
+                grid-template-columns: 1.2fr 1fr;
+                align-items: start;
+            }
+        }
+
+        .preview-box {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 250px;
+        }
+
+        .preview-box img {
+            max-width: 100%;
+            max-height: 350px;
+            border-radius: 8px;
+            object-fit: contain;
+            display: none;
+        }
+
+        /* لوحة الألوان المستخرجة */
+        .palette-box {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .color-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .color-card:hover {
+            transform: translateX(-4px);
+            border-color: rgba(74, 226, 220, 0.3);
+        }
+
+        .color-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .color-preview {
+            width: 45px;
+            height: 45px;
+            border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .color-hex {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.1rem;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+
+        .copy-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .copy-btn:hover {
+            color: var(--accent);
+            background-color: var(--bg-main);
+        }
+
+        /* التنبيه المنبثق (Toast) */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background-color: var(--accent);
+            color: var(--bg-main);
+            padding: 0.6rem 1.5rem;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            pointer-events: none;
+            box-shadow: 0 10px 25px rgba(74, 226, 220, 0.3);
+            z-index: 1000;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>مُستخرِج لوحة الألوان</h1>
+            <p>اسحب صورتك هنا لتحليلها واستخراج الألوان المهيمنة محلياً وبخصوصية تامة.</p>
+        </header>
+
+        <div class="drop-zone" id="drop-zone">
+            <p>اسحب وأفلت الصورة هنا أو</p>
+            <span class="browse-btn">تصفح الملفات</span>
+            <input type="file" id="file-input" accept="image/*">
+        </div>
+
+        <div class="workspace">
+            <div class="preview-box">
+                <p id="preview-placeholder" style="color: var(--text-muted);">لم يتم رفع صورة بعد</p>
+                <img id="image-preview" alt="معاينة الصورة">
+            </div>
+            
+            <div class="palette-box" id="palette-container">
+                </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast">تم نسخ كود اللون بنجاح!</div>
+
+    <script>
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('file-input');
+        const imagePreview = document.getElementById('image-preview');
+        const previewPlaceholder = document.getElementById('preview-placeholder');
+        const paletteContainer = document.getElementById('palette-container');
+        const toast = document.getElementById('toast');
+
+        // 1. التعامل مع أحداث السحب والإفلات (Drag & Drop)
+        dropZone.addEventListener('click', () => fileInput.click());
+
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('drag-over');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('drag-over');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('drag-over');
+            const files = e.dataTransfer.files;
+            if (files.length > 0 && files[0].type.startsWith('image/')) {
+                processImage(files[0]);
+            }
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                processImage(e.target.files[0]);
+            }
+        });
+
+        // 2. معالجة الصورة محلياً باستخدام FileReader API
+        function processImage(file) {
+            const reader = new FileReader();
+            
+            reader.onload = function(event) {
+                imagePreview.src = event.target.result;
+                imagePreview.style.display = 'block';
+                previewPlaceholder.style.display = 'none';
+            };
+
+            reader.readAsDataURL(file);
+        }
+
+        // 3. استخراج الألوان عند اكتمال تحميل الصورة في المتصفح
+        imagePreview.addEventListener('load', () => {
+            try {
+                // تهيئة مكتبة ColorThief
+                const colorThief = new ColorThief();
+                
+                // استخراج لوحة مكونة من 5 ألوان (تُرجع مصفوفة من مصفوفات RGB)
+                const rgbPalette = colorThief.getPalette(imagePreview, 5);
+                
+                renderPalette(rgbPalette);
+            } catch (error) {
+                console.error("فشل استخراج الألوان:", error);
+            }
+        });
+
+        // تحويل نظام RGB إلى تنسيق HEX المعتمد
+        function rgbToHex(r, g, b) {
+            return "#" + [r, g, b].map(x => {
+                const hex = x.toString(16);
+                return hex.length === 1 ? '0' + hex : hex;
+            }).join('').toUpperCase();
+        }
+
+        // 4. بناء وعرض بطاقات الألوان ديناميكياً
+        function renderPalette(rgbPalette) {
+            paletteContainer.innerHTML = ''; // تنظيف اللوحة السابقة
+
+            rgbPalette.forEach(rgb => {
+                const hexCode = rgbToHex(rgb[0], rgb[1], rgb[2]);
+                
+                const card = document.createElement('div');
+                card.className = 'color-card';
+                card.innerHTML = `
+                    <div class="color-info">
+                        <div class="color-preview" style="background-color: ${hexCode};"></div>
+                        <span class="color-hex">${hexCode}</span>
+                    </div>
+                    <button class="copy-btn" onclick="copyColor('${hexCode}')" title="نسخ الكود">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    </button>
+                `;
+                paletteContainer.appendChild(card);
+            });
+        }
+
+        // 5. وظيفة النسخ للحافظة وإظهار الـ Toast
+        window.copyColor = function(hex) {
+            navigator.clipboard.writeText(hex).then(() => {
+                toast.classList.add('show');
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 2000);
+            });
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>المربع السحري - النسخة المطورة</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet" />
+
+    <style>
+      /* ==========================================================================
+         RESET & VARIABLES
+         ========================================================================== */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --bg: #0e162b;
+        --card: #18233f;
+        --card-hover: #223154;
+        --primary: #5ea2ff;
+        --secondary: #7c5cff;
+        --gold: #f3c969;
+        --text: #f5f7ff;
+        --muted: #9da9c6;
+        --success: #39d98a;
+        --danger: #ff5f6d;
+        --shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+        --glow: 0 0 18px rgba(94, 162, 255, 0.25);
+        font-family: "Cairo", sans-serif;
+      }
+
+      body {
+        min-height: 100vh;
+        background: radial-gradient(circle at top, #1b2750 0%, #121c38 30%, #0e162b 100%);
+        color: var(--text);
+        padding: 24px 16px;
+        overflow-x: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 1000px;
+        margin: auto;
+      }
+
+      /* ==========================================================================
+         HEADER
+         ========================================================================== */
+      .header {
+        background: rgba(24, 35, 63, 0.85);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        backdrop-filter: blur(18px);
+        border-radius: 20px;
+        padding: 24px;
+        box-shadow: var(--shadow);
+        margin-bottom: 20px;
+      }
+
+      .title-box h1 {
+        font-size: 1.8rem;
+        color: var(--gold);
+        margin-bottom: 8px;
+        text-shadow: 0 0 18px rgba(243, 201, 105, 0.3);
+        text-align: center;
+      }
+
+      .title-box p {
+        color: var(--muted);
+        line-height: 1.6;
+        text-align: center;
+        font-size: 0.95rem;
+      }
+
+      .top-actions {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        margin-top: 20px;
+      }
+
+      @media (min-width: 600px) {
+        .top-actions {
+          grid-template-columns: repeat(4, 1fr);
+        }
+      }
+
+      button {
+        border: none;
+        cursor: pointer;
+        color: white;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        padding: 10px 14px;
+        border-radius: 12px;
+        font-size: 14px;
+        font-weight: 700;
+        transition: 0.2s ease;
+        box-shadow: var(--glow);
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      button:hover {
+        transform: translateY(-3px);
+        opacity: 0.95;
+      }
+
+      button:active {
+        transform: scale(0.97);
+      }
+
+      /* ==========================================================================
+         INFO PANEL
+         ========================================================================== */
+      .info-panel {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin-bottom: 20px;
+      }
+
+      .card {
+        background: var(--card);
+        padding: 14px;
+        border-radius: 16px;
+        text-align: center;
+        box-shadow: var(--shadow);
+        transition: 0.3s;
+        border: 1px solid rgba(255, 255, 255, 0.02);
+      }
+
+      .card:hover {
+        background: var(--card-hover);
+        transform: translateY(-2px);
+      }
+
+      .label {
+        display: block;
+        color: var(--muted);
+        margin-bottom: 6px;
+        font-size: 0.85rem;
+      }
+
+      .card strong {
+        font-size: 1.2rem;
+        color: var(--gold);
+      }
+
+      /* ==========================================================================
+         LEVELS BUTTONS
+         ========================================================================== */
+      .levels {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin-bottom: 24px;
+      }
+
+      .level-btn.active {
+        outline: 2px solid var(--gold);
+        transform: scale(1.02);
+      }
+
+      /* ==========================================================================
+         DYNAMIC RESPONSIVE BOARD (حل مشكلة الشاشات الصغيرة)
+         ========================================================================== */
+      .board-wrapper {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 20px;
+        width: 100%;
+      }
+
+      .magic-board {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        padding: 16px;
+        border-radius: 24px;
+        background: rgba(24, 35, 63, 0.85);
+        backdrop-filter: blur(12px);
+        box-shadow: var(--shadow);
+        width: 100%;
+        max-width: 380px; /* الحجم المثالي المتناسق على جميع المتصفحات */
+      }
+
+      .cell {
+        width: 100%;
+        aspect-ratio: 1 / 1; /* يجعل الخلايا مربعات كاملة دائماً مهما صغر الحجم */
+        border: 2px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        background: #121d39;
+        color: white;
+        font-size: 1.8rem;
+        font-weight: 800;
+        text-align: center;
+        outline: none;
+        transition: all 0.2s ease;
+        box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.02);
+      }
+
+      .cell:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 20px rgba(94, 162, 255, 0.45);
+        transform: scale(1.04);
+        z-index: 2;
+      }
+
+      .center-cell {
+        border-color: var(--gold);
+        box-shadow: 0 0 14px rgba(243, 201, 105, 0.2);
+      }
+
+      .cell::-webkit-inner-spin-button,
+      .cell::-webkit-outer-spin-button {
+        appearance: none;
+        margin: 0;
+      }
+
+      .cell[type="number"] {
+        appearance: textfield;
+        -moz-appearance: textfield;
+      }
+
+      /* ==========================================================================
+         RESULT BOX & MODAL
+         ========================================================================== */
+      .result-box {
+        text-align: center;
+      }
+
+      #message {
+        color: var(--muted);
+        font-size: 1rem;
+        padding: 12px;
+        font-weight: 600;
+      }
+
+      .modal {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+        z-index: 100;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      .modal-content {
+        width: 100%;
+        max-width: 600px;
+        background: #172341;
+        border-radius: 20px;
+        padding: 24px;
+        position: relative;
+        box-shadow: var(--shadow);
+        animation: fadeIn 0.3s ease;
+        max-height: 90vh;
+        overflow-y: auto;
+      }
+
+      .modal-content h2 {
+        color: var(--gold);
+        margin-bottom: 16px;
+        font-size: 1.4rem;
+      }
+
+      .modal-content ol,
+      .modal-content ul {
+        padding-right: 20px;
+        line-height: 1.8;
+        font-size: 0.95rem;
+      }
+
+      .rules-levels {
+        margin-top: 20px;
+        padding-top: 14px;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .rules-levels h3 {
+        margin-bottom: 10px;
+        color: var(--primary);
+        font-size: 1.1rem;
+      }
+
+      #close-modal {
+        position: absolute;
+        left: 16px;
+        top: 16px;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        padding: 0;
+      }
+
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(15px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      /* ==========================================================================
+         RESPONSIVE SMALL SHIELD CHANGES (تحسينات الأجهزة المحمولة جداً)
+         ========================================================================== */
+      @media (max-width: 400px) {
+        body { padding: 12px 8px; }
+        .header { padding: 16px; }
+        .title-box h1 { font-size: 1.4rem; }
+        .cell { font-size: 1.5rem; }
+        .magic-board { gap: 8px; padding: 10px; }
+        .info-panel { gap: 8px; }
+        .card { padding: 10px 6px; }
+        .card strong { font-size: 1rem; }
+      }
+    </style>
+  </head>
+
+  <body>
+    <main class="container">
+      <header class="header">
+        <div class="title-box">
+          <h1>✨ المربع السحري ✨</h1>
+          <p>املأ الشبكة بالأرقام الصحيحة حتى يصبح مجموع كل صف وعمود وقطر متساويًا.</p>
+        </div>
+        <div class="top-actions">
+          <button id="pause-btn">⏸️ إيقاف</button>
+          <button id="resume-btn">▶️ استئناف</button>
+          <button id="restart-btn">🔄 إعادة</button>
+          <button id="rules-btn">📘 طريقة اللعبة</button>
+        </div>
+      </header>
+
+      <section class="info-panel">
+        <div class="card">
+          <span class="label">المستوى</span>
+          <strong id="level-name">سهل</strong>
+        </div>
+        <div class="card">
+          <span class="label">المجموع المطلوب</span>
+          <strong id="target-sum">15</strong>
+        </div>
+        <div class="card">
+          <span class="label">الوقت</span>
+          <strong id="timer">00:00</strong>
+        </div>
+      </section>
+
+      <section class="levels">
+        <button class="level-btn active" data-level="easy">سهل</button>
+        <button class="level-btn" data-level="medium">متوسط</button>
+        <button class="level-btn" data-level="hard">صعب</button>
+      </section>
+
+      <section class="board-wrapper">
+        <div class="magic-board">
+          <input type="number" class="cell" maxlength="2" />
+          <input type="number" class="cell" maxlength="2" />
+          <input type="number" class="cell" maxlength="2" />
+          <input type="number" class="cell" maxlength="2" />
+          <input type="number" class="cell center-cell" maxlength="2" />
+          <input type="number" class="cell" maxlength="2" />
+          <input type="number" class="cell" maxlength="2" />
+          <input type="number" class="cell" maxlength="2" />
+          <input type="number" class="cell" maxlength="2" />
+        </div>
+      </section>
+
+      <section class="result-box">
+        <p id="message">ابدأ بكتابة الأرقام داخل المربعات.</p>
+      </section>
+    </main>
+
+    <div class="modal hidden" id="rules-modal">
+      <div class="modal-content">
+        <button id="close-modal">✖</button>
+        <h2>📘 طريقة اللعبة</h2>
+        <ol>
+          <li>اختر مستوى الصعوبة.</li>
+          <li>املأ المربعات التسعة بالأرقام المناسبة.</li>
+          <li>لا يسمح بتكرار أي رقم.</li>
+          <li>يجب أن يكون مجموع كل صف متساويًا.</li>
+          <li>يجب أن يكون مجموع كل عمود متساويًا.</li>
+          <li>يجب أن يكون مجموع القطر الرئيسي متساويًا.</li>
+          <li>يجب أن يكون مجموع القطر الآخر متساويًا.</li>
+          <li>حاول إنهاء اللعبة في أقل وقت ممكن.</li>
+        </ol>
+        <div class="rules-levels">
+          <h3>المستويات</h3>
+          <ul>
+            <li><strong>سهل:</strong> الأرقام من 1 إلى 9 — المجموع 15.</li>
+            <li><strong>متوسط:</strong> الأرقام من 2 إلى 10 — المجموع 18.</li>
+            <li><strong>صعب:</strong> الأرقام من 10 إلى 18 — المجموع 42.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const cells = document.querySelectorAll(".cell");
+      const timerElement = document.getElementById("timer");
+      const message = document.getElementById("message");
+      const levelName = document.getElementById("level-name");
+      const targetSumElement = document.getElementById("target-sum");
+      const levelButtons = document.querySelectorAll(".level-btn");
+      const pauseBtn = document.getElementById("pause-btn");
+      const resumeBtn = document.getElementById("resume-btn");
+      const restartBtn = document.getElementById("restart-btn");
+      const rulesBtn = document.getElementById("rules-btn");
+      const closeModalBtn = document.getElementById("close-modal");
+      const modal = document.getElementById("rules-modal");
+
+      const levels = {
+        easy: { name: "سهل", min: 1, max: 9, target: 15 },
+        medium: { name: "متوسط", min: 2, max: 10, target: 18 },
+        hard: { name: "صعب", min: 10, max: 18, target: 42 }
+      };
+
+      let currentLevel = levels.easy;
+      let seconds = 0;
+      let timer = null;
+      let isPaused = false;
+
+      // ============================
+      // TIMER FUNCTIONS
+      // ============================
+      function startTimer() {
+        if (timer) return;
+        timer = setInterval(() => {
+          if (isPaused) return;
+          seconds++;
+          updateTimer();
+        }, 1000);
+      }
+
+      function stopTimer() {
+        clearInterval(timer);
+        timer = null;
+      }
+
+      function updateTimer() {
+        const mins = String(Math.floor(seconds / 60)).padStart(2, "0");
+        const secs = String(seconds % 60).padStart(2, "0");
+        timerElement.textContent = `${mins}:${secs}`;
+      }
+
+      // ============================
+      // BOARD FUNCTIONS
+      // ============================
+      function clearBoard() {
+        cells.forEach((cell) => {
+          cell.value = "";
+          cell.disabled = false;
+        });
+        message.textContent = "ابدأ بكتابة الأرقام داخل المربعات.";
+        seconds = 0;
+        updateTimer();
+        stopTimer();
+        isPaused = false;
+      }
+
+      function restartGame() {
+        clearBoard();
+      }
+
+      function setLevel(levelKey) {
+        currentLevel = levels[levelKey];
+        levelName.textContent = currentLevel.name;
+        targetSumElement.textContent = currentLevel.target;
+        levelButtons.forEach((btn) => {
+          btn.classList.remove("active");
+          if (btn.dataset.level === levelKey) {
+            btn.classList.add("active");
+          }
+        });
+        restartGame();
+      }
+
+      levelButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          setLevel(button.dataset.level);
+        });
+      });
+
+      // ============================
+      // VALIDATION
+      // ============================
+      function getValues() {
+        return [...cells]
+          .map((cell) => Number(cell.value))
+          .filter((value) => value !== 0);
+      }
+
+      function hasDuplicates(values) {
+        return new Set(values).size !== values.length;
+      }
+
+      function isBoardComplete() {
+        return [...cells].every((cell) => cell.value !== "");
+      }
+
+      function validateNumbers() {
+        const values = getValues();
+        for (const value of values) {
+          if (value < currentLevel.min || value > currentLevel.max) {
+            message.textContent = `❌ الأرقام المسموح بها من ${currentLevel.min} إلى ${currentLevel.max}`;
+            return false;
+          }
+        }
+        if (hasDuplicates(values)) {
+          message.textContent = "❌ لا يمكن تكرار أي رقم.";
+          return false;
+        }
+        return true;
+      }
+
+      function getGrid() {
+        return [...cells].map((cell) => Number(cell.value));
+      }
+
+      function checkWin() {
+        if (!isBoardComplete() || !validateNumbers()) return;
+
+        const g = getGrid();
+        const target = currentLevel.target;
+
+        const rows = [g[0] + g[1] + g[2], g[3] + g[4] + g[5], g[6] + g[7] + g[8]];
+        const cols = [g[0] + g[3] + g[6], g[1] + g[4] + g[7], g[2] + g[4] + g[8]];
+        const diagonal1 = g[0] + g[4] + g[8];
+        const diagonal2 = g[2] + g[4] + g[6];
+
+        const allValid = [...rows, ...cols, diagonal1, diagonal2].every((sum) => sum === target);
+
+        if (allValid) {
+          stopTimer();
+          message.textContent = `🎉 أحسنت! لقد فزت في ${timerElement.textContent}`;
+          cells.forEach((cell) => { cell.disabled = true; });
+        } else {
+          message.textContent = "⚠️ الشروط غير مكتملة بعد.";
+        }
+      }
+
+      // ============================
+      // INPUT & KEYBOARD NAVIGATION EVENTS
+      // ============================
+      cells.forEach((cell, index) => {
+        // الإدخال والتحقق
+        cell.addEventListener("input", () => {
+          if (!timer) startTimer();
+          if (cell.value.length > 2) cell.value = cell.value.slice(0, 2);
+          validateNumbers();
+          checkWin();
+        });
+
+        // خوارزمية التنقل بالأسهم متوافقة مع واجهة اللغة العربية RTL
+        cell.addEventListener("keydown", (e) => {
+          let targetIndex = -1;
+
+          switch (e.key) {
+            case "ArrowUp":
+              if (index >= 3) targetIndex = index - 3;
+              break;
+            case "ArrowDown":
+              if (index < 6) targetIndex = index + 3;
+              break;
+            case "ArrowLeft":
+              // اتجاه اليمين لليسار: السهم الأيسر ينقلك للخلية التالية في الصف الحالي
+              if (index % 3 < 2) targetIndex = index + 1;
+              break;
+            case "ArrowRight":
+              // اتجاه اليمين لليسار: السهم الأيمن ينقلك للخلية السابقة في الصف الحالي
+              if (index % 3 > 0) targetIndex = index - 1;
+              break;
+            default:
+              return; // تجاهل بقية الأزرار
+          }
+
+          if (targetIndex !== -1) {
+            e.preventDefault(); // منع سلوك المتصفح الافتراضي للأسهم
+            cells[targetIndex].focus();
+          }
+        });
+      });
+
+      // ============================
+      // CONTROLS & MODAL
+      // ============================
+      pauseBtn.addEventListener("click", () => {
+        isPaused = true;
+        cells.forEach((cell) => { cell.disabled = true; });
+        message.textContent = "⏸️ تم إيقاف اللعبة.";
+      });
+
+      resumeBtn.addEventListener("click", () => {
+        isPaused = false;
+        cells.forEach((cell) => { cell.disabled = false; });
+        message.textContent = "▶️ تم استئناف اللعبة.";
+      });
+
+      restartBtn.addEventListener("click", restartGame);
+
+      rulesBtn.addEventListener("click", () => { modal.classList.remove("hidden"); });
+      closeModalBtn.addEventListener("click", () => { modal.classList.add("hidden"); });
+      window.addEventListener("click", (e) => { if (e.target === modal) modal.classList.add("hidden"); });
+
+      // INITIALIZE
+      setLevel("easy");
+    </script>
+  </body>
+</html>

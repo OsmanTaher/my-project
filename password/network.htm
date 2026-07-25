@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>محاكي الشبكات ونظرية الرسوم البيانية</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0B1121; /* الخلفية الأساسية للمشروع */
+            color: #ffffff;
+            user-select: none;
+        }
+        /* شريط الأدوات العلوي */
+        .toolbar {
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #131B2E; /* الحاوية الداكنة */
+            border: 1px solid #1F2A45;
+            padding: 10px 20px;
+            border-radius: 8px;
+            display: flex;
+            gap: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            z-index: 10;
+            align-items: center;
+        }
+        .btn {
+            background-color: #1F2A45;
+            color: #ffffff;
+            border: 1px solid transparent;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn:hover {
+            border-color: #4AE2DC;
+        }
+        .btn.active {
+            background-color: #4AE2DC; /* لون التمييز المعتمد */
+            color: #0B1121;
+        }
+        .btn-danger {
+            background-color: #2c1f1f;
+            border-color: #ef4444;
+            color: #ef4444;
+        }
+        .btn-danger:hover {
+            background-color: #ef4444;
+            color: #ffffff;
+        }
+        /* لوحة الرسم */
+        canvas {
+            display: block;
+            width: 100vw;
+            height: 100vh;
+        }
+        /* صندوق تلميحات المستخدم */
+        .info-panel {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            background-color: rgba(19, 27, 46, 0.85);
+            border: 1px solid #1F2A45;
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-size: 13px;
+            color: #a0aec0;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="toolbar">
+        <button class="btn active" id="btn-node" onclick="setMode('node')">إضافة نقطة (Node)</button>
+        <button class="btn" id="btn-edge" onclick="setMode('edge')">إضافة اتصال (Edge)</button>
+        <button class="btn" id="btn-bfs" onclick="setMode('bfs')" style="border-color: #4AE2DC; color: #4AE2DC;">تشغيل BFS</button>
+        <button class="btn btn-danger" onclick="clearGraph()">مسح الكل</button>
+    </div>
+
+    <div class="info-panel" id="info-panel">وضع العمل الحالي: إضافة نقاط. اضغط في أي مكان فارغ لإنشاء نقطة.</div>
+
+    <canvas id="networkCanvas"></canvas>
+
+    <script>
+        const canvas = document.getElementById('networkCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // ضبط أبعاد الكانفاس لتغطي الشاشة بالكامل حياً
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        // الثوابت والمتغيرات الهيكلية للمشروع
+        const NODE_RADIUS = 25;
+        let nodes = [];
+        let edges = [];
+        let adjacencyList = {}; // تمثيل الشبكة برمجياً (Adjacency List)
+
+        let currentMode = 'node'; // الوضع الافتراضي
+        let selectedNodeForEdge = null;
+        let draggedNode = null;
+        let isDrawingEdge = false;
+        let mousePos = { x: 0, y: 0 };
+
+        // كائن يضم جزيئات وميض انتشار البيانات الحية
+        let activeParticles = [];
+
+        // ضبط وتبديل وضعية العمل
+        function setMode(mode) {
+            currentMode = mode;
+            document.querySelectorAll('.toolbar .btn').forEach(b => b.classList.remove('active'));
+            if(mode !== 'idle') {
+                const activeBtn = document.getElementById(`btn-${mode}`);
+                if(activeBtn) activeBtn.classList.add('active');
+            }
+
+            const info = document.getElementById('info-panel');
+            if(mode === 'node') info.innerText = "وضع العمل الحالي: إضافة نقاط. اضغط لإنشاء نقطة، أو اسحب نقطة قائمة لتحريكها.";
+            if(mode === 'edge') info.innerText = "وضع العمل الحالي: إضافة اتصالات. اضغط على نقطة واسحب نحو نقطة أخرى للتوصيل.";
+            if(mode === 'bfs') info.innerText = "وضع العمل الحالي: خوارزمية BFS. اضغط على أي نقطة لتكون نقطة الانطلاق البصرية.";
+            
+            selectedNodeForEdge = null;
+        }
+
+        // مسح الشبكة وإعادة تعيين الهياكل
+        function clearGraph() {
+            nodes = [];
+            edges = [];
+            adjacencyList = {};
+            activeParticles = [];
+            setMode('node');
+        }
+
+        // --- ميكانيكية قراءة إحداثيات الماوس واكتشاف العناصر (Hit Detection) ---
+        function getNodeAtPosition(x, y) {
+            return nodes.find(node => {
+                // استخدام قانون المسافة الرياضي الإقليدي (Hypotenuse)
+                const distance = Math.hypot(node.x - x, node.y - y);
+                return distance <= NODE_RADIUS;
+            });
+        }
+
+        // --- معالجة أحداث الفأرة (Mouse Events) ---
+        canvas.addEventListener('mousedown', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            const targetNode = getNodeAtPosition(x, y);
+
+            if (currentMode === 'node') {
+                if (targetNode) {
+                    draggedNode = targetNode; // تفعيل وضع السحب والإفلات للنقطة
+                } else {
+                    // إنشاء نقطة جديدة في مكان فارغ
+                    const newNode = {
+                        id: Date.now() + Math.random().toString(36).substr(2, 5),
+                        x: x,
+                        y: y,
+                        label: `V${nodes.length + 1}`,
+                        status: 'idle' // الحالات: idle, visiting, visited
+                    };
+                    nodes.push(newNode);
+                    adjacencyList[newNode.id] = [];
+                }
+            } else if (currentMode === 'edge') {
+                if (targetNode) {
+                    selectedNodeForEdge = targetNode;
+                    isDrawingEdge = true;
+                }
+            } else if (currentMode === 'bfs') {
+                if (targetNode) {
+                    runVisualBFS(targetNode.id);
+                }
+            }
+        });
+
+        canvas.addEventListener('mousemove', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            mousePos.x = e.clientX - rect.left;
+            mousePos.y = e.clientY - rect.top;
+
+            // تحديث مكان النقطة المسحوبة لحظياً وإعادة بناء وتحديث مسارات الخطوط التلقائي
+            if (draggedNode) {
+                draggedNode.x = mousePos.x;
+                draggedNode.y = mousePos.top || mousePos.y;
+            }
+        });
+
+        window.addEventListener('mouseup', () => {
+            if (currentMode === 'edge' && isDrawingEdge && selectedNodeForEdge) {
+                const targetNode = getNodeAtPosition(mousePos.x, mousePos.y);
+                // منع التوصيل الذكي العشوائي أو التوصيل بالنفس
+                if (targetNode && targetNode.id !== selectedNodeForEdge.id) {
+                    // التحقق من عدم وجود الاتصال مسبقاً
+                    const exists = edges.some(edge => 
+                        (edge.from === selectedNodeForEdge.id && edge.to === targetNode.id) ||
+                        (edge.from === targetNode.id && edge.to === selectedNodeForEdge.id)
+                    );
+
+                    if (!exists) {
+                        const weightInput = prompt("أدخل وزن الخط (سرعة النقل من 1 كأسرع شيء إلى 10 كأبطأ):", "2");
+                        const weight = Math.max(1, parseFloat(weightInput) || 2);
+
+                        // إضافة البيانات إلى قائمة الاتصالات الرسمية
+                        edges.push({ from: selectedNodeForEdge.id, to: targetNode.id, weight: weight });
+                        
+                        // تحديث هيكل البيانات البرمجي القياسي (Adjacency List) لكلا الطرفين (غير موجه)
+                        adjacencyList[selectedNodeForEdge.id].push({ nodeID: targetNode.id, weight: weight });
+                        adjacencyList[targetNode.id].push({ nodeID: selectedNodeForEdge.id, weight: weight });
+                    }
+                }
+            }
+            draggedNode = null;
+            isDrawingEdge = false;
+            selectedNodeForEdge = null;
+        });
+
+        // --- منطق خوارزمية البحث بالعرض ومحاكاة الانتشار البصري (BFS & Pulse Spread) ---
+        async function runVisualBFS(startNodeID) {
+            // تصفية حالات العقد السابقة لإعادة التشغيل الآمن
+            nodes.forEach(n => n.status = 'idle');
+            activeParticles = [];
+
+            let queue = [startNodeID];
+            let visited = new Set([startNodeID]);
+            
+            const startNode = nodes.find(n => n.id === startNodeID);
+            startNode.status = 'visited';
+
+            // دالة مساعدة برمجياً لإطلاق وميض متحرك بين نقطتين بشكل متزامن
+            function sendPulse(fromID, toID, weight) {
+                return new Promise((resolve) => {
+                    const fromNode = nodes.find(n => n.id === fromID);
+                    const toNode = nodes.find(n => n.id === toID);
+                    
+                    // حساب السرعة مبرمجاً بناء على معامل وزن الخط المتغير
+                    const speed = 1 / (weight * 15); 
+
+                    activeParticles.push({
+                        x: fromNode.x,
+                        y: fromNode.y,
+                        from: fromNode,
+                        to: toNode,
+                        progress: 0,
+                        speed: speed,
+                        onComplete: () => {
+                            resolve();
+                        }
+                    });
+                });
+            }
+
+            // حلقة معالجة الطابور المبرمجة غير المتزامنة بصرياً
+            while (queue.length > 0) {
+                let currentSize = queue.length;
+                let nextLevelPromises = [];
+                let nodesToVisitNext = [];
+
+                for (let i = 0; i < currentSize; i++) {
+                    let currNodeID = queue.shift();
+
+                    // جلب الجيران من الـ Adjacency List المدمجة
+                    let neighbors = adjacencyList[currNodeID] || [];
+
+                    for (let neighbor of neighbors) {
+                        if (!visited.has(neighbor.nodeID)) {
+                            visited.add(neighbor.nodeID);
+                            nodesToVisitNext.push(neighbor.nodeID);
+                            
+                            // تجهيز عملية إطلاق وإرسال الوميض البصري حياً للجير المكتشف
+                            nextLevelPromises.push(sendPulse(currNodeID, neighbor.nodeID, neighbor.weight));
+                        }
+                    }
+                }
+
+                if (nextLevelPromises.length > 0) {
+                    // الانتظار المتزامن حتى وصول جميع الومضات البصرية لجيران المستوى الحالي
+                    await Promise.all(nextLevelPromises);
+                    
+                    // تلوين العقد المكتشفة الجديدة فور وصول جزيئات البيانات لها
+                    nodesToVisitNext.forEach(id => {
+                        const node = nodes.find(n => n.id === id);
+                        if(node) node.status = 'visited';
+                        queue.push(id);
+                    });
+                }
+            }
+        }
+
+        // --- حلقة التكرار والتحديث والرسم عالية الأداء (60 FPS Animation Loop) ---
+        function draw() {
+            // مسح وتصفية إطارات الكانفاس السابقة لإعادة الرسم النظيف
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // 1. رسم كافة خطوط الاتصال (Edges) مع الأوزان النصية المحددة مبرمجاً
+            edges.forEach(edge => {
+                const fromNode = nodes.find(n => n.id === edge.from);
+                const toNode = nodes.find(n => n.id === edge.to);
+                
+                if (fromNode && toNode) {
+                    ctx.beginPath();
+                    ctx.moveTo(fromNode.x, fromNode.y);
+                    ctx.lineTo(toNode.x, toNode.y);
+                    ctx.strokeStyle = '#1F2A45';
+                    ctx.lineWidth = 3;
+                    ctx.stroke();
+
+                    // كتابة وزن الخط في المنتصف الهندسي الدقيق للخط المتجه
+                    ctx.fillStyle = '#a0aec0';
+                    ctx.font = '12px monospace';
+                    const midX = (fromNode.x + toNode.x) / 2;
+                    const midY = (fromNode.y + toNode.y) / 2;
+                    ctx.fillText(`w:${edge.weight}`, midX + 8, midY - 8);
+                }
+            });
+
+            // 2. رسم خط التوصيل المؤقت (Rubber banding) في وضع الإنشاء النشط
+            if (currentMode === 'edge' && isDrawingEdge && selectedNodeForEdge) {
+                ctx.beginPath();
+                ctx.moveTo(selectedNodeForEdge.x, selectedNodeForEdge.y);
+                ctx.lineTo(mousePos.x, mousePos.y);
+                ctx.strokeStyle = 'rgba(74, 226, 220, 0.4)';
+                ctx.lineWidth = 2;
+                ctx.setLineDash([5, 5]); // مظهر خط مقطع احترافي
+                ctx.stroke();
+                ctx.setLineDash([]); // إعادة الوضع الافتراضي للخط المصمت
+            }
+
+            // 3. تحديث ورسم جزيئات وميض محاكاة انتشار البيانات
+            for (let i = activeParticles.length - 1; i >= 0; i--) {
+                let p = activeParticles[i];
+                p.progress += p.speed;
+
+                if (p.progress >= 1) {
+                    p.onComplete(); // استدعاء دالة الإنجاز فور وصول الجزيء للهدف
+                    activeParticles.splice(i, 1); // مسح الجزيء من الذاكرة اللحظية للرسم
+                } else {
+                    // الحساب الخطي اللحظي لإحداثيات الجزيء المتحرك (Linear Interpolation)
+                    p.x = p.from.x + (p.to.x - p.from.x) * p.progress;
+                    p.y = p.from.y + (p.to.y - p.from.y) * p.progress;
+
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, 8, 0, Math.PI * 2);
+                    ctx.fillStyle = '#4AE2DC'; // وميض بلون التمييز المتوهج
+                    ctx.shadowBlur = 10;
+                    ctx.shadowColor = '#4AE2DC';
+                    ctx.fill();
+                    ctx.shadowBlur = 0; // تصفية الظل فوراً حتى لا يؤثر على بقية الكائنات
+                }
+            }
+
+            // 4. رسم النقاط الهيكلية (Nodes) والرموز النصية الخاصة بها في طبقة علوية مستقلة
+            nodes.forEach(node => {
+                ctx.beginPath();
+                ctx.arc(node.x, node.y, NODE_RADIUS, 0, Math.PI * 2);
+                
+                // تحديد لون التعبئة بناء على الحالة الحالية للعقدة (BFS State)
+                if (node.status === 'visited') {
+                    ctx.fillStyle = '#4AE2DC';
+                    ctx.strokeStyle = '#ffffff';
+                } else {
+                    ctx.fillStyle = '#131B2E';
+                    ctx.strokeStyle = '#1F2A45';
+                }
+                
+                ctx.lineWidth = 3;
+                ctx.fill();
+                ctx.stroke();
+
+                // رسم النص التعريفي داخل النقطة بمنتصف هندسي متناسق
+                ctx.fillStyle = node.status === 'visited' ? '#0B1121' : '#ffffff';
+                ctx.font = 'bold 14px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(node.label, node.x, node.y);
+            });
+
+            // استدعاء الحلقة اللحظية عالية الأداء لضمان معالجة متواصلة وسلسة بقوة 60 إطاراً بالثانية
+            requestAnimationFrame(draw);
+        }
+
+        // إطلاق حلقة العمل الافتراضية
+        requestAnimationFrame(draw);
+    </script>
+</body>
+</html>

@@ -1,0 +1,1213 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-select=none"
+    />
+    <title>2048: Neon Arcade Edition</title>
+
+    <style>
+      /* ==========================================================================
+   1. الهوية البصرية وإعدادات الثيمات (Theme Variables)
+   ========================================================================== */
+      :root {
+        /* الوضع الداكن (Default Neon Style) */
+        --bg-base: #0b1121;
+        --container-bg: #131b2e;
+        --border-color: #1f2a45;
+        --grid-bg: #090f1e;
+        --cell-bg: #1a243f;
+        --text-main: #ffffff;
+        --text-muted: #a0aec0;
+        --neon-cyan: #4ae2dc;
+        --neon-glow: 0 0 15px rgba(74, 226, 220, 0.6);
+      }
+
+      body.light-mode {
+        /* الوضع الفاتح المتناسق */
+        --bg-base: #f0f4f8;
+        --container-bg: #ffffff;
+        --border-color: #cbd5e0;
+        --grid-bg: #e2e8f0;
+        --cell-bg: #edf2f7;
+        --text-main: #0b1121;
+        --text-muted: #4a5568;
+        --neon-cyan: #00a39e;
+        --neon-glow: 0 0 8px rgba(0, 163, 158, 0.4);
+      }
+
+      body {
+        background-color: var(--bg-base);
+        color: var(--text-main);
+        font-family: "Segoe UI", system-ui, sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+
+      .game-container {
+        width: 100%;
+        max-width: 500px;
+        padding: 20px;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      /* التنسيق البرمجي للرأس والأزرار */
+      .game-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .brand h1 {
+        font-size: 38px;
+        margin: 0;
+        color: var(--neon-cyan);
+        text-shadow: var(--neon-glow);
+        font-weight: 800;
+      }
+
+      .brand .subtitle {
+        font-size: 12px;
+        letter-spacing: 2px;
+        color: var(--text-muted);
+        text-transform: uppercase;
+      }
+
+      .action-controls {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+
+      .primary-btn,
+      .secondary-btn,
+      .icon-btn {
+        border: 1px solid var(--border-color);
+        background: var(--container-bg);
+        color: var(--text-main);
+        padding: 8px 14px;
+        border-radius: 6px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-size: 13px;
+      }
+
+      .primary-btn {
+        background: var(--neon-cyan);
+        color: #0b1121;
+        border: none;
+        box-shadow: var(--neon-glow);
+      }
+
+      .primary-btn:hover {
+        transform: scale(1.03);
+        opacity: 0.9;
+      }
+
+      .icon-btn:hover,
+      .secondary-btn:hover {
+        border-color: var(--neon-cyan);
+        box-shadow: var(--neon-glow);
+      }
+
+      .icon-btn.disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+        pointer-events: none;
+      }
+
+      /* لوحة العدادات والإحصائيات */
+      .stats-panel {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+      }
+
+      .stat-box {
+        background: var(--container-bg);
+        border: 1px solid var(--border-color);
+        padding: 10px;
+        border-radius: 8px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .stat-label {
+        font-size: 10px;
+        color: var(--text-muted);
+        font-weight: bold;
+      }
+
+      .stat-value {
+        font-size: 18px;
+        font-weight: 800;
+      }
+
+      .accent-box {
+        border-color: var(--neon-cyan);
+      }
+
+      .config-panel {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: var(--container-bg);
+        border: 1px solid var(--border-color);
+        padding: 8px 12px;
+        border-radius: 8px;
+        font-size: 14px;
+      }
+
+      select {
+        background: var(--bg-base);
+        color: var(--text-main);
+        border: 1px solid var(--border-color);
+        padding: 4px 8px;
+        border-radius: 4px;
+        outline: none;
+      }
+
+      /* ==========================================================================
+   2. محرك بناء شبكة المربعات (CSS Grid Board Engine)
+   ========================================================================== */
+      .board-wrapper {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        background: var(--grid-bg);
+        border: 2px solid var(--border-color);
+        border-radius: 12px;
+        padding: 12px;
+        box-sizing: border-box;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      }
+
+      .game-board {
+        display: grid;
+        grid-template-columns: repeat(var(--grid-size), 1fr);
+        grid-template-rows: repeat(var(--grid-size), 1fr);
+        gap: 12px;
+        width: 100%;
+        height: 100%;
+        position: relative;
+      }
+
+      .grid-cell {
+        background: var(--cell-bg);
+        border-radius: 6px;
+        width: 100%;
+        height: 100%;
+      }
+
+      /* تصميم المربعات النشطة ديناميكياً وعزل نظام الألوان حياً */
+      .tile {
+        position: absolute;
+        width: calc((100% - (var(--grid-size) - 1) * 12px) / var(--grid-size));
+        height: calc((100% - (var(--grid-size) - 1) * 12px) / var(--grid-size));
+        border-radius: 6px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: calc(28px - (var(--grid-size) - 4) * 4px);
+        font-weight: 800;
+        transition: transform 0.15s ease-in-out;
+        box-sizing: border-box;
+        z-index: 2;
+        /* ربط المتغيرات البرمجية لتحديد المسار الحركي التلقائي */
+        transform: translate(
+          calc(var(--col) * (100% + 12px)),
+          calc(var(--row) * (100% + 12px))
+        );
+      }
+
+      /* مصفوفة التوهج اللوني المتصاعد للقطع القياسية (Neon Tile Palette) */
+      .tile[data-value="2"] {
+        background: #1e293b;
+        color: #ffffff;
+        border: 1px solid #475569;
+      }
+      .tile[data-value="4"] {
+        background: #334155;
+        color: #ffffff;
+        border: 1px solid #64748b;
+      }
+      .tile[data-value="8"] {
+        background: rgba(249, 115, 22, 0.15);
+        color: #f97316;
+        border: 1px solid #f97316;
+        box-shadow: 0 0 8px rgba(249, 115, 22, 0.4);
+      }
+      .tile[data-value="16"] {
+        background: rgba(234, 179, 8, 0.15);
+        color: #eab308;
+        border: 1px solid #eab308;
+        box-shadow: 0 0 10px rgba(234, 179, 8, 0.4);
+      }
+      .tile[data-value="32"] {
+        background: rgba(236, 72, 153, 0.15);
+        color: #ec4899;
+        border: 1px solid #ec4899;
+        box-shadow: 0 0 10px rgba(236, 72, 153, 0.4);
+      }
+      .tile[data-value="64"] {
+        background: rgba(239, 68, 68, 0.15);
+        color: #ef4444;
+        border: 1px solid #ef4444;
+        box-shadow: 0 0 12px rgba(239, 68, 68, 0.4);
+      }
+      .tile[data-value="128"] {
+        background: rgba(168, 85, 247, 0.2);
+        color: #a855f7;
+        border: 1px solid #a855f7;
+        box-shadow: 0 0 15px rgba(168, 85, 247, 0.5);
+      }
+      .tile[data-value="256"] {
+        background: rgba(59, 130, 246, 0.2);
+        color: #3b82f6;
+        border: 1px solid #3b82f6;
+        box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+      }
+      .tile[data-value="512"] {
+        background: rgba(16, 185, 129, 0.2);
+        color: #10b981;
+        border: 1px solid #10b981;
+        box-shadow: 0 0 18px rgba(16, 185, 129, 0.6);
+      }
+      .tile[data-value="1024"] {
+        background: rgba(6, 182, 212, 0.25);
+        color: #06b6d4;
+        border: 1px solid #06b6d4;
+        box-shadow: 0 0 20px rgba(6, 182, 212, 0.6);
+      }
+      .tile[data-value="2048"] {
+        background: rgba(74, 226, 220, 0.3);
+        color: #4ae2dc;
+        border: 2px solid #4ae2dc;
+        box-shadow: var(--neon-glow);
+        animation: winPulse 1s infinite alternate;
+      }
+
+      /* تأثيرات التنشيط والحركة المدمجة */
+      .tile-new {
+        animation: spawnTile 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+      .tile-merged {
+        z-index: 3;
+        animation: mergeBump 0.15s ease-in-out;
+      }
+
+      @keyframes spawnTile {
+        0% {
+          transform: translate(
+              calc(var(--col) * (100% + 12px)),
+              calc(var(--row) * (100% + 12px))
+            )
+            scale(0);
+          opacity: 0;
+        }
+        100% {
+          transform: translate(
+              calc(var(--col) * (100% + 12px)),
+              calc(var(--row) * (100% + 12px))
+            )
+            scale(1);
+          opacity: 1;
+        }
+      }
+      @keyframes mergeBump {
+        0%,
+        100% {
+          transform: translate(
+              calc(var(--col) * (100% + 12px)),
+              calc(var(--row) * (100% + 12px))
+            )
+            scale(1);
+        }
+        50% {
+          transform: translate(
+              calc(var(--col) * (100% + 12px)),
+              calc(var(--row) * (100% + 12px))
+            )
+            scale(1.15);
+        }
+      }
+      @keyframes winPulse {
+        0% {
+          box-shadow: 0 0 10px rgba(74, 226, 220, 0.5);
+        }
+        100% {
+          box-shadow: 0 0 25px rgba(74, 226, 220, 0.9);
+        }
+      }
+
+      /* شاشات الـ Overlays والنوافذ المنبثقة */
+      .overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(11, 17, 33, 0.85);
+        z-index: 10;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 12px;
+        animation: fadeIn 0.3s ease;
+      }
+
+      .overlay-content h2 {
+        font-size: 32px;
+        color: var(--neon-cyan);
+        text-shadow: var(--neon-glow);
+        margin: 0 0 10px 0;
+      }
+
+      .overlay-buttons {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        margin-top: 15px;
+      }
+
+      /* النوافذ العائمة ومؤشرات المساعدة */
+      .modal {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 20;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 15px;
+      }
+
+      .modal-content {
+        background: var(--container-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        width: 100%;
+        max-width: 440px;
+        padding: 20px;
+        color: var(--text-main);
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 10px;
+      }
+
+      .modal-header h2 {
+        margin: 0;
+        font-size: 18px;
+        color: var(--neon-cyan);
+      }
+      .close-btn {
+        background: none;
+        border: none;
+        color: var(--text-muted);
+        font-size: 24px;
+        cursor: pointer;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        margin: 15px 0;
+      }
+
+      .stat-card {
+        background: var(--bg-base);
+        border: 1px solid var(--border-color);
+        padding: 10px;
+        border-radius: 6px;
+        display: flex;
+        flex-direction: column;
+        font-size: 13px;
+      }
+
+      .stat-card span:last-child {
+        font-weight: bold;
+        color: var(--neon-cyan);
+        font-size: 16px;
+        margin-top: 4px;
+      }
+
+      .achievements-list {
+        max-height: 150px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        padding-right: 5px;
+      }
+
+      .achieve-item {
+        background: var(--bg-base);
+        border-left: 3px solid var(--border-color);
+        padding: 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .achieve-item.unlocked {
+        border-left-color: var(--neon-cyan);
+      }
+      .achieve-item.unlocked span:last-child {
+        color: var(--neon-cyan);
+        font-weight: bold;
+      }
+
+      .keyboard-hints {
+        text-align: center;
+        font-size: 12px;
+        color: var(--text-muted);
+        line-height: 1.6;
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      /* تأثيرات الاهتزاز الكانفاسي الكلاسيكي للمجسمات */
+      .shake-anim {
+        animation: shake 0.2s ease;
+      }
+      @keyframes shake {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        25% {
+          transform: translateX(-4px);
+        }
+        75% {
+          transform: translateX(4px);
+        }
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+    </style>
+  </head>
+  <body class="dark-mode">
+    <div class="game-container">
+      <header class="game-header">
+        <div class="brand">
+          <h1>2048</h1>
+          <span class="subtitle">Neon Arcade</span>
+        </div>
+        <div class="action-controls">
+          <button id="themeToggle" class="icon-btn" title="Toggle Theme">
+            🌓 Mode
+          </button>
+          <button id="muteToggle" class="icon-btn" title="Mute/Unmute">
+            🔊 Sound
+          </button>
+          <button id="undoBtn" class="icon-btn disabled" title="Undo Move">
+            ↩️ Undo
+          </button>
+          <button id="restartBtn" class="primary-btn">New Game</button>
+        </div>
+      </header>
+
+      <section class="stats-panel">
+        <div class="stat-box">
+          <span class="stat-label">SCORE</span>
+          <span id="scoreVal" class="stat-value">0</span>
+        </div>
+        <div class="stat-box accent-box">
+          <span class="stat-label">BEST</span>
+          <span id="bestVal" class="stat-value">0</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-label">MOVES</span>
+          <span id="movesVal" class="stat-value">0</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-label">TIME</span>
+          <span id="timerVal" class="stat-value">00:00</span>
+        </div>
+      </section>
+
+      <section class="config-panel">
+        <label for="boardSizeSelect">Board Size:</label>
+        <select id="boardSizeSelect">
+          <option value="4">4 × 4 (Classic)</option>
+          <option value="5">5 × 5 (Deluxe)</option>
+          <option value="6">6 × 6 (Extreme)</option>
+        </select>
+        <button id="viewStatsBtn" class="secondary-btn">
+          🏆 Achievements & Stats
+        </button>
+      </section>
+
+      <main class="board-wrapper">
+        <div id="statusOverlay" class="overlay hidden">
+          <div class="overlay-content">
+            <h2 id="overlayTitle">Victory!</h2>
+            <p id="overlayMessage">You've reached the 2048 tile!</p>
+            <div class="overlay-buttons">
+              <button id="keepGoingBtn" class="secondary-btn hidden">
+                Keep Going
+              </button>
+              <button id="overlayRestartBtn" class="primary-btn">
+                Play Again
+              </button>
+            </div>
+          </div>
+        </div>
+        <div id="gameBoard" class="game-board" style="--grid-size: 4"></div>
+      </main>
+
+      <div id="statsModal" class="modal hidden">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2>Arcade Record & Achievements</h2>
+            <button id="closeModalBtn" class="close-btn">&times;</button>
+          </div>
+          <div class="modal-body">
+            <h3>Game Statistics</h3>
+            <div class="stats-grid">
+              <div class="stat-card">
+                <span>Total Games</span><span id="statTotalGames">0</span>
+              </div>
+              <div class="stat-card">
+                <span>Total Moves</span><span id="statTotalMoves">0</span>
+              </div>
+              <div class="stat-card">
+                <span>Highest Score</span><span id="statMaxScore">0</span>
+              </div>
+              <div class="stat-card">
+                <span>Highest Tile</span><span id="statMaxTile">2</span>
+              </div>
+            </div>
+            <h3>Unlocked Milestones</h3>
+            <div id="achievementsList" class="achievements-list"></div>
+          </div>
+        </div>
+      </div>
+
+      <footer class="keyboard-hints">
+        <p>
+          💻 Desktop: Use <strong>Arrows</strong> or <strong>WASD</strong> keys
+        </p>
+        <p>📱 Mobile: <strong>Swipe</strong> in any direction to move tiles</p>
+      </footer>
+    </div>
+
+    <script>
+      // ==========================================================================
+      // 1. محرك المؤثرات الصوتية الشيبتون الحية (Pure Web Audio API Sound System)
+      // ==========================================================================
+      class SoundSystem {
+        constructor() {
+          this.ctx = null;
+          this.isMuted = localStorage.getItem("game_2048_muted") === "true";
+        }
+
+        init() {
+          if (!this.ctx) {
+            this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+          }
+        }
+
+        playTone(freq, type, duration, vol = 0.1) {
+          if (this.isMuted) return;
+          this.init();
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = type;
+          osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+          gain.gain.setValueAtTime(vol, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(
+            0.0001,
+            this.ctx.currentTime + duration,
+          );
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + duration);
+        }
+
+        playSlide() {
+          this.playTone(300, "triangle", 0.08, 0.05);
+        }
+        playMerge() {
+          this.playTone(440, "sine", 0.15, 0.15);
+          setTimeout(() => this.playTone(554.37, "sine", 0.12, 0.15), 60);
+        }
+        playWin() {
+          this.playTone(523.25, "square", 0.2);
+          setTimeout(() => this.playTone(659.25, "square", 0.2), 150);
+          setTimeout(() => this.playTone(783.99, "square", 0.4), 300);
+        }
+        playGameOver() {
+          this.playTone(180, "sawtooth", 0.4);
+          setTimeout(() => this.playTone(130, "sawtooth", 0.5), 200);
+        }
+
+        toggleMute() {
+          this.isMuted = !this.isMuted;
+          localStorage.setItem("game_2048_muted", this.isMuted);
+          return this.isMuted;
+        }
+      }
+      const sound = new SoundSystem();
+
+      // ==========================================================================
+      // 2. فئة إدارة الإنجازات وسجلات المطورين (Achievements & Analytics Engine)
+      // ==========================================================================
+      class AchievementManager {
+        constructor() {
+          this.milestones = [
+            {
+              id: "tile_128",
+              title: "Arcade Starter",
+              desc: "Reach 128 tile",
+              unlocked: false,
+              check: (max) => max >= 128,
+            },
+            {
+              id: "tile_512",
+              title: "Puzzle Expert",
+              desc: "Reach 512 tile",
+              unlocked: false,
+              check: (max) => max >= 512,
+            },
+            {
+              id: "tile_2048",
+              title: "Neon God",
+              desc: "Reach 2048 tile!",
+              unlocked: false,
+              check: (max) => max >= 2048,
+            },
+            {
+              id: "moves_100",
+              title: "Persistent Player",
+              desc: "Play 100 moves in one game",
+              unlocked: false,
+              check: (_, moves) => moves >= 100,
+            },
+          ];
+          this.load();
+        }
+
+        load() {
+          const saved =
+            JSON.parse(localStorage.getItem("game_2048_achieve")) || {};
+          this.milestones.forEach((m) => (m.unlocked = !!saved[m.id]));
+        }
+
+        checkUnlock(maxTile, currentMoves) {
+          let updated = false;
+          this.milestones.forEach((m) => {
+            if (!m.unlocked && m.check(maxTile, currentMoves)) {
+              m.unlocked = true;
+              updated = true;
+            }
+          });
+          if (updated) {
+            const saveObj = {};
+            this.milestones.forEach((m) => (saveObj[m.id] = m.unlocked));
+            localStorage.setItem("game_2048_achieve", JSON.stringify(saveObj));
+          }
+        }
+      }
+
+      // ==========================================================================
+      // 3. المحرك الجوهري الأساسي للعبة (Main 2048 Pure Logic Engine)
+      // ==========================================================================
+      class Game2048 {
+        constructor() {
+          this.size = parseInt(localStorage.getItem("game_2048_size")) || 4;
+          this.achievements = new AchievementManager();
+          this.undoStack = [];
+          this.timer = null;
+          this.timeElapsed = 0;
+          this.isWon = false;
+          this.keepGoing = false;
+
+          this.domBoard = document.getElementById("gameBoard");
+          this.setupDOM();
+          this.loadGame();
+        }
+
+        setupDOM() {
+          // تحديث أزرار خيارات الواجهة حياً
+          document.getElementById("boardSizeSelect").value = this.size;
+          document.getElementById("muteToggle").innerText = sound.isMuted
+            ? "🔇 Muted"
+            : "🔊 Sound";
+          if (localStorage.getItem("game_2048_light") === "true")
+            document.body.classList.add("light-mode");
+          this.bindEvents();
+        }
+
+        initGrid() {
+          this.grid = Array.from({ length: this.size }, () =>
+            Array(this.size).fill(0),
+          );
+          this.score = 0;
+          this.moves = 0;
+          this.timeElapsed = 0;
+          this.isWon = false;
+          this.keepGoing = false;
+          this.undoStack = [];
+
+          this.domBoard.innerHTML = "";
+          this.domBoard.style.setProperty("--grid-size", this.size);
+
+          // بناء الخلفية الهيكلية الثابتة للخلايا (Static Cells)
+          for (let i = 0; i < this.size * this.size; i++) {
+            const cell = document.createElement("div");
+            cell.className = "grid-cell";
+            this.domBoard.appendChild(cell);
+          }
+
+          this.addRandomTile();
+          this.addRandomTile();
+          this.startTimer();
+          this.saveGame();
+          this.renderTiles();
+        }
+
+        addRandomTile() {
+          const emptyCells = [];
+          for (let r = 0; r < this.size; r++) {
+            for (let c = 0; c < this.size; c++) {
+              if (this.grid[r][c] === 0) emptyCells.push({ r, c });
+            }
+          }
+          if (emptyCells.length > 0) {
+            const { r, c } =
+              emptyCells[Math.floor(Math.random() * emptyCells.length)];
+            this.grid[r][c] = Math.random() < 0.9 ? 2 : 4;
+            return { r, c }; // إرجاع الإحداثيات لربط تأثير الـ Spawn لاحقاً إن لزم
+          }
+        }
+
+        renderTiles() {
+          // تنظيف القطعات المتحركة القديمة من الـ DOM
+          Array.from(this.domBoard.querySelectorAll(".tile")).forEach((t) =>
+            t.remove(),
+          );
+
+          for (let r = 0; r < this.size; r++) {
+            for (let c = 0; c < this.size; c++) {
+              const val = this.grid[r][c];
+              if (val > 0) {
+                const tile = document.createElement("div");
+                tile.className = `tile tile-new`;
+                tile.style.setProperty("--row", r);
+                tile.style.setProperty("--col", c);
+                tile.setAttribute("data-value", val);
+                tile.innerText = val;
+                this.domBoard.appendChild(tile);
+              }
+            }
+          }
+          this.updateUI();
+        }
+
+        // --- منطق حركة الحقول ومعالجة المصفوفات الفعلي (Core Sliding Logic) ---
+        slide(direction) {
+          if (
+            document
+              .getElementById("statusOverlay")
+              .classList.contains("hidden") === false &&
+            this.isWon === false
+          )
+            return;
+
+          // حفظ الحالة الراهنة في كود الـ Backups للـ Undo قبل معالجة الحركة
+          this.saveToUndoStack();
+
+          let moved = false;
+          let mergedPositions = Array.from({ length: this.size }, () =>
+            Array(this.size).fill(false),
+          );
+
+          // معالجة الدوران المتجه لتوحيد عملية السحب جهة اليسار (Abstracting Directions)
+          const rotatedGrid = this.rotateGridClockwise(direction);
+
+          for (let r = 0; r < this.size; r++) {
+            let row = rotatedGrid[r].filter((val) => val !== 0);
+            for (let i = 0; i < row.length - 1; i++) {
+              if (row[i] === row[i + 1]) {
+                row[i] *= 2;
+                this.score += row[i];
+                row.splice(i + 1, 1);
+                moved = true;
+                sound.playMerge();
+              }
+            }
+            while (row.length < this.size) row.push(0);
+
+            if (JSON.stringify(rotatedGrid[r]) !== JSON.stringify(row))
+              moved = true;
+            rotatedGrid[r] = row;
+          }
+
+          // إرجاع الشبكة لاتجاهها الأصلي بعد دمج المصفوفات
+          this.grid = this.restoreGridOrientation(rotatedGrid, direction);
+
+          if (moved) {
+            this.moves++;
+            sound.playSlide();
+            this.addRandomTile();
+            this.renderTiles();
+            this.checkGameStatus();
+            this.saveGame();
+          } else {
+            this.undoStack.pop(); // سحب الـ stack لعدم حدوث حركة حقيقية
+          }
+        }
+
+        rotateGridClockwise(dir) {
+          // تحويل الاتجاهات الأربعة إلى تمثيل برمي موحد (0: Left, 1: Up, 2: Right, 3: Down)
+          let temp = Array.from({ length: this.size }, (_, r) => [
+            ...this.grid[r],
+          ]);
+          const rotations = { up: 1, right: 2, down: 3, left: 0 }[dir];
+          for (let i = 0; i < rotations; i++) {
+            temp = Array.from({ length: this.size }, (_, r) =>
+              Array.from(
+                { length: this.size },
+                (_, c) => temp[this.size - 1 - c][r],
+              ),
+            );
+          }
+          return temp;
+        }
+
+        restoreGridOrientation(gridData, dir) {
+          let temp = gridData;
+          const rotations = { up: 3, right: 2, down: 1, left: 0 }[dir];
+          for (let i = 0; i < rotations; i++) {
+            temp = Array.from({ length: this.size }, (_, r) =>
+              Array.from(
+                { length: this.size },
+                (_, c) => temp[this.size - 1 - c][r],
+              ),
+            );
+          }
+          return temp;
+        }
+
+        // --- الفحص اللحظي لقوانين الربح والخسارة (State Validation) ---
+        checkGameStatus() {
+          let maxTile = 0;
+          let hasEmptyCell = false;
+
+          for (let r = 0; r < this.size; r++) {
+            for (let c = 0; c < this.size; c++) {
+              if (this.grid[r][c] > maxTile) maxTile = this.grid[r][c];
+              if (this.grid[r][c] === 0) hasEmptyCell = true;
+            }
+          }
+
+          this.achievements.checkUnlock(maxTile, this.moves);
+
+          // شرط الفوز (Reach 2048)
+          if (maxTile >= 2048 && !this.isWon && !this.keepGoing) {
+            this.isWon = true;
+            sound.playWin();
+            this.showOverlay("Victory!", "You've reached the 2048 tile!", true);
+            return;
+          }
+
+          // شرط الخسارة (No moves left)
+          if (!hasEmptyCell && !this.canMove()) {
+            sound.playGameOver();
+            this.showOverlay(
+              "Game Over",
+              "No valid moves remaining on the board.",
+            );
+            this.stopTimer();
+            // تحديث سجل السيرفر المحلي للإحصائيات التراكمية
+            const globalStats = JSON.parse(
+              localStorage.getItem("game_2048_global_stats"),
+            ) || { games: 0, moves: 0, maxScore: 0, maxTile: 2 };
+            globalStats.games++;
+            globalStats.moves += this.moves;
+            if (this.score > globalStats.maxScore)
+              globalStats.maxScore = this.score;
+            if (maxTile > globalStats.maxTile) globalStats.maxTile = maxTile;
+            localStorage.setItem(
+              "game_2048_global_stats",
+              JSON.stringify(globalStats),
+            );
+          }
+        }
+
+        canMove() {
+          for (let r = 0; r < this.size; r++) {
+            for (let c = 0; c < this.size; c++) {
+              if (c < this.size - 1 && this.grid[r][c] === this.grid[r][c + 1])
+                return true;
+              if (r < this.size - 1 && this.grid[r][c] === this.grid[r + 1][c])
+                return true;
+            }
+          }
+          return false;
+        }
+
+        // --- منطق الحفظ التلقائي والتراجع (Undo & Auto-Save Systems) ---
+        saveToUndoStack() {
+          if (this.undoStack.length >= 5) this.undoStack.shift(); // حد أقصى 5 خطوات للخلف لضمان استقرار الأداء
+          this.undoStack.push({
+            grid: Array.from({ length: this.size }, (_, r) => [
+              ...this.grid[r],
+            ]),
+            score: this.score,
+            moves: this.moves,
+            isWon: this.isWon,
+            keepGoing: this.keepGoing,
+          });
+          document.getElementById("undoBtn").classList.remove("disabled");
+        }
+
+        undo() {
+          if (this.undoStack.length === 0) return;
+          const state = this.undoStack.pop();
+          this.grid = state.grid;
+          this.score = state.score;
+          this.moves = state.moves;
+          this.isWon = state.isWon;
+          this.keepGoing = state.keepGoing;
+
+          if (this.undoStack.length === 0)
+            document.getElementById("undoBtn").classList.add("disabled");
+          document.getElementById("statusOverlay").classList.add("hidden");
+
+          this.renderTiles();
+          this.saveGame();
+        }
+
+        saveGame() {
+          const session = {
+            grid: this.grid,
+            score: this.score,
+            moves: this.moves,
+            time: this.timeElapsed,
+            isWon: this.isWon,
+            keepGoing: this.keepGoing,
+          };
+          localStorage.setItem(
+            `game_2048_save_s${this.size}`,
+            JSON.stringify(session),
+          );
+
+          let best = localStorage.getItem(`game_2048_best_s${this.size}`) || 0;
+          if (this.score > best)
+            localStorage.setItem(`game_2048_best_s${this.size}`, this.score);
+        }
+
+        loadGame() {
+          const saved = JSON.parse(
+            localStorage.getItem(`game_2048_save_s${this.size}`),
+          );
+          if (saved && saved.grid && saved.grid.length === this.size) {
+            this.grid = saved.grid;
+            this.score = saved.score;
+            this.moves = saved.moves;
+            this.timeElapsed = saved.time;
+            this.isWon = saved.isWon;
+            this.keepGoing = saved.keepGoing;
+
+            // تهيئة خلايا الخلفية لشبكة الأبعاد الحالية
+            this.domBoard.innerHTML = "";
+            this.domBoard.style.setProperty("--grid-size", this.size);
+            for (let i = 0; i < this.size * this.size; i++) {
+              const cell = document.createElement("div");
+              cell.className = "grid-cell";
+              this.domBoard.appendChild(cell);
+            }
+
+            this.startTimer();
+            this.renderTiles();
+            if (this.isWon && !this.keepGoing)
+              this.showOverlay(
+                "Victory!",
+                "You've reached the 2048 tile!",
+                true,
+              );
+          } else {
+            this.initGrid();
+          }
+        }
+
+        // --- محرك التوقيت وعناصر التحكم في الواجهة (Timers & UI Elements) ---
+        startTimer() {
+          this.stopTimer();
+          this.timer = setInterval(() => {
+            this.timeElapsed++;
+            const mins = String(Math.floor(this.timeElapsed / 60)).padStart(
+              2,
+              "0",
+            );
+            const secs = String(this.timeElapsed % 60).padStart(2, "0");
+            document.getElementById("timerVal").innerText = `${mins}:${secs}`;
+          }, 1000);
+        }
+
+        stopTimer() {
+          if (this.timer) clearInterval(this.timer);
+        }
+
+        updateUI() {
+          document.getElementById("scoreVal").innerText = this.score;
+          document.getElementById("bestVal").innerText =
+            localStorage.getItem(`game_2048_best_s${this.size}`) || 0;
+          document.getElementById("movesVal").innerText = this.moves;
+        }
+
+        showOverlay(title, msg, canContinue = false) {
+          document.getElementById("overlayTitle").innerText = title;
+          document.getElementById("overlayMessage").innerText = msg;
+          const overlay = document.getElementById("statusOverlay");
+          const keepGoingBtn = document.getElementById("keepGoingBtn");
+
+          if (canContinue) keepGoingBtn.classList.remove("hidden");
+          else keepGoingBtn.classList.add("hidden");
+
+          overlay.classList.remove("hidden");
+        }
+
+        // ==========================================================================
+        // 4. ربط أحداث الإدخال بالكامل (Desktop Keyboard & Mobile Swipe Event Binding)
+        // ==========================================================================
+        bindEvents() {
+          // مدخلات أجهزة الكمبيوتر (Desktop Controls)
+          window.onkeydown = (e) => {
+            const codeMap = {
+              ArrowLeft: "left",
+              KeyA: "left",
+              ArrowUp: "up",
+              KeyW: "up",
+              ArrowRight: "right",
+              KeyD: "right",
+              ArrowDown: "down",
+              KeyS: "down",
+            };
+            if (codeMap[e.code]) {
+              e.preventDefault();
+              this.slide(codeMap[e.code]);
+            }
+          };
+
+          // مدخلات أجهزة الموبايل (Mobile Swipe Gestures)
+          let touchStartX = 0,
+            touchStartY = 0;
+          this.domBoard.ontouchstart = (e) => {
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+          };
+
+          this.domBoard.ontouchmove = (e) => e.preventDefault(); // منع تفعيل الـ Scroll أثناء السحب اللحظي
+
+          this.domBoard.ontouchend = (e) => {
+            const diffX = e.changedTouches[0].clientX - touchStartX;
+            const diffY = e.changedTouches[0].clientY - touchStartY;
+
+            if (Math.max(Math.abs(diffX), Math.abs(diffY)) < 30) return; // حماية ضد الضغط العشوائي القصير جداً
+
+            if (Math.abs(diffX) > Math.abs(diffY)) {
+              this.slide(diffX > 0 ? "right" : "left");
+            } else {
+              this.slide(diffY > 0 ? "down" : "up");
+            }
+          };
+
+          // ربط بقية أزرار الإجراءات للواجهة الأمامية
+          document.getElementById("restartBtn").onclick = () => {
+            document.getElementById("statusOverlay").classList.add("hidden");
+            this.initGrid();
+          };
+          document.getElementById("overlayRestartBtn").onclick = () => {
+            document.getElementById("statusOverlay").classList.add("hidden");
+            this.initGrid();
+          };
+          document.getElementById("undoBtn").onclick = () => this.undo();
+
+          document.getElementById("keepGoingBtn").onclick = () => {
+            this.keepGoing = true;
+            document.getElementById("statusOverlay").classList.add("hidden");
+            this.startTimer();
+          };
+
+          document.getElementById("themeToggle").onclick = () => {
+            const isLight = document.body.classList.toggle("light-mode");
+            localStorage.setItem("game_2048_light", isLight);
+          };
+
+          document.getElementById("muteToggle").onclick = (e) => {
+            const isMuted = sound.toggleMute();
+            e.target.innerText = isMuted ? "🔇 Muted" : "🔊 Sound";
+          };
+
+          // تبديل مقاس اللوحة التلقائي لحظياً حياً
+          document.getElementById("boardSizeSelect").onchange = (e) => {
+            this.size = parseInt(e.target.value);
+            localStorage.setItem("game_2048_size", this.size);
+            document.getElementById("statusOverlay").classList.add("hidden");
+            this.loadGame();
+          };
+
+          // النوافذ العائمة للإحصائيات المنبثقة
+          document.getElementById("viewStatsBtn").onclick = () => {
+            const stats = JSON.parse(
+              localStorage.getItem("game_2048_global_stats"),
+            ) || { games: 0, moves: 0, maxScore: 0, maxTile: 2 };
+            document.getElementById("statTotalGames").innerText = stats.games;
+            document.getElementById("statTotalMoves").innerText = stats.moves;
+            document.getElementById("statMaxScore").innerText = stats.maxScore;
+            document.getElementById("statMaxTile").innerText = stats.maxTile;
+
+            // عرض قائمة الإنجازات المفتوحة
+            const achList = document.getElementById("achievementsList");
+            achList.innerHTML = "";
+            this.achievements.milestones.forEach((m) => {
+              const item = document.createElement("div");
+              item.className = `achieve-item ${m.unlocked ? "unlocked" : ""}`;
+              item.innerHTML = `<span><strong>${m.title}</strong> - ${m.desc}</span><span>${m.unlocked ? "🏆 Unlocked" : "🔒 Locked"}</span>`;
+              achList.appendChild(item);
+            });
+
+            document.getElementById("statsModal").classList.remove("hidden");
+          };
+
+          document.getElementById("closeModalBtn").onclick = () =>
+            document.getElementById("statsModal").classList.add("hidden");
+        }
+      }
+
+      // تشغيل محرك اللعبة فور تحميل الكائنات المادية بالكامل
+      window.addEventListener("DOMContentLoaded", () => {
+        new Game2048();
+      });
+    </script>
+  </body>
+</html>

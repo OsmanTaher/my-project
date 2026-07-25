@@ -1,0 +1,984 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Laser Reflection - Tactical Grid Core</title>
+    <style>
+      :root {
+        --bg-main: #0b1121;
+        --panel-bg: rgba(16, 26, 48, 0.75);
+        --border-color: rgba(0, 240, 255, 0.15);
+        --neon-blue: #00f0ff;
+        --neon-cyan: #00ffff;
+        --neon-pink: #ff007f;
+        --neon-green: #39ff14;
+        --neon-red: #ff3333;
+        --text-muted: #6b829e;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        user-select: none;
+      }
+
+      body {
+        background-color: var(--bg-main);
+        color: #ffffff;
+        font-family: "Segoe UI", Roboto, sans-serif;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+      }
+
+      .app-container {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        width: 95vw;
+        max-width: 650px;
+        height: 95vh;
+        max-height: 900px;
+        padding: 10px;
+      }
+
+      /* Glassmorphism Control Panel Dashboard */
+      .system-header {
+        background: var(--panel-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 14px;
+        padding: 15px 25px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      }
+
+      .header-widget {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .header-widget .widget-label {
+        font-size: 0.7rem;
+        color: var(--text-muted);
+        letter-spacing: 1.5px;
+        margin-bottom: 4px;
+        text-transform: uppercase;
+      }
+
+      .header-widget .widget-value {
+        font-size: 1.4rem;
+        font-weight: bold;
+        font-family: monospace;
+      }
+
+      /* Canvas Display Viewport Area */
+      .viewport-wrapper {
+        flex: 1;
+        background: rgba(5, 9, 19, 0.6);
+        border: 2px solid var(--border-color);
+        border-radius: 16px;
+        box-shadow:
+          inset 0 0 30px rgba(0, 0, 0, 0.8),
+          0 0 15px rgba(0, 240, 255, 0.05);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .canvas-relative-box {
+        position: relative;
+        width: 90%;
+        aspect-ratio: 1 / 1;
+        max-width: 500px;
+      }
+
+      #gameCanvas {
+        display: block;
+        width: 100%;
+        height: 100%;
+        background: transparent;
+        cursor: pointer;
+      }
+
+      /* Screen System Layer Overlays */
+      .screen-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(11, 17, 33, 0.96);
+        backdrop-filter: blur(8px);
+        display: none;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+        z-index: 10;
+        text-align: center;
+        padding: 24px;
+        border-radius: 8px;
+      }
+      .screen-overlay.active {
+        display: flex;
+      }
+
+      /* Control Buttons System Engine UI Elements */
+      .btn {
+        padding: 12px 30px;
+        background: transparent;
+        border-radius: 6px;
+        font-weight: bold;
+        letter-spacing: 1px;
+        cursor: pointer;
+        font-size: 0.95rem;
+        transition: all 0.2s ease;
+      }
+      .btn-neon-blue {
+        border: 2px solid var(--neon-blue);
+        color: #fff;
+        box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
+      }
+      .btn-neon-blue:hover {
+        background: var(--neon-blue);
+        color: var(--bg-main);
+        box-shadow: 0 0 20px var(--neon-blue);
+      }
+      .btn-neon-red {
+        border: 2px solid var(--neon-red);
+        color: #fff;
+      }
+      .btn-neon-red:hover {
+        background: var(--neon-red);
+        box-shadow: 0 0 20px var(--neon-red);
+      }
+
+      .system-footer {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      .btn-util {
+        background: var(--panel-bg);
+        border: 1px solid var(--border-color);
+        color: #fff;
+        padding: 12px 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 0.8rem;
+        flex: 1;
+        transition: all 0.2s;
+      }
+      .btn-util:hover {
+        border-color: var(--neon-blue);
+        color: var(--neon-blue);
+      }
+      .btn-danger:hover {
+        border-color: var(--neon-red);
+        color: var(--neon-red);
+      }
+
+      /* Typography Shadow System */
+      .neon-text-blue {
+        text-shadow: 0 0 8px var(--neon-blue);
+        color: var(--neon-blue);
+      }
+      .neon-text-cyan {
+        text-shadow: 0 0 8px var(--neon-cyan);
+        color: var(--neon-cyan);
+      }
+      .neon-text-green {
+        text-shadow: 0 0 8px var(--neon-green);
+        color: var(--neon-green);
+      }
+      .neon-text-red {
+        text-shadow: 0 0 8px var(--neon-red);
+        color: var(--neon-red);
+      }
+
+      /* Core Screen Shake and Blink Keyframes animations */
+      @keyframes technicalBlink {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.4;
+        }
+      }
+      .technical-blink {
+        animation: technicalBlink 1.5s infinite;
+      }
+
+      /* Screen Jitter Structural Animations class */
+      .screen-shake {
+        animation: shakeEffect 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+      }
+      @keyframes shakeEffect {
+        10%,
+        90% {
+          transform: translate3d(-2px, 0, 0);
+        }
+        20%,
+        80% {
+          transform: translate3d(3px, 0, 0);
+        }
+        30%,
+        50%,
+        70% {
+          transform: translate3d(-4px, 0, 0);
+        }
+        40%,
+        60% {
+          transform: translate3d(4px, 0, 0);
+        }
+      }
+
+      /* Responsive Overrides rules layout breakdown */
+      @media (max-width: 480px) {
+        .system-header {
+          padding: 10px 15px;
+        }
+        .header-widget .widget-value {
+          font-size: 1.1rem;
+        }
+        .system-footer {
+          flex-wrap: wrap;
+          gap: 8px;
+        }
+        .btn-util {
+          flex: calc(50% - 4px);
+        }
+        .btn-danger {
+          flex: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-container">
+      <header class="system-header glass-card">
+        <div class="header-widget">
+          <span class="widget-label">GRID NODE</span>
+          <span id="level-val" class="widget-value neon-text-blue">1</span>
+        </div>
+        <div class="header-widget">
+          <span class="widget-label">ENERGY SCORE</span>
+          <span id="score-val" class="widget-value neon-text-green">0000</span>
+        </div>
+        <div class="header-widget">
+          <span class="widget-label">ROTATIONS</span>
+          <span id="moves-val" class="widget-value">0</span>
+        </div>
+        <div class="header-widget">
+          <span class="widget-label">CHRONO LOCK</span>
+          <span id="timer-val" class="widget-value neon-text-red">60</span>
+        </div>
+      </header>
+
+      <main class="viewport-wrapper">
+        <div id="canvas-container" class="canvas-relative-box">
+          <canvas id="gameCanvas"></canvas>
+
+          <div id="victory-overlay" class="screen-overlay">
+            <h2 class="neon-text-green technical-blink">CRYSTAL ENGAGED</h2>
+            <p>Laser frequency matched. Network data localized.</p>
+            <button id="next-lvl-btn" class="btn btn-neon-blue">
+              NEXT MATRIX NODE
+            </button>
+          </div>
+
+          <div id="gameover-overlay" class="screen-overlay">
+            <h2 class="neon-text-red">SYSTEM DEPLETION</h2>
+            <p>Chronometer loop expired or structural failure detected.</p>
+            <button id="retry-btn" class="btn btn-neon-red">
+              REBOOT NODE CONTAINER
+            </button>
+          </div>
+        </div>
+      </main>
+
+      <footer class="system-footer">
+        <button id="hint-btn" class="btn-util">💡 CALIBRATE HINT</button>
+        <button id="restart-btn" class="btn-util">🔄 FLUSH NODE GRID</button>
+        <button id="clear-data-btn" class="btn-util btn-danger">
+          WIPE ALL PERSISTENCE
+        </button>
+      </footer>
+    </div>
+    <script>
+      /**
+       * Laser Reflection Puzzle Engine Architecture
+       * Vector Math and Matrix Discrete Cardinal Grid Transformations Mapping Module
+       */
+
+      // Matrix Cardinal Rays Vector Encodings [dr, dc] -> 0: North, 1: East, 2: South, 3: West
+      const DIR_VECTORS = [
+        [-1, 0], // NORTH (0)
+        [0, 1], // EAST (1)
+        [1, 0], // SOUTH (2)
+        [0, -1], // WEST (3)
+      ];
+
+      // Structural Object Nodes blueprint definition parameters mappings
+      class GridNode {
+        constructor(type, angle = 0, isFixed = false, color = "#00f0ff") {
+          this.type = type; // 'source', 'target', 'mirror', 'splitter', 'portal', 'absorber', 'wall', 'glass', 'empty'
+          this.angle = angle; // Object orientation rotation angles mapping index boundary limits: 0, 90, 180, 270
+          this.isFixed = isFixed;
+          this.color = color; // Property identifier for color filter operations
+          this.matched = false; // Condition mapping parameter state
+        }
+
+        rotate() {
+          if (this.isFixed) return false;
+          this.angle = (this.angle + 90) % 360;
+          return true;
+        }
+      }
+
+      class LaserReflectionCore {
+        constructor() {
+          this.canvas = document.getElementById("gameCanvas");
+          this.ctx = this.canvas.getContext("2d");
+
+          // System Engine Pipeline States Initialization
+          this.level = 1;
+          this.score = 0;
+          this.moves = 0;
+          this.timer = 60;
+          this.gridSize = 6; // Dynamic structural multiplier matrix variables
+          this.grid = [];
+          this.laserPaths = []; // Tracked linear vectors sequence mappings cache
+          this.particles = [];
+          this.timerInterval = null;
+          this.isPlaying = false;
+          this.shakeActive = false;
+
+          this.initDOM();
+          this.loadGameStatePersistence();
+          this.initializeMatrixContainer();
+        }
+
+        initDOM() {
+          document
+            .getElementById("next-lvl-btn")
+            .addEventListener("click", () => this.advanceLevelSequence());
+          document
+            .getElementById("retry-btn")
+            .addEventListener("click", () => this.initializeMatrixContainer());
+          document
+            .getElementById("restart-btn")
+            .addEventListener("click", () => this.initializeMatrixContainer());
+          document
+            .getElementById("hint-btn")
+            .addEventListener("click", () => this.injectCalibrationHint());
+          document
+            .getElementById("clear-data-btn")
+            .addEventListener("click", () => this.wipeStatePersistence());
+
+          // Attach Mouse / Touch Input Interaction Hits
+          this.canvas.addEventListener("click", (e) =>
+            this.handleCanvasGridClick(e),
+          );
+
+          // High DPI Canvas Scaling Watcher
+          window.addEventListener("resize", () => this.rescaleCanvasBuffer());
+        }
+
+        initializeMatrixContainer() {
+          this.isPlaying = true;
+          this.moves = 0;
+          this.gridSize = this.level >= 6 ? 8 : 6;
+          this.timer = Math.max(25, 75 - this.level * 4);
+
+          document.getElementById("victory-overlay").classList.remove("active");
+          document
+            .getElementById("gameover-overlay")
+            .classList.remove("active");
+
+          this.proceduralLevelGenerator();
+          this.rescaleCanvasBuffer();
+          this.calculateLaserRaytracer();
+          this.resetTimerThread();
+          this.syncInterfaceDashboard();
+          this.saveGameStatePersistence();
+
+          // Run Particle Animation Render Loop Thread Execution Framework
+          if (!this.animationFrameId) this.renderLoopLoop();
+        }
+
+        proceduralLevelGenerator() {
+          this.grid = Array.from({ length: this.gridSize }, () =>
+            Array.from({ length: this.gridSize }, () => new GridNode("empty")),
+          );
+
+          const colorsPool = ["#00f0ff", "#ff007f", "#39ff14"];
+          let activeColor = colorsPool[(this.level - 1) % colorsPool.length];
+
+          // Static layout anchor coordinate injection locks block
+          this.grid[0][0] = new GridNode("source", 120, true, activeColor); // Face East natively
+          this.grid[this.gridSize - 1][this.gridSize - 1] = new GridNode(
+            "target",
+            0,
+            true,
+            activeColor,
+          );
+
+          // Populate procedural blocks across the matrix array boundaries
+          const components = [
+            "mirror",
+            "mirror",
+            "splitter",
+            "portal",
+            "absorber",
+            "wall",
+            "glass",
+          ];
+          let density =
+            this.level >= 4 ? Math.floor(this.gridSize * 1.5) : this.gridSize;
+
+          for (let i = 0; i < density; i++) {
+            let r = Math.floor(Math.random() * this.gridSize);
+            let c = Math.floor(Math.random() * this.gridSize);
+            if (
+              (r === 0 && c === 0) ||
+              (r === this.gridSize - 1 && c === this.gridSize - 1)
+            )
+              continue;
+
+            let type =
+              components[
+                Math.floor(
+                  Math.random() * (this.level >= 3 ? components.length : 2),
+                )
+              ];
+            let initialAngle = [0, 90, 180, 270][Math.floor(Math.random() * 4)];
+            let isFixed = Math.random() < 0.15;
+
+            this.grid[r][c] = new GridNode(
+              type,
+              initialAngle,
+              isFixed,
+              activeColor,
+            );
+          }
+
+          // Second Portal Anchor Matching Integration Link Pair Loop block
+          if (this.level >= 3) {
+            this.grid[0][this.gridSize - 1] = new GridNode(
+              "portal",
+              0,
+              true,
+              activeColor,
+            );
+          }
+        }
+
+        calculateLaserRaytracer() {
+          this.laserPaths = [];
+          let sourceRow = 0,
+            sourceCol = 0,
+            sourceDir = 1; // Start at Source Node moving East
+
+          // Find Source Dynamic Vector configurations metrics
+          for (let r = 0; r < this.gridSize; r++) {
+            for (let c = 0; c < this.gridSize; c++) {
+              if (this.grid[r][c].type === "source") {
+                sourceRow = r;
+                sourceCol = c;
+                sourceDir =
+                  this.grid[r][c].angle === 0
+                    ? 0
+                    : this.grid[r][c].angle === 90
+                      ? 1
+                      : this.grid[r][c].angle === 180
+                        ? 2
+                        : 3;
+              }
+            }
+          }
+
+          // Initialize queue system for tracking laser segments and tracking split mirror forks
+          let traceQueue = [
+            {
+              r: sourceRow,
+              c: sourceCol,
+              dir: sourceDir,
+              color: this.grid[sourceRow][sourceCol].color,
+            },
+          ];
+          let loopsSafetyGuard = 0;
+
+          // Trace paths system array mapping iteration block
+          while (traceQueue.length > 0 && loopsSafetyGuard < 150) {
+            loopsSafetyGuard++;
+            let currentBeam = traceQueue.shift();
+            this.computeSingleRayBeam(currentBeam, traceQueue);
+          }
+
+          this.evaluateTargetMatchingState();
+        }
+
+        computeSingleRayBeam(beam, queue) {
+          let r = beam.r;
+          let c = beam.c;
+          let d = beam.dir;
+          let col = beam.color;
+
+          let pathPoints = [{ r, c }];
+
+          while (true) {
+            r += DIR_VECTORS[d][0];
+            c += DIR_VECTORS[d][1];
+
+            // Verify map layout edge boundaries collision tracking check parameters
+            if (r < 0 || r >= this.gridSize || c < 0 || c >= this.gridSize) {
+              pathPoints.push({
+                r: r - DIR_VECTORS[d][0],
+                c: c - DIR_VECTORS[d][1],
+                terminal: true,
+              });
+              break;
+            }
+
+            pathPoints.push({ r, c });
+            let node = this.grid[r][c];
+
+            if (node.type === "wall") {
+              break;
+            }
+            if (node.type === "absorber") {
+              this.spawnSparkParticlesGrid(r, c, "#ff3333");
+              break;
+            }
+            if (node.type === "glass") {
+              col = "#39ff14"; // Mutate frequency wavelength transmission state
+              continue;
+            }
+            if (node.type === "target") {
+              break; // Handled dynamically outside loop checking arrays
+            }
+
+            // Real-time Flat Mirror Law Mapping reflection angles logic computations
+            // Let a mirror at angle $0^\circ$ represent diagonal line `/`, $90^\circ$ represent `\`
+            if (node.type === "mirror") {
+              if (node.angle === 0 || node.angle === 180) {
+                //  `/` mirror mapping layer
+                if (d === 0)
+                  d = 1; // Up -> Right
+                else if (d === 1)
+                  d = 0; // Right -> Up
+                else if (d === 2)
+                  d = 3; // Down -> Left
+                else if (d === 3) d = 2; // Left -> Down
+              } else {
+                // `\` mirror configuration matrix tracking layer
+                if (d === 0)
+                  d = 3; // Up -> Left
+                else if (d === 1)
+                  d = 2; // Right -> Down
+                else if (d === 2)
+                  d = 1; // Down -> Right
+                else if (d === 3) d = 0; // Left -> Up
+              }
+              continue;
+            }
+
+            // Splitter Reflection and Transmission Pipeline fork checks block
+            if (node.type === "splitter") {
+              // Fork secondary tracking beam array segments straight ahead through element
+              queue.push({ r, c, dir: d, color: col });
+
+              // Shift primary current pointer processing segment direction $90^\circ$ orthogonal rotation axis mapping rules
+              d = (d + 1) % 4;
+              continue;
+            }
+
+            // Portals Matrix offset routing mapping links loops block
+            if (node.type === "portal") {
+              this.triggerScreenJitterShake();
+              // Linear system scanning tracking for twin portal matching channel output coordinate sets
+              let foundTwin = false;
+              for (let pr = 0; pr < this.gridSize; pr++) {
+                for (let pc = 0; pc < this.gridSize; pc++) {
+                  if (
+                    this.grid[pr][pc].type === "portal" &&
+                    (pr !== r || pc !== c)
+                  ) {
+                    r = pr;
+                    c = pc;
+                    foundTwin = true;
+                    break;
+                  }
+                }
+                if (foundTwin) break;
+              }
+              continue;
+            }
+          }
+
+          this.laserPaths.push({ points: pathPoints, color: col });
+        }
+
+        evaluateTargetMatchingState() {
+          let targetNode = this.grid[this.gridSize - 1][this.gridSize - 1];
+          targetNode.matched = false;
+
+          this.laserPaths.forEach((path) => {
+            let lastPoint = path.points[path.points.length - 1];
+            if (
+              lastPoint.r === this.gridSize - 1 &&
+              lastPoint.c === this.gridSize - 1
+            ) {
+              if (path.color === targetNode.color) {
+                targetNode.matched = true;
+              }
+            }
+          });
+
+          if (targetNode.matched && this.isPlaying) {
+            this.triggerLevelClearedVictory();
+          }
+        }
+
+        handleCanvasGridClick(e) {
+          if (!this.isPlaying) return;
+
+          const rect = this.canvas.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+
+          const cellSize = this.canvas.width / this.gridSize;
+          const c = Math.floor(x / cellSize);
+          const r = Math.floor(y / cellSize);
+
+          if (r >= 0 && r < this.gridSize && c >= 0 && c < this.gridSize) {
+            if (this.grid[r][c].rotate()) {
+              this.moves++;
+              this.calculateLaserRaytracer();
+              this.syncInterfaceDashboard();
+              this.saveGameStatePersistence();
+            }
+          }
+        }
+
+        triggerLevelClearedVictory() {
+          this.isPlaying = false;
+          clearInterval(this.timerInterval);
+          this.score += Math.max(100, 1000 - this.moves * 50 + this.timer * 10);
+
+          // Spawn massive celebrate victory explosion particle systems elements
+          for (let i = 0; i < 35; i++) {
+            this.spawnSparkParticlesGrid(
+              this.gridSize - 1,
+              this.gridSize - 1,
+              "#39ff14",
+            );
+          }
+
+          document.getElementById("victory-overlay").classList.add("active");
+          this.saveGameStatePersistence();
+        }
+
+        triggerGameOverSequence() {
+          this.isPlaying = false;
+          clearInterval(this.timerInterval);
+          document.getElementById("gameover-overlay").classList.add("active");
+        }
+
+        injectCalibrationHint() {
+          if (!this.isPlaying) return;
+          // Search first unaligned rotatable mirror block system unit to auto-correct path alignment metrics
+          for (let r = 0; r < this.gridSize; r++) {
+            for (let c = 0; c < this.gridSize; c++) {
+              let node = this.grid[r][c];
+              if (node.type === "mirror" && !node.isFixed) {
+                node.angle = 0; // Calibration default fallback path coordinates setup alignment overrides
+                this.calculateLaserRaytracer();
+                this.syncInterfaceDashboard();
+                return;
+              }
+            }
+          }
+        }
+
+        triggerScreenJitterShake() {
+          if (this.shakeActive) return;
+          this.shakeActive = true;
+          const wrapper = this.canvas.parentElement;
+          wrapper.classList.add("screen-shake");
+          setTimeout(() => {
+            wrapper.classList.remove("screen-shake");
+            this.shakeActive = false;
+          }, 400);
+        }
+
+        spawnSparkParticlesGrid(r, c, color) {
+          const cellSize = this.canvas.width / this.gridSize;
+          const x = c * cellSize + cellSize / 2;
+          const y = r * cellSize + cellSize / 2;
+
+          this.particles.push({
+            x,
+            y,
+            vx: (Math.random() - 0.5) * 4,
+            vy: (Math.random() - 0.5) * 4,
+            alpha: 1,
+            color,
+          });
+        }
+
+        rescaleCanvasBuffer() {
+          const container = this.canvas.parentElement;
+          const size = Math.min(
+            container.clientWidth,
+            container.clientHeight,
+            500,
+          );
+          this.canvas.width = size;
+          this.canvas.height = size;
+        }
+
+        renderLoopLoop() {
+          this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+          const cellSize = this.canvas.width / this.gridSize;
+
+          // 1. Draw structural floor grid layout wireframes lines block elements context
+          this.ctx.strokeStyle = "rgba(30, 45, 85, 0.25)";
+          this.ctx.lineWidth = 1;
+          for (let i = 0; i <= this.gridSize; i++) {
+            this.ctx.beginPath();
+            this.ctx.moveTo(i * cellSize, 0);
+            this.ctx.lineTo(i * cellSize, this.canvas.height);
+            this.ctx.stroke();
+            this.ctx.beginPath();
+            this.ctx.moveTo(0, i * cellSize);
+            this.ctx.lineTo(this.canvas.width, i * cellSize);
+            this.ctx.stroke();
+          }
+
+          // 2. Draw active vector laser arrays path tracing wires segments block lines context loops
+          this.laserPaths.forEach((path) => {
+            if (path.points.length < 2) return;
+            this.ctx.strokeStyle = path.color;
+            this.ctx.lineWidth = 4;
+            this.ctx.shadowColor = path.color;
+            this.ctx.shadowBlur = 12;
+            this.ctx.beginPath();
+
+            let startX = path.points[0].c * cellSize + cellSize / 2;
+            let startY = path.points[0].r * cellSize + cellSize / 2;
+            this.ctx.moveTo(startX, startY);
+
+            for (let i = 1; i < path.points.length; i++) {
+              let ptX = path.points[i].c * cellSize + cellSize / 2;
+              let ptY = path.points[i].r * cellSize + cellSize / 2;
+              this.ctx.lineTo(ptX, ptY);
+            }
+            this.ctx.stroke();
+            this.ctx.shadowBlur = 0; // Clear immediately
+          });
+
+          // 3. Render Node Element Icons Matrices Context loops block
+          for (let r = 0; r < this.gridSize; r++) {
+            for (let c = 0; c < this.gridSize; c++) {
+              this.renderGridComponentNode(
+                this.ctx,
+                this.grid[r][c],
+                r,
+                c,
+                cellSize,
+              );
+            }
+          }
+
+          // 4. Update and flush particle acceleration trails contexts loops pipelines
+          this.particles = this.particles.filter((p) => {
+            p.x += p.vx;
+            p.y += p.vy;
+            p.alpha -= 0.02;
+            this.ctx.fillStyle = p.color;
+            this.ctx.globalAlpha = p.alpha;
+            this.ctx.beginPath();
+            this.ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+            this.ctx.fill();
+            return p.alpha > 0;
+          });
+          this.ctx.globalAlpha = 1.0;
+
+          this.animationFrameId = requestAnimationFrame(() =>
+            this.renderLoopLoop(),
+          );
+        }
+
+        renderGridComponentNode(context, node, r, c, size) {
+          if (node.type === "empty") return;
+
+          let x = c * size + size / 2;
+          let y = r * size + size / 2;
+
+          context.save();
+          context.translate(x, y);
+          context.rotate((node.angle * Math.PI) / 180);
+
+          context.shadowColor = node.color;
+          context.shadowBlur = node.isFixed ? 0 : 6;
+
+          if (node.type === "source") {
+            context.fillStyle = "#64748b";
+            context.fillRect(
+              -size * 0.25,
+              -size * 0.25,
+              size * 0.5,
+              size * 0.5,
+            );
+            context.fillStyle = node.color;
+            context.beginPath();
+            context.arc(0, 0, size * 0.15, 0, Math.PI * 2);
+            context.fill();
+          } else if (node.type === "target") {
+            context.fillStyle = node.matched
+              ? varValue("--neon-green", "#39ff14")
+              : node.color;
+            context.beginPath();
+            context.moveTo(0, -size * 0.35);
+            context.lineTo(size * 0.3, 0);
+            context.lineTo(0, size * 0.35);
+            context.lineTo(-size * 0.3, 0);
+            context.closePath();
+            context.fill();
+          } else if (node.type === "mirror") {
+            context.strokeStyle = node.isFixed
+              ? "#475569"
+              : varValue("--neon-blue", "#00f0ff");
+            context.lineWidth = 5;
+            context.beginPath();
+            context.moveTo(-size * 0.4, -size * 0.4);
+            context.lineTo(size * 0.4, size * 0.4);
+            context.stroke();
+          } else if (node.type === "splitter") {
+            context.fillStyle = "rgba(255, 0, 127, 0.2)";
+            context.strokeStyle = varValue("--neon-pink", "#ff007f");
+            context.lineWidth = 2;
+            context.fillRect(
+              -size * 0.25,
+              -size * 0.25,
+              size * 0.5,
+              size * 0.5,
+            );
+            context.strokeRect(
+              -size * 0.25,
+              -size * 0.25,
+              size * 0.5,
+              size * 0.5,
+            );
+          } else if (node.type === "portal") {
+            context.strokeStyle = "#bd00ff";
+            context.lineWidth = 3;
+            context.beginPath();
+            context.arc(0, 0, size * 0.3, 0, Math.PI * 2);
+            context.stroke();
+          } else if (node.type === "absorber") {
+            context.fillStyle = "#ff3333";
+            context.fillRect(-size * 0.3, -size * 0.3, size * 0.6, size * 0.6);
+          } else if (node.type === "wall") {
+            context.fillStyle = "#1e293b";
+            context.fillRect(
+              -size * 0.45,
+              -size * 0.45,
+              size * 0.9,
+              size * 0.9,
+            );
+          } else if (node.type === "glass") {
+            context.fillStyle = "rgba(57, 255, 20, 0.15)";
+            context.strokeStyle = "#39ff14";
+            context.lineWidth = 2;
+            context.fillRect(-size * 0.3, -size * 0.15, size * 0.6, size * 0.3);
+            context.strokeRect(
+              -size * 0.3,
+              -size * 0.15,
+              size * 0.6,
+              size * 0.3,
+            );
+          }
+
+          context.restore();
+        }
+
+        resetTimerThread() {
+          clearInterval(this.timerInterval);
+          this.timerInterval = setInterval(() => {
+            if (this.isPlaying) {
+              this.timer--;
+              document.getElementById("timer-val").innerText = this.timer;
+              if (this.timer <= 0) this.triggerGameOverSequence();
+            }
+          }, 1000);
+        }
+
+        syncInterfaceDashboard() {
+          document.getElementById("level-val").innerText = this.level;
+          document.getElementById("score-val").innerText = this.score
+            .toString()
+            .padStart(4, "0");
+          document.getElementById("moves-val").innerText = this.moves;
+          document.getElementById("timer-val").innerText = this.timer;
+        }
+
+        advanceLevelSequence() {
+          this.level++;
+          this.initializeMatrixContainer();
+        }
+
+        // --- Persistence Cache Layers Engine ---
+        saveGameStatePersistence() {
+          localStorage.setItem(
+            "laser_reflection_save",
+            JSON.stringify({
+              level: this.level,
+              score: this.score,
+            }),
+          );
+        }
+
+        loadGameStatePersistence() {
+          let raw = localStorage.getItem("laser_reflection_save");
+          if (raw) {
+            let data = JSON.parse(raw);
+            this.level = data.level || 1;
+            this.score = data.score || 0;
+          }
+        }
+
+        wipeStatePersistence() {
+          localStorage.removeItem("laser_reflection_save");
+          this.level = 1;
+          this.score = 0;
+          this.initializeMatrixContainer();
+        }
+      }
+
+      // Global Context Variable Fetch Helper Module
+      function varValue(cssVar, fallback) {
+        return (
+          getComputedStyle(document.documentElement)
+            .getPropertyValue(cssVar)
+            .trim() || fallback
+        );
+      }
+
+      // Instantiate Thread execution core on Dom Content Loaded complete trigger
+      document.addEventListener("DOMContentLoaded", () => {
+        new LaserReflectionCore();
+      });
+    </script>
+  </body>
+</html>

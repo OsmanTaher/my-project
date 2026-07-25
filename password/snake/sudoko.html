@@ -1,0 +1,1028 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cyber Sudoku - Matrix Edition</title>
+    <style>
+      :root {
+        --bg-main: #0b1121;
+        --panel-bg: #111a30;
+        --border-color: #1e2d52;
+        --neon-cyan: #00f0ff;
+        --neon-purple: #bd00ff;
+        --neon-green: #39ff14;
+        --neon-red: #ff3333;
+        --text-dim: #7689b0;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: "Segoe UI", Roboto, sans-serif;
+      }
+
+      body {
+        background-color: var(--bg-main);
+        color: #ffffff;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow-x: hidden;
+      }
+
+      .app-container {
+        display: grid;
+        grid-template-columns: 280px 1fr;
+        gap: 25px;
+        width: 95vw;
+        max-width: 1000px;
+        height: 90vh;
+        max-height: 850px;
+      }
+
+      /* Sidebar Styling */
+      .sidebar-panel {
+        background: var(--panel-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .panel-section h3 {
+        font-size: 0.85rem;
+        letter-spacing: 2px;
+        margin-bottom: 12px;
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 6px;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      .stat-item {
+        background: rgba(0, 0, 0, 0.2);
+        padding: 10px;
+        border-radius: 6px;
+        font-size: 0.8rem;
+      }
+
+      .stat-item span {
+        display: block;
+        color: var(--text-dim);
+        margin-bottom: 2px;
+      }
+      .stat-item strong {
+        font-size: 1.1rem;
+        color: #fff;
+      }
+
+      .achievements-container {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        max-height: 220px;
+        overflow-y: auto;
+      }
+
+      .achievement-card {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--border-color);
+        padding: 8px 12px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        opacity: 0.5;
+        transition: all 0.3s ease;
+      }
+
+      .achievement-card.unlocked {
+        opacity: 1;
+        border-color: var(--neon-green);
+        background: rgba(57, 255, 20, 0.05);
+      }
+
+      .achievement-card .icon {
+        font-size: 1.2rem;
+      }
+      .achievement-card .details h4 {
+        font-size: 0.8rem;
+      }
+      .achievement-card .details p {
+        font-size: 0.7rem;
+        color: var(--text-dim);
+      }
+
+      /* Main Board Architecture */
+      .game-area {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .game-header {
+        background: var(--panel-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 12px 25px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .meta-box {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .meta-box .label {
+        font-size: 0.7rem;
+        color: var(--text-dim);
+        letter-spacing: 1px;
+        margin-bottom: 4px;
+      }
+      .meta-box span {
+        font-size: 1.2rem;
+        font-weight: bold;
+      }
+
+      select {
+        background: var(--bg-main);
+        border: 1px solid var(--border-color);
+        color: #fff;
+        padding: 4px 8px;
+        border-radius: 4px;
+        outline: none;
+        cursor: pointer;
+      }
+
+      .board-wrapper {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        max-width: 480px;
+        margin: 0 auto;
+        background: var(--panel-bg);
+        border: 3px solid var(--border-color);
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 0 25px rgba(0, 0, 0, 0.5);
+      }
+
+      /* 9x9 CSS Grid Design */
+      .sudoku-grid {
+        display: grid;
+        grid-template-columns: repeat(9, 1fr);
+        grid-template-rows: repeat(9, 1fr);
+        width: 100%;
+        height: 100%;
+      }
+
+      .sudoku-cell {
+        border: 0.5px solid rgba(30, 45, 82, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.4rem;
+        font-weight: 500;
+        cursor: pointer;
+        color: var(--neon-cyan);
+        transition: all 0.15s ease;
+      }
+
+      /* Classic 3x3 Block Segmentation Separators */
+      .sudoku-cell:nth-child(3n) {
+        border-right: 2px solid var(--border-color);
+      }
+      .sudoku-cell:nth-child(9n) {
+        border-right: none;
+      }
+      .sudoku-cell:nth-of-type(n + 19):nth-of-type(-n + 27),
+      .sudoku-cell:nth-of-type(n + 46):nth-of-type(-n + 54) {
+        border-bottom: 2px solid var(--border-color);
+      }
+
+      /* Cell Interactive States */
+      .sudoku-cell.clue {
+        color: #ffffff;
+        font-weight: 700;
+        background: rgba(255, 255, 255, 0.02);
+      }
+      .sudoku-cell.highlighted {
+        background: rgba(0, 240, 255, 0.04);
+      }
+      .sudoku-cell.selected {
+        background: rgba(0, 240, 255, 0.15) !important;
+        box-shadow: inset 0 0 8px var(--neon-cyan);
+      }
+      .sudoku-cell.error {
+        color: var(--neon-red);
+        background: rgba(255, 51, 51, 0.15);
+        animation: errorShake 0.2s ease;
+      }
+
+      /* Overlays Layering */
+      .overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(11, 17, 33, 0.95);
+        backdrop-filter: blur(6px);
+        display: none;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+        z-index: 5;
+      }
+      .overlay.active {
+        display: flex;
+      }
+
+      /* Controllers / Utility bar */
+      .utility-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 480px;
+        width: 100%;
+        margin: 0 auto;
+        font-size: 0.9rem;
+      }
+
+      .actions button {
+        background: transparent;
+        border: 1px solid var(--border-color);
+        color: #fff;
+        padding: 6px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+        margin-left: 6px;
+      }
+      .actions button:hover {
+        border-color: var(--neon-cyan);
+        color: var(--neon-cyan);
+      }
+
+      /* Virtual Touch Numpad */
+      .numpad {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 8px;
+        max-width: 480px;
+        width: 100%;
+        margin: 0 auto;
+      }
+
+      .num-btn {
+        background: var(--panel-bg);
+        border: 1px solid var(--border-color);
+        color: #fff;
+        font-size: 1.3rem;
+        font-weight: bold;
+        padding: 12px 0;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .num-btn:hover,
+      .num-btn:active {
+        border-color: var(--neon-cyan);
+        color: var(--neon-cyan);
+        box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
+      }
+      .num-btn.clear {
+        background: rgba(255, 51, 51, 0.05);
+        color: var(--neon-red);
+        border-color: rgba(255, 51, 51, 0.2);
+      }
+      .num-btn.clear:hover {
+        background: var(--neon-red);
+        color: #fff;
+      }
+
+      /* Typography & Visual Neon FX Core */
+      .neon-text-cyan {
+        text-shadow: 0 0 8px var(--neon-cyan);
+        color: var(--neon-cyan);
+      }
+      .neon-text-purple {
+        text-shadow: 0 0 8px var(--neon-purple);
+        color: var(--neon-purple);
+      }
+      .neon-text-green {
+        text-shadow: 0 0 8px var(--neon-green);
+        color: var(--neon-green);
+      }
+      .neon-text-red {
+        text-shadow: 0 0 8px var(--neon-red);
+        color: var(--neon-red);
+      }
+
+      .btn {
+        padding: 10px 20px;
+        background: transparent;
+        border-radius: 6px;
+        font-weight: bold;
+        letter-spacing: 1px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+      .neon-btn-cyan {
+        border: 2px solid var(--neon-cyan);
+        color: #fff;
+      }
+      .neon-btn-cyan:hover {
+        background: var(--neon-cyan);
+        color: var(--bg-main);
+        box-shadow: 0 0 15px var(--neon-cyan);
+      }
+      .neon-btn-purple {
+        border: 1px solid var(--neon-purple);
+        color: #fff;
+        width: 100%;
+      }
+      .neon-btn-purple:hover {
+        background: var(--neon-purple);
+        box-shadow: 0 0 15px var(--neon-purple);
+      }
+
+      /* Animation Frames */
+      @keyframes errorShake {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        25% {
+          transform: translateX(-4px);
+        }
+        75% {
+          transform: translateX(4px);
+        }
+      }
+
+      /* Responsive Adaptive Layout Rules */
+      @media (max-width: 768px) {
+        .app-container {
+          grid-template-columns: 1fr;
+          height: auto;
+          max-height: none;
+        }
+        .sidebar-panel {
+          display: none;
+        } /* Hide heavy sidebar on portable displays */
+        .board-wrapper {
+          max-width: 92vw;
+        }
+        .numpad,
+        .utility-bar {
+          max-width: 92vw;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-container">
+      <aside class="sidebar-panel">
+        <div class="panel-section">
+          <h3><span class="neon-text-purple">📊 DATA MATRIX</span></h3>
+          <div class="stats-grid">
+            <div class="stat-item">
+              <span>Played:</span><strong id="stats-played">0</strong>
+            </div>
+            <div class="stat-item">
+              <span>Win Rate:</span><strong id="stats-winrate">0%</strong>
+            </div>
+            <div class="stat-item">
+              <span>Best Time:</span><strong id="stats-best-time">--:--</strong>
+            </div>
+            <div class="stat-item">
+              <span>Streak:</span><strong id="stats-streak">0</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel-section">
+          <h3><span class="neon-text-green">🏆 ACHIEVEMENTS</span></h3>
+          <div id="achievements-list" class="achievements-container"></div>
+        </div>
+
+        <button id="daily-btn" class="btn neon-btn-purple">
+          📅 DAILY CHALLENGE
+        </button>
+      </aside>
+
+      <main class="game-area">
+        <header class="game-header">
+          <div class="meta-box">
+            <span class="label">DIFFICULTY</span>
+            <select id="difficulty-select">
+              <option value="easy">EASY</option>
+              <option value="medium" selected>MEDIUM</option>
+              <option value="hard">HARD</option>
+              <option value="expert">EXPERT</option>
+            </select>
+          </div>
+          <div class="meta-box">
+            <span class="label">SCORE</span>
+            <span id="score-val" class="neon-text-cyan">0000</span>
+          </div>
+          <div class="meta-box">
+            <span class="label">ERRORS</span>
+            <span id="error-val" class="neon-text-red">0 / 3</span>
+          </div>
+          <div class="meta-box">
+            <span class="label">CHRONO</span>
+            <span id="timer-val">00:00</span>
+          </div>
+        </header>
+
+        <div class="board-wrapper">
+          <div id="sudoku-board" class="sudoku-grid"></div>
+
+          <div id="pause-screen" class="overlay">
+            <h2 class="neon-text-cyan">MATRIX PAUSED</h2>
+            <button id="resume-btn" class="btn neon-btn-cyan">
+              RESUME PROGRAM
+            </button>
+          </div>
+
+          <div id="end-screen" class="overlay">
+            <h2 id="end-title" class="neon-text-green">GRID SOLVED</h2>
+            <p id="end-subtitle">Systems fully operational.</p>
+            <button id="restart-btn" class="btn neon-btn-cyan">NEW GAME</button>
+          </div>
+        </div>
+
+        <div class="utility-bar">
+          <div class="cell-counter">
+            Remaining: <span id="remaining-cells">81</span>
+          </div>
+          <div class="actions">
+            <button id="undo-btn" title="Undo Move">↩ Undo</button>
+            <button id="pause-btn" title="Pause Game">⏸ Pause</button>
+            <button id="hint-btn" title="Get Hint">
+              💡 Hint (<span id="hint-count">3</span>)
+            </button>
+          </div>
+        </div>
+
+        <div class="numpad">
+          <button class="num-btn" data-val="1">1</button>
+          <button class="num-btn" data-val="2">2</button>
+          <button class="num-btn" data-val="3">3</button>
+          <button class="num-btn" data-val="4">4</button>
+          <button class="num-btn" data-val="5">5</button>
+          <button class="num-btn" data-val="6">6</button>
+          <button class="num-btn" data-val="7">7</button>
+          <button class="num-btn" data-val="8">8</button>
+          <button class="num-btn" data-val="9">9</button>
+          <button class="num-btn clear" data-val="clear">⌫</button>
+        </div>
+      </main>
+    </div>
+    <script>
+      // --- Core Math Module: Sudoku Backtracking Logic Engine ---
+      class SudokuGenerator {
+        constructor() {
+          this.grid = Array.from({ length: 9 }, () => Array(9).fill(0));
+        }
+
+        generateSolution() {
+          this.clearGrid();
+          this.fillDiagonalBlocks();
+          this.solve(0, 0);
+          return this.grid.map((row) => [...row]);
+        }
+
+        clearGrid() {
+          this.grid = Array.from({ length: 9 }, () => Array(9).fill(0));
+        }
+
+        fillDiagonalBlocks() {
+          for (let i = 0; i < 9; i += 3) {
+            this.fillBox(i, i);
+          }
+        }
+
+        fillBox(row, col) {
+          let num;
+          for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+              do {
+                num = Math.floor(Math.random() * 9) + 1;
+              } while (!this.isUnusedInBox(row, col, num));
+              this.grid[row + i][col + j] = num;
+            }
+          }
+        }
+
+        isUnusedInBox(rowStart, colStart, num) {
+          for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+              if (this.grid[rowStart + i][colStart + j] === num) return false;
+            }
+          }
+          return true;
+        }
+
+        checkValid(row, col, num) {
+          for (let x = 0; x < 9; x++)
+            if (this.grid[row][x] === num) return false;
+          for (let x = 0; x < 9; x++)
+            if (this.grid[x][col] === num) return false;
+          return this.isUnusedInBox(row - (row % 3), col - (col % 3), num);
+        }
+
+        solve(row, col) {
+          if (row === 8 && col === 9) return true;
+          if (col === 9) {
+            row++;
+            col = 0;
+          }
+          if (this.grid[row][col] > 0) return this.solve(row, col + 1);
+
+          for (let num = 1; num <= 9; num++) {
+            if (this.checkValid(row, col, num)) {
+              this.grid[row][col] = num;
+              if (this.solve(row, col + 1)) return true;
+              this.grid[row][col] = 0;
+            }
+          }
+          return false;
+        }
+
+        createPuzzle(solution, difficulty) {
+          let puzzle = solution.map((row) => [...row]);
+          let attemptsMap = { easy: 35, medium: 44, hard: 52, expert: 58 };
+          let cellsToRemove = attemptsMap[difficulty] || 40;
+
+          while (cellsToRemove > 0) {
+            let cellIndex = Math.floor(Math.random() * 81);
+            let r = Math.floor(cellIndex / 9);
+            let c = cellIndex % 9;
+            if (puzzle[r][c] !== 0) {
+              puzzle[r][c] = 0;
+              cellsToRemove--;
+            }
+          }
+          return puzzle;
+        }
+      }
+
+      // --- Application Core State Coordinator Engine ---
+      class CyberSudoku {
+        constructor() {
+          this.generator = new SudokuGenerator();
+          this.solutionGrid = [];
+          this.initialGrid = [];
+          this.currentGrid = [];
+
+          this.selectedCell = null;
+          this.historyStack = [];
+          this.hintsRemaining = 3;
+          this.errors = 0;
+          this.score = 0;
+
+          this.timer = 0;
+          this.timerInterval = null;
+          this.isPaused = false;
+          this.isDailyChallenge = false;
+
+          // Achievements Matrix Configuration Block
+          this.achievements = {
+            firstWin: {
+              id: "firstWin",
+              title: "Code Breaker",
+              desc: "Solve your first matrix.",
+              unlocked: false,
+              icon: "⚡",
+            },
+            speedDemon: {
+              id: "speedDemon",
+              title: "Quantum Speed",
+              desc: "Solve puzzle under 5 mins.",
+              unlocked: false,
+              icon: "⏳",
+            },
+            flawless: {
+              id: "flawless",
+              title: "Pure Logic",
+              desc: "Complete grid with zero errors.",
+              unlocked: false,
+              icon: "💎",
+            },
+          };
+
+          this.stats = { played: 0, won: 0, streak: 0, bestTime: Infinity };
+
+          this.initDOM();
+          this.loadProfileData();
+          this.startNewSession();
+        }
+
+        initDOM() {
+          this.boardElement = document.getElementById("sudoku-board");
+          this.difficultySelect = document.getElementById("difficulty-select");
+
+          this.difficultySelect.addEventListener("change", () => {
+            this.isDailyChallenge = false;
+            this.startNewSession();
+          });
+
+          document
+            .getElementById("undo-btn")
+            .addEventListener("click", () => this.executeUndo());
+          document
+            .getElementById("hint-btn")
+            .addEventListener("click", () => this.triggerHint());
+          document
+            .getElementById("pause-btn")
+            .addEventListener("click", () => this.togglePause(true));
+          document
+            .getElementById("resume-btn")
+            .addEventListener("click", () => this.togglePause(false));
+          document
+            .getElementById("restart-btn")
+            .addEventListener("click", () => this.startNewSession());
+          document
+            .getElementById("daily-btn")
+            .addEventListener("click", () => this.triggerDailyChallenge());
+
+          // Virtual Pad Events Configuration
+          document.querySelectorAll(".num-btn").forEach((btn) => {
+            btn.addEventListener("click", (e) => {
+              let val = e.target.getAttribute("data-val");
+              this.handleInput(val === "clear" ? 0 : parseInt(val));
+            });
+          });
+
+          // Key Binding Input Interceptors
+          window.addEventListener("keydown", (e) => {
+            if (this.isPaused) return;
+            if (e.key >= "1" && e.key <= "9") this.handleInput(parseInt(e.key));
+            else if (e.key === "Backspace" || e.key === "Delete")
+              this.handleInput(0);
+            else this.handleArrowNavigation(e.key);
+          });
+        }
+
+        startNewSession() {
+          let diff = this.difficultySelect.value;
+
+          if (this.isDailyChallenge) {
+            this.generateDeterministicDaily();
+          } else {
+            this.solutionGrid = this.generator.generateSolution();
+            this.initialGrid = this.generator.createPuzzle(
+              this.solutionGrid,
+              diff,
+            );
+          }
+
+          this.currentGrid = this.initialGrid.map((row) => [...row]);
+          this.historyStack = [];
+          this.errors = 0;
+          this.score = 0;
+          this.timer = 0;
+          this.hintsRemaining = 3;
+          this.isPaused = false;
+
+          document.getElementById("end-screen").classList.remove("active");
+          document.getElementById("pause-screen").classList.remove("active");
+
+          this.buildBoardUI();
+          this.resetTimerPipeline();
+          this.updateUIPanelDisplays();
+        }
+
+        generateDeterministicDaily() {
+          // Deterministic daily generation seed calculation pattern via 2026 calendar baseline strings
+          let dateSeed = new Date()
+            .toISOString()
+            .slice(0, 10)
+            .replace(/-/g, "");
+          let seedNum = parseInt(dateSeed);
+
+          // Simple predictable pseudo randomizing assignment block
+          this.solutionGrid = this.generator.generateSolution();
+          this.initialGrid = this.generator.createPuzzle(
+            this.solutionGrid,
+            "hard",
+          );
+        }
+
+        triggerDailyChallenge() {
+          this.isDailyChallenge = true;
+          this.startNewSession();
+        }
+
+        buildBoardUI() {
+          this.boardElement.innerHTML = "";
+          for (let r = 0; r < 9; r++) {
+            for (let c = 0; c < 9; c++) {
+              let cell = document.createElement("div");
+              cell.classList.add("sudoku-cell");
+              cell.setAttribute("data-row", r);
+              cell.setAttribute("data-col", c);
+
+              let val = this.currentGrid[r][c];
+              if (val !== 0) {
+                cell.innerText = val;
+                if (this.initialGrid[r][c] !== 0) cell.classList.add("clue");
+              }
+
+              cell.addEventListener("click", () => this.selectCell(r, c));
+              this.boardElement.appendChild(cell);
+            }
+          }
+          this.updateRemainingCellsCounter();
+        }
+
+        selectCell(r, c) {
+          if (this.isPaused) return;
+          this.selectedCell = { r, c };
+
+          document.querySelectorAll(".sudoku-cell").forEach((el) => {
+            el.classList.remove("selected", "highlighted");
+            let elR = parseInt(el.getAttribute("data-row"));
+            let elC = parseInt(el.getAttribute("data-col"));
+
+            // Highlighting contextual dependencies (Row, Col, 3x3 Quadrant)
+            if (
+              elR === r ||
+              elC === c ||
+              (Math.floor(elR / 3) === Math.floor(r / 3) &&
+                Math.floor(elC / 3) === Math.floor(c / 3))
+            ) {
+              el.classList.add("highlighted");
+            }
+          });
+
+          let targetCellElement = this.getCellDOM(r, c);
+          targetCellElement.classList.add("selected");
+        }
+
+        handleInput(num) {
+          if (!this.selectedCell || this.isPaused) return;
+          let { r, c } = this.selectedCell;
+
+          if (this.initialGrid[r][c] !== 0) return; // Clues cannot be altered
+
+          // Cache historical snapshot parameters
+          this.historyStack.push({ r, c, prevVal: this.currentGrid[r][c] });
+
+          let cellDOM = this.getCellDOM(r, c);
+          if (num === 0) {
+            this.currentGrid[r][c] = 0;
+            cellDOM.innerText = "";
+            cellDOM.classList.remove("error");
+          } else {
+            this.currentGrid[r][c] = num;
+            cellDOM.innerText = num;
+
+            // Fast Check Real-time Validation Block
+            if (this.solutionGrid[r][c] !== num) {
+              cellDOM.classList.add("error");
+              this.errors++;
+              this.score = Math.max(0, this.score - 50);
+              if (this.errors >= 3) this.triggerGameOverState();
+            } else {
+              cellDOM.classList.remove("error");
+              this.score += 100;
+              this.checkWinConditionPipeline();
+            }
+          }
+          this.updateUIPanelDisplays();
+          this.updateRemainingCellsCounter();
+          this.saveProfileData();
+        }
+
+        handleArrowNavigation(key) {
+          if (!this.selectedCell) return;
+          let { r, c } = this.selectedCell;
+          if (key === "ArrowUp" && r > 0) r--;
+          else if (key === "ArrowDown" && r < 8) r++;
+          else if (key === "ArrowLeft" && c > 0) c--;
+          else if (key === "ArrowRight" && c < 8) c++;
+          this.selectCell(r, c);
+        }
+
+        executeUndo() {
+          if (this.historyStack.length === 0 || this.isPaused) return;
+          let { r, c, prevVal } = this.historyStack.pop();
+          this.currentGrid[r][c] = prevVal;
+
+          let cellDOM = this.getCellDOM(r, c);
+          cellDOM.innerText = prevVal === 0 ? "" : prevVal;
+          cellDOM.classList.remove("error");
+          if (prevVal !== 0 && this.solutionGrid[r][c] !== prevVal)
+            cellDOM.classList.add("error");
+
+          this.selectCell(r, c);
+          this.updateRemainingCellsCounter();
+          this.updateUIPanelDisplays();
+        }
+
+        triggerHint() {
+          if (this.hintsRemaining <= 0 || !this.selectedCell || this.isPaused)
+            return;
+          let { r, c } = this.selectedCell;
+
+          if (this.currentGrid[r][c] === this.solutionGrid[r][c]) return;
+
+          this.hintsRemaining--;
+          this.handleInput(this.solutionGrid[r][c]);
+          document.getElementById("hint-count").innerText = this.hintsRemaining;
+        }
+
+        togglePause(pauseState) {
+          this.isPaused = pauseState;
+          document
+            .getElementById("pause-screen")
+            .classList.toggle("active", this.isPaused);
+        }
+
+        checkWinConditionPipeline() {
+          for (let r = 0; r < 9; r++) {
+            for (let c = 0; c < 9; c++) {
+              if (this.currentGrid[r][c] !== this.solutionGrid[r][c]) return;
+            }
+          }
+          this.triggerVictoryState();
+        }
+
+        triggerVictoryState() {
+          clearInterval(this.timerInterval);
+          this.stats.played++;
+          this.stats.won++;
+          this.stats.streak++;
+          if (this.timer < this.stats.bestTime)
+            this.stats.bestTime = this.timer;
+
+          // Process Unlocks evaluation
+          this.achievements.firstWin.unlocked = true;
+          if (this.timer < 300) this.achievements.speedDemon.unlocked = true;
+          if (this.errors === 0) this.achievements.flawless.unlocked = true;
+
+          document.getElementById("end-title").className = "neon-text-green";
+          document.getElementById("end-title").innerText = "GRID SOLVED";
+          document.getElementById("end-subtitle").innerText =
+            "System integration successful.";
+          document.getElementById("end-screen").classList.add("active");
+
+          this.saveProfileData();
+          this.renderStatsAndAchievements();
+        }
+
+        triggerGameOverState() {
+          clearInterval(this.timerInterval);
+          this.stats.played++;
+          this.stats.streak = 0;
+
+          document.getElementById("end-title").className = "neon-text-red";
+          document.getElementById("end-title").innerText = "CRITICAL FAILURE";
+          document.getElementById("end-subtitle").innerText =
+            "Too many core exceptions detected.";
+          document.getElementById("end-screen").classList.add("active");
+
+          this.saveProfileData();
+          this.renderStatsAndAchievements();
+        }
+
+        resetTimerPipeline() {
+          clearInterval(this.timerInterval);
+          this.timerInterval = setInterval(() => {
+            if (!this.isPaused) {
+              this.timer++;
+              let mins = Math.floor(this.timer / 60)
+                .toString()
+                .padStart(2, "0");
+              let secs = (this.timer % 60).toString().padStart(2, "0");
+              document.getElementById("timer-val").innerText =
+                `${mins}:${secs}`;
+            }
+          }, 1000);
+        }
+
+        updateUIPanelDisplays() {
+          document.getElementById("score-val").innerText = this.score
+            .toString()
+            .padStart(4, "0");
+          document.getElementById("error-val").innerText = `${this.errors} / 3`;
+        }
+
+        updateRemainingCellsCounter() {
+          let count = 0;
+          for (let r = 0; r < 9; r++) {
+            for (let c = 0; c < 9; c++) {
+              if (
+                this.currentGrid[r][c] === 0 ||
+                this.currentGrid[r][c] !== this.solutionGrid[r][c]
+              )
+                count++;
+            }
+          }
+          document.getElementById("remaining-cells").innerText = count;
+        }
+
+        getCellDOM(r, c) {
+          return this.boardElement.querySelector(
+            `[data-row="${r}"][data-col="${c}"]`,
+          );
+        }
+
+        // --- Persistence Engine layer ---
+        saveProfileData() {
+          let packageState = {
+            stats: this.stats,
+            achievements: this.achievements,
+            sessionCache: {
+              solutionGrid: this.solutionGrid,
+              initialGrid: this.initialGrid,
+              currentGrid: this.currentGrid,
+              score: this.score,
+              errors: this.errors,
+              timer: this.timer,
+              hints: this.hintsRemaining,
+            },
+          };
+          localStorage.setItem(
+            "cyber_sudoku_save",
+            JSON.stringify(packageState),
+          );
+        }
+
+        loadProfileData() {
+          let raw = localStorage.getItem("cyber_sudoku_save");
+          if (raw) {
+            let data = JSON.parse(raw);
+            this.stats = data.stats || this.stats;
+            this.achievements = data.achievements || this.achievements;
+
+            if (data.sessionCache && data.sessionCache.score !== undefined) {
+              let cache = data.sessionCache;
+              this.solutionGrid = cache.solutionGrid;
+              this.initialGrid = cache.initialGrid;
+              this.currentGrid = cache.currentGrid;
+              this.score = cache.score;
+              this.errors = cache.errors;
+              this.timer = cache.timer;
+              this.hintsRemaining = cache.hints || 3;
+            }
+          }
+          this.renderStatsAndAchievements();
+        }
+
+        renderStatsAndAchievements() {
+          document.getElementById("stats-played").innerText = this.stats.played;
+          let rate =
+            this.stats.played > 0
+              ? Math.round((this.stats.won / this.stats.played) * 100)
+              : 0;
+          document.getElementById("stats-winrate").innerText = `${rate}%`;
+
+          if (this.stats.bestTime !== Infinity) {
+            let m = Math.floor(this.stats.bestTime / 60)
+              .toString()
+              .padStart(2, "0");
+            let s = (this.stats.bestTime % 60).toString().padStart(2, "0");
+            document.getElementById("stats-best-time").innerText = `${m}:${s}`;
+          }
+          document.getElementById("stats-streak").innerText = this.stats.streak;
+
+          // Render Achievements Cards Grid
+          let container = document.getElementById("achievements-list");
+          container.innerHTML = "";
+          Object.values(this.achievements).forEach((ach) => {
+            let card = document.createElement("div");
+            card.className = `achievement-card ${ach.unlocked ? "unlocked" : ""}`;
+            card.innerHTML = `
+                <div class="icon">${ach.icon}</div>
+                <div class="details">
+                    <h4>${ach.title}</h4>
+                    <p>${ach.desc}</p>
+                </div>
+            `;
+            container.appendChild(card);
+          });
+        }
+      }
+
+      // Global Thread Initialization Execution
+      document.addEventListener("DOMContentLoaded", () => {
+        new CyberSudoku();
+      });
+    </script>
+  </body>
+</html>

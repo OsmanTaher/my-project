@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>محرر ومستعرض الملاحظات السريع (Markdown)</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <style>
+        /* نظام الألوان والثيم الداكن المخصص للمطورين */
+        :root {
+            --bg-main: #0B1121;
+            --bg-panel: #131B2E;
+            --accent: #4AE2DC;
+            --accent-hover: #3cd0ca;
+            --text-main: #F8FAFC;
+            --text-muted: #94A3B8;
+            --border: #1E293B;
+            --code-bg: #1E293B;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* شريط التحكم العلوي */
+        header {
+            background-color: var(--bg-panel);
+            border-bottom: 1px solid var(--border);
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .brand-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        header h1 {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        /* مؤشر حالة الحفظ التلقائي */
+        .save-status {
+            font-size: 0.85rem;
+            color: var(--accent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .save-status.show {
+            opacity: 1;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            border: 1px solid var(--border);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .btn-danger:hover {
+            border-color: #EF4444;
+            color: #EF4444;
+        }
+
+        /* بيئة العمل المنقسمة (Split Screen Workspace) */
+        .workspace {
+            display: grid;
+            grid-template-columns: 1fr;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        @media (min-width: 768px) {
+            .workspace {
+                grid-template-columns: 1fr 1fr; /* انقسام متساوي في الشاشات الكبيرة */
+            }
+        }
+
+        /* لوحات العمل */
+        .panel {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* اللوحة اليمنى: المحرر (Editor) */
+        .editor-panel {
+            border-left: 1px solid var(--border);
+        }
+
+        .panel-header {
+            background-color: rgba(30, 41, 59, 0.4);
+            padding: 0.4rem 1rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        textarea {
+            width: 100%;
+            flex: 1;
+            background-color: transparent;
+            border: none;
+            outline: none;
+            color: #E2E8F0;
+            padding: 1.5rem;
+            font-family: 'Fira Code', 'Courier New', Courier, monospace;
+            font-size: 1rem;
+            line-height: 1.6;
+            resize: none;
+            /* جعل اتجاه الكتابة للمحرر مرناً ومناسباً للأكواد والعلامات التقنية */
+            direction: ltr;
+            text-align: left;
+        }
+
+        /* اللوحة اليسرى: نافذة العرض الحية (Preview) */
+        .preview-panel {
+            background-color: rgba(19, 27, 46, 0.3);
+        }
+
+        .preview-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+            line-height: 1.7;
+            font-size: 1rem;
+            direction: ltr; /* مستندات الماركدوان والمطورين تُعرض يساراً */
+            text-align: left;
+        }
+
+        /* تنسيق عناصر الماركدوان المستعرضة (GitHub Dark Vibe) */
+        .preview-body h1, .preview-body h2, .preview-body h3 {
+            color: var(--text-main);
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.3rem;
+        }
+        .preview-body h1 { font-size: 1.8rem; }
+        .preview-body h2 { font-size: 1.4rem; }
+        .preview-body h3 { font-size: 1.2rem; }
+
+        .preview-body p { margin-bottom: 1rem; color: #CBD5E1; }
+        
+        .preview-body code {
+            background-color: var(--code-bg);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.9rem;
+            color: var(--accent);
+        }
+
+        .preview-body pre {
+            background-color: var(--bg-panel);
+            border: 1px solid var(--border);
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-bottom: 1rem;
+        }
+        
+        .preview-body pre code {
+            background-color: transparent;
+            padding: 0;
+            color: #E2E8F0;
+        }
+
+        .preview-body ul, .preview-body ol {
+            margin-left: 2rem;
+            margin-bottom: 1rem;
+            color: #CBD5E1;
+        }
+
+        .preview-body blockquote {
+            border-left: 4px solid var(--accent);
+            padding-left: 1rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            font-style: italic;
+        }
+
+        .preview-body a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        .preview-body a:hover { text-decoration: underline; }
+
+        .preview-body img {
+            max-width: 100%;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="brand-section">
+            <h1>Markdown Notes Editor</h1>
+            <div class="save-status" id="save-indicator">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                تم الحفظ تلقائياً
+            </div>
+        </div>
+        <div class="controls">
+            <button class="btn" id="btn-download" title="تحميل الملف بصيغة .md">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                تحميل الكود (.md)
+            </button>
+            <button class="btn btn-danger" id="btn-clear" title="مسح الملاحظة بالكامل">
+                تفريغ
+            </button>
+        </div>
+    </header>
+
+    <div class="workspace">
+        <div class="panel editor-panel">
+            <div class="panel-header">المحرر / EDITOR (MARKDOWN)</div>
+            <textarea id="markdown-input" placeholder="# ملاحظة جديدة&#10;&#10;ابدأ الكتابة هنا باستخدام صيغة Markdown...&#10;&#10;**مثال على نص عريض** أو `كود برمجى محلي`"></textarea>
+        </div>
+
+        <div class="panel preview-panel">
+            <div class="panel-header">المعاينة الحية / LIVE PREVIEW</div>
+            <div class="preview-body" id="preview-output"></div>
+        </div>
+    </div>
+
+    <script>
+        const markdownInput = document.getElementById('markdown-input');
+        const previewOutput = document.getElementById('preview-output');
+        const saveIndicator = document.getElementById('save-indicator');
+        const btnClear = document.getElementById('btn-clear');
+        const btnDownload = document.getElementById('btn-download');
+
+        let saveTimeout = null;
+
+        // 1. منطق الربط والمعالجة الفورية وتحديث الـ Live Preview
+        function renderMarkdown() {
+            const rawText = markdownInput.value;
+            
+            // استخدام مكتبة marked لترجمة النص إلى HTML مسبك وآمن
+            previewOutput.innerHTML = marked.parse(rawText);
+            
+            // إدارة الحفظ التلقائي والمؤشر البصري
+            triggerAutoSave(rawText);
+        }
+
+        // 2. منطق الحفظ التلقائي الذكي (Debouncing Auto-Save)
+        function triggerAutoSave(text) {
+            // تصفير الموقت السابق في حال استمرار المستخدم في الكتابة لمنع إنهاك المتصفح
+            clearTimeout(saveTimeout);
+            
+            saveTimeout = setTimeout(() => {
+                localStorage.setItem('markdown_note', text);
+                
+                // إظهار تنبيه تم الحفظ ثم إخفاؤه بسلاسة بعد ثانية ونصف
+                saveIndicator.classList.add('show');
+                setTimeout(() => {
+                    saveIndicator.classList.remove('show');
+                }, 1500);
+            }, 500); // يتم الحفظ الفعلي بعد 500 ملي ثانية من توقف المستخدم عن الضغط
+        }
+
+        // 3. استعادة البيانات المخزنة محلياً عند فتح المتصفح (Persistence)
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedNote = localStorage.getItem('markdown_note');
+            if (savedNote !== null) {
+                markdownInput.value = savedNote;
+            }
+            renderMarkdown(); // تشغيل الرندرة الأولى للمحتوى المسترجع
+        });
+
+        // الاستماع لكل نقرة زر أو تغيير في مساحة الكتابة
+        markdownInput.addEventListener('input', renderMarkdown);
+
+        // 4. منطق زر التفريغ ومسح البيانات
+        btnClear.addEventListener('click', () => {
+            if (confirm('هل أنت متأكد من رغبتك في تفريغ المحرر ومسح الملاحظة؟')) {
+                markdownInput.value = '';
+                localStorage.removeItem('markdown_note');
+                renderMarkdown();
+            }
+        });
+
+        // 5. منطق توليد وتنزيل الملف بجهاز المستخدم محلياً (.md)
+        btnDownload.addEventListener('click', () => {
+            const textToWrite = markdownInput.value;
+            if (!textToWrite.trim()) return;
+
+            const blob = new Blob([textToWrite], { type: 'text/markdown;charset=utf-8' });
+            const link = document.createElement('a');
+            
+            link.download = `Note-${Date.now()}.md`;
+            link.href = URL.createObjectURL(blob);
+            link.click();
+            
+            // تنظيف الكائن المؤقت من الذاكرة
+            URL.revokeObjectURL(link.href);
+        });
+    </script>
+</body>
+</html>

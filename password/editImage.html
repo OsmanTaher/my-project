@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>محرر الصور المحلي الاحترافي - النسخة المطورة</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
+
+    <style>
+        /* نظام الألوان والثيم الداكن للمطورين والمصممين */
+        :root {
+            --bg-main: #0B1121;
+            --bg-card: #131B2E;
+            --accent: #4AE2DC;
+            --accent-hover: #3cd0ca;
+            --text-main: #F8FAFC;
+            --text-muted: #94A3B8;
+            --border: #1E293B;
+            --input-bg: #0B1121;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem 1rem;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 1200px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        @media (min-width: 950px) {
+            .app-container {
+                grid-template-columns: 350px 1fr;
+            }
+        }
+
+        header {
+            text-align: center;
+            grid-column: 1 / -1;
+            margin-bottom: 0.5rem;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            color: var(--text-main);
+            margin-bottom: 0.4rem;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* شريط التحكم الجانبي (الأدوات والفلاتر) */
+        .sidebar {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            max-height: 85vh;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--border) transparent;
+        }
+
+        .section-title {
+            font-size: 0.95rem;
+            color: var(--accent);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .control-label-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .control-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.88rem;
+            color: var(--text-main);
+            font-weight: 500;
+        }
+
+        .filter-desc {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* تخصيص السلايدر */
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 6px;
+            background: var(--bg-main);
+            border-radius: 3px;
+            outline: none;
+            margin-top: 2px;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--accent);
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        /* أزرار التحكم والتنقل */
+        .btn {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            border: 1px solid var(--border);
+            padding: 0.7rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .btn.active, .btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            background-color: rgba(74, 226, 220, 0.02);
+        }
+
+        .btn-toggle-active {
+            background-color: rgba(74, 226, 220, 0.1);
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .btn-block {
+            width: 100%;
+        }
+
+        .btn-primary {
+            background-color: var(--accent);
+            color: var(--bg-main);
+            font-weight: 600;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-hover);
+            color: var(--bg-main);
+            box-shadow: 0 0 15px rgba(74, 226, 220, 0.2);
+        }
+
+        /* منطقة العمل الرئيسية لعرض الصورة */
+        .main-workspace {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .drop-zone {
+            background-color: var(--bg-card);
+            border: 2px dashed var(--border);
+            border-radius: 12px;
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            padding: 2rem;
+            transition: all 0.2s ease;
+        }
+
+        .drop-zone.drag-over {
+            border-color: var(--accent);
+            background-color: rgba(74, 226, 220, 0.01);
+        }
+
+        .drop-zone p {
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        #file-input {
+            display: none;
+        }
+
+        /* حاوية التعديل والـ Cropper */
+        .editor-wrapper {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1rem;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            min-height: 500px;
+            max-height: 70vh;
+            overflow: hidden;
+        }
+
+        .img-container {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        .img-container img {
+            max-width: 100%;
+            display: block;
+        }
+
+        /* تعديل مظهر إطار Cropper.js ليصبح دائرياً حقيقياً عند تفعيله */
+        .cropper-circle .cropper-view-box,
+        .cropper-circle .cropper-face {
+            border-radius: 50%;
+            box-shadow: 0 0 0 4000px rgba(11, 17, 33, 0.75); /* تعتيم الخلفية خارج الدائرة */
+        }
+        
+        .cropper-circle .cropper-view-box {
+            outline: 2px dashed var(--accent);
+            outline-offset: -1px;
+        }
+
+        .cropper-circle .cropper-line,
+        .cropper-circle .cropper-point {
+            display: none;
+        }
+        
+        /* إبقاء مقابض الزوايا لضبط الحجم المتناسق في الوضع الدائري */
+        .cropper-circle .cropper-point.point-se {
+            display: block;
+            background-color: var(--accent);
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>مُحرر وقاصّ الصور المحلي الاحترافي</h1>
+        <p>تحكم بالفلاتر المتقدمة، واقنص أبعادك بحرية أو بنمط دائري آمن 100% محلياً.</p>
+    </header>
+
+    <div class="app-container">
+        <div class="sidebar">
+            <div class="control-group">
+                <div class="section-title">أدوات إطار القص</div>
+                <button class="btn btn-block" id="btn-toggle-circle">تفعيل القص الدائري</button>
+            </div>
+
+            <div class="control-group">
+                <div class="section-title">الفلاتر الرسومية المتقدمة</div>
+                
+                <div class="control-group">
+                    <div class="control-label-wrapper">
+                        <div class="control-label"><span>تدرج رمادي (Grayscale)</span><span id="val-grayscale">0%</span></div>
+                        <span class="filter-desc">لتحويل الصورة إلى أبيض وأسود بالكامل.</span>
+                    </div>
+                    <input type="range" id="filter-grayscale" min="0" max="100" value="0">
+                </div>
+
+                <div class="control-group">
+                    <div class="control-label-wrapper">
+                        <div class="control-label"><span>السطوع (Brightness)</span><span id="val-brightness">100%</span></div>
+                        <span class="filter-desc">للتحكم في شدة الضوء المُنبعث.</span>
+                    </div>
+                    <input type="range" id="filter-brightness" min="0" max="200" value="100">
+                </div>
+
+                <div class="control-group">
+                    <div class="control-label-wrapper">
+                        <div class="control-label"><span>التباين (Contrast)</span><span id="val-contrast">100%</span></div>
+                        <span class="filter-desc">للتحكم في الفرق بين المناطق الداكنة والفاتحة.</span>
+                    </div>
+                    <input type="range" id="filter-contrast" min="0" max="200" value="100">
+                </div>
+
+                <div class="control-group">
+                    <div class="control-label-wrapper">
+                        <div class="control-label"><span>التشبع (Saturation)</span><span id="val-saturate">100%</span></div>
+                        <span class="filter-desc">للتحكم في مدى قوة وعمق ألوان الصورة.</span>
+                    </div>
+                    <input type="range" id="filter-saturate" min="0" max="200" value="100">
+                </div>
+
+                <div class="control-group">
+                    <div class="control-label-wrapper">
+                        <div class="control-label"><span>تعديل اللون (Hue Rotate)</span><span id="val-hue">0°</span></div>
+                        <span class="filter-desc">لتدوير طيف وتردد ألوان الصورة بالكامل.</span>
+                    </div>
+                    <input type="range" id="filter-hue" min="0" max="360" value="0">
+                </div>
+
+                <div class="control-group">
+                    <div class="control-label-wrapper">
+                        <div class="control-label"><span>الشفافية (Opacity)</span><span id="val-opacity">100%</span></div>
+                        <span class="filter-desc">للتحكم في مدى وضوح ونفاذية تفاصيل الصورة.</span>
+                    </div>
+                    <input type="range" id="filter-opacity" min="0" max="100" value="100">
+                </div>
+
+                <div class="control-group">
+                    <div class="control-label-wrapper">
+                        <div class="control-label"><span>تغبيش (Blur)</span><span id="val-blur">0px</span></div>
+                        <span class="filter-desc">لإضافة تأثير التمويه الضبابي الناعم على الخلفيات.</span>
+                    </div>
+                    <input type="range" id="filter-blur" min="0" max="20" value="0">
+                </div>
+            </div>
+
+            <div class="control-group" style="margin-top: auto; gap: 10px; padding-top: 1rem;">
+                <button class="btn btn-block" id="btn-compare-toggle">معاينة الأصل</button>
+                <button class="btn btn-block btn-primary" id="btn-download">تحميل الصورة النهائية</button>
+            </div>
+        </div>
+
+        <div class="main-workspace">
+            <div class="drop-zone" id="drop-zone">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+                <p>اسحب وأفلت الصورة هنا أو انقر للتصفح من جهازك</p>
+                <input type="file" id="file-input" accept="image/*">
+            </div>
+
+            <div class="editor-wrapper" id="editor-wrapper">
+                <div class="img-container">
+                    <img id="image-to-edit" alt="المحرر المتقدم">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('file-input');
+        const editorWrapper = document.getElementById('editor-wrapper');
+        const imageToEdit = document.getElementById('image-to-edit');
+
+        // مصفوفة وجلب عناصر السلايدرز السبعة
+        const sliders = {
+            grayscale: document.getElementById('filter-grayscale'),
+            brightness: document.getElementById('filter-brightness'),
+            contrast: document.getElementById('filter-contrast'),
+            saturate: document.getElementById('filter-saturate'),
+            hue: document.getElementById('filter-hue'),
+            opacity: document.getElementById('filter-opacity'),
+            blur: document.getElementById('filter-blur')
+        };
+
+        const circleToggleBtn = document.getElementById('btn-toggle-circle');
+        const compareToggleBtn = document.getElementById('btn-compare-toggle');
+        const downloadBtn = document.getElementById('btn-download');
+
+        let cropper = null;
+        let isCircularCrop = false;
+        let isShowingOriginal = false;
+        let originalImageSrc = '';
+
+        // 1. إدارة الرفع والإفلات المحلي للملفات
+        dropZone.addEventListener('click', () => fileInput.click());
+        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('drag-over');
+            if (e.dataTransfer.files.length > 0) handleFile(e.dataTransfer.files[0]);
+        });
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) handleFile(e.target.files[0]);
+        });
+
+        function handleFile(file) {
+            if (!file.type.startsWith('image/')) return;
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                originalImageSrc = event.target.result;
+                imageToEdit.src = originalImageSrc;
+                dropZone.style.display = 'none';
+                editorWrapper.style.display = 'flex';
+                initCropper();
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // 2. تهيئة محرك وبنية أداة القص (Cropper.js) بوضع حر افتراضياً
+        function initCropper() {
+            if (cropper) cropper.destroy();
+
+            cropper = new Cropper(imageToEdit, {
+                // وضع حر (NaN) إذا لم يكن دائرياً، ويُجبر على التناسق المربع (1) للدائرة المثالية
+                aspectRatio: isCircularCrop ? 1 : NaN,
+                viewMode: 1,
+                dragMode: 'move',
+                autoCropArea: 0.8,
+                restore: false,
+                guides: !isCircularCrop,
+                center: true,
+                highlight: false,
+                cropBoxMovable: true,
+                cropBoxResizable: true,
+                toggleDragModeOnDblclick: false,
+                ready() {
+                    const container = editorWrapper.querySelector('.cropper-container');
+                    if (isCircularCrop) {
+                        container.classList.add('cropper-circle');
+                    } else {
+                        container.classList.remove('cropper-circle');
+                    }
+                    applyLiveFilters();
+                }
+            });
+        }
+
+        // تفعيل خيار ومفتاح التبديل للقص الدائري فوق الإطار
+        circleToggleBtn.addEventListener('click', () => {
+            isCircularCrop = !isCircularCrop;
+            if (isCircularCrop) {
+                circleToggleBtn.classList.add('btn-toggle-active');
+                circleToggleBtn.textContent = 'تعطيل القص الدائري';
+            } else {
+                circleToggleBtn.classList.remove('btn-toggle-active');
+                circleToggleBtn.textContent = 'تفعيل القص الدائري';
+            }
+            initCropper(); // إعادة بناء الكروبير لتبديل خصائص التحكم الحرة والدائرية فوراً
+        });
+
+        // 3. معالجة وتوليد جمل المرشحات الرسومية (CSS Filters String)
+        function getFilterString() {
+            return `grayscale(${sliders.grayscale.value}%) ` +
+                   `brightness(${sliders.brightness.value}%) ` +
+                   `contrast(${sliders.contrast.value}%) ` +
+                   `saturate(${sliders.saturate.value}%) ` +
+                   `hue-rotate(${sliders.hue.value}deg) ` +
+                   `opacity(${sliders.opacity.value}%) ` +
+                   `blur(${sliders.blur.value}px)`;
+        }
+
+        function applyLiveFilters() {
+            if (!cropper) return;
+            // حظر الفلاتر الحية إذا كان المستخدم حالياً في وضع "معاينة الأصل"
+            const filterValue = isShowingOriginal ? 'none' : getFilterString();
+
+            const cropperImg = editorWrapper.querySelector('.cropper-hide');
+            const cropperCanvasImg = editorWrapper.querySelector('.cropper-canvas img');
+            const cropperViewBoxImg = editorWrapper.querySelector('.cropper-view-box img');
+
+            if (cropperImg) cropperImg.style.filter = filterValue;
+            if (cropperCanvasImg) cropperCanvasImg.style.filter = filterValue;
+            if (cropperViewBoxImg) cropperViewBoxImg.style.filter = filterValue;
+        }
+
+        // الاستماع لكل مدخلات السلايدرز لتحديث القيمة الرقمية والمرشح الرسومي فوراً
+        Object.keys(sliders).forEach(key => {
+            sliders[key].addEventListener('input', (e) => {
+                const unit = key === 'hue' ? '°' : (key === 'blur' ? 'px' : '%');
+                document.getElementById(`val-${key}`).textContent = `${e.target.value}${unit}`;
+                
+                // إلغاء وضع معاينة الأصل تلقائياً عند قيام المستخدم بتغيير الفلاتر يدوياً
+                if (isShowingOriginal) {
+                    isShowingOriginal = false;
+                    compareToggleBtn.classList.remove('btn-toggle-active');
+                    compareToggleBtn.textContent = 'معاينة الأصل';
+                }
+                applyLiveFilters();
+            });
+        });
+
+        // 4. تطوير وتحديث مفتاح التبديل الذكي لزر المقارنة (Toggle Compare Button)
+        compareToggleBtn.addEventListener('click', () => {
+            if (!cropper) return;
+            isShowingOriginal = !isShowingOriginal;
+
+            if (isShowingOriginal) {
+                compareToggleBtn.classList.add('btn-toggle-active');
+                compareToggleBtn.textContent = 'بعد التعديل';
+            } else {
+                compareToggleBtn.classList.remove('btn-toggle-active');
+                compareToggleBtn.textContent = 'معاينة الأصل';
+            }
+            applyLiveFilters();
+        });
+
+        // 5. هندسة دمج الفلاتر والقص الدائري عالي الجودة والتحميل الكلي (Export Logic)
+        downloadBtn.addEventListener('click', () => {
+            if (!cropper) return;
+
+            // استخلاص لوحة الـ Canvas المقطوعة بأعلى دقة ميكانيكية متاحة للصورة الأصلية
+            const croppedCanvas = cropper.getCroppedCanvas({
+                imageSmoothingEnabled: true,
+                imageSmoothingQuality: 'high'
+            });
+
+            const finalCanvas = document.createElement('canvas');
+            finalCanvas.width = croppedCanvas.width;
+            finalCanvas.height = croppedCanvas.height;
+            const ctx = finalCanvas.getContext('2d');
+
+            // أ) تمرير وحقن الفلاتر الرسومية المحددة بالكامل داخل سياق الـ Canvas قبل الرسم
+            ctx.filter = getFilterString();
+
+            // ب) معالجة وتطبيق القناع الدائري الفعلي (Masking) باستخدام المسارات البرمجية
+            if (isCircularCrop) {
+                const centerX = finalCanvas.width / 2;
+                const centerY = finalCanvas.height / 2;
+                const radius = Math.min(finalCanvas.width, finalCanvas.height) / 2;
+
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+                ctx.clip(); // عزل وقص كل عمليات الإسقاط التالية داخل المحيط الدائري فقط
+            }
+
+            // ج) رسم وإسقاط محتوى الصورة النهائية المفلترة والمقصوصة
+            ctx.drawImage(croppedCanvas, 0, 0);
+
+            // د) التصدير الفوري والتنزيل بصيغة PNG للحفاظ على شفافية الأطراف في النمط الدائري
+            const dataUrl = finalCanvas.toDataURL('image/png');
+            const link = document.createElement('a');
+            link.download = `PRO-Image-${Date.now()}.png`;
+            link.href = dataUrl;
+            link.click();
+        });
+    </script>
+</body>
+</html>

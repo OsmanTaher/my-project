@@ -1,0 +1,1552 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Command Center - OS Terminal</title>
+    <style>
+      /* --- System Custom Tokens Definitions --- */
+      :root {
+        --bg-system: #0b1121;
+        --neon-blue: #00f0ff;
+        --neon-cyan: #00ffff;
+        --neon-green: #39ff14;
+        --neon-red: #ff3333;
+        --glass-bg: rgba(16, 24, 48, 0.65);
+        --glass-border: rgba(0, 240, 255, 0.15);
+        --text-main: #ffffff;
+        --text-dim: #7da0ca;
+      }
+
+      /* --- Base Structural Normalization Rules --- */
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      }
+
+      body {
+        background-color: var(--bg-system);
+        color: var(--text-main);
+        min-height: 100vh;
+        padding: 20px;
+        overflow-x: hidden;
+      }
+
+      /* --- High Performance Scannable Layouts --- */
+      .app-grid-layout {
+        display: grid;
+        grid-template-columns: 280px 1fr;
+        grid-template-rows: auto 1fr;
+        gap: 20px;
+        max-width: 1600px;
+        margin: 0 auto;
+      }
+
+      /* --- Glassmorphism UI Core Design Elements --- */
+      .glass-card {
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        border-radius: 16px;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        padding: 20px;
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+        transition:
+          transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+          border-color 0.3s;
+      }
+
+      .glass-card:hover {
+        border-color: rgba(0, 240, 255, 0.35);
+        box-shadow: 0 8px 32px 0 rgba(0, 240, 255, 0.1);
+      }
+
+      /* --- Header Component Layout Rules --- */
+      .main-header {
+        grid-column: 1 / -1;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 30px;
+      }
+
+      .header-identity {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .status-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        box-shadow: 0 0 8px transparent;
+        transition:
+          background 0.3s,
+          box-shadow 0.3s;
+      }
+      .status-dot.online {
+        background: var(--neon-green);
+        box-shadow: 0 0 10px var(--neon-green);
+      }
+      .status-dot.offline {
+        background: var(--neon-red);
+        box-shadow: 0 0 10px var(--neon-red);
+      }
+
+      .greeting-zone h1 {
+        font-size: 1.4rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+      }
+      .greeting-zone p {
+        font-size: 0.8rem;
+        color: var(--text-dim);
+        margin-top: 2px;
+      }
+
+      .search-wrapper {
+        position: relative;
+        width: 350px;
+      }
+      .search-wrapper input {
+        width: 100%;
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid var(--glass-border);
+        padding: 10px 15px 10px 38px;
+        border-radius: 8px;
+        color: #fff;
+        outline: none;
+        transition: border-color 0.2s;
+      }
+      .search-wrapper input:focus {
+        border-color: var(--neon-blue);
+        box-shadow: 0 0 8px rgba(0, 240, 255, 0.2);
+      }
+      .search-icon {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--neon-blue);
+      }
+
+      .system-clock-box {
+        font-size: 1.6rem;
+        font-weight: bold;
+        font-family: monospace;
+      }
+
+      /* --- Sidebar Analytics Dashboard Panel --- */
+      .sidebar-panel {
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+      }
+
+      .panel-title {
+        font-size: 0.9rem;
+        letter-spacing: 2px;
+        color: var(--text-dim);
+        border-bottom: 1px solid var(--glass-border);
+        padding-bottom: 8px;
+      }
+
+      .stats-vertical-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .stat-node {
+        background: rgba(0, 0, 0, 0.2);
+        padding: 12px;
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.03);
+      }
+      .stat-node .node-label {
+        font-size: 0.75rem;
+        color: var(--text-dim);
+        display: block;
+        margin-bottom: 6px;
+        text-transform: uppercase;
+      }
+      .stat-node .node-count {
+        font-size: 1.6rem;
+        font-weight: bold;
+      }
+      .stat-node .node-val {
+        font-size: 1rem;
+        font-weight: bold;
+        display: block;
+        text-align: right;
+        margin-top: 4px;
+      }
+
+      .progress-bar-wrapper {
+        width: 100%;
+        height: 6px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 4px;
+        overflow: hidden;
+      }
+      .progress-fill {
+        height: 100%;
+        width: 0%;
+        transition: width 0.4s ease;
+      }
+      .fill-cyan {
+        background: var(--neon-blue);
+        box-shadow: 0 0 8px var(--neon-blue);
+      }
+      .fill-green {
+        background: var(--neon-green);
+        box-shadow: 0 0 8px var(--neon-green);
+      }
+
+      .system-shortcuts-guide {
+        margin-top: auto;
+        background: rgba(0, 240, 255, 0.03);
+        padding: 12px;
+        border-radius: 10px;
+        border: 1px solid rgba(0, 240, 255, 0.08);
+      }
+      .system-shortcuts-guide h3 {
+        font-size: 0.8rem;
+        margin-bottom: 8px;
+        color: var(--neon-blue);
+      }
+      .system-shortcuts-guide ul {
+        list-style: none;
+        font-size: 0.75rem;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .system-shortcuts-guide kbd {
+        background: #1a2642;
+        padding: 2px 5px;
+        border-radius: 3px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        font-family: monospace;
+      }
+
+      /* --- Main Workspace Core Modules Grid System --- */
+      .workspace-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+      }
+
+      .workspace-module {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        min-height: 280px;
+        max-height: 380px;
+      }
+
+      .mod-title {
+        font-size: 0.85rem;
+        letter-spacing: 1.5px;
+        color: var(--text-dim);
+        text-transform: uppercase;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .scrollable-list {
+        flex: 1;
+        overflow-y: auto;
+        padding-right: 5px;
+      }
+      .scrollable-list::-webkit-scrollbar {
+        width: 5px;
+      }
+      .scrollable-list::-webkit-scrollbar-thumb {
+        background: var(--glass-border);
+        border-radius: 4px;
+      }
+
+      /* --- Subsystem Specific Layout Design Styles --- */
+
+      /* Module: Study Dashboard */
+      .study-meta-inputs .input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        margin-bottom: 15px;
+      }
+      .study-meta-inputs input {
+        background: rgba(0, 0, 0, 0.2);
+        border: 1px solid var(--glass-border);
+        padding: 8px 12px;
+        border-radius: 6px;
+        color: #fff;
+        outline: none;
+      }
+      .study-meta-inputs input:focus {
+        border-color: var(--neon-blue);
+      }
+      .metrics-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.9rem;
+        margin-bottom: 8px;
+      }
+      .large-bar {
+        height: 12px;
+        border-radius: 6px;
+        margin-top: auto;
+      }
+
+      /* Module: Pomodoro Execution Unit */
+      .pomo-modes {
+        display: flex;
+        gap: 10px;
+        width: 100%;
+      }
+      .pomo-mode-btn {
+        flex: 1;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--glass-border);
+        padding: 8px;
+        border-radius: 6px;
+        color: #fff;
+        cursor: pointer;
+        font-size: 0.8rem;
+      }
+      .pomo-mode-btn.active {
+        background: rgba(0, 240, 255, 0.1);
+        border-color: var(--neon-blue);
+        color: var(--neon-blue);
+      }
+      .pomo-display {
+        font-size: 3.5rem;
+        font-weight: bold;
+        text-align: center;
+        font-family: monospace;
+        margin: auto 0;
+        text-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+      }
+      .pomo-controls {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+      }
+      .session-tracker {
+        text-align: center;
+        font-size: 0.8rem;
+        color: var(--text-dim);
+      }
+
+      /* Module: Task Manager Framework */
+      .module-input-row {
+        display: flex;
+        gap: 10px;
+      }
+      .module-input-row input {
+        flex: 1;
+        background: rgba(0, 0, 0, 0.2);
+        border: 1px solid var(--glass-border);
+        padding: 10px;
+        border-radius: 6px;
+        color: #fff;
+        outline: none;
+      }
+      .module-input-row input:focus {
+        border-color: var(--neon-blue);
+      }
+      .btn-add {
+        background: var(--neon-blue);
+        border: none;
+        width: 40px;
+        border-radius: 6px;
+        color: #000;
+        font-weight: bold;
+        cursor: pointer;
+        font-size: 1.2rem;
+      }
+      .task-filters {
+        display: flex;
+        gap: 8px;
+      }
+      .filter-btn {
+        background: transparent;
+        border: 1px solid var(--glass-border);
+        color: var(--text-dim);
+        padding: 4px 10px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        cursor: pointer;
+      }
+      .filter-btn.active {
+        border-color: var(--neon-blue);
+        color: #fff;
+        background: rgba(0, 240, 255, 0.05);
+      }
+
+      #task-list {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .task-item {
+        background: rgba(255, 255, 255, 0.02);
+        padding: 10px;
+        border-radius: 6px;
+        border: 1px solid rgba(255, 255, 255, 0.04);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .task-item.completed {
+        opacity: 0.5;
+      }
+      .task-item.completed span {
+        text-decoration: line-through;
+      }
+      .task-item .actions {
+        display: flex;
+        gap: 8px;
+      }
+      .task-item button {
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        font-size: 0.9rem;
+      }
+      .task-item .btn-check {
+        color: var(--neon-green);
+      }
+      .task-item .btn-del {
+        color: var(--neon-red);
+      }
+
+      /* Module: Local Neural Notes */
+      .notes-grid-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+      .note-card {
+        background: rgba(0, 0, 0, 0.2);
+        border: 1px solid var(--glass-border);
+        border-radius: 8px;
+        padding: 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        position: relative;
+      }
+      .note-card.pinned {
+        border-color: var(--neon-green);
+        background: rgba(57, 255, 20, 0.02);
+      }
+      .note-title-field {
+        background: transparent;
+        border: none;
+        border-bottom: 1px solid transparent;
+        color: #fff;
+        font-weight: bold;
+        font-size: 0.9rem;
+        outline: none;
+        width: 85%;
+      }
+      .note-title-field:focus {
+        border-color: var(--glass-border);
+      }
+      .note-body-field {
+        background: transparent;
+        border: none;
+        color: var(--text-dim);
+        font-size: 0.8rem;
+        resize: none;
+        height: 60px;
+        outline: none;
+      }
+      .note-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: auto;
+      }
+      .note-btn {
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        font-size: 0.85rem;
+      }
+      .note-btn.pin {
+        color: var(--text-dim);
+      }
+      .note-card.pinned .note-btn.pin {
+        color: var(--neon-green);
+      }
+      .note-btn.del {
+        color: var(--neon-red);
+      }
+
+      /* Module: Hyperlink Router Elements */
+      .link-inputs {
+        display: flex;
+        gap: 8px;
+      }
+      .link-inputs input {
+        background: rgba(0, 0, 0, 0.2);
+        border: 1px solid var(--glass-border);
+        padding: 6px 10px;
+        border-radius: 6px;
+        color: #fff;
+        font-size: 0.8rem;
+        outline: none;
+      }
+      #link-title {
+        width: 35%;
+      }
+      #link-url {
+        flex: 1;
+      }
+      .links-flex-box {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-content: flex-start;
+      }
+      .route-link-anchor {
+        background: rgba(0, 240, 255, 0.03);
+        border: 1px solid var(--glass-border);
+        padding: 8px 12px;
+        border-radius: 6px;
+        color: #fff;
+        text-decoration: none;
+        font-size: 0.85rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.2s;
+        position: relative;
+      }
+      .route-link-anchor:hover {
+        background: rgba(0, 240, 255, 0.1);
+        border-color: var(--neon-blue);
+        box-shadow: 0 0 8px rgba(0, 240, 255, 0.2);
+      }
+      .btn-delete-link {
+        background: transparent;
+        border: none;
+        color: var(--neon-red);
+        cursor: pointer;
+        font-size: 0.7rem;
+        margin-left: 4px;
+        display: inline-block;
+      }
+
+      /* Module: Math Processor Calculator UI Grid */
+      .calc-screen {
+        background: rgba(0, 0, 0, 0.4);
+        border-radius: 8px;
+        border: 1px solid var(--glass-border);
+        padding: 10px;
+        text-align: right;
+        height: 65px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+      .calc-hist-line {
+        font-size: 0.75rem;
+        color: var(--text-dim);
+        font-family: monospace;
+        min-height: 14px;
+      }
+      .calc-main-line {
+        font-size: 1.4rem;
+        font-weight: bold;
+        font-family: monospace;
+      }
+      .calc-pad {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 6px;
+        flex: 1;
+      }
+      .calc-key {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 6px;
+        color: #fff;
+        font-weight: 500;
+        font-family: monospace;
+        font-size: 1.1rem;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: all 0.15s;
+      }
+      .calc-key:active {
+        background: rgba(0, 240, 255, 0.1);
+        border-color: var(--neon-blue);
+      }
+      .calc-key.op {
+        color: var(--neon-blue);
+        background: rgba(0, 240, 255, 0.02);
+      }
+      .calc-key.double {
+        grid-row: span 2;
+        background: rgba(0, 240, 255, 0.15);
+        border-color: var(--neon-blue);
+        color: #fff;
+      }
+      .calc-key.double:active {
+        background: var(--neon-blue);
+        color: #000;
+      }
+
+      /* --- Button Framework Components --- */
+      .btn {
+        padding: 10px 20px;
+        font-weight: bold;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-size: 0.85rem;
+      }
+      .btn-neon-blue {
+        background: transparent;
+        border: 2px solid var(--neon-blue);
+        color: #fff;
+        box-shadow: 0 0 10px rgba(0, 240, 255, 0.1);
+      }
+      .btn-neon-blue:hover {
+        background: var(--neon-blue);
+        color: #000;
+        box-shadow: 0 0 15px var(--neon-blue);
+      }
+      .btn-outline {
+        background: transparent;
+        border: 1px solid var(--glass-border);
+        color: #fff;
+      }
+      .btn-outline:hover {
+        border-color: #fff;
+      }
+      .btn-danger-sm {
+        background: transparent;
+        border: 1px solid rgba(255, 51, 51, 0.2);
+        color: var(--neon-red);
+      }
+      .btn-danger-sm:hover {
+        background: var(--neon-red);
+        color: #fff;
+      }
+
+      .neon-text-blue {
+        text-shadow: 0 0 8px var(--neon-blue);
+        color: var(--neon-blue);
+      }
+      .neon-text-green {
+        text-shadow: 0 0 8px var(--neon-green);
+        color: var(--neon-green);
+      }
+      .neon-text-red {
+        text-shadow: 0 0 8px var(--neon-red);
+        color: var(--neon-red);
+      }
+
+      /* --- Responsive Adaptive Breakdown Rules --- */
+      @media (max-width: 1024px) {
+        .app-grid-layout {
+          grid-template-columns: 1fr;
+        }
+        .sidebar-panel {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 15px;
+        }
+        .system-shortcuts-guide {
+          grid-column: span 2;
+          margin-top: 0;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .workspace-grid {
+          grid-template-columns: 1fr;
+        }
+        .sidebar-panel {
+          grid-template-columns: 1fr;
+        }
+        .system-shortcuts-guide {
+          grid-column: auto;
+        }
+        .search-wrapper {
+          width: 100%;
+          max-width: 220px;
+        }
+        .main-header {
+          padding: 15px;
+          flex-wrap: wrap;
+          gap: 15px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-grid-layout">
+      <header class="main-header glass-card">
+        <div class="header-identity">
+          <div class="status-dot online" id="connection-indicator"></div>
+          <div class="greeting-zone">
+            <h1 id="dynamic-greeting">Initializing Terminal...</h1>
+            <p id="live-date-string">0000.00.00 | Cyber Epoch</p>
+          </div>
+        </div>
+        <div class="search-wrapper">
+          <span class="search-icon">⚡</span>
+          <input
+            type="text"
+            id="global-search"
+            placeholder="Search system core... (Ctrl + K)"
+          />
+        </div>
+        <div class="system-clock-box">
+          <span id="live-chrono-time" class="neon-text-blue">00:00:00</span>
+        </div>
+      </header>
+
+      <aside class="sidebar-panel glass-card">
+        <h2 class="panel-title">📊 ANALYTICS CORE</h2>
+        <div class="stats-vertical-grid">
+          <div class="stat-node">
+            <span class="node-label">Productivity Rate</span>
+            <div class="progress-bar-wrapper">
+              <div
+                class="progress-fill fill-cyan"
+                id="stat-productivity-pct"
+                style="width: 0%"
+              ></div>
+            </div>
+            <span class="node-val" id="stat-productivity-text">0%</span>
+          </div>
+          <div class="stat-node">
+            <span class="node-label">Tasks Completed</span>
+            <strong class="node-count neon-text-blue" id="stat-tasks-count"
+              >0</strong
+            >
+          </div>
+          <div class="stat-node">
+            <span class="node-label">Notes Archived</span>
+            <strong class="node-count" id="stat-notes-count">0</strong>
+          </div>
+          <div class="stat-node">
+            <span class="node-label">Study Vectors</span>
+            <strong class="node-count neon-text-green" id="stat-hours-count"
+              >0h</strong
+            >
+          </div>
+          <div class="stat-node">
+            <span class="node-label">Pomodoro Cycles</span>
+            <strong class="node-count" id="stat-pomo-count">0</strong>
+          </div>
+        </div>
+        <div class="system-shortcuts-guide">
+          <h3>System Keys</h3>
+          <ul>
+            <li><kbd>Ctrl</kbd> + <kbd>K</kbd> Focus Search</li>
+            <li><kbd>Ctrl</kbd> + <kbd>N</kbd> Create Note</li>
+            <li><kbd>Ctrl</kbd> + <kbd>T</kbd> Focus Tasks</li>
+            <li><kbd>Space</kbd> Toggle Timer</li>
+          </ul>
+        </div>
+      </aside>
+
+      <main class="workspace-grid">
+        <section class="workspace-module glass-card" id="mod-study">
+          <h2 class="mod-title">📚 STUDY MANAGEMENT VECTOR</h2>
+          <div class="study-meta-inputs">
+            <div class="input-group">
+              <label>Active Core Track</label>
+              <input
+                type="text"
+                id="study-course-input"
+                value="Information Systems & FullStack Core"
+              />
+            </div>
+            <div class="metrics-row">
+              <div>Daily Goal: <span id="study-goal-text">4</span> tasks</div>
+              <div>
+                Completed:
+                <span id="study-done-text" class="neon-text-green">0</span>
+              </div>
+            </div>
+          </div>
+          <div class="progress-bar-wrapper large-bar">
+            <div
+              class="progress-fill fill-green"
+              id="study-progress-fill"
+              style="width: 0%"
+            ></div>
+          </div>
+        </section>
+
+        <section class="workspace-module glass-card" id="mod-pomodoro">
+          <h2 class="mod-title">⏱️ QUANTUM POMODORO</h2>
+          <div class="pomo-modes">
+            <button
+              class="pomo-mode-btn active"
+              data-time="1500"
+              data-mode="work"
+            >
+              Work Session
+            </button>
+            <button class="pomo-mode-btn" data-time="300" data-mode="short">
+              Short Break
+            </button>
+            <button class="pomo-mode-btn" data-time="900" data-mode="long">
+              Long Break
+            </button>
+          </div>
+          <div class="pomo-display">
+            <span id="pomo-timer-string">25:00</span>
+          </div>
+          <div class="pomo-controls">
+            <button id="pomo-start-btn" class="btn btn-neon-blue">START</button>
+            <button id="pomo-pause-btn" class="btn btn-outline">PAUSE</button>
+            <button id="pomo-reset-btn" class="btn btn-danger-sm">RESET</button>
+          </div>
+          <div class="session-tracker">
+            Completed System Cycles: <span id="pomo-cycle-val">0</span>
+          </div>
+        </section>
+
+        <section class="workspace-module glass-card" id="mod-tasks">
+          <h2 class="mod-title">📋 ARCHITECTURAL TO-DO MANAGER</h2>
+          <form id="task-form" class="module-input-row">
+            <input
+              type="text"
+              id="task-input"
+              placeholder="Append new deployment task..."
+              required
+            />
+            <button type="submit" class="btn-add">+</button>
+          </form>
+          <div class="task-filters">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="active">Active</button>
+            <button class="filter-btn" data-filter="completed">
+              Completed
+            </button>
+          </div>
+          <ul id="task-list" class="scrollable-list"></ul>
+        </section>
+
+        <section class="workspace-module glass-card" id="mod-notes">
+          <h2 class="mod-title">📝 LOCALIZED NOTES KERNEL</h2>
+          <div class="notes-actions">
+            <button id="add-note-btn" class="btn btn-neon-blue">
+              + Create New Note
+            </button>
+          </div>
+          <div
+            id="notes-wrapper"
+            class="notes-grid-container scrollable-list"
+          ></div>
+        </section>
+
+        <section class="workspace-module glass-card" id="mod-links">
+          <h2 class="mod-title">🔗 EDGE ROUTER CHANNELS</h2>
+          <form id="link-form" class="link-inputs">
+            <input
+              type="text"
+              id="link-title"
+              placeholder="Platform Title"
+              required
+            />
+            <input
+              type="url"
+              id="link-url"
+              placeholder="https://..."
+              required
+            />
+            <button type="submit" class="btn-add">Link</button>
+          </form>
+          <div
+            id="links-container"
+            class="links-flex-box scrollable-list"
+          ></div>
+        </section>
+
+        <section class="workspace-module glass-card" id="mod-calculator">
+          <h2 class="mod-title">🧮 MATH CO-PROCESSOR</h2>
+          <div class="calc-screen">
+            <div id="calc-history" class="calc-hist-line"></div>
+            <div id="calc-main-display" class="calc-main-line">0</div>
+          </div>
+          <div class="calc-pad">
+            <button class="calc-key op" data-calc="C">C</button>
+            <button class="calc-key op" data-calc="%">%</button>
+            <button class="calc-key op" data-calc="/">/</button>
+            <button class="calc-key op" data-calc="*">*</button>
+            <button class="calc-key" data-calc="7">7</button>
+            <button class="calc-key" data-calc="8">8</button>
+            <button class="calc-key" data-calc="9">9</button>
+            <button class="calc-key op" data-calc="-">-</button>
+            <button class="calc-key" data-calc="4">4</button>
+            <button class="calc-key" data-calc="5">5</button>
+            <button class="calc-key" data-calc="6">6</button>
+            <button class="calc-key op" data-calc="+">+</button>
+            <button class="calc-key" data-calc="1">1</button>
+            <button class="calc-key" data-calc="2">2</button>
+            <button class="calc-key" data-calc="3">3</button>
+            <button
+              class="calc-key op double"
+              id="calc-equal-btn"
+              data-calc="="
+            >
+              =
+            </button>
+            <button class="calc-key zero" data-calc="0">0</button>
+            <button class="calc-key" data-calc=".">.</button>
+          </div>
+        </section>
+      </main>
+    </div>
+    <script>
+      /**
+       * Command Center Core Script Engine Architecture
+       * Built with modular structural Class blocks matching local lifecycle events.
+       */
+
+      class CommandCenter {
+        constructor() {
+          this.state = {
+            tasks: JSON.parse(localStorage.getItem("cc_tasks")) || [],
+            notes: JSON.parse(localStorage.getItem("cc_notes")) || [],
+            links:
+              JSON.parse(localStorage.getItem("cc_links")) ||
+              this.getDefaultLinks(),
+            pomoSessions:
+              parseInt(localStorage.getItem("cc_pomo_sessions")) || 0,
+            studyHours: parseFloat(localStorage.getItem("cc_study_hours")) || 0,
+            currentCourse:
+              localStorage.getItem("cc_current_course") ||
+              "Information Systems & FullStack Core",
+          };
+
+          this.initCoreSystems();
+          this.registerGlobalKeyboardShortcuts();
+          this.listenNetworkStatus();
+        }
+
+        initCoreSystems() {
+          this.runLiveChronoClock();
+
+          // Initialize independent system widgets modules
+          this.todoEngine = new TodoManager(this);
+          this.notesEngine = new NotesKernel(this);
+          this.pomoEngine = new PomodoroEngine(this);
+          this.linkRouter = new LinkRouter(this);
+          this.mathProcessor = new MathProcessor();
+
+          // Bind Study Dashboard parameters hooks
+          const courseInput = document.getElementById("study-course-input");
+          courseInput.value = this.state.currentCourse;
+          courseInput.addEventListener("input", (e) => {
+            this.state.currentCourse = e.target.value;
+            localStorage.setItem("cc_current_course", e.target.value);
+          });
+
+          this.calculateGlobalMetrics();
+        }
+
+        getDefaultLinks() {
+          return [
+            { id: 1, title: "GitHub Core", url: "https://github.com" },
+            { id: 2, title: "Codeforces Track", url: "https://codeforces.com" },
+            { id: 3, title: "Vercel Node", url: "https://vercel.com" },
+            {
+              id: 4,
+              title: "MDN Web Docs",
+              url: "https://developer.mozilla.org",
+            },
+          ];
+        }
+
+        runLiveChronoClock() {
+          const timeEl = document.getElementById("live-chrono-time");
+          const dateEl = document.getElementById("live-date-string");
+          const greetingEl = document.getElementById("dynamic-greeting");
+
+          const updateClock = () => {
+            const now = new Date();
+            timeEl.innerText = now.toTimeString().split(" ")[0];
+
+            // Render calendar baseline strings matching 2026 guidelines
+            const options = {
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit",
+            };
+            dateEl.innerText = now
+              .toLocaleDateString("en-US", options)
+              .replace(/\//g, ".");
+
+            // Dynamic Greeting context evaluation
+            const hr = now.getHours();
+            let greet = "Welcome back, Operator";
+            if (hr < 12) greet = "Good morning, Operator";
+            else if (hr < 18) greet = "Good afternoon, Engineer";
+            else greet = "Systems active for night session, Dev";
+
+            greetingEl.innerText = greet;
+          };
+          setInterval(updateClock, 1000);
+          updateClock();
+        }
+
+        calculateGlobalMetrics() {
+          // Render values dynamically out into Analytics side panel nodes
+          const totalTasks = this.state.tasks.length;
+          const completedTasks = this.state.tasks.filter(
+            (t) => t.completed,
+          ).length;
+
+          document.getElementById("stat-tasks-count").innerText =
+            completedTasks;
+          document.getElementById("stat-notes-count").innerText =
+            this.state.notes.length;
+          document.getElementById("stat-pomo-count").innerText =
+            this.state.pomoSessions;
+          document.getElementById("stat-hours-count").innerText =
+            `${this.state.studyHours.toFixed(1)}h`;
+
+          // Mathematical evaluation mapping task parameters into progress percentage ratios
+          const productivityRate =
+            totalTasks > 0
+              ? Math.round((completedTasks / totalTasks) * 100)
+              : 0;
+          document.getElementById("stat-productivity-text").innerText =
+            `${productivityRate}%`;
+          document.getElementById("stat-productivity-pct").style.width =
+            `${productivityRate}%`;
+
+          // Sync local Study Dashboard specific modules nodes
+          document.getElementById("study-done-text").innerText = completedTasks;
+          const dailyGoal = 4; // Baseline target metric parameter configuration
+          const studyProgressPct = Math.min(
+            100,
+            Math.round((completedTasks / dailyGoal) * 100),
+          );
+          document.getElementById("study-progress-fill").style.width =
+            `${studyProgressPct}%`;
+        }
+
+        registerGlobalKeyboardShortcuts() {
+          window.addEventListener("keydown", (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
+              e.preventDefault();
+              document.getElementById("global-search").focus();
+            }
+            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "n") {
+              e.preventDefault();
+              document.getElementById("add-note-btn").click();
+            }
+            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "t") {
+              e.preventDefault();
+              document.getElementById("task-input").focus();
+            }
+            if (
+              e.code === "Space" &&
+              document.activeElement.tagName !== "INPUT" &&
+              document.activeElement.tagName !== "TEXTAREA"
+            ) {
+              e.preventDefault();
+              const startBtn = document.getElementById("pomo-start-btn");
+              const pauseBtn = document.getElementById("pomo-pause-btn");
+              if (this.pomoEngine.tickerInterval) {
+                pauseBtn.click();
+              } else {
+                startBtn.click();
+              }
+            }
+          });
+
+          // Global Search evaluation filtering event registration
+          document
+            .getElementById("global-search")
+            .addEventListener("input", (e) => {
+              const query = e.target.value.toLowerCase();
+              this.todoEngine.render(query);
+              this.notesEngine.render(query);
+            });
+        }
+
+        listenNetworkStatus() {
+          const indicator = document.getElementById("connection-indicator");
+          const triggerNotification = (status) => {
+            indicator.className = `status-dot ${status}`;
+            // Optional Non-intrusive Desktop notification pipeline fallback interface
+            if (Notification.permission === "granted") {
+              new Notification(
+                `System Alert: Core connection changed to ${status.toUpperCase()}.`,
+              );
+            }
+          };
+
+          window.addEventListener("online", () =>
+            triggerNotification("online"),
+          );
+          window.addEventListener("offline", () =>
+            triggerNotification("offline"),
+          );
+
+          if (Notification.permission === "default") {
+            Notification.requestPermission();
+          }
+        }
+      }
+
+      // --- Module Framework: Architectural Task Manager ---
+      class TodoManager {
+        constructor(core) {
+          this.core = core;
+          this.currentFilter = "all";
+          this.listElement = document.getElementById("task-list");
+          this.formElement = document.getElementById("task-form");
+
+          this.formElement.addEventListener("submit", (e) =>
+            this.handleAppendTask(e),
+          );
+          this.registerFilters();
+          this.render();
+        }
+
+        registerFilters() {
+          document.querySelectorAll(".filter-btn").forEach((btn) => {
+            btn.addEventListener("click", (e) => {
+              document
+                .querySelectorAll(".filter-btn")
+                .forEach((b) => b.classList.remove("active"));
+              e.target.classList.add("active");
+              this.currentFilter = e.target.getAttribute("data-filter");
+              this.render();
+            });
+          });
+        }
+
+        handleAppendTask(e) {
+          e.preventDefault();
+          const input = document.getElementById("task-input");
+          const taskText = input.value.trim();
+          if (!taskText) return;
+
+          this.core.state.tasks.push({
+            id: Date.now(),
+            text: taskText,
+            completed: false,
+          });
+
+          input.value = "";
+          this.sync();
+        }
+
+        toggleTask(id) {
+          const task = this.core.state.tasks.find((t) => t.id === id);
+          if (task) task.completed = !task.completed;
+          this.sync();
+        }
+
+        deleteTask(id) {
+          this.core.state.tasks = this.core.state.tasks.filter(
+            (t) => t.id !== id,
+          );
+          this.sync();
+        }
+
+        sync() {
+          localStorage.setItem(
+            "cc_tasks",
+            JSON.stringify(this.core.state.tasks),
+          );
+          this.core.calculateGlobalMetrics();
+          this.render();
+        }
+
+        render(query = "") {
+          this.listElement.innerHTML = "";
+          let filtered = this.core.state.tasks;
+
+          if (this.currentFilter === "active")
+            filtered = filtered.filter((t) => !t.completed);
+          if (this.currentFilter === "completed")
+            filtered = filtered.filter((t) => t.completed);
+          if (query)
+            filtered = filtered.filter((t) =>
+              t.text.toLowerCase().includes(query),
+            );
+
+          filtered.forEach((task) => {
+            const li = document.createElement("li");
+            li.className = `task-item ${task.completed ? "completed" : ""}`;
+            li.innerHTML = `
+                <span>${task.text}</span>
+                <div class="actions">
+                    <button class="btn-check">${task.completed ? "↩" : "✓"}</button>
+                    <button class="btn-del">✕</button>
+                </div>
+            `;
+            li.querySelector(".btn-check").addEventListener("click", () =>
+              this.toggleTask(task.id),
+            );
+            li.querySelector(".btn-del").addEventListener("click", () =>
+              this.deleteTask(task.id),
+            );
+            this.listElement.appendChild(li);
+          });
+        }
+      }
+
+      // --- Module Framework: Local Neural Notes Kernel ---
+      class NotesKernel {
+        constructor(core) {
+          this.core = core;
+          this.wrapper = document.getElementById("notes-wrapper");
+          document
+            .getElementById("add-note-btn")
+            .addEventListener("click", () => this.spawnNoteCard());
+          this.render();
+        }
+
+        spawnNoteCard() {
+          const newNote = {
+            id: Date.now(),
+            title: "Untitled Intel Note",
+            body: "",
+            pinned: false,
+          };
+          this.core.state.notes.unshift(newNote);
+          this.sync();
+        }
+
+        updateNote(id, property, val) {
+          const note = this.core.state.notes.find((n) => n.id === id);
+          if (note) {
+            note[property] = val;
+            localStorage.setItem(
+              "cc_notes",
+              JSON.stringify(this.core.state.notes),
+            );
+          }
+        }
+
+        togglePin(id) {
+          const note = this.core.state.notes.find((n) => n.id === id);
+          if (note) note.pinned = !note.pinned;
+          // Re-sort notes layout sequence context prioritizing pinned nodes elements
+          this.core.state.notes.sort((a, b) => b.pinned - a.pinned);
+          this.sync();
+        }
+
+        deleteNote(id) {
+          this.core.state.notes = this.core.state.notes.filter(
+            (n) => n.id !== id,
+          );
+          this.sync();
+        }
+
+        sync() {
+          localStorage.setItem(
+            "cc_notes",
+            JSON.stringify(this.core.state.notes),
+          );
+          this.core.calculateGlobalMetrics();
+          this.render();
+        }
+
+        render(query = "") {
+          this.wrapper.innerHTML = "";
+          let filtered = this.core.state.notes;
+          if (query)
+            filtered = filtered.filter(
+              (n) =>
+                n.title.toLowerCase().includes(query) ||
+                n.body.toLowerCase().includes(query),
+            );
+
+          filtered.forEach((note) => {
+            const card = document.createElement("div");
+            card.className = `note-card ${note.pinned ? "pinned" : ""}`;
+            card.innerHTML = `
+                <input type="text" class="note-title-field" value="${note.title}">
+                <textarea class="note-body-field" placeholder="Input structural logs here...">${note.body}</textarea>
+                <div class="note-footer">
+                    <button class="note-btn pin">${note.pinned ? "📌" : "📍"}</button>
+                    <button class="note-btn del">🗑️</button>
+                </div>
+            `;
+
+            // Setup real-time atomic value field context auto-save monitoring bindings
+            card
+              .querySelector(".note-title-field")
+              .addEventListener("input", (e) =>
+                this.updateNote(note.id, "title", e.target.value),
+              );
+            card
+              .querySelector(".note-body-field")
+              .addEventListener("input", (e) =>
+                this.updateNote(note.id, "body", e.target.value),
+              );
+            card
+              .querySelector(".note-btn.pin")
+              .addEventListener("click", () => this.togglePin(note.id));
+            card
+              .querySelector(".note-btn.del")
+              .addEventListener("click", () => this.deleteNote(note.id));
+
+            this.wrapper.appendChild(card);
+          });
+        }
+      }
+
+      // --- Module Framework: Quantum Pomodoro Engine ---
+      class PomodoroEngine {
+        constructor(core) {
+          this.core = core;
+          this.timeRemaining = 1500;
+          this.tickerInterval = null;
+          this.currentMode = "work";
+
+          this.initDOM();
+        }
+
+        initDOM() {
+          this.displayString = document.getElementById("pomo-timer-string");
+
+          document.querySelectorAll(".pomo-mode-btn").forEach((btn) => {
+            btn.addEventListener("click", (e) => {
+              document
+                .querySelectorAll(".pomo-mode-btn")
+                .forEach((b) => b.classList.remove("active"));
+              e.target.classList.add("active");
+              this.timeRemaining = parseInt(e.target.getAttribute("data-time"));
+              this.currentMode = e.target.getAttribute("data-mode");
+              this.clearIntervalThread();
+              this.updateDisplayUI();
+            });
+          });
+
+          document
+            .getElementById("pomo-start-btn")
+            .addEventListener("click", () => this.executeTimerStart());
+          document
+            .getElementById("pomo-pause-btn")
+            .addEventListener("click", () => this.clearIntervalThread());
+          document
+            .getElementById("pomo-reset-btn")
+            .addEventListener("click", () => this.resetActiveTimerSession());
+        }
+
+        executeTimerStart() {
+          if (this.tickerInterval) return;
+          this.tickerInterval = setInterval(() => {
+            this.timeRemaining--;
+            this.updateDisplayUI();
+
+            // Track continuous study fractions to augment total metrics calculations logs
+            if (this.currentMode === "work") {
+              this.core.state.studyHours += 1 / 3600;
+              localStorage.setItem(
+                "cc_study_hours",
+                this.core.state.studyHours,
+              );
+              if (Math.floor(this.timeRemaining) % 60 === 0)
+                this.core.calculateGlobalMetrics();
+            }
+
+            if (this.timeRemaining <= 0) {
+              this.handleCycleTermination();
+            }
+          }, 1000);
+        }
+
+        clearIntervalThread() {
+          clearInterval(this.tickerInterval);
+          this.tickerInterval = null;
+        }
+
+        resetActiveTimerSession() {
+          this.clearIntervalThread();
+          const activeBtn = document.querySelector(".pomo-mode-btn.active");
+          this.timeRemaining = parseInt(activeBtn.getAttribute("data-time"));
+          this.updateDisplayUI();
+        }
+
+        handleCycleTermination() {
+          this.clearIntervalThread();
+          if (this.currentMode === "work") {
+            this.core.state.pomoSessions++;
+            localStorage.setItem(
+              "cc_pomo_sessions",
+              this.core.state.pomoSessions,
+            );
+            document.getElementById("pomo-cycle-val").innerText =
+              this.core.state.pomoSessions;
+          }
+          alert(
+            `Core Alert: Pomodoro segment [${this.currentMode.toUpperCase()}] complete.`,
+          );
+          this.resetActiveTimerSession();
+          this.core.calculateGlobalMetrics();
+        }
+
+        updateDisplayUI() {
+          const mins = Math.floor(this.timeRemaining / 60)
+            .toString()
+            .padStart(2, "0");
+          const secs = (this.timeRemaining % 60).toString().padStart(2, "0");
+          this.displayString.innerText = `${mins}:${secs}`;
+        }
+      }
+
+      // --- Module Framework: Custom Hyperlink Edge Router ---
+      class LinkRouter {
+        constructor(core) {
+          this.core = core;
+          this.container = document.getElementById("links-container");
+          this.form = document.getElementById("link-form");
+
+          this.form.addEventListener("submit", (e) => this.appendRouterLink(e));
+          this.render();
+        }
+
+        appendRouterLink(e) {
+          e.preventDefault();
+          const titleIn = document.getElementById("link-title");
+          const urlIn = document.getElementById("link-url");
+
+          this.core.state.links.push({
+            id: Date.now(),
+            title: titleIn.value,
+            url: urlIn.value,
+          });
+
+          titleIn.value = "";
+          urlIn.value = "";
+          this.sync();
+        }
+
+        deleteRouterLink(id) {
+          this.core.state.links = this.core.state.links.filter(
+            (l) => l.id !== id,
+          );
+          this.sync();
+        }
+
+        sync() {
+          localStorage.setItem(
+            "cc_links",
+            JSON.stringify(this.core.state.links),
+          );
+          this.render();
+        }
+
+        render() {
+          this.container.innerHTML = "";
+          this.core.state.links.forEach((link) => {
+            const wrapper = document.createElement("div");
+            wrapper.style.display = "inline-flex";
+            wrapper.style.alignItems = "center";
+
+            const anchor = document.createElement("a");
+            anchor.className = "route-link-anchor";
+            anchor.href = link.url;
+            anchor.target = "_blank";
+            anchor.innerHTML = `🌐 <span>${link.title}</span>`;
+
+            const delBtn = document.createElement("button");
+            delBtn.className = "btn-delete-link";
+            delBtn.innerText = "✕";
+            delBtn.addEventListener("click", (e) => {
+              e.preventDefault();
+              this.deleteRouterLink(link.id);
+            });
+
+            anchor.appendChild(delBtn);
+            this.container.appendChild(anchor);
+          });
+        }
+      }
+
+      // --- Module Framework: Computation Co-Processor Widget ---
+      class MathProcessor {
+        constructor() {
+          this.mainLine = document.getElementById("calc-main-display");
+          this.histLine = document.getElementById("calc-history");
+          this.currentExpression = "";
+          this.initEvents();
+        }
+
+        initEvents() {
+          document.querySelectorAll(".calc-key").forEach((key) => {
+            key.addEventListener("click", (e) => {
+              const command = e.target.getAttribute("data-calc");
+              this.executeCalculationCommand(command);
+            });
+          });
+
+          // Intercept standard validation alphanumeric key mappings directly via physical keyboard inputs
+          window.addEventListener("keydown", (e) => {
+            if (
+              document.activeElement.tagName === "INPUT" ||
+              document.activeElement.tagName === "TEXTAREA"
+            )
+              return;
+            const validKeys = "0123456789+-*/%.";
+            if (validKeys.includes(e.key))
+              this.executeCalculationCommand(e.key);
+            else if (e.key === "Enter") this.executeCalculationCommand("=");
+            else if (e.key === "Escape") this.executeCalculationCommand("C");
+          });
+        }
+
+        executeCalculationCommand(cmd) {
+          if (cmd === "C") {
+            this.currentExpression = "";
+            this.mainLine.innerText = "0";
+            this.histLine.innerText = "";
+          } else if (cmd === "=") {
+            try {
+              if (!this.currentExpression) return;
+              // Native sandboxed clean parsing fallback math execution evaluations algorithm
+              const output = Function(
+                `"use strict"; return (${this.currentExpression})`,
+              )();
+              this.histLine.innerText = `${this.currentExpression} =`;
+              this.mainLine.innerText = output;
+              this.currentExpression = output.toString();
+            } catch (err) {
+              this.mainLine.innerText = "ERR";
+              this.currentExpression = "";
+            }
+          } else {
+            if (this.mainLine.innerText === "0" && !"+-*/%".includes(cmd))
+              this.currentExpression = "";
+            this.currentExpression += cmd;
+            this.mainLine.innerText = this.currentExpression;
+          }
+        }
+      }
+
+      // Run Engine Thread Context on Dom Load Complete
+      document.addEventListener("DOMContentLoaded", () => {
+        new CommandCenter();
+      });
+    </script>
+  </body>
+</html>

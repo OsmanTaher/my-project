@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لعبة تحطيم الكتل الاحترافية | Brick Breaker</title>
+    <style>
+        /* CSS Variables لإدارة الثيمات والإضاءة */
+        :root {
+            --bg-color: #BFD5DD;
+            --text-color: #0B1121;
+            --container-bg: #ffffff;
+            --overlay-bg: rgba(255, 255, 255, 0.96);
+            --primary-color: #2563eb;
+            --primary-hover: #1d4ed8;
+            --paddle-color: #0b1121;
+            --ball-color: #ef4444;
+            --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --border-color: #e2e8f0;
+        }
+
+        .dark-mode {
+            --bg-color: #0B1121;
+            --text-color: #BFD5DD;
+            --container-bg: #1e293b;
+            --overlay-bg: rgba(15, 23, 42, 0.96);
+            --primary-color: #3b82f6;
+            --primary-hover: #2563eb;
+            --paddle-color: #38bdf8;
+            --ball-color: #f43f5e;
+            --shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            --border-color: #334155;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* اللوحة العلوية للمعلومات */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: min(95vw, 80vh * 1.33); /* نسبة 4:3 المتجاوبة */
+            margin-bottom: 15px;
+            padding: 0 10px;
+        }
+
+        .stats-container {
+            display: flex;
+            gap: 20px;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        /* حاوية اللعبة بأبعاد مستقلة ومتجاوبة (نسبة العرض للارتفاع 4:3) */
+        .game-container {
+            position: relative;
+            width: min(95vw, 80vh * 1.33);
+            aspect-ratio: 4 / 3;
+            background-color: var(--container-bg);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            border: 4px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        /* الواجهات المنبثقة فوق الـ Canvas */
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--overlay-bg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            z-index: 10;
+        }
+
+        .overlay.hidden {
+            display: none;
+        }
+
+        .overlay h2 {
+            font-size: 2.5rem;
+            margin-bottom: 5px;
+        }
+
+        .difficulty-options {
+            display: flex;
+            gap: 10px;
+        }
+
+        .diff-btn {
+            background: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--text-color);
+            padding: 6px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .diff-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .hint {
+            font-size: 0.9rem;
+            opacity: 0.7;
+            text-align: center;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="stats-container">
+            <div>النقاط: <span id="score">0</span></div>
+            <div>المحاولات: <span id="lives">3</span></div>
+        </div>
+        <div>
+            <button class="btn" id="pause-btn" disabled>إيقاف مؤقت</button>
+            <button class="btn" id="theme-toggle">تبديل الثيم 🌓</button>
+        </div>
+    </header>
+
+    <div class="game-container" id="container">
+        <canvas id="gameCanvas" width="800" height="600"></canvas>
+
+        <div id="start-screen" class="overlay">
+            <h2>تحطيم الكتل | Brick Breaker</h2>
+            <p>اختر مستوى الصعوبة (سرعة الكرة):</p>
+            <div class="difficulty-options">
+                <button class="diff-btn" data-speed="4">سهل</button>
+                <button class="diff-btn active" data-speed="6">متوسط</button>
+                <button class="diff-btn" data-speed="9">صعب</button>
+            </div>
+            <button class="btn" id="start-btn" style="padding: 12px 28px; font-size: 1.2rem;">ابدأ اللعب</button>
+            <p class="hint">التحكم: حرك الماوس يميناً ويساراً، أو استخدم الأسهم (◄ ►) / A-D.<br>اضغط المسطرة (Spacebar) للإيقاف المؤقت.</p>
+        </div>
+
+        <div id="game-over-screen" class="overlay hidden">
+            <h2 id="game-title">انتهت اللعبة!</h2>
+            <p style="font-size: 1.4rem;">مجموع نقاطك: <span id="final-score">0</span></p>
+            <button class="btn" id="restart-btn" style="padding: 12px 28px;">اللعب مجدداً</button>
+        </div>
+    </div>
+
+    <script>
+        // --- الإعدادات الكلاسيكية والمتغيرات البيئية ---
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const container = document.getElementById('container');
+        
+        // عناصر واجهة المستخدم
+        const scoreEl = document.getElementById('score');
+        const livesEl = document.getElementById('lives');
+        const finalScoreEl = document.getElementById('final-score');
+        const gameTitle = document.getElementById('game-title');
+        
+        const startScreen = document.getElementById('start-screen');
+        const gameOverScreen = document.getElementById('game-over-screen');
+        const startBtn = document.getElementById('start-btn');
+        const restartBtn = document.getElementById('restart-btn');
+        const pauseBtn = document.getElementById('pause-btn');
+        const themeToggle = document.getElementById('theme-toggle');
+        const diffButtons = document.querySelectorAll('.diff-btn');
+
+        // المتغيرات التشغيلية للعبة
+        let score = 0;
+        let lives = 3;
+        let baseSpeed = 6; 
+        let isPaused = false;
+        let gameActive = false;
+        let animationId = null;
+
+        // فيزياء المضرب (Paddle)
+        const paddle = {
+            width: 120,
+            height: 15,
+            x: (canvas.width - 120) / 2,
+            y: canvas.height - 30,
+            speed: 10,
+            moveLeft: false,
+            moveRight: false
+        };
+
+        // فيزياء الكرة (Ball)
+        const ball = {
+            x: canvas.width / 2,
+            y: canvas.height - 45,
+            radius: 8,
+            dx: 0,
+            dy: 0
+        };
+
+        // إعدادات المصفوفة الشبكية للكتل (Bricks)
+        const brickRows = 5;
+        const brickColumns = 8;
+        const brickWidth = 84;
+        const brickHeight = 24;
+        const brickPadding = 10;
+        const brickOffsetTop = 60;
+        const brickOffsetLeft = 27;
+        let bricks = [];
+
+        // ألوان الكتل الكلاسيكية (قوس قزح لكل صف للجمالية الفخمة)
+        const rowColors = ["#ef4444", "#f97316", "#f59e0b", "#10b981", "#3b82f6"];
+
+        // --- محرك الصوت البرمجي النظيف (Web Audio API) ---
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playSound(type) {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            if (type === 'brick') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.08);
+            } else if (type === 'paddle') {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(350, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.1);
+            } else if (type === 'loss') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(200, audioCtx.currentTime);
+                osc.frequency.linearRampToValueAtTime(100, audioCtx.currentTime + 0.4);
+                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.4);
+            } else if (type === 'win') {
+                osc.type = 'sine';
+                const now = audioCtx.currentTime;
+                [440, 554, 659, 880].forEach((f, i) => {
+                    const noteOsc = audioCtx.createOscillator();
+                    const noteGain = audioCtx.createGain();
+                    noteOsc.type = 'sine';
+                    noteOsc.frequency.setValueAtTime(f, now + i * 0.1);
+                    noteGain.gain.setValueAtTime(0.1, now + i * 0.1);
+                    noteGain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.1 + 0.2);
+                    noteOsc.connect(noteGain);
+                    noteGain.connect(audioCtx.destination);
+                    noteOsc.start(now + i * 0.1);
+                    noteOsc.stop(now + i * 0.1 + 0.2);
+                });
+            }
+        }
+
+        // --- تهيئة وبناء مصفوفة اللعب ---
+        function initBricks() {
+            bricks = [];
+            for (let r = 0; r < brickRows; r++) {
+                bricks[r] = [];
+                for (let c = 0; c < brickColumns; c++) {
+                    bricks[r][c] = { x: 0, y: 0, status: 1, color: rowColors[r] };
+                }
+            }
+        }
+
+        function resetBallAndPaddle() {
+            paddle.x = (canvas.width - paddle.width) / 2;
+            ball.x = canvas.width / 2;
+            ball.y = paddle.y - ball.radius - 5;
+            // إطلاق الكرة دائماً للأعلى بزاوية عشوائية خفيفة
+            ball.dx = baseSpeed * (Math.random() * 0.6 - 0.3);
+            ball.dy = -baseSpeed;
+        }
+
+        function initGame() {
+            score = 0;
+            lives = 3;
+            scoreEl.textContent = score;
+            livesEl.textContent = lives;
+            isPaused = false;
+            gameActive = true;
+            pauseBtn.disabled = false;
+            pauseBtn.textContent = "إيقاف مؤقت";
+            
+            initBricks();
+            resetBallAndPaddle();
+        }
+
+        // --- منطق المحاكاة والحركة (Game Loop) ---
+        function gameLoop() {
+            if (!isPaused && gameActive) {
+                updatePhysics();
+                draw();
+            }
+            animationId = requestAnimationFrame(gameLoop);
+        }
+
+        function updatePhysics() {
+            // تحريك المضرب بواسطة الكيبورد
+            if (paddle.moveRight && paddle.x < canvas.width - paddle.width) {
+                paddle.x += paddle.speed;
+            } else if (paddle.moveLeft && paddle.x > 0) {
+                paddle.x -= paddle.speed;
+            }
+
+            // تحريك الكرة
+            ball.x += ball.dx;
+            ball.y += ball.dy;
+
+            // اصطدام الكرة بالجدران الجانبية والعمودية
+            if (ball.x + ball.radius > canvas.width || ball.x - ball.radius < 0) {
+                ball.dx = -ball.dx;
+                playSound('brick');
+            }
+            if (ball.y - ball.radius < 0) {
+                ball.dy = -ball.dy;
+                playSound('brick');
+            }
+
+            // اصطدام الكرة بالمضرب
+            if (ball.y + ball.radius >= paddle.y && 
+                ball.y - ball.radius <= paddle.y + paddle.height &&
+                ball.x >= paddle.x && 
+                ball.x <= paddle.x + paddle.width) {
+                
+                // فيزياء احترافية: زاوية الارتداد تعتمد على مكان اصطدام الكرة بالمضرب
+                let hitPoint = (ball.x - (paddle.x + paddle.width / 2)) / (paddle.width / 2);
+                ball.dx = hitPoint * baseSpeed * 0.8;
+                ball.dy = -Math.abs(ball.dy); // ضمان الارتداد للأعلى دائمًا
+                playSound('paddle');
+            }
+
+            // سقوط الكرة في الأسفل (خسارة محاولة)
+            if (ball.y + ball.radius > canvas.height) {
+                lives--;
+                livesEl.textContent = lives;
+                playSound('loss');
+                
+                if (lives === 0) {
+                    endGame(false);
+                } else {
+                    resetBallAndPaddle();
+                }
+            }
+
+            // معالجة الاصطدام بالكتل (Brick Collision Detection)
+            let allDestroyed = true;
+            for (let r = 0; r < brickRows; r++) {
+                for (let c = 0; c < brickColumns; c++) {
+                    let b = bricks[r][c];
+                    if (b.status === 1) {
+                        allDestroyed = false; // لا يزال هناك كتل متبقية
+                        
+                        // التحقق من تداخل حدود الكرة مع الكتلة
+                        if (ball.x + ball.radius > b.x && 
+                            ball.x - ball.radius < b.x + brickWidth && 
+                            ball.y + ball.radius > b.y && 
+                            ball.y - ball.radius < b.y + brickHeight) {
+                            
+                            ball.dy = -ball.dy; // عكس الاتجاه الرأسي
+                            b.status = 0;       // تدمير الكتلة
+                            score += 10;
+                            scoreEl.textContent = score;
+                            playSound('brick');
+                        }
+                    }
+                }
+            }
+
+            // التحقق من الفوز الكامل
+            if (allDestroyed) {
+                endGame(true);
+            }
+        }
+
+        // --- دالة الرسم (Rendering Canvas Elements) ---
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const computedStyle = getComputedStyle(document.documentElement);
+
+            // 1. رسم الكتل (Bricks)
+            for (let r = 0; r < brickRows; r++) {
+                for (let c = 0; c < brickColumns; c++) {
+                    if (bricks[r][c].status === 1) {
+                        let brickX = (c * (brickWidth + brickPadding)) + brickOffsetLeft;
+                        let brickY = (r * (brickHeight + brickPadding)) + brickOffsetTop;
+                        bricks[r][c].x = brickX;
+                        bricks[r][c].y = brickY;
+                        
+                        ctx.fillStyle = bricks[r][c].color;
+                        ctx.beginPath();
+                        ctx.roundRect(brickX, brickY, brickWidth, brickHeight, 4);
+                        ctx.fill();
+                    }
+                }
+            }
+
+            // 2. رسم المضرب (Paddle)
+            ctx.style = computedStyle.getPropertyValue('--paddle-color').trim();
+            ctx.fillStyle = ctx.style;
+            ctx.beginPath();
+            ctx.roundRect(paddle.x, paddle.y, paddle.width, paddle.height, 6);
+            ctx.fill();
+
+            // 3. رسم الكرة (Ball)
+            ctx.fillStyle = computedStyle.getPropertyValue('--ball-color').trim();
+            ctx.beginPath();
+            ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        // --- آليات التحكم والواجهات ---
+        function togglePause() {
+            if (!gameActive) return;
+            isPaused = !isPaused;
+            pauseBtn.textContent = isPaused ? "استئناف" : "إيقاف مؤقت";
+            if (isPaused) {
+                ctx.fillStyle = "rgba(0,0,0,0.4)";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = "#ffffff";
+                ctx.font = "bold 28px sans-serif";
+                ctx.textAlign = "center";
+                ctx.fillText("موقوف مؤقتاً", canvas.width / 2, canvas.height / 2 + 10);
+            }
+        }
+
+        function endGame(isWin) {
+            gameActive = false;
+            pauseBtn.disabled = true;
+            finalScoreEl.textContent = score;
+            
+            if (isWin) {
+                gameTitle.textContent = "تهانينا! لقد فزت 🎉";
+                gameTitle.style.color = "#10b981";
+                playSound('win');
+            } else {
+                gameTitle.textContent = "انتهت اللعبة! 💥";
+                gameTitle.style.color = "#ef4444";
+            }
+            gameOverScreen.classList.remove('hidden');
+        }
+
+        // تحريك المضرب بالماوس لسهولة استجابة اللعبة وسلاستها
+        container.addEventListener('mousemove', (e) => {
+            if (!gameActive || isPaused) return;
+            let rect = canvas.getBoundingClientRect();
+            // حساب الموضع النسبي للماوس داخل الـ Canvas
+            let relativeX = (e.clientX - rect.left) * (canvas.width / rect.width);
+            
+            if (relativeX > 0 && relativeX < canvas.width) {
+                paddle.x = relativeX - paddle.width / 2;
+                // حصر المضرب داخل حدود الشاشة
+                if (paddle.x < 0) paddle.x = 0;
+                if (paddle.x > canvas.width - paddle.width) paddle.x = canvas.width - paddle.width;
+            }
+        });
+
+        // تحريك المضرب بأسهم لوحة المفاتيح
+        window.addEventListener('keydown', (e) => {
+            if (['Space', 'ArrowLeft', 'ArrowRight', 'KeyA', 'KeyD'].includes(e.code)) {
+                e.preventDefault(); // منع السكرول الافتراضي للمتصفح
+            }
+
+            if (e.code === 'Space') {
+                if (!gameActive && gameOverScreen.classList.contains('hidden')) startBtn.click();
+                else if (!gameActive) restartBtn.click();
+                else togglePause();
+                return;
+            }
+
+            if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') paddle.moveRight = true;
+            if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') paddle.moveLeft = true;
+        });
+
+        window.addEventListener('keyup', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') paddle.moveRight = false;
+            if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') paddle.moveLeft = false;
+        });
+
+        // إدارة خيارات الصعوبة والسرعة
+        diffButtons.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                diffButtons.forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                baseSpeed = parseInt(e.target.getAttribute('data-speed'));
+            });
+        });
+
+        // ربط أزرار الشاشات المنبثقة
+        startBtn.addEventListener('click', () => {
+            startScreen.classList.add('hidden');
+            initGame();
+            if (!animationId) gameLoop();
+        });
+
+        restartBtn.addEventListener('click', () => {
+            gameOverScreen.classList.add('hidden');
+            initGame();
+        });
+
+        pauseBtn.addEventListener('click', togglePause);
+
+        // إدارة الثيمات (Theme Toggle)
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            if (!gameActive || isPaused) draw();
+        });
+
+        // الرندرة المبدئية للعناصر الهيكلية قبل التشغيل
+        initBricks();
+        resetBallAndPaddle();
+        draw();
+    </script>
+</body>
+</html>

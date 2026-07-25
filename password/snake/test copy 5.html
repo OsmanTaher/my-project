@@ -1,0 +1,888 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quantum Magic Square - Logic Engine</title>
+    <style>
+      :root {
+        --bg: #0e162b;
+        --card: #18233f;
+        --primary: #6ea8fe;
+        --secondary: #8b5cf6;
+        --gold: #f4c95d;
+        --text: #f8fafc;
+        --border: rgba(110, 168, 254, 0.15);
+        --neon-red: #ff3333;
+        --neon-green: #39ff14;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        user-select: none;
+      }
+
+      body {
+        background-color: var(--bg);
+        color: var(--text);
+        font-family: "Segoe UI", Roboto, sans-serif;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+      }
+
+      .app-container {
+        display: grid;
+        grid-template-columns: 320px 1fr;
+        gap: 25px;
+        width: 95vw;
+        max-width: 1100px;
+        height: 90vh;
+        max-height: 750px;
+      }
+
+      /* Glassmorphism Sidebar Styling */
+      .glass-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .glass-card:hover {
+        border-color: rgba(110, 168, 254, 0.3);
+        box-shadow: 0 8px 32px 0 rgba(110, 168, 254, 0.08);
+      }
+
+      .control-panel {
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+      }
+
+      .brand-section .subtitle {
+        font-size: 0.75rem;
+        color: var(--primary);
+        letter-spacing: 1px;
+        margin-top: 4px;
+        text-transform: uppercase;
+      }
+
+      .config-group {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .input-node {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .input-node label {
+        font-size: 0.75rem;
+        color: var(--primary);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      select {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        color: #fff;
+        padding: 8px 12px;
+        border-radius: 8px;
+        outline: none;
+        cursor: pointer;
+        font-size: 0.9rem;
+      }
+      select:focus {
+        border-color: var(--primary);
+      }
+
+      .stats-panel {
+        background: rgba(0, 0, 0, 0.2);
+        padding: 15px;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.02);
+      }
+      .stats-panel h3 {
+        font-size: 0.75rem;
+        color: var(--primary);
+        margin-bottom: 10px;
+        letter-spacing: 1px;
+      }
+      .stat-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.9rem;
+        margin-bottom: 8px;
+      }
+
+      /* Main Gameplay Viewport Architecture */
+      .workspace-area {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .workspace-header {
+        padding: 12px 25px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .chrono-box {
+        display: flex;
+        flex-direction: column;
+      }
+      .chrono-box .label {
+        font-size: 0.65rem;
+        color: var(--primary);
+        letter-spacing: 0.5px;
+      }
+      .chrono-box .neon-text-secondary {
+        font-size: 1.5rem;
+        font-weight: bold;
+        font-family: monospace;
+      }
+
+      .header-actions {
+        display: flex;
+        gap: 8px;
+      }
+
+      /* Dynamic 3x3 CSS Grid Container Matrix */
+      .board-viewport {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        max-width: 380px;
+        margin: 0 auto;
+        background: rgba(0, 0, 0, 0.2);
+        border: 2px solid var(--border);
+        border-radius: 16px;
+        padding: 12px;
+        box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.6);
+      }
+
+      .matrix-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: repeat(3, 1fr);
+        gap: 10px;
+        width: 100%;
+        height: 100%;
+      }
+
+      /* Numeric Cell Input Box Framework Blueprint */
+      .matrix-cell {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        color: #fff;
+        font-size: 1.8rem;
+        font-weight: bold;
+        text-align: center;
+        outline: none;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .matrix-cell:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 12px rgba(110, 168, 254, 0.25);
+        background: rgba(110, 168, 254, 0.02);
+      }
+
+      /* Modifier Cell States (Clues, Locked, Error, Complete) */
+      .matrix-cell.clue {
+        background: rgba(255, 255, 255, 0.02);
+        color: var(--primary);
+        cursor: not-allowed;
+      }
+      .matrix-cell.success-pulse {
+        animation: successPulse 0.4s ease-out forwards;
+        border-color: var(--neon-green);
+        color: var(--neon-green);
+      }
+      .matrix-cell.error-shake {
+        animation: errorShake 0.3s ease-in-out both;
+        border-color: var(--neon-red);
+        color: var(--neon-red);
+      }
+
+      /* Overlay Glassmorphism Windows Layers Stack */
+      .grid-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(14, 22, 43, 0.96);
+        backdrop-filter: blur(8px);
+        display: none;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+        z-index: 10;
+        text-align: center;
+        padding: 20px;
+        border-radius: 14px;
+      }
+      .grid-overlay.active {
+        display: flex;
+      }
+
+      /* Control Buttons Unified Framework Elements */
+      .btn {
+        padding: 12px 24px;
+        background: transparent;
+        border-radius: 8px;
+        font-weight: bold;
+        letter-spacing: 0.5px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        transition: all 0.2s;
+        width: 100%;
+      }
+      .btn-primary {
+        border: 2px solid var(--primary);
+        color: #fff;
+        box-shadow: 0 0 8px rgba(110, 168, 254, 0.1);
+      }
+      .btn-primary:hover {
+        background: var(--primary);
+        color: var(--bg);
+        box-shadow: 0 0 15px var(--primary);
+      }
+      .btn-neon-red {
+        border: 2px solid var(--neon-red);
+        color: #fff;
+      }
+      .btn-neon-red:hover {
+        background: var(--neon-red);
+        color: #fff;
+      }
+
+      .btn-sm {
+        background: transparent;
+        border: 1px solid var(--border);
+        color: #fff;
+        padding: 6px 14px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.75rem;
+      }
+      .btn-sm:hover:not(:disabled) {
+        border-color: var(--primary);
+        color: var(--primary);
+      }
+      .btn-sm:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+      }
+
+      .workspace-footer {
+        padding: 12px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.8rem;
+        color: var(--text);
+      }
+      .btn-danger-sm {
+        background: transparent;
+        border: 1px solid rgba(255, 51, 51, 0.2);
+        color: var(--neon-red);
+        padding: 4px 8px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.7rem;
+      }
+      .btn-danger-sm:hover {
+        background: var(--neon-red);
+        color: #fff;
+      }
+
+      /* Typography Visual Color Enhancements */
+      .neon-text-primary {
+        text-shadow: 0 0 8px var(--primary);
+        color: var(--primary);
+      }
+      .neon-text-secondary {
+        text-shadow: 0 0 8px var(--secondary);
+        color: var(--secondary);
+      }
+      .neon-text-gold {
+        text-shadow: 0 0 8px var(--gold);
+        color: var(--gold);
+      }
+      .neon-text-red {
+        text-shadow: 0 0 8px var(--neon-red);
+        color: var(--neon-red);
+      }
+
+      /* Animation Keyframes Mapping Timelines */
+      @keyframes errorShake {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        20%,
+        60% {
+          transform: translateX(-4px);
+        }
+        40%,
+        80% {
+          transform: translateX(4px);
+        }
+      }
+      @keyframes successPulse {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.08);
+          box-shadow: 0 0 15px var(--neon-green);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.6;
+        }
+      }
+      .pulse-anim {
+        animation: pulse 1.5s infinite;
+      }
+
+      /* Responsive Media Viewport Constraints rules breakdown */
+      @media (max-width: 768px) {
+        .app-container {
+          grid-template-columns: 1fr;
+          height: auto;
+          max-height: none;
+          padding: 10px;
+        }
+        .control-panel {
+          display: none;
+        } /* Hide heavy configuration side panels on portable device displays */
+        .board-viewport {
+          max-width: 90vw;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-container">
+      <aside class="control-panel glass-card">
+        <div class="brand-section">
+          <h1 class="neon-text-primary">MAGIC SQUARE</h1>
+          <p class="subtitle">Mathematical Grid Matrix</p>
+        </div>
+
+        <div class="config-group">
+          <div class="input-node">
+            <label>Operational Level</label>
+            <select id="level-select">
+              <option value="1">Level I (1 - 9) -> Sum 15</option>
+              <option value="2">Level II (2 - 10) -> Sum 18</option>
+              <option value="3">Level III (10 - 18) -> Sum 42</option>
+            </select>
+          </div>
+          <div class="input-node">
+            <label>Difficulty Vector</label>
+            <select id="difficulty-select">
+              <option value="easy">Easy (3 Clues)</option>
+              <option value="medium" selected>Medium (1 Clue)</option>
+              <option value="hard">Hard (Blank Grid)</option>
+              <option value="pro">Pro (Time Attack)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="stats-panel">
+          <h3>📊 TELEMETRY DATA</h3>
+          <div class="stat-row">
+            <span>Net Score:</span>
+            <strong id="score-val" class="neon-text-gold">0000</strong>
+          </div>
+          <div class="stat-row">
+            <span>Best Record:</span> <strong id="best-time-val">--:--</strong>
+          </div>
+          <div class="stat-row">
+            <span>Target Sum:</span>
+            <strong id="target-sum-val" class="neon-text-primary">15</strong>
+          </div>
+        </div>
+
+        <div class="action-system">
+          <button id="start-btn" class="btn btn-primary">
+            INITIALIZE MATRIX
+          </button>
+        </div>
+      </aside>
+
+      <main class="workspace-area">
+        <header class="workspace-header glass-card">
+          <div class="chrono-box">
+            <span class="label">CHRONO TIMER</span>
+            <span id="timer-val" class="neon-text-secondary">00:00</span>
+          </div>
+          <div class="header-actions">
+            <button id="pause-btn" class="btn-sm" disabled>⏸ PAUSE</button>
+            <button id="hint-btn" class="btn-sm" disabled>💡 HINT</button>
+          </div>
+        </header>
+
+        <div class="grid-viewport">
+          <div id="magic-grid" class="matrix-grid"></div>
+
+          <div id="pause-overlay" class="grid-overlay">
+            <h2 class="neon-text-primary">MATRIX PAUSED</h2>
+            <button id="resume-btn" class="btn btn-primary">
+              RESUME SYSTEM
+            </button>
+          </div>
+
+          <div id="victory-overlay" class="grid-overlay">
+            <h2 class="neon-text-gold pulse-anim">MATRIX BALANCED</h2>
+            <p>All rows, columns, and diagonals reached perfect symmetry.</p>
+            <button id="next-level-btn" class="btn btn-primary">
+              LOAD NEXT NODE
+            </button>
+          </div>
+        </div>
+
+        <footer class="workspace-footer glass-card">
+          <span id="status-message"
+            >System offline. Initialize core matrix to begin.</span
+          >
+          <button id="wipe-data-btn" class="btn-danger-sm">WIPE DATA</button>
+        </footer>
+      </main>
+    </div>
+    <script>
+      /**
+       * Quantum Magic Square Core Puzzle Engine Architecture
+       * Matrix Transformations, Logic Validations, and Local Telemetry Persistence layers
+       */
+
+      // Immutable Level Database Mapping Solutions Sets Matrices
+      const LEVEL_DATABASE = {
+        1: {
+          targetSum: 15,
+          range: [1, 9],
+          solution: [
+            [8, 1, 6],
+            [3, 5, 7],
+            [4, 9, 2],
+          ],
+        },
+        2: {
+          targetSum: 18,
+          range: [2, 10],
+          solution: [
+            [9, 2, 7],
+            [4, 6, 8],
+            [5, 10, 3],
+          ],
+        },
+        3: {
+          targetSum: 42,
+          range: [10, 18],
+          solution: [
+            [17, 10, 15],
+            [12, 14, 16],
+            [13, 18, 11],
+          ],
+        },
+      };
+
+      class MagicSquareEngine {
+        constructor() {
+          this.gridContainer = document.getElementById("magic-grid");
+
+          // Configuration Engine States Initialization
+          this.level = 1;
+          this.difficulty = "medium";
+          this.score = 1000;
+          this.timer = 0;
+          this.isPlaying = false;
+          this.isPaused = false;
+
+          this.matrix = Array.from({ length: 3 }, () => Array(3).fill(0));
+          this.clueMask = Array.from({ length: 3 }, () => Array(3).fill(false));
+
+          this.timerInterval = null;
+          this.bestRecord = localStorage.getItem("ms_best_record") || Infinity;
+
+          this.initDOM();
+          this.syncTelemetryStatsDisplays();
+        }
+
+        initDOM() {
+          document
+            .getElementById("start-btn")
+            .addEventListener("click", () =>
+              this.initializeActiveMatrixContainer(),
+            );
+          document
+            .getElementById("pause-btn")
+            .addEventListener("click", () => this.toggleSystemPauseState(true));
+          document
+            .getElementById("resume-btn")
+            .addEventListener("click", () =>
+              this.toggleSystemPauseState(false),
+            );
+          document
+            .getElementById("hint-btn")
+            .addEventListener("click", () => this.deployStructuralHintNode());
+          document
+            .getElementById("next-level-btn")
+            .addEventListener("click", () => this.advanceLevelSequence());
+          document
+            .getElementById("wipe-data-btn")
+            .addEventListener("click", () => this.wipeLocalPersistenceCache());
+
+          document
+            .getElementById("level-select")
+            .addEventListener(
+              "change",
+              (e) => (this.level = parseInt(e.target.value)),
+            );
+          document
+            .getElementById("difficulty-select")
+            .addEventListener(
+              "change",
+              (e) => (this.difficulty = e.target.value),
+            );
+        }
+
+        initializeActiveMatrixContainer() {
+          this.isPlaying = true;
+          this.isPaused = false;
+          this.score = 1000;
+
+          const config = LEVEL_DATABASE[this.level];
+          document.getElementById("target-sum-val").innerText =
+            config.targetSum;
+
+          // Apply dynamic conditional time constraints configurations for Pro modes parameters mapping rules
+          this.timer = this.difficulty === "pro" ? 45 : 0;
+
+          document.getElementById("victory-overlay").classList.remove("active");
+          document.getElementById("pause-overlay").classList.remove("active");
+
+          // Enabled control interface components buttons links state values
+          document.getElementById("pause-btn").disabled = false;
+          document.getElementById("hint-btn").disabled = false;
+
+          this.generateMaskedDifficultyMatrix();
+          this.renderViewportHTMLGrid();
+          this.resetChronoTimerThread();
+          this.updateSystemStatusMessage(
+            "Matrix diagnostics complete. Input channels open.",
+          );
+          this.syncTelemetryStatsDisplays();
+        }
+
+        generateMaskedDifficultyMatrix() {
+          this.matrix = Array.from({ length: 3 }, () => Array(3).fill(0));
+          this.clueMask = Array.from({ length: 3 }, () => Array(3).fill(false));
+
+          const config = LEVEL_DATABASE[this.level];
+          let cluesCount =
+            this.difficulty === "easy"
+              ? 3
+              : this.difficulty === "medium"
+                ? 1
+                : 0;
+
+          // Pre-fill randomized coordinate sets mappings derived from core datasets variables values arrays
+          let pool = [];
+          for (let r = 0; r < 3; r++) {
+            for (let c = 0; c < 3; c++) pool.push({ r, c });
+          }
+
+          // Shuffle arrays sequence map parameters
+          pool.sort(() => Math.random() - 0.5);
+
+          for (let i = 0; i < cluesCount; i++) {
+            const { r, c } = pool[i];
+            this.matrix[r][c] = config.solution[r][c];
+            this.clueMask[r][c] = true;
+          }
+        }
+
+        renderViewportHTMLGrid() {
+          this.gridContainer.innerHTML = "";
+          const config = LEVEL_DATABASE[this.level];
+
+          for (let r = 0; r < 3; r++) {
+            for (let c = 0; c < 3; c++) {
+              const input = document.createElement("input");
+              input.type = "text";
+              input.inputMode = "numeric";
+              input.className = "matrix-cell";
+              input.setAttribute("data-coord", `${r},${c}`);
+
+              if (this.clueMask[r][c]) {
+                input.value = this.matrix[r][c];
+                input.classList.add("clue");
+                input.readOnly = true;
+              } else {
+                input.value = this.matrix[r][c] === 0 ? "" : this.matrix[r][c];
+                // Attach dynamic input intercept validation logic loops monitoring hooks
+                input.addEventListener("change", (e) =>
+                  this.handleCellInputEvent(r, c, e.target),
+                );
+              }
+
+              this.gridContainer.appendChild(input);
+            }
+          }
+        }
+
+        handleCellInputEvent(r, c, element) {
+          if (!this.isPlaying || this.isPaused) return;
+
+          const val = parseInt(element.value.trim());
+          const config = LEVEL_DATABASE[this.level];
+
+          // Sanitize input values against strict dynamic range matrix rules constraints configuration filters
+          if (isNaN(val) || val < config.range[0] || val > config.range[1]) {
+            this.triggerVisualFeedbackAnimation(element, "error-shake");
+            element.value = "";
+            this.matrix[r][r] = 0;
+            return;
+          }
+
+          // Validate unique occurrences criteria check parameters within current working states bounds mapping layout sets
+          let duplicate = false;
+          for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+              if ((i !== r || j !== c) && this.matrix[i][j] === val)
+                duplicate = true;
+            }
+          }
+
+          if (duplicate) {
+            this.updateSystemStatusMessage(
+              "Exception: Duplicate token values collision detected inside active matrix.",
+            );
+            this.triggerVisualFeedbackAnimation(element, "error-shake");
+            element.value = "";
+            this.matrix[r][c] = 0;
+            this.score = Math.max(0, this.score - 50);
+            this.syncTelemetryStatsDisplays();
+            return;
+          }
+
+          // Commit input verification changes out to state object variables elements
+          this.matrix[r][c] = val;
+          this.triggerVisualFeedbackAnimation(element, "success-pulse");
+
+          this.runRealtimeMatrixValidation();
+        }
+
+        runRealtimeMatrixValidation() {
+          const config = LEVEL_DATABASE[this.level];
+          const target = config.targetSum;
+
+          // Check if matrix array layers are fully populated completely
+          for (let r = 0; r < 3; r++) {
+            for (let c = 0; c < 3; c++) {
+              if (this.matrix[r][c] === 0) return; // Exit logic loop checking paths early if empty sets remain
+            }
+          }
+
+          // Evaluate all matrix dimension components balance properties constraints matches sets
+          let valid = true;
+
+          // 1. Check Row structural blocks lines
+          for (let r = 0; r < 3; r++) {
+            if (this.matrix[r].reduce((a, b) => a + b, 0) !== target)
+              valid = false;
+          }
+
+          // 2. Check Column directional channels
+          for (let c = 0; c < 3; c++) {
+            let colSum =
+              this.matrix[0][c] + this.matrix[1][c] + this.matrix[2][c];
+            if (colSum !== target) valid = false;
+          }
+
+          // 3. Check Cross Diagonal coordinates branches intersection chains rules
+          let diag1 = this.matrix[0][0] + this.matrix[1][1] + this.matrix[2][2];
+          let diag2 = this.matrix[0][2] + this.matrix[1][1] + this.matrix[2][0];
+
+          if (diag1 !== target || diag2 !== target) valid = false;
+
+          if (valid) {
+            this.triggerVictoryResolutionState();
+          } else {
+            this.updateSystemStatusMessage(
+              "Asymmetry Warning: Matrix values complete but total values out of balance.",
+            );
+            this.score = Math.max(0, this.score - 100);
+            this.syncTelemetryStatsDisplays();
+          }
+        }
+
+        triggerVictoryResolutionState() {
+          this.isPlaying = false;
+          this.clearIntervalThread();
+
+          document.getElementById("victory-overlay").classList.add("active");
+          this.updateSystemStatusMessage(
+            "System Solved: Matrix equations perfectly unified.",
+          );
+
+          if (this.timer < this.bestRecord && this.difficulty !== "pro") {
+            this.bestRecord = this.timer;
+            localStorage.setItem("ms_best_record", this.bestRecord);
+          }
+
+          this.syncTelemetryStatsDisplays();
+        }
+
+        triggerDefeatResolutionState() {
+          this.isPlaying = false;
+          this.clearIntervalThread();
+          this.updateSystemStatusMessage(
+            "Critical Error: Chronometer countdown depleted layout container.",
+          );
+          alert("SYSTEM FAILURE: Timer cycle expired.");
+          this.initializeActiveMatrixContainer();
+        }
+
+        deployStructuralHintNode() {
+          if (!this.isPlaying || this.isPaused) return;
+
+          const config = LEVEL_DATABASE[this.level];
+          // Search first blank empty cell slot to automatically insert accurate pre-calculated resolution coordinates tokens
+          for (let r = 0; r < 3; r++) {
+            for (let c = 0; c < 3; c++) {
+              if (this.matrix[r][c] === 0) {
+                this.matrix[r][c] = config.solution[r][c];
+                let cellDOM = this.gridContainer.querySelector(
+                  `[data-coord="${r},${c}"]`,
+                );
+                if (cellDOM) {
+                  cellDOM.value = this.matrix[r][c];
+                  this.triggerVisualFeedbackAnimation(cellDOM, "success-pulse");
+                }
+                this.score = Math.max(0, this.score - 200);
+                this.syncTelemetryStatsDisplays();
+                this.runRealtimeMatrixValidation();
+                return;
+              }
+            }
+          }
+        }
+
+        toggleSystemPauseState(pauseState) {
+          if (!this.isPlaying) return;
+          this.isPaused = pauseState;
+          document
+            .getElementById("pause-overlay")
+            .classList.toggle("active", this.isPaused);
+        }
+
+        triggerVisualFeedbackAnimation(element, className) {
+          element.classList.add(className);
+          setTimeout(() => element.classList.remove(className), 400);
+        }
+
+        resetChronoTimerThread() {
+          this.clearIntervalThread();
+          this.timerInterval = setInterval(() => {
+            if (this.isPlaying && !this.isPaused) {
+              if (this.difficulty === "pro") {
+                this.timer--;
+                this.score = Math.max(0, this.score - 5);
+                if (this.timer <= 0) this.triggerDefeatResolutionState();
+              } else {
+                this.timer++;
+                if (this.timer % 2 === 0)
+                  this.score = Math.max(0, this.score - 1);
+              }
+              this.renderTimerStringDisplay();
+            }
+          }, 1000);
+          this.renderTimerStringDisplay();
+        }
+
+        renderTimerStringDisplay() {
+          let m = Math.floor(Math.abs(this.timer) / 60)
+            .toString()
+            .padStart(2, "0");
+          let s = (Math.abs(this.timer) % 60).toString().padStart(2, "0");
+          document.getElementById("timer-val").innerText = `${m}:${s}`;
+        }
+
+        clearIntervalThread() {
+          clearInterval(this.timerInterval);
+          this.timerInterval = null;
+        }
+
+        syncTelemetryStatsDisplays() {
+          document.getElementById("score-val").innerText = this.score
+            .toString()
+            .padStart(4, "0");
+          if (this.bestRecord !== Infinity) {
+            let bm = Math.floor(this.bestRecord / 60)
+              .toString()
+              .padStart(2, "0");
+            let bs = (this.bestRecord % 60).toString().padStart(2, "0");
+            document.getElementById("best-time-val").innerText = `${bm}:${bs}`;
+          } else {
+            document.getElementById("best-time-val").innerText = "--:--";
+          }
+        }
+
+        updateSystemStatusMessage(msg) {
+          document.getElementById("status-message").innerText = `[SYS] ${msg}`;
+        }
+
+        advanceLevelSequence() {
+          this.level = this.level < 3 ? this.level + 1 : 1;
+          document.getElementById("level-select").value = this.level;
+          this.initializeActiveMatrixContainer();
+        }
+
+        wipeLocalPersistenceCache() {
+          localStorage.removeItem("ms_best_record");
+          this.bestRecord = Infinity;
+          this.isPlaying = false;
+          this.clearIntervalThread();
+          this.matrix = Array.from({ length: 3 }, () => Array(3).fill(0));
+          this.gridContainer.innerHTML = "";
+          document.getElementById("pause-btn").disabled = true;
+          document.getElementById("hint-btn").disabled = true;
+          this.syncTelemetryStatsDisplays();
+          this.updateSystemStatusMessage(
+            "Local storage cache purged. Standby.",
+          );
+        }
+      }
+
+      // Global Thread Initialization Execution Engine Context Setup
+      document.addEventListener("DOMContentLoaded", () => {
+        new MagicSquareEngine();
+      });
+    </script>
+  </body>
+</html>

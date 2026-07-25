@@ -13,6 +13,8 @@
         --card-dark: #1a2230;
         --hover-dark: #223047;
         --shadow-dark: #2a3a55;
+        --primary-blue: #2563eb;
+        --primary-blue-hover: #1d4ed8;
       }
 
       * {
@@ -37,25 +39,179 @@
         width: 100%;
       }
 
+      /* حاوية الفيديو المخصصة */
       .video-wrapper {
+        position: relative;
         text-align: center;
+        background: #000;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
       }
 
       video {
         width: 100%;
-        border-radius: 10px;
-        box-shadow: 0 0 10px var(--shadow-dark);
+        display: block;
+        cursor: pointer;
       }
 
-      video:hover {
-        transition: 0.3s all;
-        box-shadow: 0 0 10px var(--hover-dark);
+      /* شريط التحكم الفاخر الجديد */
+      .custom-controls {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(to top, rgba(15, 22, 33, 0.95), rgba(15, 22, 33, 0.7), transparent);
+        padding: 20px 15px 10px 15px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        z-index: 10;
       }
 
-      video:fullscreen {
-        border-radius: 0;
+      .video-wrapper:hover .custom-controls,
+      .video-wrapper:focus-within .custom-controls {
+        opacity: 1;
       }
 
+      /* شريط التقدم الفاخر */
+      .timeline-container {
+        position: relative;
+        height: 6px;
+        background: rgba(255, 255, 255, 0.2);
+        cursor: pointer;
+        border-radius: 4px;
+        margin-bottom: 12px;
+        transition: height 0.1s ease;
+      }
+
+      .timeline-container:hover {
+        height: 8px;
+      }
+
+      .timeline-progress {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        background: var(--primary-blue);
+        border-radius: 4px;
+        width: 0%;
+      }
+
+      .timeline-handle {
+        position: absolute;
+        top: 50%;
+        transform: translate(-50%, -50%) scale(0);
+        width: 14px;
+        height: 14px;
+        background: #fff;
+        border-radius: 50%;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        transition: transform 0.1s ease;
+      }
+
+      .timeline-container:hover .timeline-handle {
+        transform: translate(-50%, -50%) scale(1);
+      }
+
+      .controls-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .controls-left, .controls-right {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .ctrl-btn {
+        background: none;
+        border: none;
+        color: #fff;
+        font-size: 16px;
+        cursor: pointer;
+        transition: color 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .ctrl-btn:hover {
+        color: var(--primary-blue);
+      }
+
+      .time-display {
+        font-size: 13px;
+        font-weight: 600;
+        color: #e0e0e0;
+      }
+
+      .volume-box {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .volume-slider {
+        -webkit-appearance: none;
+        width: 70px;
+        height: 4px;
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 2px;
+        outline: none;
+      }
+
+      .volume-slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 12px;
+        height: 12px;
+        background: #fff;
+        border-radius: 50%;
+        cursor: pointer;
+      }
+
+      /* تأثير الـ Popover الخاص بالقفز الحركي (+5 / -5) على طريقة يوتيوب */
+      .popover-indicator {
+        position: absolute;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(37, 99, 235, 0.3);
+        border: 2px solid var(--primary-blue);
+        backdrop-filter: blur(4px);
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        pointer-events: none;
+        z-index: 15;
+      }
+
+      .popover-indicator.left-side { left: 25%; }
+      .popover-indicator.right-side { left: 75%; }
+
+      .popover-indicator span {
+        font-size: 16px;
+        font-weight: bold;
+        color: #fff;
+      }
+
+      @keyframes popUrgent {
+        0% { transform: translate(-50%, -50%) scale(0.6); opacity: 0; }
+        50% { opacity: 1; }
+        100% { transform: translate(-50%, -50%) scale(1.1); opacity: 0; }
+      }
+
+      .popover-indicator.animate {
+        animation: popUrgent 0.5s ease-out forwards;
+      }
+
+      /* تعديل بقية عناصر واجهة المستخدم */
       .toggle-btn {
         margin: 15px 0;
         padding: 10px 20px;
@@ -87,13 +243,6 @@
         margin: 0;
       }
 
-      .timestamps li {
-        padding: 8px;
-        cursor: pointer;
-        border-bottom: 1px solid var(--shadow-dark);
-        font-weight: 600;
-      }
-
       textarea {
         margin-top: 10px;
         border-radius: 10px;
@@ -122,7 +271,7 @@
       }
 
       #videoNameInput:focus {
-        border-color: #1db954;
+        border-color: var(--primary-blue);
       }
 
       .buttons-group {
@@ -149,9 +298,9 @@
       }
 
       .folder-btn:hover {
-        background: #1db954;
+        background: var(--primary-blue);
         color: #fff;
-        border-color: #1db954;
+        border-color: var(--primary-blue);
       }
 
       .clear-btn {
@@ -203,13 +352,8 @@
 
       .files-dropdown li:hover {
         background: var(--hover-dark);
-        color: #1db954;
+        color: var(--primary-blue);
         padding-right: 22px;
-      }
-
-      .timestamps li.active {
-        background: linear-gradient(90deg, #172f58, #3a4242);
-        color: lightskyblue;
       }
 
       .confetti-piece {
@@ -226,27 +370,42 @@
       }
 
       @keyframes fall {
-        0% {
-          transform: translateY(0) rotate(0deg);
-          opacity: 1;
-        }
-        90% {
-          opacity: 1;
-        }
-        100% {
-          transform: translateY(105vh) rotate(360deg);
-          opacity: 0;
-        }
+        0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+        90% { opacity: 1; }
+        100% { transform: translateY(105vh) rotate(360deg); opacity: 0; }
       }
     </style>
   </head>
   <body>
     <div class="container">
-      <div class="video-wrapper">
-        <video id="video" width="100%" height="700" poster="Dream.png" controls>
+      <div class="video-wrapper" id="videoWrapper">
+        <video id="video" poster="Dream.png">
           <source src="" type="video/mp4" />
           Your browser does not support HTML5 video.
         </video>
+
+        <div id="popLeft" class="popover-indicator left-side"><span>-5s</span></div>
+        <div id="popRight" class="popover-indicator right-side"><span>+5s</span></div>
+
+        <div class="custom-controls" id="customControls">
+          <div class="timeline-container" id="timelineContainer">
+            <div class="timeline-progress" id="timelineProgress"></div>
+            <div class="timeline-handle" id="timelineHandle"></div>
+          </div>
+          <div class="controls-row">
+            <div class="controls-left">
+              <button class="ctrl-btn" id="playBtn">▶</button>
+              <div class="time-display" id="timeDisplay">00:00 / 00:00</div>
+            </div>
+            <div class="controls-right">
+              <div class="volume-box">
+                <button class="ctrl-btn" id="muteBtn">🔊</button>
+                <input type="range" class="volume-slider" id="volumeSlider" min="0" max="1" step="0.05" value="1" />
+              </div>
+              <button class="ctrl-btn" id="fullscreenBtn">⬜</button>
+            </div>
+          </div>
+        </div>
       </div>
 
       <button id="toggleTimestamps" class="toggle-btn">⏱ Show/Hide Timestamps</button>
@@ -278,6 +437,7 @@
 
     <script>
       const video = document.getElementById("video");
+      const videoWrapper = document.getElementById("videoWrapper");
       const timestamps = document.getElementById("timestamps");
       const toggleBtn = document.getElementById("toggleTimestamps");
       const notesBox = document.getElementById("notes");
@@ -293,17 +453,36 @@
       const chooseVideoBtn = document.getElementById("chooseVideoBtn");
       const videoFilePicker = document.getElementById("videoFilePicker");
 
-      let loadedVideoFiles = []; 
-      const timestampItems = timestamps.querySelectorAll("li");
+      // عناصر شريط التحكم الجديد
+      const playBtn = document.getElementById("playBtn");
+      const timeDisplay = document.getElementById("timeDisplay");
+      const muteBtn = document.getElementById("muteBtn");
+      const volumeSlider = document.getElementById("volumeSlider");
+      const fullscreenBtn = document.getElementById("fullscreenBtn");
+      const timelineContainer = document.getElementById("timelineContainer");
+      const timelineProgress = document.getElementById("timelineProgress");
+      const timelineHandle = document.getElementById("timelineHandle");
 
-      // وظيفة تنسيق الوقت الرقمي وتحويله إلى صيغة [MM:SS]
+      const popLeft = document.getElementById("popLeft");
+      const popRight = document.getElementById("popRight");
+
+      let loadedVideoFiles = []; 
+
       function formatTime(seconds) {
+        if (isNaN(seconds)) return "00:00";
         const mins = Math.floor(seconds / 60);
         const secs = Math.floor(seconds % 60);
         return `[${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}] `;
       }
 
-      // دالة إدراج الـ Timestamp في موضع مؤشر الكتابة الحالي (Cursor Position)
+      function formatDisplayTime(secs) {
+        if (isNaN(secs)) return "00:00";
+        const m = Math.floor(secs / 60);
+        const s = Math.floor(secs % 60);
+        return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+      }
+
+      // إدراج التوقيت الحالي في النوتس
       function insertTimestamp() {
         const timestampText = formatTime(video.currentTime);
         const startPos = notesBox.selectionStart;
@@ -311,15 +490,94 @@
         const currentText = notesBox.value;
 
         notesBox.value = currentText.substring(0, startPos) + timestampText + currentText.substring(endPos);
-        
-        // إعادة تركيز المؤشر مباشرة بعد النص المدرج حديثاً لضمان تجربة كتابة سلسة دون انقطاع
         notesBox.selectionStart = notesBox.selectionEnd = startPos + timestampText.length;
         notesBox.focus();
-
-        // تحديث التخزين المحلي فوراً
         localStorage.setItem("myNotes", notesBox.value);
       }
 
+      // تحديث شريط التقدم الزمني المخصص والوقت المكتوب
+      function updateProgress() {
+        if (video.duration) {
+          const percentage = (video.currentTime / video.duration) * 100;
+          timelineProgress.style.width = `${percentage}%`;
+          timelineHandle.style.left = `${percentage}%`;
+          timeDisplay.textContent = `${formatDisplayTime(video.currentTime)} / ${formatDisplayTime(video.duration)}`;
+        }
+      }
+      video.addEventListener("timeupdate", updateProgress);
+      video.addEventListener("timeupdate", () => {
+        localStorage.setItem("lastVideoTime", video.currentTime);
+      });
+
+      // التحكم بالتقديم والتأخير عبر سحب أو النقر على خط الـ Timeline
+      function setTimelinePosition(e) {
+        const rect = timelineContainer.getBoundingClientRect();
+        const pos = (e.clientX - rect.left) / rect.width;
+        video.currentTime = pos * video.duration;
+      }
+
+      let isDraggingTimeline = false;
+      timelineContainer.addEventListener("mousedown", (e) => {
+        isDraggingTimeline = true;
+        setTimelinePosition(e);
+      });
+      document.addEventListener("mousemove", (e) => {
+        if (isDraggingTimeline) setTimelinePosition(e);
+      });
+      document.addEventListener("mouseup", () => {
+        isDraggingTimeline = false;
+      });
+
+      // تشغيل وإيقاف الفيديو مخصص
+      function togglePlay() {
+        if (video.paused) {
+          video.play().catch(err => console.log(err));
+          playBtn.textContent = "⏸";
+        } else {
+          video.pause();
+          playBtn.textContent = "▶";
+        }
+      }
+      playBtn.addEventListener("click", togglePlay);
+      video.addEventListener("click", togglePlay);
+
+      video.addEventListener("play", () => playBtn.textContent = "⏸");
+      video.addEventListener("pause", () => playBtn.textContent = "▶");
+
+      // التحكم في الصوت والميوت
+      volumeSlider.addEventListener("input", (e) => {
+        video.volume = e.target.value;
+        video.muted = (video.volume === 0);
+        muteBtn.textContent = video.muted ? "🔇" : "🔊";
+      });
+
+      muteBtn.addEventListener("click", () => {
+        video.muted = !video.muted;
+        muteBtn.textContent = video.muted ? "🔇" : "🔊";
+        volumeSlider.value = video.muted ? 0 : video.volume;
+      });
+
+      // ملء الشاشة المخصص
+      function toggleFullscreen() {
+        if (!document.fullscreenElement) {
+          videoWrapper.requestFullscreen().catch(err => console.log(err));
+          fullscreenBtn.textContent = "🎵";
+        } else {
+          document.exitFullscreen();
+          fullscreenBtn.textContent = "⬜";
+        }
+      }
+      fullscreenBtn.addEventListener("click", toggleFullscreen);
+
+      // تشغيل تأثير الـ Popover المرئي عند التقديم والتأخير
+      function triggerPopover(isRight) {
+        const el = isRight ? popRight : popLeft;
+        el.classList.remove("animate");
+        void el.offsetWidth; 
+        el.classList.add("animate");
+      }
+
+      // هندسة استدعاء وعرض قائمة الفيديوهات
       function renderFilesList(filesArray) {
         folderFilesList.innerHTML = "";
         const currentFolder = localStorage.getItem("selectedFolderName") || "File";
@@ -330,18 +588,22 @@
           li.title = fileName;
           
           li.addEventListener("click", () => {
-            videoNameInput.value = fileName;
-            localStorage.setItem("videoName", fileName);
-
-            videoSource.src = `../${currentFolder}/${fileName}`;
-            video.src = `../${currentFolder}/${fileName}`;
-            video.load();
-            video.play().catch((err) => console.log("بث الفيديو..."));
-
-            videoNameInput.blur();
+            loadSelectedVideo(fileName, currentFolder);
           });
           folderFilesList.appendChild(li);
         });
+      }
+
+      function loadSelectedVideo(fileName, folderName) {
+        videoNameInput.value = fileName;
+        localStorage.setItem("videoName", fileName);
+        localStorage.setItem("isStandaloneVideo", "false");
+
+        videoSource.src = `../${folderName}/${fileName}`;
+        video.src = `../${folderName}/${fileName}`;
+        video.load();
+        video.play().catch((err) => console.log("بث الفيديو..."));
+        videoNameInput.blur();
       }
 
       viewFolderBtn.addEventListener("click", () => {
@@ -373,18 +635,13 @@
           localStorage.setItem("cachedFolderFiles", JSON.stringify(loadedVideoFiles));
           renderFilesList(loadedVideoFiles);
           folderFilesList.style.display = "block";
-          
-          const firstVideo = loadedVideoFiles[0];
-          videoNameInput.value = firstVideo;
-          localStorage.setItem("videoName", firstVideo);
-          videoSource.src = `../${folderName}/${firstVideo}`;
-          video.src = `../${folderName}/${firstVideo}`;
-          video.load();
+          loadSelectedVideo(loadedVideoFiles[0], folderName);
         } else {
           alert("لم يتم العثور على ملفات mp4 داخل المجلد المحدد!");
         }
       });
 
+      // زر اختيار فيديو منفرد
       chooseVideoBtn.addEventListener("click", () => {
         videoFilePicker.click();
       });
@@ -395,6 +652,7 @@
 
         videoNameInput.value = file.name;
         localStorage.setItem("videoName", file.name);
+        localStorage.setItem("isStandaloneVideo", "true");
 
         const fileURL = URL.createObjectURL(file);
         videoSource.src = fileURL;
@@ -410,7 +668,7 @@
         }
       });
 
-      // استرجاع البيانات ومزامنة مسار الفيديو التلقائي والوقت عند الإقلاع
+      // تهيئة ومزامنة البيانات عند الإقلاع الفوري وإعادة التحميل الذكي
       window.addEventListener("load", () => {
         const cachedFiles = localStorage.getItem("cachedFolderFiles");
         if (cachedFiles) {
@@ -420,6 +678,7 @@
 
         const currentFolder = localStorage.getItem("selectedFolderName") || "File";
         let savedVideoName = localStorage.getItem("videoName") || "";
+        const isStandalone = localStorage.getItem("isStandaloneVideo") === "true";
         
         if (savedVideoName) {
           if (!savedVideoName.toLowerCase().endsWith(".mp4")) {
@@ -427,14 +686,19 @@
           }
           videoNameInput.value = savedVideoName;
           
-          if (!savedVideoName.startsWith("blob:")) {
+          // حل ذكي: إذا كان الملف مختاراً مسبقاً عبر منقي الملفات المنفرد ويوجد نسخة منه في مجلد الكاش، يتم حله فوراً وتلقائياً
+          if (isStandalone && loadedVideoFiles.includes(savedVideoName)) {
+            videoSource.src = `../${currentFolder}/${savedVideoName}`;
+            video.src = `../${currentFolder}/${savedVideoName}`;
+            video.load();
+          } else if (!isStandalone) {
             videoSource.src = `../${currentFolder}/${savedVideoName}`;
             video.src = `../${currentFolder}/${savedVideoName}`;
             video.load();
           }
         }
 
-        // هندسة الاستئناف التلقائي لآخر توقيت تم حفظه في الجلسة السابقة
+        // استعادة نقطة التوقف الزمنية الأخيرة بدقة
         const savedTime = localStorage.getItem("lastVideoTime");
         if (savedTime && savedVideoName) {
           const setSavedTime = () => {
@@ -458,6 +722,7 @@
           let videoName = videoNameInput.value.trim();
           if (videoName) {
             localStorage.setItem("videoName", videoName);
+            localStorage.setItem("isStandaloneVideo", "false");
 
             if (!videoName.toLowerCase().endsWith(".mp4")) {
               videoName += ".mp4";
@@ -500,36 +765,13 @@
         localStorage.setItem("myNotes", notesBox.value);
       });
 
-      function updateActiveTimestamp() {
-        const currentTime = video.currentTime;
-        let activeFound = false;
-        timestampItems.forEach((item) => {
-          const time = parseFloat(item.getAttribute("data-time"));
-          const nextItem = item.nextElementSibling;
-          let nextTime = nextItem ? parseFloat(nextItem.getAttribute("data-time")) : Infinity;
-          if (!activeFound && currentTime >= time && currentTime < nextTime) {
-            item.classList.add("active");
-            activeFound = true;
-          } else {
-            item.classList.remove("active");
-          }
-        });
-      }
-      video.addEventListener("timeupdate", updateActiveTimestamp);
-      
-      // حفظ التوقيت الحالي بشكل مستمر في الـ LocalStorage لمزامنة جلسة المذاكرة
-      video.addEventListener("timeupdate", () => {
-        localStorage.setItem("lastVideoTime", video.currentTime);
-      });
-
       video.addEventListener("click", () => { video.blur(); });
       toggleBtn.addEventListener("click", () => {
         timestamps.style.display = timestamps.style.display === "none" ? "block" : "none";
       });
 
-      // معالج الاختصارات المركزي الشامل
+      // معالج الاختصارات المركزي الشامل والمحدث
       document.addEventListener("keydown", (e) => {
-        // فحص اختصار التوقيت Alt + T بشكل معزول أولاً ليعمل حتى داخل الـ Inputs والـ Textarea دون مشاكل
         if (e.altKey && (e.key === "t" || e.key === "T" || e.key === "ف")) {
           e.preventDefault();
           insertTimestamp();
@@ -547,14 +789,42 @@
               triggerConfettiAnimation(); 
             }
             break;
-          case "ArrowRight": e.preventDefault(); video.currentTime += 5; break;
-          case "ArrowLeft": e.preventDefault(); video.currentTime -= 5; break;
-          case "ArrowUp": e.preventDefault(); video.volume = Math.min(video.volume + 0.05, 1); break;
-          case "ArrowDown": e.preventDefault(); video.volume = Math.max(video.volume - 0.05, 0); break;
-          case " ": e.preventDefault(); if (video.paused) video.play(); else video.pause(); break;
-          case "f": case "F": case "ب": e.preventDefault(); if (!document.fullscreenElement) video.requestFullscreen(); else document.exitFullscreen(); break;
-          case ">": case ".": e.preventDefault(); if (video.playbackRate < 2.5) video.playbackRate += 0.25; break;
-          case "<": case ",": e.preventDefault(); if (video.playbackRate > 0.25) video.playbackRate -= 0.25; break;
+          case "ArrowRight": 
+            e.preventDefault(); 
+            video.currentTime += 5; 
+            triggerPopover(true);
+            break;
+          case "ArrowLeft": 
+            e.preventDefault(); 
+            video.currentTime -= 5; 
+            triggerPopover(false);
+            break;
+          case "ArrowUp": 
+            e.preventDefault(); 
+            video.volume = Math.min(video.volume + 0.05, 1); 
+            volumeSlider.value = video.volume;
+            break;
+          case "ArrowDown": 
+            e.preventDefault(); 
+            video.volume = Math.max(video.volume - 0.05, 0); 
+            volumeSlider.value = video.volume;
+            break;
+          case " ": 
+            e.preventDefault(); 
+            togglePlay();
+            break;
+          case "f": case "F": case "ب": 
+            e.preventDefault(); 
+            toggleFullscreen();
+            break;
+          case ">": case ".": 
+            e.preventDefault(); 
+            if (video.playbackRate < 2.5) video.playbackRate += 0.25; 
+            break;
+          case "<": case ",": 
+            e.preventDefault(); 
+            if (video.playbackRate > 0.25) video.playbackRate -= 0.25; 
+            break;
         }
       });
     </script>

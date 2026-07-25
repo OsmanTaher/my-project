@@ -1,0 +1,884 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quantum Flood - Chromatic Matrix Core</title>
+    <style>
+      :root {
+        --bg-main: #0b1121;
+        --panel-bg: rgba(16, 25, 47, 0.7);
+        --border-color: rgba(0, 240, 255, 0.15);
+        --neon-blue: #00f0ff;
+        --neon-cyan: #00ffff;
+        --neon-pink: #ff007f;
+        --neon-green: #39ff14;
+        --neon-red: #ff3333;
+        --text-dim: #6d85a6;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        user-select: none;
+      }
+
+      body {
+        background-color: var(--bg-main);
+        color: #ffffff;
+        font-family: "Segoe UI", Roboto, sans-serif;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+      }
+
+      .app-layout {
+        display: grid;
+        grid-template-columns: 280px 1fr;
+        gap: 25px;
+        width: 95vw;
+        max-width: 1050px;
+        height: 90vh;
+        max-height: 800px;
+      }
+
+      /* Glassmorphism Sidebar Styling */
+      .glass-card {
+        background: var(--panel-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+      }
+
+      .dashboard-sidebar {
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .sidebar-title {
+        font-size: 0.9rem;
+        letter-spacing: 2px;
+        color: var(--text-dim);
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 8px;
+      }
+
+      .metrics-list {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+
+      .metric-node {
+        background: rgba(0, 0, 0, 0.2);
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.02);
+      }
+      .metric-node span {
+        font-size: 0.75rem;
+        color: var(--text-dim);
+        display: block;
+        margin-bottom: 4px;
+        text-transform: uppercase;
+      }
+      .metric-node strong {
+        font-size: 1.4rem;
+        font-weight: bold;
+        font-family: monospace;
+      }
+
+      select {
+        background: var(--bg-main);
+        border: 1px solid var(--border-color);
+        color: #fff;
+        padding: 6px 10px;
+        border-radius: 6px;
+        width: 100%;
+        outline: none;
+        cursor: pointer;
+      }
+
+      .stats-panel-sub {
+        background: rgba(0, 0, 0, 0.3);
+        padding: 15px;
+        border-radius: 10px;
+        border: 1px solid rgba(0, 240, 255, 0.05);
+      }
+      .stats-panel-sub h3 {
+        font-size: 0.75rem;
+        color: var(--text-dim);
+        margin-bottom: 8px;
+      }
+      .sub-stat {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.85rem;
+        margin-bottom: 6px;
+      }
+
+      .btn-sm-util {
+        width: 100%;
+        background: transparent;
+        color: var(--text-dim);
+        border: 1px solid var(--border-color);
+        padding: 8px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.75rem;
+        transition: all 0.2s;
+      }
+      .btn-sm-util:hover {
+        border-color: var(--neon-blue);
+        color: var(--neon-blue);
+      }
+
+      .audio-toggle-zone {
+        margin-top: auto;
+      }
+
+      /* Main Gameplay Area Workspace */
+      .workspace-area {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .workspace-header {
+        padding: 12px 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .header-box {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .header-box .box-label {
+        font-size: 0.7rem;
+        color: var(--text-dim);
+        letter-spacing: 1px;
+      }
+      .header-box .box-val {
+        font-size: 1.5rem;
+        font-weight: bold;
+        font-family: monospace;
+      }
+
+      /* Core Matrix Processing Grid Viewport */
+      .board-viewport {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        max-width: 440px;
+        margin: 0 auto;
+        background: rgba(5, 9, 19, 0.5);
+        border: 2px solid var(--border-color);
+        border-radius: 14px;
+        padding: 8px;
+        overflow: hidden;
+        box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.8);
+      }
+
+      .flood-grid {
+        display: grid;
+        width: 100%;
+        height: 100%;
+        gap: 2px;
+      }
+
+      /* Color Pixel Cell Blueprint Block elements */
+      .flood-cell {
+        border-radius: 3px;
+        transition:
+          background-color 0.4s cubic-bezier(0.25, 1, 0.5, 1),
+          transform 0.15s;
+      }
+      .flood-cell.expand {
+        transform: scale(1.08);
+      }
+
+      /* Overlays Layer Stack Setup */
+      .grid-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(11, 17, 33, 0.97);
+        backdrop-filter: blur(8px);
+        display: none;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+        z-index: 10;
+        text-align: center;
+        padding: 20px;
+      }
+      .grid-overlay.active {
+        display: flex;
+      }
+
+      /* Bottom Selector Palette Bar Layout */
+      .palette-footer {
+        padding: 15px 25px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .palette-container {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+      }
+
+      /* Dynamic Clickable Palette Key Blocks */
+      .palette-btn {
+        flex: 1;
+        height: 40px;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        cursor: pointer;
+        position: relative;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+      }
+      .palette-btn:hover {
+        transform: translateY(-4px);
+      }
+      .palette-btn:active {
+        transform: translateY(0);
+      }
+
+      .control-actions {
+        display: flex;
+        gap: 10px;
+      }
+      .btn-action {
+        flex: 1;
+        background: transparent;
+        border: 1px solid var(--border-color);
+        color: #fff;
+        padding: 10px;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .btn-action:hover {
+        border-color: var(--neon-blue);
+        color: var(--neon-blue);
+      }
+
+      /* Controller Interface Unified Buttons Framework */
+      .btn {
+        padding: 12px 26px;
+        background: transparent;
+        border-radius: 6px;
+        font-weight: bold;
+        letter-spacing: 1px;
+        cursor: pointer;
+        font-size: 0.95rem;
+        transition: all 0.2s ease;
+      }
+      .btn-neon-blue {
+        border: 2px solid var(--neon-blue);
+        color: #fff;
+        box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
+      }
+      .btn-neon-blue:hover {
+        background: var(--neon-blue);
+        color: var(--bg-main);
+        box-shadow: 0 0 20px var(--neon-blue);
+      }
+      .btn-neon-red {
+        border: 2px solid var(--neon-red);
+        color: #fff;
+      }
+      .btn-neon-red:hover {
+        background: var(--neon-red);
+        box-shadow: 0 0 20px var(--neon-red);
+      }
+
+      /* Particle FX Canvas Elements overlay layers */
+      .particle-fx {
+        position: absolute;
+        pointer-events: none;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        z-index: 5;
+        animation: particleFade 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+      }
+
+      /* Animations Pipelines keyframe configurations */
+      @keyframes particleFade {
+        0% {
+          transform: translate(0, 0) scale(1);
+          opacity: 1;
+        }
+        100% {
+          transform: translate(var(--x), var(--y)) scale(0.2);
+          opacity: 0;
+        }
+      }
+      @keyframes popEffect {
+        0% {
+          transform: scale(0.85);
+          opacity: 0;
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+      @keyframes blink {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.4;
+        }
+      }
+      .blink-anim {
+        animation: blink 1.5s infinite;
+      }
+      .pop-anim {
+        animation: popEffect 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)
+          forwards;
+      }
+
+      /* Responsive Media Overrides layouts layout breakdown mapping rules */
+      @media (max-width: 768px) {
+        .app-layout {
+          grid-template-columns: 1fr;
+          height: auto;
+          max-height: none;
+          padding: 10px;
+        }
+        .dashboard-sidebar {
+          display: none;
+        } /* Hide heavy telemetry block panels on portable viewports */
+        .board-viewport {
+          max-width: 90vw;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-layout">
+      <aside class="dashboard-sidebar glass-card">
+        <h2 class="sidebar-title">📊 QUANTUM METRICS</h2>
+        <div class="metrics-list">
+          <div class="metric-node">
+            <span>Active Mode</span>
+            <select id="mode-select">
+              <option value="classic">CLASSIC FLOOD</option>
+              <option value="time">TIME CHALLENGE</option>
+              <option value="limited">LIMITED MOVES</option>
+              <option value="endless">ENDLESS MATRIX</option>
+            </select>
+          </div>
+          <div class="metric-node">
+            <span>Grid Density</span>
+            <select id="difficulty-select">
+              <option value="easy">Easy (10x10)</option>
+              <option value="medium" selected>Medium (14x14)</option>
+              <option value="hard">Hard (18x18)</option>
+            </select>
+          </div>
+          <div class="metric-node">
+            <span>Net Score</span>
+            <strong id="score-val" class="neon-text-cyan">0000</strong>
+          </div>
+          <div class="metric-node">
+            <span>Best Highscore</span>
+            <strong id="best-score-val">0000</strong>
+          </div>
+        </div>
+
+        <div class="stats-panel-sub">
+          <h3>💾 CORE LOG ARCHIVE</h3>
+          <div class="sub-stat">
+            <span>Grids Cleared:</span> <strong id="stats-cleared">0</strong>
+          </div>
+          <div class="sub-stat">
+            <span>Total Operations:</span> <strong id="stats-moves">0</strong>
+          </div>
+        </div>
+
+        <div class="audio-toggle-zone">
+          <button id="audio-toggle-btn" class="btn-sm-util">
+            🔊 HAPTIC AUDIO ON
+          </button>
+        </div>
+      </aside>
+
+      <main class="workspace-area">
+        <header class="workspace-header glass-card">
+          <div class="header-box">
+            <span class="box-label">OPERATIONS LEFT</span>
+            <span id="moves-left-val" class="box-val">0</span>
+          </div>
+          <div class="header-box">
+            <span class="box-label">CHRONO SYNC</span>
+            <span id="timer-val" class="box-val neon-text-red">00:00</span>
+          </div>
+        </header>
+
+        <div class="board-viewport">
+          <div id="flood-grid-container" class="flood-grid"></div>
+
+          <div id="victory-overlay" class="grid-overlay">
+            <h2 class="neon-text-green pop-anim">MATRIX SATURATED</h2>
+            <p>Chromatic wavelengths locked into absolute uniformity.</p>
+            <button id="next-grid-btn" class="btn btn-neon-blue">
+              INIT NEXT FREQUENCY
+            </button>
+          </div>
+
+          <div id="defeat-overlay" class="grid-overlay">
+            <h2 class="neon-text-red blink-anim">MATRIX ASYMMETRY</h2>
+            <p>
+              Operational constraints breached. Quantum synchronization lost.
+            </p>
+            <button id="retry-btn" class="btn btn-neon-red">
+              REBOOT FLOOD CHAMBER
+            </button>
+          </div>
+        </div>
+
+        <footer class="palette-footer glass-card">
+          <div id="color-palette-bar" class="palette-container"></div>
+          <div class="control-actions">
+            <button id="hint-btn" class="btn-action">
+              💡 DEPLOY FILL HINT
+            </button>
+            <button id="restart-btn" class="btn-action">
+              🔄 FLUSH CORE GRID
+            </button>
+          </div>
+        </footer>
+      </main>
+    </div>
+    <script>
+      /**
+       * Quantum Color Flood Engine Core
+       * Object-Oriented Grid Transformations and Flood Fill Logic Module
+       */
+
+      // Immutable Core System Neon Matrix Colors Pool Encodings Array
+      const COLOR_PALETTE = [
+        { id: 0, hex: "#ff007f", name: "neon-pink" },
+        { id: 1, hex: "#00f0ff", name: "neon-blue" },
+        { id: 2, hex: "#39ff14", name: "neon-green" },
+        { id: 3, hex: "#bd00ff", name: "neon-purple" },
+        { id: 4, hex: "#ff9900", name: "neon-orange" },
+        { id: 5, hex: "#ffff00", name: "neon-yellow" },
+      ];
+
+      class ColorFloodEngine {
+        constructor() {
+          this.gridContainer = document.getElementById("flood-grid-container");
+
+          // Configuration Engine State Initializations
+          this.mode = "classic"; // 'classic', 'time', 'limited', 'endless'
+          this.difficulty = "medium"; // 'easy' (10x10), 'medium' (14x14), 'hard' (18x18)
+          this.gridSize = 14;
+
+          this.matrix = [];
+          this.movesTaken = 0;
+          this.movesAllowed = 25;
+          this.score = 0;
+          this.timer = 0;
+          this.audioActive = true;
+
+          // Statistics System Telemetry Bundles Tracking Maps
+          this.stats = { cleared: 0, totalMoves: 0, bestHighscore: 0 };
+          this.timerInterval = null;
+          this.isPlaying = false;
+
+          this.initDOM();
+          this.loadProfileTelemetryCache();
+          this.initializeFloodSession();
+        }
+
+        initDOM() {
+          document
+            .getElementById("mode-select")
+            .addEventListener("change", (e) => {
+              this.mode = e.target.value;
+              this.initializeFloodSession();
+            });
+          document
+            .getElementById("difficulty-select")
+            .addEventListener("change", (e) => {
+              this.difficulty = e.target.value;
+              this.initializeFloodSession();
+            });
+
+          document
+            .getElementById("next-grid-btn")
+            .addEventListener("click", () => this.advanceSessionSequence());
+          document
+            .getElementById("retry-btn")
+            .addEventListener("click", () => this.initializeFloodSession());
+          document
+            .getElementById("restart-btn")
+            .addEventListener("click", () => this.initializeFloodSession());
+          document
+            .getElementById("hint-btn")
+            .addEventListener("click", () => this.deployAlgorithmicHint());
+
+          document
+            .getElementById("audio-toggle-btn")
+            .addEventListener("click", () => {
+              this.audioActive = !this.audioActive;
+              document.getElementById("audio-toggle-btn").innerText = this
+                .audioActive
+                ? "🔊 HAPTIC AUDIO ON"
+                : "🔇 AUDIO MUTED";
+            });
+
+          this.buildInteractivePaletteKeysUI();
+        }
+
+        buildInteractivePaletteKeysUI() {
+          const paletteBar = document.getElementById("color-palette-bar");
+          paletteBar.innerHTML = "";
+
+          COLOR_PALETTE.forEach((color) => {
+            const btn = document.createElement("button");
+            btn.className = "palette-btn";
+            btn.style.backgroundColor = color.hex;
+            btn.style.boxShadow = `0 0 8px ${color.hex}44`;
+            btn.setAttribute("data-color-id", color.id);
+
+            btn.addEventListener("click", () =>
+              this.handlePaletteSelectionEvent(color.id),
+            );
+            paletteBar.appendChild(btn);
+          });
+        }
+
+        initializeFloodSession() {
+          this.isPlaying = true;
+          this.movesTaken = 0;
+
+          // Setup size parameters scales based on telemetry input keys mappings
+          const sizeMap = { easy: 10, medium: 14, hard: 18 };
+          this.gridSize = sizeMap[this.difficulty] || 14;
+
+          // Balance dynamic computational constraints filters depending on selected configurations
+          this.movesAllowed =
+            Math.floor(this.gridSize * 1.8) +
+            (this.mode === "limited" ? -4 : 0);
+          this.timer = this.mode === "time" ? 45 : 0;
+
+          document.getElementById("victory-overlay").classList.remove("active");
+          document.getElementById("defeat-overlay").classList.remove("active");
+
+          this.generateRandomMatrixArray();
+          this.renderViewportHTMLGrid();
+          this.resetTimerPipelineThread();
+          this.syncTelemetryDashboard();
+          this.saveProfileTelemetryCache();
+        }
+
+        generateRandomMatrixArray() {
+          this.matrix = [];
+          for (let r = 0; r < this.gridSize; r++) {
+            let row = [];
+            for (let c = 0; c < this.gridSize; c++) {
+              // Populate coordinates randomly using ID markers referencing palette pool arrays
+              row.push(Math.floor(Math.random() * COLOR_PALETTE.length));
+            }
+            this.matrix.push(row);
+          }
+        }
+
+        renderViewportHTMLGrid() {
+          this.gridContainer.innerHTML = "";
+          this.gridContainer.style.gridTemplateColumns = `repeat(${this.gridSize}, 1fr)`;
+
+          for (let r = 0; r < this.gridSize; r++) {
+            for (let c = 0; c < this.gridSize; c++) {
+              const cell = document.createElement("div");
+              cell.className = "flood-cell";
+              cell.style.backgroundColor = COLOR_PALETTE[this.matrix[r][c]].hex;
+              cell.setAttribute("data-pos", `${r},${c}`);
+              this.gridContainer.appendChild(cell);
+            }
+          }
+        }
+
+        handlePaletteSelectionEvent(selectedColorId) {
+          if (!this.isPlaying) return;
+
+          const originColorId = this.matrix[0][0];
+          if (selectedColorId === originColorId) return; // Disallow redundant self selections execution paths
+
+          this.movesTaken++;
+          this.stats.totalMoves++;
+
+          // Execute structural loop-based non-recursive Flood Fill processing routine
+          this.executeFloodFillAlgorithm(selectedColorId, originColorId);
+
+          this.triggerVisualExpansionEffects(selectedColorId);
+          this.triggerHapticMockAudioNode();
+
+          this.syncTelemetryDashboard();
+          this.checkSessionResolutionPipelines();
+        }
+
+        executeFloodFillAlgorithm(newColorId, oldColorId) {
+          // Queue implementation avoids deep tree execution limits exceptions on large grids
+          let queue = [[0, 0]];
+          this.matrix[0][0] = newColorId;
+
+          let visited = Array.from({ length: this.gridSize }, () =>
+            Array(this.gridSize).fill(false),
+          );
+          visited[0][0] = true;
+
+          while (queue.length > 0) {
+            let [r, c] = queue.shift();
+
+            const adjacentTargets = [
+              [r - 1, c],
+              [r + 1, c],
+              [r, c - 1],
+              [r, c + 1],
+            ];
+            adjacentTargets.forEach(([tr, tc]) => {
+              if (
+                tr >= 0 &&
+                tr < this.gridSize &&
+                tc >= 0 &&
+                tc < this.gridSize
+              ) {
+                if (!visited[tr][tc] && this.matrix[tr][tc] === oldColorId) {
+                  visited[tr][tc] = true;
+                  this.matrix[tr][tc] = newColorId;
+                  queue.push([tr, tc]);
+                }
+              }
+            });
+          }
+        }
+
+        triggerVisualExpansionEffects(targetColorId) {
+          // Linearly sweep DOM layers adjusting background tokens values
+          for (let r = 0; r < this.gridSize; r++) {
+            for (let c = 0; c < this.gridSize; c++) {
+              let cellDOM = this.gridContainer.querySelector(
+                `[data-pos="${r},${c}"]`,
+              );
+              if (cellDOM) {
+                cellDOM.style.backgroundColor =
+                  COLOR_PALETTE[this.matrix[r][c]].hex;
+              }
+            }
+          }
+
+          // Apply scale transition pop on origin node box elements boundaries frame
+          let originDOM = this.gridContainer.querySelector(`[data-pos="0,0"]`);
+          if (originDOM) {
+            originDOM.classList.add("expand");
+            setTimeout(() => originDOM.classList.remove("expand"), 150);
+          }
+        }
+
+        checkSessionResolutionPipelines() {
+          // Scan for complete matching uniform structure state distribution mapping rules
+          let unifiedTargetId = this.matrix[0][0];
+          let localizedSaturated = true;
+
+          for (let r = 0; r < this.gridSize; r++) {
+            for (let c = 0; c < this.gridSize; c++) {
+              if (this.matrix[r][c] !== unifiedTargetId) {
+                localizedSaturated = false;
+                break;
+              }
+            }
+            if (!localizedSaturated) break;
+          }
+
+          if (localizedSaturated) {
+            this.triggerMatchResolutionWin();
+            return;
+          }
+
+          // Validate constraint failure criteria check parameters loops
+          if (this.mode !== "endless" && this.movesTaken >= this.movesAllowed) {
+            this.triggerMatchResolutionDefeat();
+          }
+        }
+
+        triggerMatchResolutionWin() {
+          this.isPlaying = false;
+          clearInterval(this.timerInterval);
+
+          this.stats.cleared++;
+
+          let scoreReward = Math.max(
+            200,
+            (this.movesAllowed - this.movesTaken) * 120,
+          );
+          if (this.mode === "time") scoreReward += this.timer * 30;
+          this.score += scoreReward;
+
+          if (this.score > this.stats.bestHighscore)
+            this.stats.bestHighscore = this.score;
+
+          // Deploy spark particles arrays layers across active layout framework container coordinates
+          this.spawnBurstParticlesCore(COLOR_PALETTE[this.matrix[0][0]].hex);
+
+          document.getElementById("victory-overlay").classList.add("active");
+          this.saveProfileTelemetryCache();
+          this.syncTelemetryDashboard();
+        }
+
+        triggerMatchResolutionDefeat() {
+          this.isPlaying = false;
+          clearInterval(this.timerInterval);
+          document.getElementById("defeat-overlay").classList.add("active");
+        }
+
+        deployAlgorithmicHint() {
+          if (!this.isPlaying) return;
+          // Search first alternative matching neighbor block to suggest path operations parameters
+          let originId = this.matrix[0][0];
+          for (let r = 0; r < this.gridSize; r++) {
+            for (let c = 0; c < this.gridSize; c++) {
+              if (this.matrix[r][c] !== originId) {
+                let cellDOM = this.gridContainer.querySelector(
+                  `[data-pos="${r},${c}"]`,
+                );
+                if (cellDOM) {
+                  cellDOM.style.transform = "scale(0.8)";
+                  setTimeout(() => (cellDOM.style.transform = "scale(1)"), 300);
+                }
+                this.score = Math.max(0, this.score - 50);
+                this.syncTelemetryDashboard();
+                return;
+              }
+            }
+          }
+        }
+
+        spawnBurstParticlesCore(colorHex) {
+          const viewport = this.gridContainer.parentElement;
+          for (let i = 0; i < 20; i++) {
+            const p = document.createElement("div");
+            p.className = "particle-fx";
+            p.style.backgroundColor = colorHex;
+            p.style.left = "50%";
+            p.style.top = "50%";
+
+            let angle = Math.random() * Math.PI * 2;
+            let dist = 50 + Math.random() * 120;
+            p.style.setProperty("--x", `${Math.cos(angle) * dist}px`);
+            p.style.setProperty("--y", `${Math.sin(angle) * dist}px`);
+
+            viewport.appendChild(p);
+            setTimeout(() => p.remove(), 600);
+          }
+        }
+
+        triggerHapticMockAudioNode() {
+          if (!this.audioActive) return;
+          // Mock non-resource visual feedback wave simulation loops patterns log entries triggers
+          console.log(
+            "%c⚡ [Haptic Audio System Feedback Click]",
+            `color: ${COLOR_PALETTE[this.matrix[0][0]].hex}`,
+          );
+        }
+
+        resetTimerPipelineThread() {
+          clearInterval(this.timerInterval);
+          if (this.mode === "time") {
+            this.timerInterval = setInterval(() => {
+              if (this.isPlaying) {
+                this.timer--;
+                this.renderTimerStringDisplay(this.timer);
+                if (this.timer <= 0) this.triggerMatchResolutionDefeat();
+              }
+            }, 1000);
+          } else {
+            this.timer = 0;
+            this.timerInterval = setInterval(() => {
+              if (this.isPlaying) {
+                this.timer++;
+                this.renderTimerStringDisplay(this.timer);
+              }
+            }, 1000);
+          }
+          this.renderTimerStringDisplay(this.timer);
+        }
+
+        renderTimerStringDisplay(secondsCount) {
+          let m = Math.floor(Math.abs(secondsCount) / 60)
+            .toString()
+            .padStart(2, "0");
+          let s = (Math.abs(secondsCount) % 60).toString().padStart(2, "0");
+          document.getElementById("timer-val").innerText = `${m}:${s}`;
+        }
+
+        syncTelemetryDashboard() {
+          document.getElementById("score-val").innerText = this.score
+            .toString()
+            .padStart(4, "0");
+          document.getElementById("best-score-val").innerText =
+            this.stats.bestHighscore.toString().padStart(4, "0");
+          document.getElementById("stats-cleared").innerText =
+            this.stats.cleared;
+          document.getElementById("stats-moves").innerText =
+            this.stats.totalMoves;
+
+          let rem =
+            this.mode === "endless" ? "∞" : this.movesAllowed - this.movesTaken;
+          document.getElementById("moves-left-val").innerText = rem;
+        }
+
+        advanceSessionSequence() {
+          this.initializeFloodSession();
+        }
+
+        // --- Profile Telemetry Cache Storage Layer ---
+        saveProfileTelemetryCache() {
+          localStorage.setItem(
+            "quantum_flood_save",
+            JSON.stringify({
+              score: this.score,
+              stats: this.stats,
+            }),
+          );
+        }
+
+        loadProfileTelemetryCache() {
+          let raw = localStorage.getItem("quantum_flood_save");
+          if (raw) {
+            let data = JSON.parse(raw);
+            this.score = data.score || 0;
+            this.stats = data.stats || this.stats;
+          }
+        }
+      }
+
+      // Global Thread Initialization Execution core trigger context setup block
+      document.addEventListener("DOMContentLoaded", () => {
+        new ColorFloodEngine();
+      });
+    </script>
+  </body>
+</html>

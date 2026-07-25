@@ -35,8 +35,8 @@
               brand: {
                 light: "#f4fbf7",
                 cream: "#fdfbf7",
-                accent: "#dfb76c", 
-                emerald: "#0d5c46", 
+                accent: "#dfb76c",
+                emerald: "#0d5c46",
                 mint: "#10b981",
                 dark: "#062c22",
               },
@@ -59,7 +59,7 @@
       .quran-border {
         border: 8px double #dfb76c;
       }
-      
+
       ::-webkit-scrollbar {
         width: 8px;
       }
@@ -73,7 +73,7 @@
       ::-webkit-scrollbar-thumb:hover {
         background: #062c22;
       }
-      
+
       html {
         scroll-behavior: smooth;
       }
@@ -117,7 +117,6 @@
           </div>
         </div>
 
-        <!-- Quick Stats & Actions -->
         <div class="flex items-center gap-3">
           <div
             class="bg-brand-dark/50 px-4 py-1.5 rounded-full border border-emerald-700/50 flex items-center gap-2"
@@ -128,13 +127,6 @@
             <i class="fa-solid fa-fire text-amber-500 animate-pulse"></i>
             <span class="text-xs text-emerald-100">أيام متتالية</span>
           </div>
-          <button
-            onclick="openResetModal()"
-            class="bg-red-700 hover:bg-red-800 text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1.5"
-          >
-            <i class="fa-solid fa-rotate-left"></i>
-            تهيئة <span class="hidden sm:block">الحساب</span>
-          </button>
         </div>
       </div>
 
@@ -509,13 +501,20 @@
               class="font-bold text-brand-emerald text-lg flex items-center gap-2"
             >
               <i class="fa-solid fa-list-check"></i>
-              خط زمني لإنجازاتك الأخيرة
+              خط زمني
             </h3>
             <button
               onclick="clearHistoryLogs()"
               class="text-slate-400 hover:text-red-600 transition text-xs flex items-center gap-1"
             >
               <i class="fa-solid fa-trash-can"></i> مسح السجل
+            </button>
+            <button
+              onclick="openResetModal()"
+              class="bg-red-700 hover:bg-red-800 text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1.5"
+            >
+              <i class="fa-solid fa-rotate-left"></i>
+              تهيئة <span class="hidden sm:block">الحساب</span>
             </button>
           </div>
 
@@ -677,10 +676,7 @@
         <span class="sm:hidden">&lt;/&gt;</span>
       </div>
     </footer>
-
-    <!-- JS Logic and Data -->
     <script>
-      
       const SuraHs = [
         { id: 1, name: "الفاتحة", start: 1, end: 1, type: "مكية" },
         { id: 2, name: "البقرة", start: 2, end: 49, type: "مدنية" },
@@ -803,7 +799,6 @@
         if (s.end > 604) s.end = 604;
       });
 
-      
       const JuzsData = Array.from({ length: 30 }, (_, i) => {
         const index = i + 1;
         let start = 1 + (index - 1) * 20;
@@ -829,8 +824,7 @@
         };
       });
 
-      
-      let pageStates = {}; 
+      let pageStates = {};
       let streakCount = 0;
       let lastActivityDate = "";
       let historyLogs = [];
@@ -838,7 +832,6 @@
       let currentStatusFilter = "all";
       let activePageForStatusChange = null;
 
-      
       window.onload = function () {
         loadFromLocalStorage();
         renderDashboard();
@@ -847,11 +840,9 @@
         renderHistoryLogs();
         updateDailyTarget();
 
-        
         updateScrollProgress();
       };
 
-      
       function loadFromLocalStorage() {
         const savedPages = localStorage.getItem("quran_tracker_pages");
         const savedStreak = localStorage.getItem("quran_tracker_streak");
@@ -864,7 +855,7 @@
           for (let p = 1; p <= 604; p++) {
             pageStates[p] = 0;
           }
-          
+
           pageStates[1] = 3;
           pageStates[2] = 1;
           pageStates[3] = 1;
@@ -888,7 +879,6 @@
         checkStreakBreak();
       }
 
-      
       function saveToLocalStorage() {
         localStorage.setItem("quran_tracker_pages", JSON.stringify(pageStates));
         localStorage.setItem("quran_tracker_streak", streakCount.toString());
@@ -896,7 +886,6 @@
         localStorage.setItem("quran_tracker_logs", JSON.stringify(historyLogs));
       }
 
-      
       function checkStreakBreak() {
         if (lastActivityDate) {
           const today = new Date();
@@ -914,7 +903,6 @@
         }
       }
 
-      
       function scrollToTop() {
         window.scrollTo({
           top: 0,
@@ -922,7 +910,6 @@
         });
       }
 
-      
       function updateScrollProgress() {
         const winScroll =
           document.body.scrollTop || document.documentElement.scrollTop;
@@ -936,10 +923,8 @@
         }
       }
 
-      
       window.addEventListener("scroll", updateScrollProgress);
 
-      
       function updateStreak() {
         const todayStr = new Date().toDateString();
         if (lastActivityDate !== todayStr) {
@@ -968,7 +953,6 @@
         }
       }
 
-      
       function addHistoryLog(text) {
         const newLog = {
           id: Date.now(),
@@ -986,7 +970,6 @@
         renderHistoryLogs();
       }
 
-      
       function clearHistoryLogs() {
         openCustomConfirm(
           "مسح سجل النشاط",
@@ -1005,7 +988,6 @@
         );
       }
 
-      
       function renderDashboard() {
         let completed = 0;
         let revision = 0;
@@ -1067,7 +1049,6 @@
         }
       }
 
-      
       function updateDailyTarget() {
         let startPage = -1;
         let endPage = -1;
@@ -1125,7 +1106,6 @@
         document.getElementById("btn-target-complete").dataset.end = endPage;
       }
 
-      
       function completeTodayTarget() {
         const btn = document.getElementById("btn-target-complete");
         const start = parseInt(btn.dataset.start);
@@ -1153,7 +1133,6 @@
         }, 300);
       }
 
-      
       function renderSurahsGrid() {
         const container = document.getElementById("surahs-container");
         container.innerHTML = "";

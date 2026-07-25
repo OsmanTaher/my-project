@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المولد المتقدم للبيانات الوهمية</title>
+    <style>
+        /* نظام الألوان والثيم الداكن الاحترافي للمطورين */
+        :root {
+            --bg-main: #0B1121;
+            --bg-card: #131B2E;
+            --accent: #4AE2DC;
+            --accent-hover: #3cd0ca;
+            --text-main: #F8FAFC;
+            --text-muted: #94A3B8;
+            --border: #1E293B;
+            --input-bg: #0B1121;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem 1rem;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 1100px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        @media (min-width: 900px) {
+            .app-container {
+                grid-template-columns: 350px 1fr;
+            }
+        }
+
+        header {
+            text-align: center;
+            grid-column: 1 / -1;
+            margin-bottom: 0.5rem;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.4rem;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* لوحة التحكم الجانبية */
+        .sidebar {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            height: max-content;
+        }
+
+        .section-title {
+            font-size: 0.95rem;
+            color: var(--accent);
+            font-weight: 600;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.5rem;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        input[type="number"] {
+            width: 100%;
+            background-color: var(--input-bg);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 0.6rem;
+            border-radius: 6px;
+            outline: none;
+            font-size: 0.95rem;
+            transition: border-color 0.2s;
+        }
+
+        input[type="number"]:focus {
+            border-color: var(--accent);
+        }
+
+        /* خيارات الحقول (Checkboxes) */
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            color: var(--text-main);
+            cursor: pointer;
+        }
+
+        /* الإعدادات الإحصائية للحقل الرقمي */
+        .statistical-settings {
+            background-color: var(--input-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 0.5rem;
+            display: none; /* تظهر فقط عند اختيار الحقل الرقمي */
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .statistical-settings.show {
+            display: flex;
+        }
+
+        /* الأزرار */
+        .btn-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 1rem;
+        }
+
+        .btn {
+            background-color: var(--input-bg);
+            color: var(--text-main);
+            border: 1px solid var(--border);
+            padding: 0.7rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .btn-primary {
+            background-color: var(--accent);
+            color: var(--bg-main);
+            border: none;
+            font-weight: 600;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-hover);
+            color: var(--bg-main);
+            box-shadow: 0 0 15px rgba(74, 226, 220, 0.2);
+        }
+
+        /* منطقة عرض الـ JSON الناتج */
+        .main-workspace {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            min-height: 550px;
+        }
+
+        .json-container {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        textarea {
+            width: 100%;
+            height: 100%;
+            min-height: 500px;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #E2E8F0;
+            font-family: 'Fira Code', 'Courier New', Courier, monospace;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            resize: none;
+            direction: ltr;
+            text-align: left;
+        }
+
+        /* التنبيه المنبثق (Toast) */
+        .toast {
+            position: fixed;
+            bottom: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--accent);
+            color: var(--bg-main);
+            padding: 0.6rem 1.5rem;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            opacity: 0;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(74, 226, 220, 0.2);
+            z-index: 1000;
+        }
+
+        .toast.show {
+            bottom: 30px;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>المولد المتقدم للبيانات الوهمية (Mock Data)</h1>
+        <p>قم بتوليد مئات السجلات من الهياكل البرمجية محلياً مع دعم كامل للمحاكاة الإحصائية العشوائية.</p>
+    </header>
+
+    <div class="app-container">
+        <div class="sidebar">
+            <div class="control-group">
+                <div class="section-title">إعدادات السجلات</div>
+                <label for="records-count">عدد السجلات المطلوب توليدها:</label>
+                <input type="number" id="records-count" min="1" max="5000" value="100">
+            </div>
+
+            <div class="control-group">
+                <div class="section-title">الحقول المطلوبة (Fields)</div>
+                <div class="checkbox-group">
+                    <label class="checkbox-label"><input type="checkbox" id="field-name" checked> الاسم (Name)</label>
+                    <label class="checkbox-label"><input type="checkbox" id="field-address" checked> العنوان (Address)</label>
+                    <label class="checkbox-label"><input type="checkbox" id="field-phone" checked> الهاتف (Phone)</label>
+                    <label class="checkbox-label"><input type="checkbox" id="field-date" checked> التاريخ (Date)</label>
+                    <label class="checkbox-label"><input type="checkbox" id="field-numeric"> القيمة الرقمية (Numeric Value)</label>
+                </div>
+            </div>
+
+            <div class="statistical-settings" id="stat-settings">
+                <label style="color: var(--accent); font-weight: 600;">محاكاة التوزيع الطبيعي (Gaussian)</label>
+                <div class="control-group">
+                    <label for="stat-mean">المتوسط الحسابي (Mean - μ):</label>
+                    <input type="number" id="stat-mean" value="50" step="any">
+                </div>
+                <div class="control-group">
+                    <label for="stat-stddev">الانحراف المعياري (Std Dev - σ):</label>
+                    <input type="number" id="stat-stddev" value="10" min="0.001" step="any">
+                </div>
+            </div>
+
+            <div class="btn-wrapper">
+                <button class="btn btn-primary" id="btn-generate">توليد البيانات</button>
+                <button class="btn" id="btn-copy">نسخ للذاكرة</button>
+                <button class="btn" id="btn-download">تحميل كملف JSON</button>
+            </div>
+        </div>
+
+        <div class="main-workspace">
+            <div class="json-container">
+                <textarea id="json-output" readonly placeholder="// البيانات المولّدة ستظهر هنا بصيغة JSON..."></textarea>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast">تم النسخ إلى الحافظة بنجاح!</div>
+
+    <script>
+        // قواميس ومصفوفات البيانات الوهمية للمحاكاة
+        const namesPool = ["John Doe", "Jane Smith", "Alex Johnson", "Emily Davis", "Michael Brown", "Sarah Wilson", "David Miller", "Jessica Taylor", "James Anderson", "Megan Thomas", "Robert Martinez", "Linda Garcia", "William Robinson", "Elizabeth Clark", "David Rodriguez"];
+        const citiesPool = ["New York, NY", "Los Angeles, CA", "Chicago, IL", "Houston, TX", "Phoenix, AZ", "Philadelphia, PA", "San Antonio, TX", "San Diego, CA", "Dallas, TX", "San Jose, CA"];
+        const streetsPool = ["Main St", "Oak St", "Pine St", "Maple Dr", "Cedar Ln", "Elm St", "View Rd", "Washington Ave"];
+
+        // ربط عناصر الواجهة بالمتغيرات
+        const numericCheckbox = document.getElementById('field-numeric');
+        const statSettings = document.getElementById('stat-settings');
+        const btnGenerate = document.getElementById('btn-generate');
+        const btnCopy = document.getElementById('btn-copy');
+        const btnDownload = document.getElementById('btn-download');
+        const jsonOutput = document.getElementById('json-output');
+        const toast = document.getElementById('toast');
+
+        // إظهار أو إخفاء الإعدادات الإحصائية بالتزامن مع حالة الـ Checkbox الخاص بها
+        numericCheckbox.addEventListener('change', () => {
+            if (numericCheckbox.checked) {
+                statSettings.classList.add('show');
+            } else {
+                statSettings.classList.remove('show');
+            }
+        });
+
+        /**
+         * خوارزمية Box-Muller Transform لتوليد أرقام تتبع التوزيع الطبيعي
+         */
+        function generateNormalDistribution(mean, stdDev) {
+            let u1 = 0, u2 = 0;
+            // حظر الصفر المطلق لمنع الأخطاء الرياضية داخل دالة اللوغاريتم الطبيعي
+            while (u1 === 0) u1 = Math.random();
+            while (u2 === 0) u2 = Math.random();
+
+            // تطبيق معادلة التحويل الأساسية للحصول على قيمة عشوائية معيارية متناسقة Z0
+            const z0 = Math.sqrt(-2.0 * Math.log(u1)) * Math.cos(2.0 * Math.PI * u2);
+
+            // تمديد القيمة المعيارية بناء على المتوسط والانحراف المعياري للمستخدم
+            return mean + z0 * stdDev;
+        }
+
+        // دوال مساعدة فرعية لتوليد بقية تفاصيل الحقول العشوائية القياسية
+        function getRandomPhone() {
+            return `+1 (555) ${Math.floor(100 + Math.random() * 900)}-${Math.floor(1000 + Math.random() * 9000)}`;
+        }
+
+        function getRandomDate() {
+            const start = new Date(2020, 0, 1);
+            const end = new Date(2026, 6, 1);
+            const date = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+            return date.toISOString().split('T')[0];
+        }
+
+        // المحرك الرئيسي لتوليد مصفوفة الكائنات
+        btnGenerate.addEventListener('click', () => {
+            const count = parseInt(document.getElementById('records-count').value) || 100;
+            const mockData = [];
+
+            const includeName = document.getElementById('field-name').checked;
+            const includeAddress = document.getElementById('field-address').checked;
+            const includePhone = document.getElementById('field-phone').checked;
+            const includeDate = document.getElementById('field-date').checked;
+            const includeNumeric = numericCheckbox.checked;
+
+            const mean = parseFloat(document.getElementById('stat-mean').value) || 0;
+            const stdDev = parseFloat(document.getElementById('stat-stddev').value) || 1;
+
+            if (!includeName && !includeAddress && !includePhone && !includeDate && !includeNumeric) {
+                alert("برجاء تحديد حقل واحد على الأقل ليتم توليد البيانات بناء عليه!");
+                return;
+            }
+
+            // بناء الحلقات التكرارية لتكوين السجلات في خطوة سريعة داخل الذاكرة
+            for (let i = 1; i <= count; i++) {
+                const record = { id: i };
+
+                if (includeName) {
+                    record.name = namesPool[Math.floor(Math.random() * namesPool.length)];
+                }
+                if (includeAddress) {
+                    record.address = `${Math.floor(100 + Math.random() * 8990)} ${streetsPool[Math.floor(Math.random() * streetsPool.length)]}, ${citiesPool[Math.floor(Math.random() * citiesPool.length)]}`;
+                }
+                if (includePhone) {
+                    record.phone = getRandomPhone();
+                }
+                if (includeDate) {
+                    record.date = getRandomDate();
+                }
+                if (includeNumeric) {
+                    // توليد الرقم المستخرج من التوزيع الطبيعي وتقريبه لمرتبتين عشريتين لجمالية البيانات
+                    const numValue = generateNormalDistribution(mean, stdDev);
+                    record.numericValue = parseFloat(numValue.toFixed(2));
+                }
+
+                mockData.push(record);
+            }
+
+            // حقن النص بشكل منسق Pretty-Print داخل مساحة العرض
+            jsonOutput.value = JSON.stringify(mockData, null, 4);
+        });
+
+        // منطق نسخ كود الـ JSON إلى الحافظة
+        btnCopy.addEventListener('click', () => {
+            if (!jsonOutput.value) return;
+            navigator.clipboard.writeText(jsonOutput.value).then(() => {
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 2000);
+            });
+        });
+
+        // منطق تحميل وتصدير البيانات كملف امتداد .json حقيقي وجاهز
+        btnDownload.addEventListener('click', () => {
+            if (!jsonOutput.value) return;
+            const blob = new Blob([jsonOutput.value], { type: 'application/json;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.download = `mock-data-${Date.now()}.json`;
+            link.href = url;
+            link.click();
+            URL.revokeObjectURL(url); // مسح الرابط المؤقت من ذاكرة المتصفح
+        });
+    </script>
+</body>
+</html>

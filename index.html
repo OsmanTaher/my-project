@@ -1,597 +1,1537 @@
 <!doctype html>
-<html lang="ar" dir="rtl">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>مستودع التطبيقات والمشاريع الأسطورية</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Cairo Font for Premium Arabic Typography -->
-    <link
-      href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap"
-      rel="stylesheet"
+    <meta
+      name="description"
+      content="A Neo-Brutalist index of HTML projects and experiments."
     />
+    <title>Labs Projects</title>
+    <link rel="shortcut icon" href="/logo.webp" type="image/x-icon" />
 
     <style>
+      :root {
+        --ink: #eaf7f5;
+        --deep: #07273b;
+        --surface: #0a3149;
+        --surface-2: #0e3a54;
+        --teal: #2dd4bf;
+        --lime: #c7cd8e;
+        --muted: #a9c0c8;
+        --line: rgba(234, 247, 245, 0.18);
+        --shadow: 6px 6px 0 #041925;
+        --shadow-sm: 4px 4px 0 #041925;
+        --radius: 16px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
       body {
-        font-family: "Cairo", sans-serif;
-        background: radial-gradient(
-          circle at top right,
-          #0b0f19 0%,
-          #020617 100%
-        );
+        margin: 0;
+        min-height: 100vh;
+        background:
+          linear-gradient(rgba(45, 212, 191, 0.035) 1px, transparent 1px),
+          linear-gradient(
+            90deg,
+            rgba(45, 212, 191, 0.035) 1px,
+            transparent 1px
+          ),
+          var(--deep);
+        background-size: 28px 28px;
+        color: var(--ink);
+        font-family:
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
       }
 
-      /* Glassmorphism dashboard cards styling */
-      .glass-card {
-        background: rgba(15, 23, 42, 0.45);
-        backdrop-filter: blur(16px);
-        border: 1px solid rgba(255, 255, 255, 0.03);
-        transform: translateY(0) scale(1);
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .page {
+        width: min(1440px, calc(100% - 40px));
+        margin: 0 auto;
+      }
+
+      .navbar {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 28px;
+        padding: 16px 0;
+        background: rgba(7, 39, 59, 0.93);
+        border-bottom: 1px solid var(--line);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 1.65rem;
+        font-weight: 950;
+        letter-spacing: -0.05em;
+        text-transform: uppercase;
+      }
+
+      .brand-logo {
+        width: 52px;
+        height: 52px;
+        object-fit: contain;
+        border: 3px solid var(--ink);
+        background: var(--surface);
+        box-shadow: var(--shadow-sm);
+      }
+
+      .brand-dot {
+        color: var(--teal);
+      }
+
+      .nav-links {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 28px;
+        font-size: 0.86rem;
+        font-weight: 900;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .nav-links a {
+        position: relative;
+        padding: 8px 0;
+      }
+
+      .nav-links a::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 3px;
+        background: var(--teal);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.18s ease;
+      }
+
+      .nav-links a:hover::after {
+        transform: scaleX(1);
+      }
+
+      .nav-actions {
+        display: flex;
+        gap: 10px;
+      }
+
+      .header-btn {
+        border: 3px solid var(--ink);
+        box-shadow: var(--shadow-sm);
+        min-height: 50px;
+        padding: 0 18px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 950;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
         transition:
-          transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-          box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-          border-color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+          transform 0.14s ease,
+          box-shadow 0.14s ease;
       }
 
-      /* Dynamic staggered entrance animations keyframes */
-      @keyframes slideUpFade {
-        from {
-          opacity: 0;
-          transform: translateY(30px);
+      .header-btn:hover {
+        transform: translate(3px, 3px);
+        box-shadow: 1px 1px 0 var(--ink);
+      }
+
+      .header-btn.labs {
+        background: var(--lime);
+      }
+      .header-btn.whatsapp {
+        background: var(--teal);
+      }
+
+      .hero {
+        padding: 86px 0 58px;
+        text-align: center;
+      }
+
+      .hero h1 {
+        margin: 0;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(3.5rem, 7vw, 7rem);
+        line-height: 0.95;
+        letter-spacing: -0.065em;
+        text-wrap: balance;
+      }
+
+      .hero p {
+        max-width: 760px;
+        margin: 20px auto 0;
+        color: var(--muted);
+        font-family: "Courier New", Courier, monospace;
+        font-size: 1rem;
+        line-height: 1.65;
+      }
+
+      .project-count {
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        font-size: 0.8rem;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 28px;
+        padding-bottom: 90px;
+      }
+
+      .project-card {
+        display: flex;
+        flex-direction: column;
+        min-height: 360px;
+        border: 3px solid var(--ink);
+        border-radius: var(--radius);
+        background: var(--surface);
+        overflow: hidden;
+        box-shadow: var(--shadow);
+        transition:
+          transform 0.16s ease,
+          box-shadow 0.16s ease;
+      }
+
+      .project-card:hover {
+        transform: translate(-2px, -2px);
+        box-shadow: 10px 10px 0 var(--ink);
+      }
+
+      .file-strip {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        min-height: 64px;
+        padding: 0 18px;
+        border-bottom: 3px solid var(--ink);
+        background: var(--surface-2);
+        color: var(--ink);
+        font-family: "Courier New", Courier, monospace;
+        font-weight: 900;
+        letter-spacing: 0.08em;
+      }
+
+      .file-type {
+        padding: 5px 9px;
+        border: 2px solid var(--ink);
+        background: var(--teal);
+        color: var(--ink);
+        box-shadow: 2px 2px 0 #041925;
+      }
+
+      .file-count {
+        opacity: 0.85;
+      }
+
+      .card-content {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        padding: 22px 20px 20px;
+      }
+
+      .folder-name {
+        color: var(--teal);
+        font-size: 0.76rem;
+        font-weight: 950;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+        margin-bottom: 7px;
+        word-break: break-word;
+      }
+
+      .project-card h2 {
+        margin: 0;
+        font-size: clamp(1.3rem, 1.8vw, 1.7rem);
+        line-height: 1.05;
+        letter-spacing: -0.04em;
+        word-break: break-word;
+      }
+
+      .project-card p {
+        margin: 16px 0 22px;
+        color: var(--muted);
+        font-family: "Courier New", Courier, monospace;
+        font-size: 0.9rem;
+        line-height: 1.55;
+      }
+
+      .card-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-top: auto;
+        padding-top: 16px;
+        border-top: 2px dashed var(--line);
+      }
+
+      .path {
+        max-width: 55%;
+        color: rgba(169, 192, 200, 0.72);
+        font-family: "Courier New", Courier, monospace;
+        font-size: 0.73rem;
+        line-height: 1.3;
+        overflow-wrap: anywhere;
+      }
+
+      .open-btn {
+        flex: 0 0 auto;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        min-height: 44px;
+        padding: 0 15px;
+        border: 3px solid var(--ink);
+        background: var(--teal);
+        box-shadow: var(--shadow-sm);
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        transition:
+          transform 0.14s ease,
+          box-shadow 0.14s ease;
+      }
+
+      .open-btn:hover {
+        transform: translate(3px, 3px);
+        box-shadow: 1px 1px 0 var(--ink);
+      }
+
+      .empty {
+        display: none;
+        grid-column: 1 / -1;
+        padding: 60px 20px;
+        text-align: center;
+        border: 3px solid var(--ink);
+        background: var(--lime);
+        box-shadow: var(--shadow);
+        font-weight: 950;
+        text-transform: uppercase;
+      }
+
+      footer {
+        border-top: 3px solid var(--line);
+        padding: 24px 0 36px;
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        font-family: "Courier New", Courier, monospace;
+        font-size: 0.82rem;
+        font-weight: 800;
+      }
+
+      .scroll-progress {
+        position: fixed;
+        left: 22px;
+        bottom: 22px;
+        z-index: 1100;
+        width: 56px;
+        height: 56px;
+        display: grid;
+        place-items: center;
+        padding: 3px;
+        border: 0;
+        border-radius: 50%;
+        background: conic-gradient(
+          var(--teal) var(--progress, 0deg),
+          rgba(234, 247, 245, 0.18) 0deg
+        );
+        box-shadow: 4px 4px 0 #041925;
+        cursor: pointer;
+        transition: transform 0.16s ease;
+      }
+
+      .scroll-progress:hover {
+        transform: translateY(-2px);
+      }
+
+      .scroll-progress-inner {
+        width: 100%;
+        height: 100%;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        background: var(--deep);
+        border: 2px solid rgba(234, 247, 245, 0.16);
+        color: var(--teal);
+        font-size: 1.15rem;
+        font-weight: 950;
+        line-height: 1;
+      }
+
+      .scroll-progress:focus-visible {
+        outline: 3px solid var(--teal);
+        outline-offset: 4px;
+      }
+
+      @media (max-width: 1150px) {
+        .grid {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
         }
-        to {
-          opacity: 1;
-          transform: translateY(0);
+        .nav-links {
+          display: none;
         }
       }
 
-      .animate-card {
-        animation: slideUpFade 0.6s cubic-bezier(0.4, 0, 0.2, 1) both;
+      @media (max-width: 820px) {
+        .page {
+          width: min(100% - 28px, 680px);
+        }
+        .navbar {
+          align-items: flex-start;
+        }
+        .nav-actions {
+          flex-direction: column;
+        }
+        .header-btn {
+          min-height: 44px;
+          padding: 0 13px;
+        }
+        .hero {
+          padding-top: 80px;
+        }
+        .grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 20px;
+        }
       }
 
-      /* Beautiful styled scrollbar for dashboard */
-      ::-webkit-scrollbar {
-        width: 6px;
+      @media (max-width: 580px) {
+        .page {
+          width: min(100% - 20px, 480px);
+        }
+        .brand {
+          font-size: 1.25rem;
+        }
+        .brand-logo {
+          width: 44px;
+          height: 44px;
+        }
+        .grid {
+          grid-template-columns: 1fr;
+        }
+        .hero h1 {
+          font-size: clamp(3rem, 17vw, 5rem);
+        }
+        .hero p {
+          font-size: 0.9rem;
+        }
+        footer {
+          flex-direction: column;
+        }
+        .scroll-progress {
+          left: 14px;
+          bottom: 14px;
+          width: 50px;
+          height: 50px;
+        }
       }
-      ::-webkit-scrollbar-track {
-        background: #020617;
-      }
-      ::-webkit-scrollbar-thumb {
-        background: rgba(255, 255, 255, 0.08);
-        border-radius: 99px;
-      }
-      ::-webkit-scrollbar-thumb:hover {
-        background: rgba(6, 182, 212, 0.3);
+
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+        *,
+        *::before,
+        *::after {
+          transition: none !important;
+        }
       }
     </style>
   </head>
-  <body
-    class="text-slate-100 min-h-screen py-8 px-4 md:py-16 md:px-8 flex flex-col justify-between overflow-x-hidden selection:bg-cyan-500/30"
-  >
-    <!-- Glowing Background Elements -->
-    <div
-      class="fixed top-[-10%] left-[-10%] w-[50vw] h-[50vw] bg-indigo-500/5 rounded-full blur-[120px] pointer-events-none z-0"
-    ></div>
-    <div
-      class="fixed bottom-[-10%] right-[-10%] w-[50vw] h-[50vw] bg-cyan-500/5 rounded-full blur-[120px] pointer-events-none z-0"
-    ></div>
 
-    <div
-      class="w-full max-w-7xl mx-auto flex-1 flex flex-col justify-center space-y-8 z-10 relative"
-    >
-      <!-- Header Dashboard Branding -->
-      <header class="text-center space-y-3">
-        <div
-          class="inline-flex items-center justify-center w-16 h-16 rounded-3xl bg-gradient-to-tr from-cyan-500 to-indigo-500 text-3xl mb-1 shadow-lg shadow-cyan-500/10 animate-bounce"
-        >
-          🚀
-        </div>
-        <h1
-          class="text-3xl md:text-5xl font-black bg-gradient-to-r from-cyan-400 via-teal-300 to-indigo-400 bg-clip-text text-transparent tracking-tight"
-        >
-          لوحة التحكم واستعراض المشاريع البرمجية
-        </h1>
-        <p
-          class="text-xs md:text-sm text-slate-400 max-w-lg mx-auto leading-relaxed"
-        >
-          مستودع المطور الإبداعي الذكي - منصة متكاملة تضم
-          <span
-            id="project-count-badge"
-            class="text-cyan-400 font-extrabold text-base"
-            >--</span
+  <body>
+    <div class="page">
+      <header class="navbar">
+        <a class="brand" href="https://aswany.me/" aria-label="Aswany home">
+          <img class="brand-logo" src="/logo.webp" alt="Aswany logo" />
+          <span>ASWANY<span class="brand-dot">.</span></span>
+        </a>
+
+        <nav class="nav-links" aria-label="Primary navigation">
+          <a href="https://aswany.me/">Home</a>
+          <a href="https://aswany.me/#skills">Skills</a>
+          <a href="https://aswany.me/#projects">Projects</a>
+          <a href="https://aswany.me/certifications">Certifications</a>
+          <a href="https://aswany.me/#contact">Contact</a>
+          <a href="https://aswany.me/labs">Labs</a>
+        </nav>
+
+        <div class="nav-actions">
+          <a
+            class="header-btn labs"
+            href="tg://resolve?phone=201080859921"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Telegram</a
           >
-          تطبيقاً ولعبة مبرمجة بأعلى دقة ومعايير جمالية.
-        </p>
+          <a
+            class="header-btn whatsapp"
+            id="contact"
+            href="https://wa.me/+201080859921"
+            target="_blank"
+            rel="noopener noreferrer"
+            >WhatsApp</a
+          >
+        </div>
       </header>
 
-      <!-- Search Controls Hub & Quick Categories Filter -->
-      <section
-        class="glass-card rounded-[2rem] p-5 shadow-xl flex flex-col md:flex-row items-center justify-between gap-4 border border-slate-800/40"
-      >
-        <!-- Dynamic Search input -->
-        <div class="w-full md:w-96 relative">
-          <input
-            type="text"
-            id="search-input"
-            oninput="handleSearch(this.value)"
-            placeholder="ابحث باسم المجلد أو تطبيق معين..."
-            class="w-full bg-slate-950/60 border-2 border-slate-850 rounded-2xl py-3.5 pl-12 pr-6 text-sm font-bold text-slate-200 outline-none focus:border-cyan-500 focus:bg-slate-950 transition-all duration-300 shadow-inner"
-          />
-          <span
-            class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none"
-            >🔍</span
-          >
-        </div>
+      <main id="labs">
+        <section class="hero">
+          <h1><span class="accent">✦</span> Labs Projects</h1>
+          <p>
+            A Neo-Brutalist directory for opening every HTML project and
+            experiment directly from this page.
+          </p>
+        </section>
 
-        <!-- Category Switchers -->
-        <div
-          class="flex items-center gap-2 flex-wrap justify-center text-xs font-black"
-        >
-          <button
-            onclick="filterCategory('all')"
-            id="filter-all"
-            class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-500 text-slate-950 shadow-md transition-all"
-          >
-            كل المشاريع
-          </button>
-          <button
-            onclick="filterCategory('game')"
-            id="filter-game"
-            class="px-4 py-2.5 rounded-xl bg-slate-900/60 border border-slate-800 text-slate-400 hover:text-slate-200 hover:bg-slate-800/80 transition-all"
-          >
-            ألعاب تسلية (Games)
-          </button>
-          <button
-            onclick="filterCategory('tool')"
-            id="filter-tool"
-            class="px-4 py-2.5 rounded-xl bg-slate-900/60 border border-slate-800 text-slate-400 hover:text-slate-200 hover:bg-slate-800/80 transition-all"
-          >
-            أدوات ذكية (Tools)
-          </button>
-          <button
-            onclick="filterCategory('dev')"
-            id="filter-dev"
-            class="px-4 py-2.5 rounded-xl bg-slate-900/60 border border-slate-800 text-slate-400 hover:text-slate-200 hover:bg-slate-800/80 transition-all"
-          >
-            مفاهيم وبرمجة (Dev)
-          </button>
-        </div>
-      </section>
+        <section id="projects" aria-label="Projects">
+          <div class="grid" id="projectGrid">
+            <article class="project-card">
+              <div class="file-strip">
+                <span class="file-type">HTML</span>
+                <span class="file-count">#01</span>
+              </div>
+              <div class="card-content">
+                <div class="folder-name">algorithms</div>
+                <h2>index.html</h2>
+                <p>
+                  A practical web project demonstrating development concepts
+                  through clean interfaces and functionality.
+                </p>
+                <div class="card-footer">
+                  <span class="path">/algorithms/index.html</span>
+                  <a
+                    class="open-btn"
+                    href="algorithms/index.html"
+                    aria-label="Open algorithms/index.html"
+                  >
+                    Open <span aria-hidden="true">↗</span>
+                  </a>
+                </div>
+              </div>
+            </article>
 
-      <!-- Main Dynamic Projects Grid Container -->
-      <main
-        id="projects-grid"
-        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 items-stretch"
-      >
-        <!-- Dynamic project cards rendered here -->
+            <article class="project-card">
+              <div class="file-strip">
+                <span class="file-type">HTML</span>
+                <span class="file-count">#02</span>
+              </div>
+              <div class="card-content">
+                <div class="folder-name">algorithms</div>
+                <h2>part1.html</h2>
+                <p>
+                  A practical web project demonstrating development concepts
+                  through clean interfaces and functionality.
+                </p>
+                <div class="card-footer">
+                  <span class="path">/algorithms/part1.html</span>
+                  <a
+                    class="open-btn"
+                    href="algorithms/part1.html"
+                    aria-label="Open algorithms/part1.html"
+                  >
+                    Open <span aria-hidden="true">↗</span>
+                  </a>
+                </div>
+              </div>
+            </article>
+
+            <article class="project-card">
+              <div class="file-strip">
+                <span class="file-type">HTML</span>
+                <span class="file-count">#03</span>
+              </div>
+              <div class="card-content">
+                <div class="folder-name">algorithms</div>
+                <h2>part2.html</h2>
+                <p>
+                  A practical web project demonstrating development concepts
+                  through clean interfaces and functionality.
+                </p>
+                <div class="card-footer">
+                  <span class="path">/algorithms/part2.html</span>
+                  <a
+                    class="open-btn"
+                    href="algorithms/part2.html"
+                    aria-label="Open algorithms/part2.html"
+                  >
+                    Open <span aria-hidden="true">↗</span>
+                  </a>
+                </div>
+              </div>
+            </article>
+
+            <article class="project-card">
+              <div class="file-strip">
+                <span class="file-type">HTML</span>
+                <span class="file-count">#04</span>
+              </div>
+              <div class="card-content">
+                <div class="folder-name">BrickBreaker</div>
+                <h2>index.html</h2>
+                <p>
+                  A practical web project demonstrating development concepts
+                  through clean interfaces and functionality.
+                </p>
+                <div class="card-footer">
+                  <span class="path">/BrickBreaker/index.html</span>
+                  <a
+                    class="open-btn"
+                    href="BrickBreaker/index.html"
+                    aria-label="Open BrickBreaker/index.html"
+                  >
+                    Open <span aria-hidden="true">↗</span>
+                  </a>
+                </div>
+              </div>
+            </article>
+
+            <article class="project-card">
+              <div class="file-strip">
+                <span class="file-type">HTML</span>
+                <span class="file-count">#05</span>
+              </div>
+              <div class="card-content">
+                <div class="folder-name">c++</div>
+                <h2>index.html</h2>
+                <p>
+                  A practical web project demonstrating development concepts
+                  through clean interfaces and functionality.
+                </p>
+                <div class="card-footer">
+                  <span class="path">/c++/index.html</span>
+                  <a
+                    class="open-btn"
+                    href="c++/index.html"
+                    aria-label="Open c++/index.html"
+                  >
+                    Open <span aria-hidden="true">↗</span>
+                  </a>
+                </div>
+              </div>
+            </article>
+
+            <article class="project-card">
+              <div class="file-strip">
+                <span class="file-type">HTML</span>
+                <span class="file-count">#06</span>
+              </div>
+              <div class="card-content">
+                <div class="folder-name">calc</div>
+                <h2>index.html</h2>
+                <p>
+                  A practical web project demonstrating development concepts
+                  through clean interfaces and functionality.
+                </p>
+                <div class="card-footer">
+                  <span class="path">/calc/index.html</span>
+                  <a
+                    class="open-btn"
+                    href="calc/index.html"
+                    aria-label="Open calc/index.html"
+                  >
+                    Open <span aria-hidden="true">↗</span>
+                  </a>
+                </div>
+              </div>
+            </article>
+
+            <article class="project-card">
+              <div class="file-strip">
+                <span class="file-type">HTML</span>
+                <span class="file-count">#07</span>
+              </div>
+              <div class="card-content">
+                <div class="folder-name">CPlusPlus</div>
+                <h2>index.html</h2>
+                <p>
+                  A practical web project demonstrating development concepts
+                  through clean interfaces and functionality.
+                </p>
+                <div class="card-footer">
+                  <span class="path">/CPlusPlus/index.html</span>
+                  <a
+                    class="open-btn"
+                    href="CPlusPlus/index.html"
+                    aria-label="Open CPlusPlus/index.html"
+                  >
+                    Open <span aria-hidden="true">↗</span>
+                  </a>
+                </div>
+              </div>
+            </article>
+
+            <article class="project-card">
+              <div class="file-strip">
+                <span class="file-type">HTML</span>
+                <span class="file-count">#08</span>
+              </div>
+              <div class="card-content">
+                <div class="folder-name">DSA</div>
+                <h2>index.html</h2>
+                <p>
+                  A practical web project demonstrating development concepts
+                  through clean interfaces and functionality.
+                </p>
+                <div class="card-footer">
+                  <span class="path">/DSA/index.html</span>
+                  <a
+                    class="open-btn"
+                    href="DSA/index.html"
+                    aria-label="Open DSA/index.html"
+                  >
+                    Open <span aria-hidden="true">↗</span>
+                  </a>
+                </div>
+              </div>
+            </article>
+
+            <article class="project-card">
+              <div class="file-strip">
+                <span class="file-type">HTML</span>
+                <span class="file-count">#09</span>
+              </div>
+              <div class="card-content">
+                <div class="folder-name">DSA</div>
+                <h2>part1.html</h2>
+                <p>
+                  A practical web project demonstrating development concepts
+                  through clean interfaces and functionality.
+                </p>
+                <div class="card-footer">
+                  <span class="path">/DSA/part1.html</span>
+                  <a
+                    class="open-btn"
+                    href="DSA/part1.html"
+                    aria-label="Open DSA/part1.html"
+                  >
+                    Open <span aria-hidden="true">↗</span>
+                  </a>
+                </div>
+              </div>
+            </article>
+
+            <article class="project-card">
+              <div class="file-strip">
+                <span class="file-type">HTML</span>
+                <span class="file-count">#10</span>
+              </div>
+              <div class="card-content">
+                <div class="folder-name">DSA</div>
+                <h2>part2.html</h2>
+                <p>
+                  A practical web project demonstrating development concepts
+                  through clean interfaces and functionality.
+                </p>
+                <div class="card-footer">
+                  <span class="path">/DSA/part2.html</span>
+                  <a
+                    class="open-btn"
+                    href="DSA/part2.html"
+                    aria-label="Open DSA/part2.html"
+                  >
+                    Open <span aria-hidden="true">↗</span>
+                  </a>
+                </div>
+              </div>
+            </article>
+
+            <article class="project-card">
+              <div class="file-strip">
+                <span class="file-type">HTML</span>
+                <span class="file-count">#11</span>
+              </div>
+              <div class="card-content">
+                <div class="folder-name">editImage</div>
+                <h2>index.html</h2>
+                <p>
+                  A practical web project demonstrating development concepts
+                  through clean interfaces and functionality.
+                </p>
+                <div class="card-footer">
+                  <span class="path">/editImage/index.html</span>
+                  <a
+                    class="open-btn"
+                    href="editImage/index.html"
+                    aria-label="Open editImage/index.html"
+                  >
+                    Open <span aria-hidden="true">↗</span>
+                  </a>
+                </div>
+              </div>
+            </article>
+
+            <article class="project-card">
+              <div class="file-strip">
+                <span class="file-type">HTML</span>
+                <span class="file-count">#12</span>
+              </div>
+              <div class="card-content">
+                <div class="folder-name">extractColor</div>
+                <h2>extractColor.html</h2>
+                <p>
+                  A practical web project demonstrating development concepts
+                  through clean interfaces and functionality.
+                </p>
+                <div class="card-footer">
+                  <span class="path">/extractColor/extractColor.html</span>
+                  <a
+                    class="open-btn"
+                    href="extractColor/extractColor.html"
+                    aria-label="Open extractColor/extractColor.html"
+                  >
+                    Open <span aria-hidden="true">↗</span>
+                  </a>
+                </div>
+              </div>
+            </article>
+
+            <article class="project-card">
+              <div class="file-strip">
+                <span class="file-type">HTML</span>
+                <span class="file-count">#13</span>
+              </div>
+              <div class="card-content">
+                <div class="folder-name">fastWrite</div>
+                <h2>index.html</h2>
+                <p>
+                  A practical web project demonstrating development concepts
+                  through clean interfaces and functionality.
+                </p>
+                <div class="card-footer">
+                  <span class="path">/fastWrite/index.html</span>
+                  <a
+                    class="open-btn"
+                    href="fastWrite/index.html"
+                    aria-label="Open fastWrite/index.html"
+                  >
+                    Open <span aria-hidden="true">↗</span>
+                  </a>
+                </div>
+              </div>
+            </article>
+
+            <article class="project-card">
+              <div class="file-strip">
+                <span class="file-type">HTML</span>
+                <span class="file-count">#14</span>
+              </div>
+              <div class="card-content">
+                <div class="folder-name">github</div>
+                <h2>index.html</h2>
+                <p>
+                  A practical web project demonstrating development concepts
+                  through clean interfaces and functionality.
+                </p>
+                <div class="card-footer">
+                  <span class="path">/github/index.html</span>
+                  <a
+                    class="open-btn"
+                    href="github/index.html"
+                    aria-label="Open github/index.html"
+                  >
+                    Open <span aria-hidden="true">↗</span>
+                  </a>
+                </div>
+              </div>
+            </article>
+
+            <article class="project-card">
+              <div class="file-strip">
+                <span class="file-type">HTML</span>
+                <span class="file-count">#15</span>
+              </div>
+              <div class="card-content">
+                <div class="folder-name">goldenCalc</div>
+                <h2>index.html</h2>
+                <p>
+                  A practical web project demonstrating development concepts
+                  through clean interfaces and functionality.
+                </p>
+                <div class="card-footer">
+                  <span class="path">/goldenCalc/index.html</span>
+                  <a
+                    class="open-btn"
+                    href="goldenCalc/index.html"
+                    aria-label="Open goldenCalc/index.html"
+                  >
+                    Open <span aria-hidden="true">↗</span>
+                  </a>
+                </div>
+              </div>
+            </article>
+
+            <article class="project-card">
+              <div class="file-strip">
+                <span class="file-type">HTML</span>
+                <span class="file-count">#16</span>
+              </div>
+              <div class="card-content">
+                <div class="folder-name">id</div>
+                <h2>index.html</h2>
+                <p>
+                  A practical web project demonstrating development concepts
+                  through clean interfaces and functionality.
+                </p>
+                <div class="card-footer">
+                  <span class="path">/id/index.html</span>
+                  <a
+                    class="open-btn"
+                    href="id/index.html"
+                    aria-label="Open id/index.html"
+                  >
+                    Open <span aria-hidden="true">↗</span>
+                  </a>
+                </div>
+              </div>
+            </article>
+
+            <article class="project-card">
+              <div class="file-strip">
+                <span class="file-type">HTML</span>
+                <span class="file-count">#17</span>
+              </div>
+              <div class="card-content">
+                <div class="folder-name">javaScript</div>
+                <h2>index.html</h2>
+                <p>
+                  A practical web project demonstrating development concepts
+                  through clean interfaces and functionality.
+                </p>
+                <div class="card-footer">
+                  <span class="path">/javaScript/index.html</span>
+                  <a
+                    class="open-btn"
+                    href="javaScript/index.html"
+                    aria-label="Open javaScript/index.html"
+                  >
+                    Open <span aria-hidden="true">↗</span>
+                  </a>
+                </div>
+              </div>
+            </article>
+
+            <article class="project-card">
+              <div class="file-strip">
+                <span class="file-type">HTML</span>
+                <span class="file-count">#18</span>
+              </div>
+              <div class="card-content">
+                <div class="folder-name">markdown</div>
+                <h2>mark.html</h2>
+                <p>
+                  A practical web project demonstrating development concepts
+                  through clean interfaces and functionality.
+                </p>
+                <div class="card-footer">
+                  <span class="path">/markdown/mark.html</span>
+                  <a
+                    class="open-btn"
+                    href="markdown/mark.html"
+                    aria-label="Open markdown/mark.html"
+                  >
+                    Open <span aria-hidden="true">↗</span>
+                  </a>
+                </div>
+              </div>
+            </article>
+
+            <article class="project-card">
+              <div class="file-strip">
+                <span class="file-type">HTML</span>
+                <span class="file-count">#19</span>
+              </div>
+              <div class="card-content">
+                <div class="folder-name">MazeEscape</div>
+                <h2>index.html</h2>
+                <p>
+                  A practical web project demonstrating development concepts
+                  through clean interfaces and functionality.
+                </p>
+                <div class="card-footer">
+                  <span class="path">/MazeEscape/index.html</span>
+                  <a
+                    class="open-btn"
+                    href="MazeEscape/index.html"
+                    aria-label="Open MazeEscape/index.html"
+                  >
+                    Open <span aria-hidden="true">↗</span>
+                  </a>
+                </div>
+              </div>
+            </article>
+
+            <article class="project-card">
+              <div class="file-strip">
+                <span class="file-type">HTML</span>
+                <span class="file-count">#20</span>
+              </div>
+              <div class="card-content">
+                <div class="folder-name">memory-game</div>
+                <h2>index.html</h2>
+                <p>
+                  A practical web project demonstrating development concepts
+                  through clean interfaces and functionality.
+                </p>
+                <div class="card-footer">
+                  <span class="path">/memory-game/index.html</span>
+                  <a
+                    class="open-btn"
+                    href="memory-game/index.html"
+                    aria-label="Open memory-game/index.html"
+                  >
+                    Open <span aria-hidden="true">↗</span>
+                  </a>
+                </div>
+              </div>
+            </article>
+
+            <article class="project-card">
+              <div class="file-strip">
+                <span class="file-type">HTML</span>
+                <span class="file-count">#21</span>
+              </div>
+              <div class="card-content">
+                <div class="folder-name">mockData</div>
+                <h2>index.html</h2>
+                <p>
+                  A practical web project demonstrating development concepts
+                  through clean interfaces and functionality.
+                </p>
+                <div class="card-footer">
+                  <span class="path">/mockData/index.html</span>
+                  <a
+                    class="open-btn"
+                    href="mockData/index.html"
+                    aria-label="Open mockData/index.html"
+                  >
+                    Open <span aria-hidden="true">↗</span>
+                  </a>
+                </div>
+              </div>
+            </article>
+
+            <article class="project-card">
+              <div class="file-strip">
+                <span class="file-type">HTML</span>
+                <span class="file-count">#22</span>
+              </div>
+              <div class="card-content">
+                <div class="folder-name">oop</div>
+                <h2>index.html</h2>
+                <p>
+                  A practical web project demonstrating development concepts
+                  through clean interfaces and functionality.
+                </p>
+                <div class="card-footer">
+                  <span class="path">/oop/index.html</span>
+                  <a
+                    class="open-btn"
+                    href="oop/index.html"
+                    aria-label="Open oop/index.html"
+                  >
+                    Open <span aria-hidden="true">↗</span>
+                  </a>
+                </div>
+              </div>
+            </article>
+
+            <article class="project-card">
+              <div class="file-strip">
+                <span class="file-type">HTML</span>
+                <span class="file-count">#23</span>
+              </div>
+              <div class="card-content">
+                <div class="folder-name">passwordGen</div>
+                <h2>index.html</h2>
+                <p>
+                  A practical web project demonstrating development concepts
+                  through clean interfaces and functionality.
+                </p>
+                <div class="card-footer">
+                  <span class="path">/passwordGen/index.html</span>
+                  <a
+                    class="open-btn"
+                    href="passwordGen/index.html"
+                    aria-label="Open passwordGen/index.html"
+                  >
+                    Open <span aria-hidden="true">↗</span>
+                  </a>
+                </div>
+              </div>
+            </article>
+
+            <article class="project-card">
+              <div class="file-strip">
+                <span class="file-type">HTML</span>
+                <span class="file-count">#24</span>
+              </div>
+              <div class="card-content">
+                <div class="folder-name">periodicTable</div>
+                <h2>index.html</h2>
+                <p>
+                  A practical web project demonstrating development concepts
+                  through clean interfaces and functionality.
+                </p>
+                <div class="card-footer">
+                  <span class="path">/periodicTable/index.html</span>
+                  <a
+                    class="open-btn"
+                    href="periodicTable/index.html"
+                    aria-label="Open periodicTable/index.html"
+                  >
+                    Open <span aria-hidden="true">↗</span>
+                  </a>
+                </div>
+              </div>
+            </article>
+
+            <article class="project-card">
+              <div class="file-strip">
+                <span class="file-type">HTML</span>
+                <span class="file-count">#25</span>
+              </div>
+              <div class="card-content">
+                <div class="folder-name">powershell</div>
+                <h2>index.html</h2>
+                <p>
+                  A practical web project demonstrating development concepts
+                  through clean interfaces and functionality.
+                </p>
+                <div class="card-footer">
+                  <span class="path">/powershell/index.html</span>
+                  <a
+                    class="open-btn"
+                    href="powershell/index.html"
+                    aria-label="Open powershell/index.html"
+                  >
+                    Open <span aria-hidden="true">↗</span>
+                  </a>
+                </div>
+              </div>
+            </article>
+
+            <article class="project-card">
+              <div class="file-strip">
+                <span class="file-type">HTML</span>
+                <span class="file-count">#26</span>
+              </div>
+              <div class="card-content">
+                <div class="folder-name">qr</div>
+                <h2>index.html</h2>
+                <p>
+                  A practical web project demonstrating development concepts
+                  through clean interfaces and functionality.
+                </p>
+                <div class="card-footer">
+                  <span class="path">/qr/index.html</span>
+                  <a
+                    class="open-btn"
+                    href="qr/index.html"
+                    aria-label="Open qr/index.html"
+                  >
+                    Open <span aria-hidden="true">↗</span>
+                  </a>
+                </div>
+              </div>
+            </article>
+
+            <article class="project-card">
+              <div class="file-strip">
+                <span class="file-type">HTML</span>
+                <span class="file-count">#27</span>
+              </div>
+              <div class="card-content">
+                <div class="folder-name">quran</div>
+                <h2>index.html</h2>
+                <p>
+                  A practical web project demonstrating development concepts
+                  through clean interfaces and functionality.
+                </p>
+                <div class="card-footer">
+                  <span class="path">/quran/index.html</span>
+                  <a
+                    class="open-btn"
+                    href="quran/index.html"
+                    aria-label="Open quran/index.html"
+                  >
+                    Open <span aria-hidden="true">↗</span>
+                  </a>
+                </div>
+              </div>
+            </article>
+
+            <article class="project-card">
+              <div class="file-strip">
+                <span class="file-type">HTML</span>
+                <span class="file-count">#28</span>
+              </div>
+              <div class="card-content">
+                <div class="folder-name">search</div>
+                <h2>index.html</h2>
+                <p>
+                  A practical web project demonstrating development concepts
+                  through clean interfaces and functionality.
+                </p>
+                <div class="card-footer">
+                  <span class="path">/search/index.html</span>
+                  <a
+                    class="open-btn"
+                    href="search/index.html"
+                    aria-label="Open search/index.html"
+                  >
+                    Open <span aria-hidden="true">↗</span>
+                  </a>
+                </div>
+              </div>
+            </article>
+
+            <article class="project-card">
+              <div class="file-strip">
+                <span class="file-type">HTML</span>
+                <span class="file-count">#29</span>
+              </div>
+              <div class="card-content">
+                <div class="folder-name">snakeClassic</div>
+                <h2>index.html</h2>
+                <p>
+                  A practical web project demonstrating development concepts
+                  through clean interfaces and functionality.
+                </p>
+                <div class="card-footer">
+                  <span class="path">/snakeClassic/index.html</span>
+                  <a
+                    class="open-btn"
+                    href="snakeClassic/index.html"
+                    aria-label="Open snakeClassic/index.html"
+                  >
+                    Open <span aria-hidden="true">↗</span>
+                  </a>
+                </div>
+              </div>
+            </article>
+
+            <article class="project-card">
+              <div class="file-strip">
+                <span class="file-type">HTML</span>
+                <span class="file-count">#30</span>
+              </div>
+              <div class="card-content">
+                <div class="folder-name">studyProgress</div>
+                <h2>index.html</h2>
+                <p>
+                  A practical web project demonstrating development concepts
+                  through clean interfaces and functionality.
+                </p>
+                <div class="card-footer">
+                  <span class="path">/studyProgress/index.html</span>
+                  <a
+                    class="open-btn"
+                    href="studyProgress/index.html"
+                    aria-label="Open studyProgress/index.html"
+                  >
+                    Open <span aria-hidden="true">↗</span>
+                  </a>
+                </div>
+              </div>
+            </article>
+
+            <article class="project-card">
+              <div class="file-strip">
+                <span class="file-type">HTML</span>
+                <span class="file-count">#31</span>
+              </div>
+              <div class="card-content">
+                <div class="folder-name">tampletePDF</div>
+                <h2>index.html</h2>
+                <p>
+                  A practical web project demonstrating development concepts
+                  through clean interfaces and functionality.
+                </p>
+                <div class="card-footer">
+                  <span class="path">/tampletePDF/index.html</span>
+                  <a
+                    class="open-btn"
+                    href="tampletePDF/index.html"
+                    aria-label="Open tampletePDF/index.html"
+                  >
+                    Open <span aria-hidden="true">↗</span>
+                  </a>
+                </div>
+              </div>
+            </article>
+
+            <article class="project-card">
+              <div class="file-strip">
+                <span class="file-type">HTML</span>
+                <span class="file-count">#32</span>
+              </div>
+              <div class="card-content">
+                <div class="folder-name">tampletePDF</div>
+                <h2>bigDark1.html</h2>
+                <p>
+                  A practical web project demonstrating development concepts
+                  through clean interfaces and functionality.
+                </p>
+                <div class="card-footer">
+                  <span class="path">/tampletePDF/bigDark1.html</span>
+                  <a
+                    class="open-btn"
+                    href="tampletePDF/bigDark1.html"
+                    aria-label="Open tampletePDF/bigDark1.html"
+                  >
+                    Open <span aria-hidden="true">↗</span>
+                  </a>
+                </div>
+              </div>
+            </article>
+
+            <article class="project-card">
+              <div class="file-strip">
+                <span class="file-type">HTML</span>
+                <span class="file-count">#33</span>
+              </div>
+              <div class="card-content">
+                <div class="folder-name">tampletePDF</div>
+                <h2>bigScreen.html</h2>
+                <p>
+                  A practical web project demonstrating development concepts
+                  through clean interfaces and functionality.
+                </p>
+                <div class="card-footer">
+                  <span class="path">/tampletePDF/bigScreen.html</span>
+                  <a
+                    class="open-btn"
+                    href="tampletePDF/bigScreen.html"
+                    aria-label="Open tampletePDF/bigScreen.html"
+                  >
+                    Open <span aria-hidden="true">↗</span>
+                  </a>
+                </div>
+              </div>
+            </article>
+
+            <article class="project-card">
+              <div class="file-strip">
+                <span class="file-type">HTML</span>
+                <span class="file-count">#34</span>
+              </div>
+              <div class="card-content">
+                <div class="folder-name">tampletePDF</div>
+                <h2>phone.html</h2>
+                <p>
+                  A practical web project demonstrating development concepts
+                  through clean interfaces and functionality.
+                </p>
+                <div class="card-footer">
+                  <span class="path">/tampletePDF/phone.html</span>
+                  <a
+                    class="open-btn"
+                    href="tampletePDF/phone.html"
+                    aria-label="Open tampletePDF/phone.html"
+                  >
+                    Open <span aria-hidden="true">↗</span>
+                  </a>
+                </div>
+              </div>
+            </article>
+
+            <article class="project-card">
+              <div class="file-strip">
+                <span class="file-type">HTML</span>
+                <span class="file-count">#35</span>
+              </div>
+              <div class="card-content">
+                <div class="folder-name">ToDo</div>
+                <h2>index.html</h2>
+                <p>
+                  A practical web project demonstrating development concepts
+                  through clean interfaces and functionality.
+                </p>
+                <div class="card-footer">
+                  <span class="path">/ToDo/index.html</span>
+                  <a
+                    class="open-btn"
+                    href="ToDo/index.html"
+                    aria-label="Open ToDo/index.html"
+                  >
+                    Open <span aria-hidden="true">↗</span>
+                  </a>
+                </div>
+              </div>
+            </article>
+
+            <article class="project-card">
+              <div class="file-strip">
+                <span class="file-type">HTML</span>
+                <span class="file-count">#36</span>
+              </div>
+              <div class="card-content">
+                <div class="folder-name">UML</div>
+                <h2>index.html</h2>
+                <p>
+                  A practical web project demonstrating development concepts
+                  through clean interfaces and functionality.
+                </p>
+                <div class="card-footer">
+                  <span class="path">/UML/index.html</span>
+                  <a
+                    class="open-btn"
+                    href="UML/index.html"
+                    aria-label="Open UML/index.html"
+                  >
+                    Open <span aria-hidden="true">↗</span>
+                  </a>
+                </div>
+              </div>
+            </article>
+
+            <article class="project-card">
+              <div class="file-strip">
+                <span class="file-type">HTML</span>
+                <span class="file-count">#37</span>
+              </div>
+              <div class="card-content">
+                <div class="folder-name">Umrah</div>
+                <h2>index.html</h2>
+                <p>
+                  A practical web project demonstrating development concepts
+                  through clean interfaces and functionality.
+                </p>
+                <div class="card-footer">
+                  <span class="path">/Umrah/index.html</span>
+                  <a
+                    class="open-btn"
+                    href="Umrah/index.html"
+                    aria-label="Open Umrah/index.html"
+                  >
+                    Open <span aria-hidden="true">↗</span>
+                  </a>
+                </div>
+              </div>
+            </article>
+
+            <article class="project-card">
+              <div class="file-strip">
+                <span class="file-type">HTML</span>
+                <span class="file-count">#38</span>
+              </div>
+              <div class="card-content">
+                <div class="folder-name">xo</div>
+                <h2>index.html</h2>
+                <p>
+                  A practical web project demonstrating development concepts
+                  through clean interfaces and functionality.
+                </p>
+                <div class="card-footer">
+                  <span class="path">/xo/index.html</span>
+                  <a
+                    class="open-btn"
+                    href="xo/index.html"
+                    aria-label="Open xo/index.html"
+                  >
+                    Open <span aria-hidden="true">↗</span>
+                  </a>
+                </div>
+              </div>
+            </article>
+
+            <article class="project-card">
+              <div class="file-strip">
+                <span class="file-type">HTML</span>
+                <span class="file-count">#39</span>
+              </div>
+              <div class="card-content">
+                <div class="folder-name">zakat</div>
+                <h2>index.html</h2>
+                <p>
+                  A practical web project demonstrating development concepts
+                  through clean interfaces and functionality.
+                </p>
+                <div class="card-footer">
+                  <span class="path">/zakat/index.html</span>
+                  <a
+                    class="open-btn"
+                    href="zakat/index.html"
+                    aria-label="Open zakat/index.html"
+                  >
+                    Open <span aria-hidden="true">↗</span>
+                  </a>
+                </div>
+              </div>
+            </article>
+          </div>
+        </section>
       </main>
 
-      <!-- Fallback Search Empty State -->
-      <div id="empty-search-state" class="text-center py-20 space-y-3 hidden">
-        <div class="text-5xl">🕵️‍♂️</div>
-        <p class="text-sm font-bold text-slate-400">
-          عذراً، لم نجد أي مشروع يطابق هذا البحث!
-        </p>
-        <p class="text-xs text-slate-500">
-          تأكد من كتابة الأحرف بشكل صحيح باللغة العربية أو الإنجليزية.
-        </p>
-      </div>
+      <button
+        class="scroll-progress"
+        id="scrollProgress"
+        type="button"
+        aria-label="Back to top"
+        title="Back to top"
+      >
+        <span class="scroll-progress-inner" aria-hidden="true">↑</span>
+      </button>
+
+      <footer>
+        <span>Built for learning, experiments, and fast browsing.</span>
+        <span>© 2026 Aswany Labs</span>
+      </footer>
     </div>
 
-    <!-- Platform Footer -->
-    <footer
-      class="text-center py-8 text-xs text-slate-500 font-bold tracking-wider z-10 relative"
-    >
-      منصة معرض أعمال المطور الفنية • مصممة ومطورة وفقاً للمعايير القياسية
-      العالمية لعام ٢٠٢٦ م
-    </footer>
-
-    <!-- Comprehensive JS Processing Data & Engine -->
     <script>
-      // Web Audio Synth feedback engine for premium sound notifications
-      let audioCtx = null;
+      const scrollProgress = document.getElementById("scrollProgress");
 
-      function initAudio() {
-        if (!audioCtx) {
-          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        }
-        if (audioCtx.state === "suspended") {
-          audioCtx.resume();
-        }
+      function updateScrollProgress() {
+        const scrollTop = window.scrollY;
+        const scrollable =
+          document.documentElement.scrollHeight - window.innerHeight;
+        const progress = scrollable > 0 ? scrollTop / scrollable : 0;
+        scrollProgress.style.setProperty("--progress", `${progress * 360}deg`);
       }
 
-      function playSfx(type) {
-        try {
-          initAudio();
-          const ctx = audioCtx;
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          const now = ctx.currentTime;
-
-          if (type === "hover") {
-            // Soft high frequency short tick
-            osc.type = "sine";
-            osc.frequency.setValueAtTime(800, now);
-            gain.gain.setValueAtTime(0.015, now);
-            gain.gain.linearRampToValueAtTime(0.001, now + 0.05);
-            osc.start(now);
-            osc.stop(now + 0.05);
-          } else if (type === "click") {
-            // Beautiful ascending positive confirmation chime
-            osc.type = "sine";
-            osc.frequency.setValueAtTime(523.25, now); // C5
-            osc.frequency.setValueAtTime(659.25, now + 0.06); // E5
-            gain.gain.setValueAtTime(0.06, now);
-            gain.gain.linearRampToValueAtTime(0.001, now + 0.2);
-            osc.start(now);
-            osc.stop(now + 0.2);
-          }
-        } catch (e) {
-          console.warn("Audio feedback context safely bypassed:", e);
-        }
-      }
-
-      // --- Master Projects Database Mapping ---
-      const projectsDatabase = [
-        {
-          slug: "agile",
-          title: "منهجية وتخطيط Agile",
-          subtitle: "إدارة المشاريع المرنة",
-          category: "dev",
-          desc: "واجهة وبوابة مفاهيم تخطيط المشاريع وإدارة المهام وفق أحدث معايير الأجايل.",
-          glowColor: "rgba(168, 85, 247, 0.4)",
-          accentClass: "border-purple-500/20 text-purple-400 bg-purple-500/10",
-          icon: "📋",
-        },
-        {
-          slug: "algorithms",
-          title: "مستكشف ومحلل الخوارزميات",
-          subtitle: "مفاهيم علوم الحاسوب",
-          category: "dev",
-          desc: "عرض تفاعلي وهندسي لطرق عمل وترتيب الخوارزميات البرمجية المعقدة.",
-          glowColor: "rgba(59, 130, 246, 0.4)",
-          accentClass: "border-blue-500/20 text-blue-400 bg-blue-500/10",
-          icon: "⚙️",
-        },
-        {
-          slug: "bmi-calculator",
-          title: "حاسبة مؤشر كتلة الجسم",
-          subtitle: "BMI Calculator Pro",
-          category: "tool",
-          desc: "تطبيق ويب تفاعلي ذكي لقياس اللياقة والكتلة الصحية بدقة لمعايير WHO.",
-          glowColor: "rgba(16, 185, 129, 0.4)",
-          accentClass:
-            "border-emerald-500/20 text-emerald-400 bg-emerald-500/10",
-          icon: "⚖️",
-        },
-        {
-          slug: "c++",
-          title: "مستودع مشاريع C++",
-          subtitle: "C++ Programming Stack",
-          category: "dev",
-          desc: "ملفات برمجية ومشاريع مخصصة تعكس قوة وكفاءة التطوير بلغة السي بلس بلس.",
-          glowColor: "rgba(244, 63, 94, 0.4)",
-          accentClass: "border-rose-500/20 text-rose-400 bg-rose-500/10",
-          icon: "💻",
-        },
-        {
-          slug: "calc",
-          title: "الآلة الحاسبة السيبرانية",
-          subtitle: "Cyber Calculator Engine",
-          category: "tool",
-          desc: "آلة حاسبة متقدمة مبرمجة بخوارزميات تحليلية كاملة للأمان والعمليات المتعددة.",
-          glowColor: "rgba(6, 182, 212, 0.4)",
-          accentClass: "border-cyan-500/20 text-cyan-400 bg-cyan-500/10",
-          icon: "🧮",
-        },
-        {
-          slug: "dice-Game",
-          title: "صراع النرد الأسطوري",
-          subtitle: "Dice Conquest 3D",
-          category: "game",
-          desc: "لعبة نرد تفاعلية ثلاثية الأبعاد بذكاء اصطناعي وتتبع نتائج بالـ LocalStorage.",
-          glowColor: "rgba(245, 158, 11, 0.4)",
-          accentClass: "border-amber-500/20 text-amber-400 bg-amber-500/10",
-          icon: "🎲",
-        },
-        {
-          slug: "drum-Kit",
-          title: "المعزف الإيقاعي السيبراني",
-          subtitle: "Cyber Drum Kit",
-          category: "game",
-          desc: "محاكي طبول وعزف إيقاعي تفاعلي يصنع الأصوات برمجياً بدون أي تأخير.",
-          glowColor: "rgba(217, 70, 239, 0.4)",
-          accentClass:
-            "border-fuchsia-500/20 text-fuchsia-400 bg-fuchsia-500/10",
-          icon: "🥁",
-        },
-        {
-          slug: "DSA",
-          title: "هياكل البيانات والترتيب",
-          subtitle: "Data Structures Stack",
-          category: "dev",
-          desc: "شروحات وأكواد لهياكل البيانات (Arrays, Lists, Trees) وبنائها البرمجي المطور.",
-          glowColor: "rgba(99, 102, 241, 0.4)",
-          accentClass: "border-indigo-500/20 text-indigo-400 bg-indigo-500/10",
-          icon: "🌿",
-        },
-        {
-          slug: "fastWrite",
-          title: "مدرب الكتابة السريعة",
-          subtitle: "Fast Writing Coach",
-          category: "tool",
-          desc: "أداة ذكية لاختبار سرعة ودقة الكتابة على لوحة المفاتيح وحساب نسبة الأخطاء.",
-          glowColor: "rgba(20, 184, 166, 0.4)",
-          accentClass: "border-teal-500/20 text-teal-400 bg-teal-500/10",
-          icon: "⌨️",
-        },
-        {
-          slug: "flashcart",
-          title: "منصة الاستذكار الذكية",
-          subtitle: "Memorize Master",
-          category: "tool",
-          desc: "منصة تفاعلية للاستذكار والحفظ بتقنية 3D وتكرار متباعد مع تخزين كامل بالـ LocalStorage واختصارات لوحة المفاتيح.",
-          glowColor: "rgba(168, 85, 247, 0.4)",
-          accentClass: "border-purple-500/20 text-purple-400 bg-purple-500/10",
-          icon: "🧠",
-        },
-        {
-          slug: "google-Dorks",
-          title: "موسوعة حيل وأوامر البحث المتقدم",
-          subtitle: "Google Dorks Hub",
-          category: "tool",
-          desc: "دليل تفاعلي ومنصة لإطلاق استعلامات الفحص المتقدم لمحركات البحث، كشط مجموعات الواتساب، والتنقيب عن البيانات لمسوقي المبيعات والمبرمجين.",
-          glowColor: "rgba(239, 68, 68, 0.4)",
-          accentClass: "border-rose-500/20 text-rose-400 bg-rose-500/10",
-          icon: "🛡️",
-        },
-        {
-          slug: "id",
-          title: "محلل الرقم القومي المصري",
-          subtitle: "Egyptian ID Analyzer",
-          category: "tool",
-          desc: "واجهة احترافية متطورة لتفكيك أرقام الهوية الوطنية واستخراج السن الدقيق ومحل الميلاد والنوع تلقائياً مع نظام سجل محلي للاستعلامات.",
-          glowColor: "rgba(6, 182, 212, 0.4)",
-          accentClass: "border-cyan-500/20 text-cyan-400 bg-cyan-500/10",
-          icon: "💳",
-        },
-        {
-          slug: "javaScript",
-          title: "مستودع جافا سكريبت",
-          subtitle: "JS Playground Core",
-          category: "dev",
-          desc: "مكتبة كود وتطبيقات ويب ديناميكية تعكس التقنيات المتقدمة في الـ ES6+.",
-          glowColor: "rgba(234, 179, 8, 0.4)",
-          accentClass: "border-yellow-500/20 text-yellow-400 bg-yellow-500/10",
-          icon: "💛",
-        },
-        {
-          slug: "kanban",
-          title: "لوحة تنظيم المهام كانبان",
-          subtitle: "Premium Kanban Board",
-          category: "tool",
-          desc: "أداة تنظيمية متطورة تتيح سحب وإفلات المهام وتصنيف الأولويات الزمنية بدقة.",
-          glowColor: "rgba(16, 185, 129, 0.4)",
-          accentClass:
-            "border-emerald-500/20 text-emerald-400 bg-emerald-500/10",
-          icon: "📌",
-        },
-        {
-          slug: "memory-game",
-          title: "لعبة مطابقة العناصر والذاكرة",
-          subtitle: "Memory Match Master",
-          category: "game",
-          desc: "لعبة تحدي وتقوية الذاكرة بالبطاقات المتشابهة والمؤثرات الصوتية والعداد التنازلي.",
-          glowColor: "rgba(217, 70, 239, 0.4)",
-          accentClass:
-            "border-fuchsia-500/20 text-fuchsia-400 bg-fuchsia-500/10",
-          icon: "💎",
-        },
-        {
-          slug: "oop",
-          title: "البرمجة كائنية التوجه",
-          subtitle: "OOP Principles Guide",
-          category: "dev",
-          desc: "شروحات ونماذج هندسية لتطبيق مفاهيم OOP الكبرى (الفئات، التوريث، التعددية).",
-          glowColor: "rgba(99, 102, 241, 0.4)",
-          accentClass: "border-indigo-500/20 text-indigo-400 bg-indigo-500/10",
-          icon: "🧬",
-        },
-        {
-          slug: "search",
-          title: "محرك البحث الذكي المخصص",
-          subtitle: "Smart Search Utility",
-          category: "tool",
-          desc: "نموذج بحث ذكي مخصص ومحسّن للفلترة السريعة وتوفير تجربة مستخدم فورية.",
-          glowColor: "rgba(59, 130, 246, 0.4)",
-          accentClass: "border-blue-500/20 text-blue-400 bg-blue-500/10",
-          icon: "🔎",
-        },
-        {
-          slug: "ToDo",
-          title: "مدير المهام والإنتاجية اليومية",
-          subtitle: "Advanced To-Do Planner",
-          category: "tool",
-          desc: "قائمة مهام ممتعة وتفاعلية بذكاء الرصد وحفظ البيانات بشكل مستمر.",
-          glowColor: "rgba(16, 185, 129, 0.4)",
-          accentClass:
-            "border-emerald-500/20 text-emerald-400 bg-emerald-500/10",
-          icon: "✅",
-        },
-        {
-          slug: "UML",
-          title: "مصمم مخططات الهيكلة UML",
-          subtitle: "UML Modeler Engine",
-          category: "dev",
-          desc: "شروحات ونماذج لبناء رسومات الهيكلية والتخطيطية للتطبيقات البرمجية الكبرى.",
-          glowColor: "rgba(168, 85, 247, 0.4)",
-          accentClass: "border-purple-500/20 text-purple-400 bg-purple-500/10",
-          icon: "📐",
-        },
-        {
-          slug: "whatsApp",
-          title: "دليل تسويق وأتمتة الواتساب",
-          subtitle: "WhatsApp Automation Hub",
-          category: "tool",
-          desc: "دليل تفاعلي متكامل لإستراتيجيات النمو، كشط واستخراج أرقام المجموعات المستهدفة، وتفادي الحظر الصارم مع محاكي CRM مدمج والردود السريعة.",
-          glowColor: "rgba(16, 185, 129, 0.4)",
-          accentClass:
-            "border-emerald-500/20 text-emerald-400 bg-emerald-500/10",
-          icon: "💬",
-        },
-        {
-          slug: "xo",
-          title: "تحدي إكس أو الأسطوري",
-          subtitle: "XO Ultimate Challenge",
-          category: "game",
-          desc: "لعبة ذكاء اصطناعي بنمط Minimax ضد الكمبيوتر أو صديق وحفظ كلي للنتائج.",
-          glowColor: "rgba(244, 63, 94, 0.4)",
-          accentClass: "border-rose-500/20 text-rose-400 bg-rose-500/10",
-          icon: "❌",
-        },
-        {
-          slug: "zakat",
-          title: "حاسبة الزكاة الذكية",
-          subtitle: "Al-Zakat Calculator",
-          category: "tool",
-          desc: "أداة فقهية وتقنية متقدمة لحساب زكاة المال والذهب بدقة متناهية وفقاً للقيم الديناميكية الحالية للسوق ومقارنتها بالنصاب الشرعي.",
-          glowColor: "rgba(16, 185, 129, 0.4)",
-          accentClass:
-            "border-emerald-500/20 text-emerald-400 bg-emerald-500/10",
-          icon: "🕌",
-        },
-      ];
-
-      // Global State Variables
-      let activeCategory = "all";
-      let searchQuery = "";
-
-      // DOM caching elements
-      const gridContainer = document.getElementById("projects-grid");
-      const badgeCount = document.getElementById("project-count-badge");
-      const emptyState = document.getElementById("empty-search-state");
-
-      // Page startup
-      window.addEventListener("DOMContentLoaded", () => {
-        badgeCount.textContent = projectsDatabase.length;
-        renderProjectCards();
+      scrollProgress.addEventListener("click", () => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
       });
 
-      // Filter and compile results
-      function getFilteredProjects() {
-        return projectsDatabase.filter((project) => {
-          // Category Filter
-          const matchCategory =
-            activeCategory === "all" || project.category === activeCategory;
-          // Query Filter
-          const matchSearch =
-            project.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            project.slug.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            project.subtitle.toLowerCase().includes(searchQuery.toLowerCase());
-
-          return matchCategory && matchSearch;
-        });
-      }
-
-      // Render project cards list inside the dashboard grid container
-      function renderProjectCards() {
-        const list = getFilteredProjects();
-        gridContainer.innerHTML = "";
-
-        if (list.length === 0) {
-          emptyState.classList.remove("hidden");
-          return;
-        }
-        emptyState.classList.add("hidden");
-
-        list.forEach((project, index) => {
-          const card = document.createElement("div");
-          // Staggered Slide animation logic
-          card.className =
-            "animate-card glass-card rounded-[2.2rem] p-6 flex flex-col justify-between relative overflow-hidden group cursor-pointer border hover:border-slate-700 shadow-lg shadow-slate-950/20";
-          card.style.animationDelay = `${index * 0.04}s`; // Smooth staggered delay
-
-          // Set mouse events for premium audio click/hover
-          card.setAttribute("onmouseenter", "playSfx('hover')");
-
-          // التعديل والإصلاح الجوهري هنا: استدعاء الدالة الصحيحة "navigateProject" بدلاً من "MapsProject"
-          card.setAttribute("onclick", `navigateProject('${project.slug}')`);
-
-          card.innerHTML = `
-                    <!-- Invisible neon background glowing orb -->
-                    <div class="absolute -top-12 -left-12 w-24 h-24 rounded-full blur-2xl transition-all duration-300 group-hover:scale-[1.8] pointer-events-none opacity-10 group-hover:opacity-20" style="background-color: ${project.glowColor};"></div>
-                    
-                    <div class="space-y-4">
-                        <!-- Top details -->
-                        <div class="flex items-center justify-between">
-                            <span class="w-10 h-10 rounded-2xl bg-slate-900 border border-slate-800/80 flex items-center justify-center text-lg group-hover:scale-110 transition-transform duration-300">
-                                ${project.icon}
-                            </span>
-                            <span class="border text-[10px] font-black py-1 px-3.5 rounded-xl uppercase ${project.accentClass}">
-                                ${project.slug.toUpperCase()}
-                            </span>
-                        </div>
-
-                        <!-- Card text descriptions -->
-                        <div class="space-y-1">
-                            <h3 class="text-md font-extrabold text-white group-hover:text-cyan-400 transition-colors duration-300">${project.title}</h3>
-                            <p class="text-[10px] font-bold text-slate-400 tracking-wide font-mono">${project.subtitle}</p>
-                        </div>
-
-                        <p class="text-xs text-slate-500 leading-relaxed font-semibold">
-                            ${project.desc}
-                        </p>
-                    </div>
-
-                    <!-- Open indicators -->
-                    <div class="flex items-center justify-between text-[11px] font-bold text-slate-400 group-hover:text-cyan-400 transition-colors border-t border-slate-900 pt-4 mt-6">
-                        <span>انقر للدخول فورا</span>
-                        <span class="text-xs transition-transform duration-300 group-hover:translate-x-[-4px]">⮕</span>
-                    </div>
-                `;
-          gridContainer.appendChild(card);
-        });
-      }
-
-      // Search live filter
-      function handleSearch(val) {
-        searchQuery = val.trim();
-        renderProjectCards();
-      }
-
-      // Category filter switcher
-      function filterCategory(category) {
-        playSfx("click");
-        activeCategory = category;
-
-        // Update filters layout styles
-        const buttons = ["all", "game", "tool", "dev"];
-        buttons.forEach((btn) => {
-          const el = document.getElementById(`filter-${btn}`);
-          if (el) {
-            if (btn === category) {
-              el.className =
-                "px-4 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-500 text-slate-950 shadow-md transition-all";
-            } else {
-              el.className =
-                "px-4 py-2.5 rounded-xl bg-slate-900/60 border border-slate-800 text-slate-400 hover:text-slate-200 hover:bg-slate-800/80 transition-all";
-            }
-          }
-        });
-
-        renderProjectCards();
-      }
-
-      function navigateProject(slug) {
-        playSfx("click");
-
-        setTimeout(() => {
-          window.location.href = `${window.location.origin}/${slug}`;
-        }, 250);
-      }
+      window.addEventListener("scroll", updateScrollProgress, {
+        passive: true,
+      });
+      window.addEventListener("resize", updateScrollProgress);
+      updateScrollProgress();
     </script>
   </body>
 </html>

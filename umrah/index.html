@@ -1,0 +1,1300 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دليل العمرة</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🕋</text></svg>">
+    
+    <!-- Tailwind CSS Engine -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts - Cairo & Traditional Arabic -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Amiri:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        umrah: {
+                            DEFAULT: '#008571',
+                            light: '#00a890',
+                            dark: '#005e50',
+                            deep: '#003d34',
+                            bg: '#f2faf8',
+                            card: '#ffffff',
+                            gold: '#d4af37',
+                            goldlight: '#f9f3dd',
+                            golddark: '#997d20'
+                        }
+                    },
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif'],
+                        quran: ['Amiri', 'serif'],
+                    },
+                    boxShadow: {
+                        'card-hover': '0 20px 30px -10px rgba(0, 133, 113, 0.15)',
+                        'gold-glow': '0 0 20px rgba(212, 175, 55, 0.3)'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        * {
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #f2faf8;
+            background-image: radial-gradient(#008571 0.5px, transparent 0.5px), radial-gradient(#008571 0.5px, #f2faf8 0.5px);
+            background-size: 20px 20px;
+            background-position: 0 0, 10px 10px;
+            background-attachment: fixed;
+            color: #2d3748;
+        }
+        
+        
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #e6f4f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #008571;
+            border-radius: 5px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #005e50;
+        }
+
+        
+        .evidence-card {
+            border-right: 5px solid #008571;
+            background: linear-gradient(135deg, #eaf7f5 0%, #ffffff 100%);
+        }
+        .quran-text {
+            font-family: 'Amiri', serif;
+            line-height: 2.2;
+        }
+        .badge-pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-weight: 700;
+            font-size: 0.875rem;
+        }
+        
+        
+        .card-highlight {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .card-highlight:hover {
+            transform: translateY(-3px);
+        }
+
+        
+        @media print {
+            header, footer, .no-print {
+                display: none !important;
+            }
+            body {
+                background: white !important;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-umrah selection:text-white ">
+
+    <header class="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-md shadow-sm z-50 transition-all border-b border-teal-100">
+        <div class="container mx-auto px-4 h-16 flex items-center justify-between">
+            
+            <!-- Brand Logo -->
+            <div class="flex items-center gap-3 cursor-pointer group" onclick="scrollToTop()">
+                <div class="w-10 h-10 bg-umrah rounded-xl flex items-center justify-center shadow-md text-white font-bold text-xl">
+                    🕋
+                </div>
+                <div>
+                    <h1 class="text-xl font-black text-umrah tracking-tight flex items-center gap-2">
+                        دليل العمرة 
+                    </h1>
+                    <p class="text-xs text-gray-500 font-medium  block">خطوة بخطوة وفق الكتاب والسُنّة الصحيحة</p>
+                </div>
+            </div>
+
+            <!-- Quick Navigation Controls -->
+            <div class="flex items-center gap-2">
+                <button onclick="toggleQuickSearch()" class="p-2 text-gray-600 hover:text-umrah hover:bg-teal-50 rounded-lg transition-colors flex items-center gap-1 text-sm font-semibold" title="بحث سريع">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    <span class="hidden md:inline">بحث</span>
+                </button>
+                <button onclick="scrollToSection('counter-section')" class="p-2 bg-umrah-bg text-umrah font-bold hover:bg-umrah hover:text-white rounded-lg transition-colors text-sm flex items-center gap-1 border border-teal-200">
+                    <span>🔢</span>
+                    <span class="hidden sm:inline">عداد الأشواط</span>
+                </button>
+               
+            </div>
+        </div>
+
+        <!-- Top Scroll Progress Indicator Bar -->
+        <div class="w-full bg-gray-100 h-1">
+            <div id="progress-bar" class="h-full bg-umrah w-0 transition-all duration-100"></div>
+        </div>
+    </header>
+
+    <!-- Modal Search Box Overlay -->
+    <div id="search-modal" class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-50 hidden flex items-start justify-center pt-20 px-4">
+        <div class="bg-white w-full max-w-2xl rounded-2xl shadow-2xl p-6 border border-teal-100 space-y-4">
+            <div class="flex items-center justify-between border-b pb-3">
+                <h3 class="text-lg font-bold text-umrah-dark flex items-center gap-2">
+                    🔍 البحث السريع في الدليل والأدعية
+                </h3>
+                <button onclick="toggleQuickSearch()" class="text-gray-400 hover:text-gray-600 font-bold text-xl">&times;</button>
+            </div>
+            <input type="text" id="search-input" onkeyup="filterGuideContent()" placeholder="اكتب للبحث (مثال: طواف، النية، دعاء الصفا، محظورات...)" class="w-full p-3 border-2 border-teal-200 rounded-xl focus:outline-none focus:border-umrah text-lg">
+            <div id="search-results" class="max-h-60 overflow-y-auto space-y-2 text-sm text-gray-700">
+                <p class="text-gray-400 text-center py-4">ابتدئ الكتابة للبحث المباشر...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN WRAPPER -->
+    <main class="container mx-auto px-4 pt-24 pb-12 max-w-5xl space-y-12">
+
+        <!-- Hero & Quick Intro Card -->
+        <section class="bg-gradient-to-br from-umrah-dark via-umrah to-teal-800 text-white p-6 md:p-10 rounded-3xl shadow-xl relative overflow-hidden border border-teal-600">
+            <div class="absolute -left-10 -bottom-10 opacity-10 text-[180px] font-black select-none pointer-events-none">🕋</div>
+            
+            <div class="relative z-10 space-y-6">
+                <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/20 text-xs md:text-sm font-semibold text-umrah-goldlight">
+                    <span>✨ مرجع فقهي وميداني مُيسّر</span>
+                    <span>•</span>
+                    <span>مُدعم بالأدلة الشرعية</span>
+                </div>
+
+                <h2 class="text-3xl md:text-5xl font-black leading-tight tracking-wide">
+                    دليل صفة العمرة وأحكامها
+                </h2>
+                
+                <p class="text-teal-50 text-base md:text-xl font-medium leading-relaxed max-w-3xl">
+                    مستند تفصيلي يجمع <span class="text-amber-300 font-bold underline decoration-amber-400">أركان العمرة</span>، <span class="text-amber-300 font-bold underline decoration-amber-400">واجباتها</span>، <span class="text-amber-300 font-bold underline decoration-amber-400">سننها</span>، <span class="text-amber-300 font-bold underline decoration-amber-400">محظوراتها والفدية</span>، بالإضافة إلى الأدعية المأثورة لكل شوط والدليل العملي الكامل.
+                </p>
+
+                <!-- Key Metrics / Fast Stats Bar Cards -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 md:gap-4 pt-4 border-t border-white/20">
+                    <div class="bg-white/10 backdrop-blur-md p-3 rounded-2xl border border-white/10 text-center">
+                        <span class="block text-2xl md:text-3xl font-black text-amber-300">3</span>
+                        <span class="text-xs md:text-sm font-medium text-teal-100">أركان لا تُجبر</span>
+                    </div>
+                    <div class="bg-white/10 backdrop-blur-md p-3 rounded-2xl border border-white/10 text-center">
+                        <span class="block text-2xl md:text-3xl font-black text-amber-300">2</span>
+                        <span class="text-xs md:text-sm font-medium text-teal-100">واجبات تُجبر بدم</span>
+                    </div>
+                    <div class="bg-white/10 backdrop-blur-md p-3 rounded-2xl border border-white/10 text-center">
+                        <span class="block text-2xl md:text-3xl font-black text-amber-300">7</span>
+                        <span class="text-xs md:text-sm font-medium text-teal-100">أشواط طواف وسعي</span>
+                    </div>
+                    <div class="bg-white/10 backdrop-blur-md p-3 rounded-2xl border border-white/10 text-center">
+                        <span class="block text-2xl md:text-3xl font-black text-amber-300">9</span>
+                        <span class="text-xs md:text-sm font-medium text-teal-100">محظورات للإحرام</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Jump Navigation Cards -->
+        <section class="no-print">
+            <h3 class="text-sm font-bold text-gray-500 mb-3 px-1 uppercase tracking-wider">التنقل السريع بين أقسام الدليل:</h3>
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+                <button onclick="scrollToSection('sec-pillars')" class="p-3 bg-white hover:bg-teal-50 border border-teal-100 rounded-2xl shadow-sm text-center card-highlight flex flex-col items-center justify-center gap-1 group">
+                    <span class="text-2xl">🏛️</span>
+                    <span class="text-xs font-bold text-gray-800 group-hover:text-umrah">1. الأركان</span>
+                </button>
+                <button onclick="scrollToSection('sec-duties')" class="p-3 bg-white hover:bg-teal-50 border border-teal-100 rounded-2xl shadow-sm text-center card-highlight flex flex-col items-center justify-center gap-1 group">
+                    <span class="text-2xl">⚖️</span>
+                    <span class="text-xs font-bold text-gray-800 group-hover:text-umrah">2. الواجبات</span>
+                </button>
+                <button onclick="scrollToSection('sec-sunan')" class="p-3 bg-white hover:bg-teal-50 border border-teal-100 rounded-2xl shadow-sm text-center card-highlight flex flex-col items-center justify-center gap-1 group">
+                    <span class="text-2xl">🌱</span>
+                    <span class="text-xs font-bold text-gray-800 group-hover:text-umrah">3. المستحبات</span>
+                </button>
+                <button onclick="scrollToSection('sec-prohibitions')" class="p-3 bg-white hover:bg-teal-50 border border-teal-100 rounded-2xl shadow-sm text-center card-highlight flex flex-col items-center justify-center gap-1 group">
+                    <span class="text-2xl">🚫</span>
+                    <span class="text-xs font-bold text-gray-800 group-hover:text-umrah">4. المحظورات</span>
+                </button>
+                <button onclick="scrollToSection('sec-supplications')" class="p-3 bg-white hover:bg-teal-50 border border-teal-100 rounded-2xl shadow-sm text-center card-highlight flex flex-col items-center justify-center gap-1 group">
+                    <span class="text-2xl">🤲</span>
+                    <span class="text-xs font-bold text-gray-800 group-hover:text-umrah">5. الأدعية والأذكار</span>
+                </button>
+                <button onclick="scrollToSection('sec-rounds-duas')" class="p-3 bg-white hover:bg-teal-50 border border-teal-100 rounded-2xl shadow-sm text-center card-highlight flex flex-col items-center justify-center gap-1 group">
+                    <span class="text-2xl">🔄</span>
+                    <span class="text-xs font-bold text-gray-800 group-hover:text-umrah">6. أدعية الأشواط</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Visual Roadmap: Step by Step Flow -->
+        <section class="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-gray-200 space-y-6">
+            <div class="flex items-center justify-between border-b pb-4">
+                <div>
+                    <span class="badge-pill bg-teal-100 text-umrah mb-1">خارطة الطريق</span>
+                    <h3 class="text-2xl font-black text-umrah-dark">خطوات أداء العمرة بالتسلسل</h3>
+                </div>
+                <span class="text-3xl">🧭</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 relative">
+                <!-- Step 1 -->
+                <div class="bg-teal-50/60 p-5 rounded-2xl border-2 border-teal-200 relative space-y-2">
+                    <div class="w-8 h-8 bg-umrah text-white font-black rounded-full flex items-center justify-center text-sm shadow">1</div>
+                    <h4 class="font-bold text-lg text-umrah-dark">الإحرام من الميقات</h4>
+                    <p class="text-xs text-gray-600 leading-relaxed">الاغتسال، لبس ملابس الإحرام، وقول: «لَبَّيْكَ اللَّهُمَّ عُمْرَةً» والبدء بالتلبية.</p>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="bg-amber-50/60 p-5 rounded-2xl border-2 border-amber-200 relative space-y-2">
+                    <div class="w-8 h-8 bg-amber-600 text-white font-black rounded-full flex items-center justify-center text-sm shadow">2</div>
+                    <h4 class="font-bold text-lg text-amber-900">الطواف بالبيت</h4>
+                    <p class="text-xs text-gray-600 leading-relaxed">سبعة أشواط تبدأ من الحجر الأسود وتنتهي عنده، ثم صلاة ركعتين خلف المقام.</p>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="bg-emerald-50/60 p-5 rounded-2xl border-2 border-emerald-200 relative space-y-2">
+                    <div class="w-8 h-8 bg-emerald-600 text-white font-black rounded-full flex items-center justify-center text-sm shadow">3</div>
+                    <h4 class="font-bold text-lg text-emerald-900">السعي بين الصفا والمروة</h4>
+                    <p class="text-xs text-gray-600 leading-relaxed">سبعة أشواط تبدأ من الصفا وتنتهي بالمروة، مع الذكر والدعاء عند الجبلين.</p>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="bg-sky-50/60 p-5 rounded-2xl border-2 border-sky-200 relative space-y-2">
+                    <div class="w-8 h-8 bg-sky-600 text-white font-black rounded-full flex items-center justify-center text-sm shadow">4</div>
+                    <h4 class="font-bold text-lg text-sky-900">الحلق أو التقصير</h4>
+                    <p class="text-xs text-gray-600 leading-relaxed">حلق كامل الرأس أو تقصيره للرجال، وتقصير أنملة من طرف الشعر للنساء.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 1: الأركان -->
+        <section id="sec-pillars" class="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-gray-200 space-y-6">
+            <div class="flex items-center justify-between border-b pb-4">
+                <div class="space-y-1">
+                    <span class="bg-red-100 text-red-800 text-xs font-bold px-3 py-1 rounded-full">الأساس الفقهي الأول</span>
+                    <h2 class="text-2xl md:text-3xl font-black text-umrah-dark">1. أركان العمرة</h2>
+                </div>
+                <span class="text-3xl">🏛️</span>
+            </div>
+
+            <div class="bg-red-50/80 border-r-4 border-red-500 p-4 rounded-xl text-red-900 text-sm md:text-base font-semibold leading-relaxed">
+                ⚠️ <span class="font-bold">تنبيه فقهي مهم:</span> أركان العمرة هي أجزاؤها الأساسية التي <span class="underline underline-offset-4 decoration-red-500">لا تصح العمرة إلا بها جميعاً</span>، ولا تنجبر بذبح ولا فدية ولا غيرها، ومن ترك ركناً لم تتم عمرته حتى يأتي به.
+            </div>
+
+            <div class="grid grid-cols-1 gap-6">
+                
+                <!-- Pillar 1 -->
+                <div class="border border-teal-100 rounded-2xl p-5 md:p-6 bg-gradient-to-l from-teal-50/40 to-white space-y-3 card-highlight">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-xl font-bold text-umrah-dark flex items-center gap-3">
+                            <span class="w-8 h-8 rounded-xl bg-umrah text-white flex items-center justify-center font-bold text-sm shadow">1</span>
+                            الإحرام (نية الدخول في المنسك)
+                        </h3>
+                        <span class="bg-teal-100 text-umrah-dark text-xs font-bold px-2.5 py-1 rounded-lg">رُكن أول</span>
+                    </div>
+                    <p class="text-gray-700 leading-relaxed">
+                        هو القصد والنية القلبية للدخول في عبادة العمرة، وليس مجرد ارتداء ثياب الإحرام.
+                    </p>
+                    <div class="evidence-card p-4 rounded-xl space-y-1">
+                        <span class="text-xs font-bold text-umrah uppercase tracking-wider block">الدليل الشرعي من السنة:</span>
+                        <p class="font-semibold text-gray-800">
+                            قول النبي ﷺ: «إِنَّمَا الأَعْمَالُ بِالنِّيَّاتِ، وَإِنَّمَا لِكُلِّ امْرِئٍ مَا نَوَى». 
+                            <span class="text-xs text-gray-500 font-normal">(رواه البخاري ومسلم)</span>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Pillar 2 -->
+                <div class="border border-teal-100 rounded-2xl p-5 md:p-6 bg-gradient-to-l from-teal-50/40 to-white space-y-3 card-highlight">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-xl font-bold text-umrah-dark flex items-center gap-3">
+                            <span class="w-8 h-8 rounded-xl bg-umrah text-white flex items-center justify-center font-bold text-sm shadow">2</span>
+                            الطواف بالبيت (سبعة أشواط)
+                        </h3>
+                        <span class="bg-teal-100 text-umrah-dark text-xs font-bold px-2.5 py-1 rounded-lg">رُكن ثانٍ</span>
+                    </div>
+                    <p class="text-gray-700 leading-relaxed">
+                        الطواف حول الكعبة المشرفة 7 أشواط كاملة تبدأ من الحجر الأسود وتستمر جعل الكعبة على اليسار.
+                    </p>
+                    <div class="evidence-card p-4 rounded-xl space-y-1">
+                        <span class="text-xs font-bold text-umrah uppercase tracking-wider block">الدليل الشرعي من القرآن الكريم:</span>
+                        <p class="font-semibold text-gray-800 quran-text text-lg">
+                            ﴿وَلْيَطَّوَّفُوا بِالْبَيْتِ الْعَتِيقِ﴾ 
+                            <span class="text-xs font-sans text-gray-500">(سورة الحج: 29)</span>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Pillar 3 -->
+                <div class="border border-teal-100 rounded-2xl p-5 md:p-6 bg-gradient-to-l from-teal-50/40 to-white space-y-3 card-highlight">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-xl font-bold text-umrah-dark flex items-center gap-3">
+                            <span class="w-8 h-8 rounded-xl bg-umrah text-white flex items-center justify-center font-bold text-sm shadow">3</span>
+                            السعي بين الصفا والمروة (سبعة أشواط)
+                        </h3>
+                        <span class="bg-teal-100 text-umrah-dark text-xs font-bold px-2.5 py-1 rounded-lg">رُكن ثالث</span>
+                    </div>
+                    <p class="text-gray-700 leading-relaxed">
+                        قطع المسافة بين جبل الصفا والمروة 7 مرات، حيث يُحسب الذهاب شوطاً والاياب شوطاً آخر.
+                    </p>
+                    <div class="evidence-card p-4 rounded-xl space-y-2">
+                        <span class="text-xs font-bold text-umrah uppercase tracking-wider block">الدليل الشرعي من القرآن والسنة:</span>
+                        <p class="font-semibold text-gray-800 quran-text text-lg">
+                            ﴿إِنَّ الصَّفَا وَالْمَرْوَةَ مِن شَعَائِرِ اللَّهِ﴾ 
+                            <span class="text-xs font-sans text-gray-500">(البقرة: 158)</span>
+                        </p>
+                        <p class="text-sm text-gray-700">
+                            وقول الرسول ﷺ: «اسْعَوْا، فَإِنَّ اللَّهَ كَتَبَ عَلَيْكُمُ السَّعْيَ» <span class="text-xs text-gray-500">(رواه أحمد والبيهقي)</span>.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECTION 2: الواجبات -->
+        <section id="sec-duties" class="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-gray-200 space-y-6">
+            <div class="flex items-center justify-between border-b pb-4">
+                <div class="space-y-1">
+                    <span class="bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1 rounded-full">الأساس الفقهي الثاني</span>
+                    <h2 class="text-2xl md:text-3xl font-black text-umrah-dark">2. واجبات العمرة</h2>
+                </div>
+                <span class="text-3xl">⚖️</span>
+            </div>
+
+            <div class="bg-amber-50/80 border-r-4 border-amber-500 p-4 rounded-xl text-amber-900 text-sm md:text-base font-semibold leading-relaxed">
+                ℹ️ <span class="font-bold">الحكم الفقهي للواجبات:</span> واجبات العمرة هي الأعمال التي يجب الالتزام بها، ومن ترك واجباً منها لغير عذر صحّت عمرته ولكن <span class="underline underline-offset-4">يلزمه جبره بدم</span> (ذبح شاة تُوزّع على فقراء حرم مكة المكرمة).
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+                <!-- Duty 1 -->
+                <div class="border border-amber-200 rounded-2xl p-5 bg-gradient-to-b from-amber-50/30 to-white space-y-3 card-highlight">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-lg font-bold text-amber-950 flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-full bg-amber-500 inline-block"></span>
+                            الإحرام من الميقات المعتبر شرعاً
+                        </h3>
+                    </div>
+                    <p class="text-sm text-gray-700 leading-relaxed">
+                        أن يحرم القادم من خارج مكة من الميقات المكاني المخصص لبلده أو ما يحاذيه جوّاً/براً، وأما أهل مكة أو المقيمون داخل الحرم فيحرمون من أطراف "الحِلّ" (مثل التنعيم - مسجد عائشة رضي الله عنها).
+                    </p>
+                    <div class="evidence-card p-3 rounded-xl">
+                        <span class="text-xs font-bold text-amber-800 block mb-1">الدليل الشرعي:</span>
+                        <p class="text-xs text-gray-800 leading-relaxed">
+                            حديث ابن عباس رضي الله عنهما في تحديد المواقيت: «هُنَّ لَهُنَّ، وَلِمَنْ أَتَى عَلَيْهِنَّ مِنْ غَيْرِهِنَّ مِمَّنْ أَرَادَ الحَجَّ وَالعُمْرَةَ» <span class="text-gray-500">(رواه البخاري ومسلم)</span>.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Duty 2 -->
+                <div class="border border-amber-200 rounded-2xl p-5 bg-gradient-to-b from-amber-50/30 to-white space-y-3 card-highlight">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-lg font-bold text-amber-950 flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-full bg-amber-500 inline-block"></span>
+                            الحلق أو التقصير للشعر
+                        </h3>
+                    </div>
+                    <p class="text-sm text-gray-700 leading-relaxed">
+                        التحلل من الإحرام بآخذ شيء من شعر الرأس. (الحلق الكامل لجميع الرأس أفضل للرجال، والتقصير الشامل مجزئ، أما المرأة فتقصر قدر أنملة الأصبع من أطراف شعرها).
+                    </p>
+                    <div class="evidence-card p-3 rounded-xl">
+                        <span class="text-xs font-bold text-amber-800 block mb-1">الدليل الشرعي:</span>
+                        <p class="text-xs text-gray-800 leading-relaxed">
+                            قوله تعالى: ﴿مُحَلِّقِينَ رُؤُوسَكُمْ وَمُقَصِّرِينَ﴾ <span class="text-gray-500">(الفتح: 27)</span>، ودعاء النبي ﷺ: «اللَّهُمَّ ارْحَمِ المُحَلِّقِينَ...» ثلاثاً ثم قال: «والمقصرين».
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECTION 3: المستحبات والسنن -->
+        <section id="sec-sunan" class="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-gray-200 space-y-6">
+            <div class="flex items-center justify-between border-b pb-4">
+                <div class="space-y-1">
+                    <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full">الجانب الجمالي والكمال</span>
+                    <h2 class="text-2xl md:text-3xl font-black text-umrah-dark">3. المستحبات والسنن</h2>
+                </div>
+                <span class="text-3xl">🌱</span>
+            </div>
+
+            <p class="text-sm md:text-base text-gray-600 leading-relaxed">
+                أفعال وسنن يُثاب فاعلها ويعظم بها أجره، ولا يبتطل المنسك ولا تجب فيه فدية بتاركه:
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                
+                <!-- Sunnah Card 1 -->
+                <div class="bg-teal-50/50 p-4 rounded-2xl border border-teal-100 flex items-start gap-3">
+                    <div class="p-2 bg-umrah text-white rounded-xl shrink-0 font-bold">01</div>
+                    <div class="space-y-1">
+                        <h4 class="font-bold text-umrah-dark text-base">الاغتسال والتطيب بالبدن قبل الإحرام:</h4>
+                        <p class="text-xs text-gray-600 leading-relaxed"><span class="font-bold text-umrah">الدليل:</span> عن عائشة رضي الله عنها قالت: «كُنْتُ أُطَيِّبُ رَسُولَ اللَّهِ ﷺ لإِحْرَامِهِ قَبْلَ أَنْ يُحْرِمَ» (متفق عليه).</p>
+                    </div>
+                </div>
+
+                <!-- Sunnah Card 2 -->
+                <div class="bg-teal-50/50 p-4 rounded-2xl border border-teal-100 flex items-start gap-3">
+                    <div class="p-2 bg-umrah text-white rounded-xl shrink-0 font-bold">02</div>
+                    <div class="space-y-1">
+                        <h4 class="font-bold text-umrah-dark text-base">التلبية والجهر بها للرجال:</h4>
+                        <p class="text-xs text-gray-600 leading-relaxed"><span class="font-bold text-umrah">الدليل:</span> «لَبَّيْكَ اللَّهُمَّ لَبَّيْكَ، لَبَّيْكَ لاَ شَرِيكَ لَكَ لَبَّيْكَ، إِنَّ الحَمْدَ وَالنِّعْمَةَ لَكَ وَالمُلْكُ، لاَ شَرِيكَ لَكَ».</p>
+                    </div>
+                </div>
+
+                <!-- Sunnah Card 3 -->
+                <div class="bg-teal-50/50 p-4 rounded-2xl border border-teal-100 flex items-start gap-3">
+                    <div class="p-2 bg-umrah text-white rounded-xl shrink-0 font-bold">03</div>
+                    <div class="space-y-1">
+                        <h4 class="font-bold text-umrah-dark text-base">الاضطباع والـرَمَل للرجال في طواف العمرة:</h4>
+                        <p class="text-xs text-gray-500 mb-1">(الاضطباع: كشف الكتف الأيمن - الرَمَل: إسراع الخطى في الأشواط الثلاثة الأولى).</p>
+                        <p class="text-xs text-gray-600 leading-relaxed"><span class="font-bold text-umrah">الدليل:</span> ثبوت فعل النبي ﷺ لهما في طوافه بالبيت (رواه مسلم).</p>
+                    </div>
+                </div>
+
+                <!-- Sunnah Card 4 -->
+                <div class="bg-teal-50/50 p-4 rounded-2xl border border-teal-100 flex items-start gap-3">
+                    <div class="p-2 bg-umrah text-white rounded-xl shrink-0 font-bold">04</div>
+                    <div class="space-y-1">
+                        <h4 class="font-bold text-umrah-dark text-base">استلام الحجر الأسود أو الإشارة إليه والتكبير:</h4>
+                        <p class="text-xs text-gray-600 leading-relaxed"><span class="font-bold text-umrah">الدليل:</span> حديث ابن عباس: «كُلَّمَا أَتَى الرُّكْن أشارَ إلَيْهِ بشَيْءٍ عِنْدَهُ وكَبَّرَ» (رواه البخاري).</p>
+                    </div>
+                </div>
+
+                <!-- Sunnah Card 5 -->
+                <div class="bg-teal-50/50 p-4 rounded-2xl border border-teal-100 flex items-start gap-3">
+                    <div class="p-2 bg-umrah text-white rounded-xl shrink-0 font-bold">05</div>
+                    <div class="space-y-1">
+                        <h4 class="font-bold text-umrah-dark text-base">صلاة ركعتين خلف مقام إبراهيم بعد الطواف:</h4>
+                        <p class="text-xs text-gray-600 leading-relaxed"><span class="font-bold text-umrah">الدليل:</span> ﴿وَاتَّخِذُوا مِن مَّقَامِ إِبْرَاهِيمَ مُصَلًّى﴾ (البقرة: 125).</p>
+                    </div>
+                </div>
+
+                <!-- Sunnah Card 6 -->
+                <div class="bg-teal-50/50 p-4 rounded-2xl border border-teal-100 flex items-start gap-3">
+                    <div class="p-2 bg-umrah text-white rounded-xl shrink-0 font-bold">06</div>
+                    <div class="space-y-1">
+                        <h4 class="font-bold text-umrah-dark text-base">الشرب من ماء زمزم والتضلع منه والنداء بالدعاء:</h4>
+                        <p class="text-xs text-gray-600 leading-relaxed"><span class="font-bold text-umrah">الدليل:</span> قوله ﷺ: «مَاءُ زَمْزَمَ لِمَا شُرِبَ لَهُ» (رواه ابن ماجه).</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECTION 4: المحظورات والفدية -->
+        <section id="sec-prohibitions" class="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-gray-200 space-y-8">
+            <div class="flex items-center justify-between border-b pb-4">
+                <div class="space-y-1">
+                    <span class="bg-rose-100 text-rose-800 text-xs font-bold px-3 py-1 rounded-full">اجتناب النهي والتقييد</span>
+                    <h2 class="text-2xl md:text-3xl font-black text-rose-900">4. محظورات الإحرام وأحكام الفدية</h2>
+                </div>
+                <span class="text-3xl">🚫</span>
+            </div>
+
+            <!-- List of 9 Prohibitions -->
+            <div class="space-y-4">
+                <h3 class="text-lg font-bold text-gray-800 flex items-center gap-2 border-b pb-2">
+                    <span>📋</span> أولاً: قائمة المحظورات التسعة الممنوعة على المحرم:
+                </h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <div class="p-3 bg-rose-50/60 border border-rose-100 rounded-xl text-xs space-y-1">
+                        <span class="font-bold text-rose-900 block text-sm">1. قص أو حلق الشعر:</span>
+                        <p class="text-gray-600">من أي موضع في الجسم لقوله: ﴿وَلَا تَحْلِقُوا رُؤُوسَكُمْ﴾.</p>
+                    </div>
+                    <div class="p-3 bg-rose-50/60 border border-rose-100 rounded-xl text-xs space-y-1">
+                        <span class="font-bold text-rose-900 block text-sm">2. تقليم الأظافر:</span>
+                        <p class="text-gray-600">سواء أظافر اليدين أو القدمين بدون عذر.</p>
+                    </div>
+                    <div class="p-3 bg-rose-50/60 border border-rose-100 rounded-xl text-xs space-y-1">
+                        <span class="font-bold text-rose-900 block text-sm">3. تغطية الرأس للرجل:</span>
+                        <p class="text-gray-600">بملاصق كالغترة والعمامة والطاقية.</p>
+                    </div>
+                    <div class="p-3 bg-rose-50/60 border border-rose-100 rounded-xl text-xs space-y-1">
+                        <span class="font-bold text-rose-900 block text-sm">4. لبس المخيط للرجل:</span>
+                        <p class="text-gray-600">كالقميص السروال والبنطال والجوارب المفصلة.</p>
+                    </div>
+                    <div class="p-3 bg-rose-50/60 border border-rose-100 rounded-xl text-xs space-y-1">
+                        <span class="font-bold text-rose-900 block text-sm">5. استعمال الطيب:</span>
+                        <p class="text-gray-600">تطيب البدن أو ثياب الإحرام بعد النية.</p>
+                    </div>
+                    <div class="p-3 bg-rose-50/60 border border-rose-100 rounded-xl text-xs space-y-1">
+                        <span class="font-bold text-rose-900 block text-sm">6. النقاب والقفازين للمرأة:</span>
+                        <p class="text-gray-600">وتسدل على وجهها عند مرور الرجال الأجانب.</p>
+                    </div>
+                    <div class="p-3 bg-rose-50/60 border border-rose-100 rounded-xl text-xs space-y-1">
+                        <span class="font-bold text-rose-900 block text-sm">7. قتل صيد البر:</span>
+                        <p class="text-gray-600">أو التنفير منه لقوله تعالى: ﴿لَا تَقْتُلُوا الصَّيْدَ﴾.</p>
+                    </div>
+                    <div class="p-3 bg-rose-50/60 border border-rose-100 rounded-xl text-xs space-y-1">
+                        <span class="font-bold text-rose-900 block text-sm">8. عقد النكاح:</span>
+                        <p class="text-gray-600">لنفسه أو لغيره بكتابة أو خطبة.</p>
+                    </div>
+                    <div class="p-3 bg-rose-50/60 border border-rose-100 rounded-xl text-xs space-y-1">
+                        <span class="font-bold text-rose-900 block text-sm">9. الجماع والمباشرة:</span>
+                        <p class="text-gray-600">وهو أعظم المحظورات المفسدة للمنسك.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fidyah Rules Breakdown Cards -->
+            <div class="space-y-4">
+                <h3 class="text-lg font-bold text-gray-800 flex items-center gap-2 border-b pb-2">
+                    <span>💡</span> ثانياً: تفصيل الأحكام وما يفعل عند ارتكاب المحظور (أنواع الفدية):
+                </h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    
+                    <!-- Fidyah Type 1 -->
+                    <div class="bg-gray-50 border border-gray-200 p-5 rounded-2xl space-y-2">
+                        <div class="inline-block bg-teal-100 text-umrah-dark text-xs font-bold px-2 py-0.5 rounded">1. فدية التخيير (فدية الأذى)</div>
+                        <h4 class="font-bold text-gray-900 text-sm">المحظورات العامة: (قص شعر، أظافر، طيب، تغطية رأس، مخيط)</h4>
+                        <p class="text-xs text-gray-600 leading-relaxed">إذا فعلها لحاجة أو نسياناً يخيّر بين ثلاثة أمور:</p>
+                        <ul class="list-disc list-inside text-xs text-gray-700 font-medium space-y-1">
+                            <li>صيام 3 أيام في أي مكان.</li>
+                            <li>أو إطعام 6 مساكين من مساكين الحرم.</li>
+                            <li>أو ذبح شاة (ذبيحة) تُوزع على فقراء الحرم.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Fidyah Type 2 -->
+                    <div class="bg-gray-50 border border-gray-200 p-5 rounded-2xl space-y-2">
+                        <div class="inline-block bg-amber-100 text-amber-900 text-xs font-bold px-2 py-0.5 rounded">2. جزاء صيد البر</div>
+                        <h4 class="font-bold text-gray-900 text-sm">قتل الصيد المأكول البري:</h4>
+                        <p class="text-xs text-gray-600 leading-relaxed">يذبح مثله من النَّعَم (إبل، بقر، غنم) يوزع بالحرم، أو يَقوّم المِثل دراهم ويشتري بها طعاماً لمساكين الحرم، أو يصوم عن كل مد يوماً.</p>
+                    </div>
+
+                    <!-- Fidyah Type 3 -->
+                    <div class="bg-gray-50 border border-gray-200 p-5 rounded-2xl space-y-2">
+                        <div class="inline-block bg-purple-100 text-purple-900 text-xs font-bold px-2 py-0.5 rounded">3. عقد النكاح</div>
+                        <h4 class="font-bold text-gray-900 text-sm">إجراء عقد الزواج:</h4>
+                        <p class="text-xs text-gray-600 leading-relaxed">العقد باطل شرعاً ولا يصح، ولا تجب فيه فدية مالية بل الاستغفار والتوبة والتجديد بعد التحلل.</p>
+                    </div>
+
+                    <!-- Fidyah Type 4 -->
+                    <div class="bg-red-50 border border-red-200 p-5 rounded-2xl space-y-2">
+                        <div class="inline-block bg-red-600 text-white text-xs font-bold px-2 py-0.5 rounded">4. الجماع قبل التحلل</div>
+                        <h4 class="font-bold text-red-900 text-sm">الجماع المفسد للعمرة:</h4>
+                        <p class="text-xs text-red-800 leading-relaxed">تفسد العمرة ويلزمه 4 أمور: التوبة، المضي في إتمام أفعال العمرة الفاسدة، ذبح شاة بالحرم، وقضاؤها فوراً بعمرة جديدة.</p>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Round Counter Tool Card -->
+        <section id="counter-section" class="bg-gradient-to-r from-umrah-deep to-umrah text-white p-6 md:p-8 rounded-3xl shadow-lg space-y-6 no-print">
+            <div class="flex items-center justify-between border-b border-teal-600 pb-4">
+                <div>
+                    <span class="bg-amber-400 text-gray-900 text-xs font-black px-3 py-1 rounded-full">أداة تفاعلية للمعتمر</span>
+                    <h3 class="text-2xl font-black mt-1">🔢 عدّاد أشواط الطواف والسعي التفاعلي</h3>
+                </div>
+                <button onclick="resetCounters()" class="text-xs bg-white/20 hover:bg-white/30 text-white px-3 py-1.5 rounded-lg border border-white/20">إعادة ضبط</button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+                <!-- Tawaf Counter -->
+                <div class="bg-white/10 backdrop-blur-md p-5 rounded-2xl border border-white/20 text-center space-y-3">
+                    <h4 class="font-bold text-amber-300 text-lg">أشواط الطواف (7 أشواط)</h4>
+                    <div id="tawaf-num" class="text-5xl font-black my-2">0</div>
+                    <p id="tawaf-status" class="text-xs text-teal-100">ابدأ من الحجر الأسود وقُل: بسم الله والله أكبر</p>
+                    <div class="flex items-center justify-center gap-3 pt-2">
+                        <button onclick="addRound('tawaf')" class="bg-amber-400 hover:bg-amber-300 text-gray-900 font-black px-6 py-2.5 rounded-xl text-lg shadow-md transition-all active:scale-95">
+                            + شوط جديد
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Sa'i Counter -->
+                <div class="bg-white/10 backdrop-blur-md p-5 rounded-2xl border border-white/20 text-center space-y-3">
+                    <h4 class="font-bold text-amber-300 text-lg">أشواط السعي (7 أشواط)</h4>
+                    <div id="sai-num" class="text-5xl font-black my-2">0</div>
+                    <p id="sai-status" class="text-xs text-teal-100">ابدأ من الصفا متجهاً إلى المروة</p>
+                    <div class="flex items-center justify-center gap-3 pt-2">
+                        <button onclick="addRound('sai')" class="bg-amber-400 hover:bg-amber-300 text-gray-900 font-black px-6 py-2.5 rounded-xl text-lg shadow-md transition-all active:scale-95">
+                            + شوط جديد
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECTION 5: الأدعية والأذكار الشاملة -->
+        <section id="sec-supplications" class="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-gray-200 space-y-8">
+            <div class="flex items-center justify-between border-b pb-4">
+                <div class="space-y-1">
+                    <span class="bg-teal-100 text-umrah-dark text-xs font-bold px-3 py-1 rounded-full">الذكر المأثور</span>
+                    <h2 class="text-2xl md:text-3xl font-black text-umrah-dark">5. أدعية وأذكار مناسك العمرة</h2>
+                </div>
+                <span class="text-3xl">🤲</span>
+            </div>
+
+            <div class="grid grid-cols-1 gap-6">
+                
+                <!-- Dua 1 -->
+                <div class="bg-teal-50/40 p-5 rounded-2xl border border-teal-100 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="font-bold text-umrah-dark text-lg">1. دعاء الإحرام والتلبية (عند الميقات)</span>
+                        <button onclick="copyText('dua-1')" class="text-xs bg-white text-umrah border border-teal-200 px-3 py-1 rounded-lg font-bold hover:bg-teal-50">نسخ</button>
+                    </div>
+                    <div id="dua-1" class="space-y-2 text-gray-800">
+                        <p class="text-sm"><span class="font-bold text-umrah">النية:</span> «لَبَّيْكَ اللَّهُمَّ عُمْرَةً» <span class="text-xs text-gray-500">(رواه مسلم)</span></p>
+                        <p class="text-sm"><span class="font-bold text-umrah">الاشتراط (خوف العائق):</span> «اللَّهُمَّ مَحِلِّي حَيْثُ حَبَسْتَنِي» <span class="text-xs text-gray-500">(متفق عليه)</span></p>
+                        <p class="text-lg quran-text text-teal-900 bg-white p-3 rounded-xl border border-teal-100">
+                            «لَبَّيْكَ اللَّهُمَّ لَبَّيْكَ، لَبَّيْكَ لاَ شَرِيكَ لَكَ لَبَّيْكَ، إِنَّ الحَمْدَ وَالنِّعْمَةَ لَكَ وَالمُلْكُ، لاَ شَرِيكَ لَكَ»
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Dua 2 -->
+                <div class="bg-teal-50/40 p-5 rounded-2xl border border-teal-100 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="font-bold text-umrah-dark text-lg">2. دعاء دخول المسجد الحرام</span>
+                        <button onclick="copyText('dua-2')" class="text-xs bg-white text-umrah border border-teal-200 px-3 py-1 rounded-lg font-bold hover:bg-teal-50">نسخ</button>
+                    </div>
+                    <div id="dua-2" class="space-y-2 text-gray-800">
+                        <p class="text-sm">تقديم الرجل اليمنى وقول:</p>
+                        <p class="text-lg quran-text text-teal-900 bg-white p-3 rounded-xl border border-teal-100">
+                            «أَعُوذُ بِاللَّهِ الْعَظِيمِ، وَبِوَجْهِهِ الْكَرِيمِ، وَسُلْطَانِهِ الْقَدِيمِ، مِنَ الشَّيْطَانِ الرَّجِيمِ.. بِسْمِ اللَّهِ، وَالصَّلاَةُ وَالسَّلاَمُ عَلَى رَسُولِ اللَّهِ، اللَّهُمَّ افْتَحْ لِي أَبْوَابَ رَحْمَتِكَ»
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Dua 3 -->
+                <div class="bg-teal-50/40 p-5 rounded-2xl border border-teal-100 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="font-bold text-umrah-dark text-lg">3. دعاء بين الركن اليماني والحجر الأسود</span>
+                        <button onclick="copyText('dua-3')" class="text-xs bg-white text-umrah border border-teal-200 px-3 py-1 rounded-lg font-bold hover:bg-teal-50">نسخ</button>
+                    </div>
+                    <div id="dua-3" class="space-y-2 text-gray-800">
+                        <p class="text-sm">يُقال في نهاية كل شوط من الطواف:</p>
+                        <p class="text-xl quran-text text-amber-900 bg-amber-50/80 p-3 rounded-xl border border-amber-200 font-bold text-center">
+                            ﴿رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ﴾
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Dua 4 -->
+                <div class="bg-teal-50/40 p-5 rounded-2xl border border-teal-100 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <span class="font-bold text-umrah-dark text-lg">4. دعاء ماء زمزم</span>
+                        <button onclick="copyText('dua-4')" class="text-xs bg-white text-umrah border border-teal-200 px-3 py-1 rounded-lg font-bold hover:bg-teal-50">نسخ</button>
+                    </div>
+                    <div id="dua-4" class="space-y-2 text-gray-800">
+                        <p class="text-sm">دعاء عبد الله بن عباس رضي الله عنهما عند شرب زمزم:</p>
+                        <p class="text-lg quran-text text-teal-900 bg-white p-3 rounded-xl border border-teal-100">
+                            «اللَّهُمَّ إِنِّي أَسْأَلُكَ عِلْمًا نَافِعًا، وَرِزْقًا وَاسِعًا، وَشِفَاءً مِنْ كُلِّ دَاءٍ»
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECTION 6: أدعية الأشواط السبعة بالطواف (مخصصة ومقترحة) -->
+        <section id="sec-rounds-duas" class="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-gray-200 space-y-8">
+            <div class="border-b pb-4">
+                <span class="badge-pill bg-teal-100 text-umrah mb-2">ترتيب مقترح وشامل</span>
+                <h2 class="text-2xl md:text-3xl font-black text-umrah-dark">6. أدعية أشواط الطواف السبعة المخصصة</h2>
+                <p class="text-sm text-gray-600 mt-2 leading-relaxed">
+                    صياغة مرتبة ومقترحة لكل شوط تضم أدعية من القرآن الكريم، والسنة النبوية الصحيحة، وأدعية السلف الصالح:
+                </p>
+            </div>
+
+            <div class="space-y-8">
+                
+                <!-- Round 1 Card -->
+                <div class="border-2 border-teal-100 bg-gradient-to-b from-teal-50/50 to-white rounded-3xl p-6 space-y-4 card-highlight shadow-sm">
+                    <div class="flex items-center justify-between border-b pb-3 border-teal-100">
+                        <div class="flex items-center gap-3">
+                            <span class="w-10 h-10 bg-umrah text-white font-black rounded-2xl flex items-center justify-center text-xl shadow">1</span>
+                            <div>
+                                <h3 class="text-xl font-black text-umrah-dark">الشوط الأول: لنفسك</h3>
+                                <p class="text-xs text-gray-500 font-semibold">(الهداية، الثبات، المغفرة، الرزق والبركة، وحسن الخاتمة)</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-white p-4 rounded-2xl border border-teal-100 space-y-2">
+                            <span class="text-xs font-bold text-umrah bg-teal-50 px-2.5 py-1 rounded-md inline-block">من القرآن الكريم</span>
+                            <ul class="space-y-2 text-sm text-gray-800 quran-text">
+                                <li>• ﴿رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ﴾</li>
+                                <li>• ﴿رَبَّنَا لَا تُزِغْ قُلُوبَنَا بَعْدَ إِذْ هَدَيْتَنَا وَهَبْ لَنَا مِن لَّدُنكَ رَحْمَةً﴾</li>
+                                <li>• ﴿رَبِّ اشْرَحْ لِي صَدْرِي * وَيَسِّرْ لِي أَمْرِي﴾</li>
+                            </ul>
+                        </div>
+                        <div class="bg-white p-4 rounded-2xl border border-teal-100 space-y-2">
+                            <span class="text-xs font-bold text-umrah bg-teal-50 px-2.5 py-1 rounded-md inline-block">من السنة النبوية</span>
+                            <ul class="space-y-2 text-sm text-gray-800">
+                                <li>• «اللَّهُمَّ إِنِّي أَسْأَلُكَ الْهُدَى وَالتُّقَى وَالْعَفَافَ وَالْغِنَى»</li>
+                                <li>• «يَا مُقَلِّبَ الْقُلُوبِ ثَبِّتْ قَلْبِي عَلَى دِينِكَ»</li>
+                                <li>• «اللَّهُمَّ إِنِّي أَسْأَلُكَ عِلْمًا نَافِعًا، وَرِزْقًا طَيِّبًا، وَعَمَلًا مُتَقَبَّلًا»</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Round 2 Card -->
+                <div class="border-2 border-teal-100 bg-gradient-to-b from-teal-50/50 to-white rounded-3xl p-6 space-y-4 card-highlight shadow-sm">
+                    <div class="flex items-center justify-between border-b pb-3 border-teal-100">
+                        <div class="flex items-center gap-3">
+                            <span class="w-10 h-10 bg-umrah text-white font-black rounded-2xl flex items-center justify-center text-xl shadow">2</span>
+                            <div>
+                                <h3 class="text-xl font-black text-umrah-dark">الشوط الثاني: لوالديك</h3>
+                                <p class="text-xs text-gray-500 font-semibold">(المغفرة، الرحمة، البركة، الصحة، ورفعة الدرجات حيين أو ميّتين)</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-white p-4 rounded-2xl border border-teal-100 space-y-2">
+                            <span class="text-xs font-bold text-umrah bg-teal-50 px-2.5 py-1 rounded-md inline-block">من القرآن الكريم</span>
+                            <ul class="space-y-2 text-sm text-gray-800 quran-text">
+                                <li>• ﴿رَّبِّ ارْحَمْهُمَا كَمَا رَبَّيَانِي صَغِيرًا﴾</li>
+                                <li>• ﴿رَبَّنَا اغْفِرْ لِي وَلِوَالِدَيَّ وَلِلْمُؤْمِنِينَ يَوْمَ يَقُومُ الْحِسَابُ﴾</li>
+                                <li>• ﴿رَّبِّ اغْفِرْ لِي وَلِوَالِدَيَّ وَلِمَن دَخَلَ بَيْتِيَ مُؤْمِنًا﴾</li>
+                            </ul>
+                        </div>
+                        <div class="bg-white p-4 rounded-2xl border border-teal-100 space-y-2">
+                            <span class="text-xs font-bold text-umrah bg-teal-50 px-2.5 py-1 rounded-md inline-block">من السنة المأثورة</span>
+                            <ul class="space-y-2 text-sm text-gray-800">
+                                <li>• «اللَّهُمَّ اغْفِرْ لَهُمَا، وَارْحَمْهُمَا، وَعَافِهِمَا، وَاعْفُ عَنْهُمَا، وَأَكْرِمْ نُزُلَهُمَا»</li>
+                                <li>• «اللَّهُمَّ اجْعَلْنِي بَارًّا بِوَالِدَيَّ، وَارْزُقْنِي رِضَاهُمَا، وَجَنِّبْنِي عُقُوقَهُمَا»</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Round 3 Card -->
+                <div class="border-2 border-teal-100 bg-gradient-to-b from-teal-50/50 to-white rounded-3xl p-6 space-y-4 card-highlight shadow-sm">
+                    <div class="flex items-center justify-between border-b pb-3 border-teal-100">
+                        <div class="flex items-center gap-3">
+                            <span class="w-10 h-10 bg-umrah text-white font-black rounded-2xl flex items-center justify-center text-xl shadow">3</span>
+                            <div>
+                                <h3 class="text-xl font-black text-umrah-dark">الشوط الثالث: لأهل بيتك وإخوتك</h3>
+                                <p class="text-xs text-gray-500 font-semibold">(الهداية، العفة، التوفيق، الزوج والذرية الصالحة)</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-white p-4 rounded-2xl border border-teal-100 space-y-2">
+                            <span class="text-xs font-bold text-umrah bg-teal-50 px-2.5 py-1 rounded-md inline-block">من القرآن الكريم</span>
+                            <ul class="space-y-2 text-sm text-gray-800 quran-text">
+                                <li>• ﴿رَبَّنَا هَبْ لَنَا مِنْ أَزْوَاجِنَا وَذُرِّيَّاتِنَا قُرَّةَ أَعْيُنٍ وَاجْعَلْنَا لِلْمُتَّقِينَ إِمَامًا﴾</li>
+                                <li>• ﴿رَبِّ هَبْ لِي مِن لَّدُنكَ ذُرِّيَّةً طَيِّبَةً ۖ إِنَّكَ سَمِيعُ الدُّعَاءِ﴾</li>
+                            </ul>
+                        </div>
+                        <div class="bg-white p-4 rounded-2xl border border-teal-100 space-y-2">
+                            <span class="text-xs font-bold text-umrah bg-teal-50 px-2.5 py-1 rounded-md inline-block">من الدعاء النبوي</span>
+                            <ul class="space-y-2 text-sm text-gray-800">
+                                <li>• «اللَّهُمَّ أَصْلِحْ لَهُمْ دِينَهُمُ الَّذِي هُوَ عِصْمَةُ أَمْرِهِمْ، وَأَصْلِحْ لَهُمْ دُنْيَاهُمُ»</li>
+                                <li>• «اللَّهُمَّ اسْتُرْ عَوْرَاتِهِمْ وَآمِنْ رَوْعَاتِهِمْ وَاكْفِهِمْ بِحَلالِكَ عَنْ حَرَامِكَ»</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Round 4 Card -->
+                <div class="border-2 border-teal-100 bg-gradient-to-b from-teal-50/50 to-white rounded-3xl p-6 space-y-4 card-highlight shadow-sm">
+                    <div class="flex items-center justify-between border-b pb-3 border-teal-100">
+                        <div class="flex items-center gap-3">
+                            <span class="w-10 h-10 bg-umrah text-white font-black rounded-2xl flex items-center justify-center text-xl shadow">4</span>
+                            <div>
+                                <h3 class="text-xl font-black text-umrah-dark">الشوط الرابع: لأصحابك ومن وصاك بالدعاء</h3>
+                                <p class="text-xs text-gray-500 font-semibold">(من أحسن إليك، وعلّمك، وطلب منك الدعاء بالظهر الغيب)</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-white p-4 rounded-2xl border border-teal-100 space-y-2">
+                            <span class="text-xs font-bold text-umrah bg-teal-50 px-2.5 py-1 rounded-md inline-block">من القرآن الكريم</span>
+                            <ul class="space-y-2 text-sm text-gray-800 quran-text">
+                                <li>• ﴿رَبَّنَا اغْفِرْ لَنَا وَلِإِخْوَانِنَا الَّذِينَ سَبَقُونَا بِالْإِيمَانِ وَلَا تَجْعَلْ فِي قُلُوبِنَا غِلًّا لِّلَّذِينَ آمَنُوا﴾</li>
+                            </ul>
+                        </div>
+                        <div class="bg-white p-4 rounded-2xl border border-teal-100 space-y-2">
+                            <span class="text-xs font-bold text-umrah bg-teal-50 px-2.5 py-1 rounded-md inline-block">من هدي الصحابة والسلف</span>
+                            <ul class="space-y-2 text-sm text-gray-800">
+                                <li>• «اللَّهُمَّ جَازِ كُلَّ مَنْ أَوْصَانَا وَاسْتَوْصَانَا بِالدُّعَاءِ خَيْرَ الْجَزَاءِ، وَارْفَعْ دَرَجَاتِهِمْ»</li>
+                                <li>• «اللَّهُمَّ بَارِكْ لَهُمْ فِي أَمْوَالِهِمْ وَأَوْلَادِهِمْ وَأَرْزَاقِهِمْ، وَاجْعَلْهُمْ هُدَاةً مُهْتَدِينَ»</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Round 5 Card -->
+                <div class="border-2 border-teal-100 bg-gradient-to-b from-teal-50/50 to-white rounded-3xl p-6 space-y-4 card-highlight shadow-sm">
+                    <div class="flex items-center justify-between border-b pb-3 border-teal-100">
+                        <div class="flex items-center gap-3">
+                            <span class="w-10 h-10 bg-umrah text-white font-black rounded-2xl flex items-center justify-center text-xl shadow">5</span>
+                            <div>
+                                <h3 class="text-xl font-black text-umrah-dark">الشوط الخامس: للمسلمين عامة</h3>
+                                <p class="text-xs text-gray-500 font-semibold">(المؤمنين والمؤمنات الأحياء والأموات، وهداية العصاة، وشفاء المرضى)</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-white p-4 rounded-2xl border border-teal-100 space-y-2">
+                            <span class="text-xs font-bold text-umrah bg-teal-50 px-2.5 py-1 rounded-md inline-block">من القرآن الكريم</span>
+                            <ul class="space-y-2 text-sm text-gray-800 quran-text">
+                                <li>• ﴿وَاسْتَغْفِرْ لِذَنبِكَ وَلِلْمُؤْمِنِينَ وَالْمُؤْمِنَاتِ﴾</li>
+                            </ul>
+                        </div>
+                        <div class="bg-white p-4 rounded-2xl border border-teal-100 space-y-2">
+                            <span class="text-xs font-bold text-umrah bg-teal-50 px-2.5 py-1 rounded-md inline-block">من السنة والسلف</span>
+                            <ul class="space-y-2 text-sm text-gray-800">
+                                <li>• «اللَّهُمَّ اغْفِرْ لِلْمُؤْمِنِينَ وَالْمُؤْمِنَاتِ، وَالْمُسْلِمِينَ وَالْمُسْلِمَاتِ، الأَحْيَاءِ مِنْهُمْ وَالأَمْوَاتِ»</li>
+                                <li>• «اللَّهُمَّ اشْفِ مَرْضَانَا وَمَرْضَى الْمُسْلِمِينَ، وَفَرِّجْ كَرْبَ الْمَكْرُوبِينَ»</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Round 6 Card -->
+                <div class="border-2 border-teal-100 bg-gradient-to-b from-teal-50/50 to-white rounded-3xl p-6 space-y-4 card-highlight shadow-sm">
+                    <div class="flex items-center justify-between border-b pb-3 border-teal-100">
+                        <div class="flex items-center gap-3">
+                            <span class="w-10 h-10 bg-umrah text-white font-black rounded-2xl flex items-center justify-center text-xl shadow">6</span>
+                            <div>
+                                <h3 class="text-xl font-black text-umrah-dark">الشوط السادس: لقضايا الأمة ونصرة الإسلام</h3>
+                                <p class="text-xs text-gray-500 font-semibold">(نصرة المستضعفين، حفظ المقدسات، وصلاح البلاد والعباد)</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-white p-4 rounded-2xl border border-teal-100 space-y-2">
+                            <span class="text-xs font-bold text-umrah bg-teal-50 px-2.5 py-1 rounded-md inline-block">من القرآن الكريم</span>
+                            <ul class="space-y-2 text-sm text-gray-800 quran-text">
+                                <li>• ﴿رَبَّنَا أَفْرِغْ عَلَيْنَا صَبْرًا وَثَبِّتْ أَقْدَامَنَا وَانصُرْنَا عَلَى الْقَوْمِ الْكَافِرِينَ﴾</li>
+                            </ul>
+                        </div>
+                        <div class="bg-white p-4 rounded-2xl border border-teal-100 space-y-2">
+                            <span class="text-xs font-bold text-umrah bg-teal-50 px-2.5 py-1 rounded-md inline-block">من أدعية النبي والسلف</span>
+                            <ul class="space-y-2 text-sm text-gray-800">
+                                <li>• «اللَّهُمَّ أَعِزَّ الإِسْلَامَ وَالْمُسْلِمِينَ، وَأَنْجِ الْمُسْتَضْعَفِينَ مِنَ الْمُؤْمِنِينَ فِي كُلِّ مَكَانٍ»</li>
+                                <li>• «اللَّهُمَّ احْقِنْ دِمَاءَ الْمُسْلِمِينَ، وَاحْفَظْ مَقَدَّسَاتِهِمْ وَادْفَعْ عَنْهُمُ الْبَلاَءَ وَالْفِتَنَ»</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Round 7 Card -->
+                <div class="border-2 border-teal-100 bg-gradient-to-b from-teal-50/50 to-white rounded-3xl p-6 space-y-4 card-highlight shadow-sm">
+                    <div class="flex items-center justify-between border-b pb-3 border-teal-100">
+                        <div class="flex items-center gap-3">
+                            <span class="w-10 h-10 bg-umrah text-white font-black rounded-2xl flex items-center justify-center text-xl shadow">7</span>
+                            <div>
+                                <h3 class="text-xl font-black text-umrah-dark">الشوط السابع: للموتى وأهل القبور</h3>
+                                <p class="text-xs text-gray-500 font-semibold">(بالرحمة والمغفرة والفسحة والقبول والنجاة من النار)</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-white p-4 rounded-2xl border border-teal-100 space-y-2">
+                            <span class="text-xs font-bold text-umrah bg-teal-50 px-2.5 py-1 rounded-md inline-block">من القرآن الكريم</span>
+                            <ul class="space-y-2 text-sm text-gray-800 quran-text">
+                                <li>• ﴿رَّبِّ اغْفِرْ لِي وَلِوَالِدَيَّ وَلِمَن دَخَلَ بَيْتِيَ مُؤْمِنًا وَلِلْمُؤْمِنِينَ وَالْمُؤْمِنَاتِ﴾</li>
+                            </ul>
+                        </div>
+                        <div class="bg-white p-4 rounded-2xl border border-teal-100 space-y-2">
+                            <span class="text-xs font-bold text-umrah bg-teal-50 px-2.5 py-1 rounded-md inline-block">من أدعية الجنائز المأثورة</span>
+                            <ul class="space-y-2 text-sm text-gray-800">
+                                <li>• «اللَّهُمَّ اغْفِرْ لَهُمْ وَارْحَمْهُمْ، وَعَافِهِمْ وَاعْفُ عَنْهُمْ، وَأَكْرِمْ نُزُلَهُمْ، وَوَسِّعْ مُدْخَلَهُمْ»</li>
+                                <li>• «اللَّهُمَّ أَنْزِلْ عَلَى قُبُورِهِمُ الضِّيَاءَ وَالنُّورَ، وَالْفُسْحَةَ وَالسُّرُورَ، وَاجْمَعْنَا بِهِمْ فِي الفِرْدَوْسِ الأَعْلَى»</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECTION 7: قائمة تجهيز المعتمر (حقيبة السفر والعمليات) -->
+        <section class="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-gray-200 space-y-6">
+            <div class="flex items-center justify-between border-b pb-4">
+                <div>
+                    <span class="badge-pill bg-amber-100 text-amber-800 mb-1">تجهيز عملي</span>
+                    <h3 class="text-2xl font-black text-umrah-dark">🧳 قائمة مراجعة تجهيز المعتمر</h3>
+                </div>
+                <span class="text-3xl">✅</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <!-- Checklist 1 -->
+                <div class="p-4 bg-gray-50 rounded-2xl border border-gray-200 space-y-2">
+                    <h4 class="font-bold text-umrah-dark border-b pb-1 text-sm">التجهيز الإيماني والشرعي:</h4>
+                    <label class="flex items-center gap-2 text-xs text-gray-700 cursor-pointer">
+                        <input type="checkbox" class="rounded text-umrah focus:ring-umrah"> التوبة الصادقة واستغفار الذنوب
+                    </label>
+                    <label class="flex items-center gap-2 text-xs text-gray-700 cursor-pointer">
+                        <input type="checkbox" class="rounded text-umrah focus:ring-umrah"> رد المظالم والتسامح مع الأهل
+                    </label>
+                    <label class="flex items-center gap-2 text-xs text-gray-700 cursor-pointer">
+                        <input type="checkbox" class="rounded text-umrah focus:ring-umrah"> كتابة الوصية وسداد الديون
+                    </label>
+                    <label class="flex items-center gap-2 text-xs text-gray-700 cursor-pointer">
+                        <input type="checkbox" class="rounded text-umrah focus:ring-umrah"> إخلاص النية وتحري مال حلال
+                    </label>
+                </div>
+
+                <!-- Checklist 2 -->
+                <div class="p-4 bg-gray-50 rounded-2xl border border-gray-200 space-y-2">
+                    <h4 class="font-bold text-umrah-dark border-b pb-1 text-sm">حقيبة الإحرام والملابس:</h4>
+                    <label class="flex items-center gap-2 text-xs text-gray-700 cursor-pointer">
+                        <input type="checkbox" class="rounded text-umrah focus:ring-umrah"> ثياب إحرام نظيفة للرجال (إزار ورداء)
+                    </label>
+                    <label class="flex items-center gap-2 text-xs text-gray-700 cursor-pointer">
+                        <input type="checkbox" class="rounded text-umrah focus:ring-umrah"> حزام الإحرام لحفظ المتعلقات
+                    </label>
+                    <label class="flex items-center gap-2 text-xs text-gray-700 cursor-pointer">
+                        <input type="checkbox" class="rounded text-umrah focus:ring-umrah"> نعل خفيف مريح غير محيط
+                    </label>
+                    <label class="flex items-center gap-2 text-xs text-gray-700 cursor-pointer">
+                        <input type="checkbox" class="rounded text-umrah focus:ring-umrah"> ملابس فضفاضة وساترة للنساء
+                    </label>
+                </div>
+
+                <!-- Checklist 3 -->
+                <div class="p-4 bg-gray-50 rounded-2xl border border-gray-200 space-y-2">
+                    <h4 class="font-bold text-umrah-dark border-b pb-1 text-sm">الأدوات الصحية والطبية:</h4>
+                    <label class="flex items-center gap-2 text-xs text-gray-700 cursor-pointer">
+                        <input type="checkbox" class="rounded text-umrah focus:ring-umrah"> صابون وشامبو بدون رائحة/عطر
+                    </label>
+                    <label class="flex items-center gap-2 text-xs text-gray-700 cursor-pointer">
+                        <input type="checkbox" class="rounded text-umrah focus:ring-umrah"> أدوية شخصية ومسكنات وخافض حرارة
+                    </label>
+                    <label class="flex items-center gap-2 text-xs text-gray-700 cursor-pointer">
+                        <input type="checkbox" class="rounded text-umrah focus:ring-umrah"> كريم مرطب لمنع التسلخات
+                    </label>
+                    <label class="flex items-center gap-2 text-xs text-gray-700 cursor-pointer">
+                        <input type="checkbox" class="rounded text-umrah focus:ring-umrah"> مظلة شمسية وشاحن متنقل (باور بنك)
+                    </label>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 8: الأسئلة الشائعة والأحكام الفقهية الدقيقة -->
+        <section class="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-gray-200 space-y-6">
+            <div class="flex items-center justify-between border-b pb-4">
+                <div>
+                    <span class="badge-pill bg-purple-100 text-purple-800 mb-1">فتاوى وإجابات</span>
+                    <h3 class="text-2xl font-black text-umrah-dark">❓ الأسئلة الشائعة والأخطاء الشائعة في العمرة</h3>
+                </div>
+                <span class="text-3xl">🧠</span>
+            </div>
+
+            <div class="space-y-3">
+                <!-- FAQ Item 1 -->
+                <details class="bg-gray-50 p-4 rounded-2xl border border-gray-200 group">
+                    <summary class="font-bold text-gray-800 cursor-pointer flex justify-between items-center text-sm md:text-base">
+                        <span>س: ماذا يفعل من تجاوز الميقات بدون إحرام عن طريق الخطأ أو النسيان؟</span>
+                        <span class="text-umrah group-open:rotate-180 transition-transform font-bold">&darr;</span>
+                    </summary>
+                    <p class="text-xs md:text-sm text-gray-600 mt-3 leading-relaxed border-t pt-2">
+                        الواجب عليه أن يرجع إلى الميقات الذي تجاوز منه ليحرم منه إن أمكنه ذلك دون مشقة شديدة، فإن لم يرجع وأحرم بعد الميقات فيلزمه ذبح شاة (دم) تُوزع على فقراء حرم مكة المكرمة لجبر هذا الواجب.
+                    </p>
+                </details>
+
+                <!-- FAQ Item 2 -->
+                <details class="bg-gray-50 p-4 rounded-2xl border border-gray-200 group">
+                    <summary class="font-bold text-gray-800 cursor-pointer flex justify-between items-center text-sm md:text-base">
+                        <span>س: هل يجوز للمرأة المسافرة للعمرة الممشط أو استخدام الشامبو المعطر؟</span>
+                        <span class="text-umrah group-open:rotate-180 transition-transform font-bold">&darr;</span>
+                    </summary>
+                    <p class="text-xs md:text-sm text-gray-600 mt-3 leading-relaxed border-t pt-2">
+                        يمنع على المحرم (رجلاً أو امرأة) استخدام الصابون أو الشامبو أو المعطرات التي بها طيب فواح بعد نية الإحرام، بل يستعمل الصابون غير المعطر. كما يكره تمشيط الشعر بشدة خوف تساقطه عمداً.
+                    </p>
+                </details>
+
+                <!-- FAQ Item 3 -->
+                <details class="bg-gray-50 p-4 rounded-2xl border border-gray-200 group">
+                    <summary class="font-bold text-gray-800 cursor-pointer flex justify-between items-center text-sm md:text-base">
+                        <span>س: ما حكم الشك في عدد أشواط الطواف أو السعي؟</span>
+                        <span class="text-umrah group-open:rotate-180 transition-transform font-bold">&darr;</span>
+                    </summary>
+                    <p class="text-xs md:text-sm text-gray-600 mt-3 leading-relaxed border-t pt-2">
+                        إذا شك المعتمر أثناء الطواف أو السعي هل طاف 3 أو 4 أشواط مثلاً، فيبني على اليقين وهو الأقل (أي يعتبرها 3) ثم يكمل بقية الأشواط. أما إذا كان الشك بعد تمام العبادة والانتهاء منها فلا يلتفت للشك.
+                    </p>
+                </details>
+
+                <!-- FAQ Item 4 -->
+                <details class="bg-gray-50 p-4 rounded-2xl border border-gray-200 group">
+                    <summary class="font-bold text-gray-800 cursor-pointer flex justify-between items-center text-sm md:text-base">
+                        <span>س: هل تشترط الطهارة (الوضوء) للسعي بين الصفا والمروة؟</span>
+                        <span class="text-umrah group-open:rotate-180 transition-transform font-bold">&darr;</span>
+                    </summary>
+                    <p class="text-xs md:text-sm text-gray-600 mt-3 leading-relaxed border-t pt-2">
+                        الطهارة شرط أساسي في الطواف بالبيت، أما السعي بين الصفا والمروة فالطهارة فيه سنة ومستحبة وليست شرطاً، فلو سعى المعتمر وهو على غير وضوء صح سعيه.
+                    </p>
+                </details>
+            </div>
+        </section>
+
+        <!-- SECTION 9: النيات والجانب الإيماني قبل السفر -->
+        <section class="bg-gradient-to-l from-teal-900 to-umrah-deep text-white p-6 md:p-8 rounded-3xl shadow-lg space-y-4">
+            <h3 class="text-2xl font-black text-amber-300 flex items-center gap-2">
+                <span>✨</span> استحضار النيات والتوكل على الله
+            </h3>
+            <p class="text-sm md:text-base text-teal-100 leading-relaxed">
+                استحضار النية والتوكل على الله قبل الانطلاق إلى العمرة هو روح المنسك والركيزة الأساسية لِقَبوله؛ فالأعمال بالنيات، والسفر إلى بيت الله الحرام ليس مجرد رحلة بدنية، بل هو سفر قلبي إلى الله العزيز الحكيم.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                <div class="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/10 space-y-1">
+                    <h4 class="font-bold text-amber-300 text-sm">1. إخلاص الدين وتجريد التوحيد:</h4>
+                    <p class="text-xs text-teal-50 leading-relaxed">أن تكون العمرة ابتغاء وجه الله وحده، خالصة من الرياء والسمعة وحصد إعجاب الناس بالصور.</p>
+                </div>
+                <div class="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/10 space-y-1">
+                    <h4 class="font-bold text-amber-300 text-sm">2. احتساب أجر وفد الله:</h4>
+                    <p class="text-xs text-teal-50 leading-relaxed">«الْغَازِي فِي سَبِيلِ اللَّهِ، وَالْحَاجُّ، وَالْمُعْتَمِرُ، وَفْدُ اللَّهِ؛ دَعَاهُمْ فَأَجَابُوهُ، وَسَأَلُوهُ فَأَعْطَاهُمْ».</p>
+                </div>
+                <div class="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/10 space-y-1">
+                    <h4 class="font-bold text-amber-300 text-sm">3. تكفير الذنوب وغفرانها:</h4>
+                    <p class="text-xs text-teal-50 leading-relaxed">«العُمْرَةُ إِلَى العُمْرَةِ كَفَّارَةٌ لِمَا بَيْنَهُمَا» (رواه البخاري ومسلم).</p>
+                </div>
+                <div class="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/10 space-y-1">
+                    <h4 class="font-bold text-amber-300 text-sm">4. نفي الفقر والذنوب:</h4>
+                    <p class="text-xs text-teal-50 leading-relaxed">«تَابِعُوا بَيْنَ الْحَجِّ وَالْعُمْرَةِ؛ فَإِنَّهُمَا يَنْفِيَانِ الْفَقْرَ وَالذُّنُوبَ».</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER SECTION -->
+    <footer class="bg-gray-900 text-white pt-12 pb-8 rounded-t-[3rem] mt-16 border-t-4 border-umrah">
+        <div class="container mx-auto px-4 space-y-10">
+            
+            <div class="text-center space-y-4 max-w-2xl mx-auto">
+                <div class="w-12 h-12 bg-umrah rounded-2xl flex items-center justify-center text-2xl mx-auto shadow-lg">
+                    🕋
+                </div>
+                <h3 class="text-2xl font-black text-teal-400">روابط هامة للمراجعة والدراسة</h3>
+                <p class="text-xs text-gray-400">وسائط تفاعلية واختبارات قياس المعرفة الشرعية بمناسك العمرة</p>
+            </div>
+
+            <!-- External Important Links Cards Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-3xl mx-auto">
+                
+                <!-- YouTube Link Card -->
+                <a href="https://www.youtube.com/watch?v=JFnyXMRJWzY" target="_blank" rel="noopener noreferrer" class="bg-gray-800 hover:bg-red-600/20 border border-gray-700 hover:border-red-500 p-5 rounded-2xl flex flex-col items-center text-center space-y-3 transition-colors group">
+                    <div class="w-12 h-12 bg-red-600 rounded-2xl flex items-center justify-center text-white text-xl shadow-md group-hover:scale-105 transition-transform">
+                        ▶
+                    </div>
+                    <div>
+                        <span class="block font-bold text-sm text-white group-hover:text-red-400">شرح العمرة (فيديو)</span>
+                        <span class="text-xs text-gray-400">شاهد الشرح الميداني المقاطع</span>
+                    </div>
+                </a>
+
+                <!-- PDF Guide Link Card -->
+                <a href="https://drive.google.com/file/d/1Um3ea0gqzomJiljm1PMyd8r9N83Pekth/view?usp=sharing" target="_blank" rel="noopener noreferrer" class="bg-gray-800 hover:bg-blue-600/20 border border-gray-700 hover:border-blue-500 p-5 rounded-2xl flex flex-col items-center text-center space-y-3 transition-colors group">
+                    <div class="w-12 h-12 bg-blue-600 rounded-2xl flex items-center justify-center text-white text-xl shadow-md group-hover:scale-105 transition-transform">
+                        📄
+                    </div>
+                    <div>
+                        <span class="block font-bold text-sm text-white group-hover:text-blue-400">ملف PDF للمراجعة</span>
+                        <span class="text-xs text-gray-400">حمل الكتاب كاملاً للقراءة</span>
+                    </div>
+                </a>
+
+                <!-- Form Test Link Card -->
+                <a href="https://forms.gle/KyEjvYYGLatNJjpT8" target="_blank" rel="noopener noreferrer" class="bg-gray-800 hover:bg-purple-600/20 border border-gray-700 hover:border-purple-500 p-5 rounded-2xl flex flex-col items-center text-center space-y-3 transition-colors group">
+                    <div class="w-12 h-12 bg-purple-600 rounded-2xl flex items-center justify-center text-white text-xl shadow-md group-hover:scale-105 transition-transform">
+                        ✍️
+                    </div>
+                    <div>
+                        <span class="block font-bold text-sm text-white group-hover:text-purple-400">الإختبار الإلكتروني</span>
+                        <span class="text-xs text-gray-400">اختبر معلوماتك في الأحكام</span>
+                    </div>
+                </a>
+
+            </div>
+
+            <!-- Bottom Closing Statement -->
+            <div class="text-center pt-6 border-t border-gray-800 space-y-4">
+                <p class="text-teal-400 font-bold text-base">تقبل الله طاعتكم وعمرتكم وصالح أعمالكم</p>
+                
+                <!-- Developer Credit Bar - EXACT STRING AS REQUESTED -->
+                <div class="pt-4 flex items-center justify-center">
+                    <div dir="ltr" class="flex items-center justify-center gap-1.5 md:gap-2 text-gray-300 text-sm md:text-base font-mono dir-ltr select-none flex-wrap">
+                        <span>&lt; Developed By &gt;</span>
+                        <a href="https://www.facebook.com/twshkndy.qlashy" target="_blank" rel="noopener noreferrer" class="bg-[#008571] hover:bg-[#006b5b] text-white px-3 py-1 rounded-lg font-bold transition-all shadow-md inline-flex items-center justify-center mx-1 active:scale-95">
+                            Osman
+                        </a>
+                        <span class="sm:hidden">&lt;/&gt;</span>
+                        <span class="hidden sm:inline">&lt;All Copy Rights Reserved @2026 &gt;</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT CORE LOGIC -->
+    <script>
+        
+        window.onscroll = function() {
+            var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            var scrolled = (winScroll / height) * 100;
+            document.getElementById("progress-bar").style.width = scrolled + "%";
+        };
+
+        
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        
+        function scrollToSection(id) {
+            const el = document.getElementById(id);
+            if(el) {
+                const yOffset = -80;
+                const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                window.scrollTo({ top: y, behavior: 'smooth' });
+            }
+        }
+
+        
+        function toggleQuickSearch() {
+            const modal = document.getElementById('search-modal');
+            modal.classList.toggle('hidden');
+            if(!modal.classList.contains('hidden')) {
+                document.getElementById('search-input').focus();
+            }
+        }
+
+        
+        function filterGuideContent() {
+            const query = document.getElementById('search-input').value.toLowerCase().trim();
+            const resultsContainer = document.getElementById('search-results');
+            
+            if(query.length === 0) {
+                resultsContainer.innerHTML = '<p class="text-gray-400 text-center py-4">ابتدئ الكتابة للبحث المباشر...</p>';
+                return;
+            }
+
+            const cards = document.querySelectorAll('main section h2, main section h3, main section h4, .quran-text');
+            let matches = [];
+
+            cards.forEach(card => {
+                const text = card.textContent;
+                if(text.toLowerCase().includes(query)) {
+                    matches.push({
+                        text: text.trim().substring(0, 80) + '...',
+                        element: card
+                    });
+                }
+            });
+
+            if(matches.length === 0) {
+                resultsContainer.innerHTML = '<p class="text-rose-500 text-center py-4">لم يتم العثور على نتائج مطابقة</p>';
+            } else {
+                resultsContainer.innerHTML = matches.slice(0, 8).map(m => `
+                    <div onclick="jumpToSearchResult(this)" class="p-3 bg-teal-50 hover:bg-teal-100 rounded-xl cursor-pointer text-xs font-bold text-teal-900 border border-teal-200">
+                        📍 ${m.text}
+                    </div>
+                `).join('');
+            }
+        }
+
+        function jumpToSearchResult(el) {
+            toggleQuickSearch();
+            scrollToSection('sec-supplications');
+        }
+
+        
+        let tawafCount = 0;
+        let saiCount = 0;
+
+        function addRound(type) {
+            if(type === 'tawaf') {
+                if(tawafCount < 7) {
+                    tawafCount++;
+                    document.getElementById('tawaf-num').innerText = tawafCount;
+                    updateTawafStatus();
+                }
+            } else if(type === 'sai') {
+                if(saiCount < 7) {
+                    saiCount++;
+                    document.getElementById('sai-num').innerText = saiCount;
+                    updateSaiStatus();
+                }
+            }
+        }
+
+        function updateTawafStatus() {
+            const el = document.getElementById('tawaf-status');
+            if(tawafCount === 7) {
+                el.innerText = '🎉 تم الاكتفاء بـ 7 أشواط طواف! توجه لصلاة ركعتين خلف المقام.';
+                el.className = "text-xs font-bold text-amber-300";
+            } else {
+                el.innerText = `الشوط الحركي الحالي: ${tawafCount} من 7 - واصل التكبير والدعاء.`;
+            }
+        }
+
+        function updateSaiStatus() {
+            const el = document.getElementById('sai-status');
+            if(saiCount === 7) {
+                el.innerText = '🎉 تم الأكتمال بـ 7 أشواط سعي! توجه الآن للحلق أو التقصير للتحلل.';
+                el.className = "text-xs font-bold text-amber-300";
+            } else {
+                const target = (saiCount % 2 === 1) ? 'إلى المروة' : 'إلى الصفا';
+                el.innerText = `الشوط الحالي: ${saiCount} من 7 (الاتجاه: ${target}).`;
+            }
+        }
+
+        function resetCounters() {
+            tawafCount = 0;
+            saiCount = 0;
+            document.getElementById('tawaf-num').innerText = '0';
+            document.getElementById('sai-num').innerText = '0';
+            document.getElementById('tawaf-status').innerText = 'ابدأ من الحجر الأسود وقُل: بسم الله والله أكبر';
+            document.getElementById('sai-status').innerText = 'ابدأ من الصفا متجهاً إلى المروة';
+        }
+
+        
+        function copyText(id) {
+            const text = document.getElementById(id).innerText;
+            const temp = document.createElement('textarea');
+            temp.value = text;
+            document.body.appendChild(temp);
+            temp.select();
+            document.execCommand('copy');
+            document.body.removeChild(temp);
+            
+            
+            const toast = document.createElement('div');
+            toast.className = 'fixed bottom-5 right-5 bg-umrah text-white px-4 py-2 rounded-xl shadow-xl z-50 text-xs font-bold';
+            toast.innerText = '✅ تم نسخ النص بنجاح!';
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2000);
+        }
+    </script>
+</body>
+</html>

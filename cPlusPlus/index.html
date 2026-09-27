@@ -1,0 +1,4646 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <title>معمارية الحاسوب وأساسيات C++ | Aswany — Eng. Osman Taher</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=IBM+Plex+Mono:wght@400;700&family=Tajawal:wght@300;400;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --pur: #7c3aed;
+        --pur-d: #5b21b6;
+        --pur-dd: #3b0764;
+        --pur-l: #a78bfa;
+        --pur-p: #f5f3ff;
+        --gold: #d97706;
+        --gold-l: #fcd34d;
+        --gold-p: #fffbeb;
+        --ink: #0a0612;
+        --ink-s: #1a0a2e;
+        --ink-m: #2d1b4e;
+        --slate: #f8f7ff;
+        --rule: #e9e4f5;
+        --white: #ffffff;
+        --green: #059669;
+        --green-p: #ecfdf5;
+        --red: #dc2626;
+        --red-p: #fef2f2;
+        --blue: #1d4ed8;
+        --blue-p: #eff6ff;
+        --cb: #060310;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Cairo", "Tajawal", sans-serif;
+        font-size: 11pt;
+        color: #1a0a2e;
+        background: #c4b5d4;
+        direction: rtl;
+        line-height: 1.9;
+      }
+
+      /* ═══ COVER ═══ */
+      .cover {
+        width: 794px;
+        min-height: 1123px;
+        margin: 0 auto;
+        background: var(--ink);
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        overflow: hidden;
+        page-break-after: always;
+      }
+      .c-mesh {
+        position: absolute;
+        inset: 0;
+        background-image:
+          repeating-linear-gradient(
+            45deg,
+            rgba(124, 58, 237, 0.06) 0,
+            rgba(124, 58, 237, 0.06) 1px,
+            transparent 1px,
+            transparent 40px
+          ),
+          repeating-linear-gradient(
+            -45deg,
+            rgba(124, 58, 237, 0.06) 0,
+            rgba(124, 58, 237, 0.06) 1px,
+            transparent 1px,
+            transparent 40px
+          );
+      }
+      .c-glow1 {
+        position: absolute;
+        width: 550px;
+        height: 550px;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          rgba(124, 58, 237, 0.22) 0%,
+          transparent 70%
+        );
+        top: -180px;
+        right: -120px;
+      }
+      .c-glow2 {
+        position: absolute;
+        width: 400px;
+        height: 400px;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          rgba(217, 119, 6, 0.12) 0%,
+          transparent 70%
+        );
+        bottom: 60px;
+        left: -100px;
+      }
+      .c-stripe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 6px;
+        height: 100%;
+        background: linear-gradient(
+          to bottom,
+          var(--gold-l),
+          var(--pur-l),
+          var(--gold-l)
+        );
+      }
+      .c-inner {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        padding: 52px 65px;
+        min-height: 1123px;
+        justify-content: space-between;
+      }
+      .c-brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .c-logo {
+        width: 46px;
+        height: 46px;
+        background: rgba(124, 58, 237, 0.15);
+        border: 1.5px solid var(--pur);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 17px;
+        font-weight: 700;
+        color: var(--pur-l);
+      }
+      .c-bn {
+        font-size: 18px;
+        font-weight: 900;
+        color: var(--gold-l);
+        letter-spacing: 1px;
+      }
+      .c-ser {
+        margin-right: auto;
+        font-size: 8.5pt;
+        color: rgba(255, 255, 255, 0.28);
+        font-family: "IBM Plex Mono", monospace;
+        letter-spacing: 2px;
+      }
+      .c-main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 28px 0;
+      }
+      .c-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: rgba(217, 119, 6, 0.12);
+        border: 1px solid var(--gold);
+        border-radius: 4px;
+        padding: 5px 14px;
+        font-size: 8.5pt;
+        color: var(--gold-l);
+        font-family: "IBM Plex Mono", monospace;
+        letter-spacing: 2px;
+        margin-bottom: 20px;
+        align-self: flex-start;
+      }
+      .c-t1 {
+        font-size: 14pt;
+        font-weight: 700;
+        color: var(--pur-l);
+        margin-bottom: 4px;
+      }
+      .c-t2 {
+        font-size: 50pt;
+        font-weight: 900;
+        color: var(--white);
+        line-height: 1.05;
+      }
+      .c-t3 {
+        font-size: 50pt;
+        font-weight: 900;
+        color: var(--gold-l);
+        line-height: 1.05;
+      }
+      .c-t4 {
+        font-size: 50pt;
+        font-weight: 900;
+        color: var(--pur-l);
+        line-height: 1.05;
+        margin-bottom: 24px;
+      }
+      .c-div {
+        width: 90px;
+        height: 3px;
+        background: linear-gradient(90deg, var(--gold), var(--pur-l));
+        border-radius: 3px;
+        margin-bottom: 20px;
+      }
+      .c-sub {
+        font-size: 13pt;
+        color: rgba(255, 255, 255, 0.62);
+        max-width: 500px;
+        line-height: 1.9;
+      }
+      .c-pills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 24px;
+      }
+      .c-pill {
+        border: 1px solid rgba(167, 139, 250, 0.35);
+        color: rgba(167, 139, 250, 0.9);
+        padding: 4px 14px;
+        border-radius: 4px;
+        font-size: 9pt;
+        font-weight: 700;
+        font-family: "IBM Plex Mono", monospace;
+      }
+      .c-pill.gold {
+        border-color: rgba(252, 211, 77, 0.4);
+        color: var(--gold-l);
+      }
+      .c-stats {
+        display: flex;
+        gap: 18px;
+        margin-top: 24px;
+      }
+      .c-stat {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 6px;
+        padding: 11px 18px;
+        text-align: center;
+      }
+      .c-sn {
+        font-size: 20pt;
+        font-weight: 900;
+        color: var(--gold-l);
+      }
+      .c-sl {
+        font-size: 8pt;
+        color: rgba(255, 255, 255, 0.38);
+        font-family: "IBM Plex Mono", monospace;
+      }
+      .c-auth {
+        border-top: 1px solid rgba(124, 58, 237, 0.3);
+        padding-top: 18px;
+      }
+      .c-al {
+        font-size: 8pt;
+        color: var(--gold-l);
+        font-family: "IBM Plex Mono", monospace;
+        letter-spacing: 3px;
+        margin-bottom: 5px;
+      }
+      .c-an {
+        font-size: 18pt;
+        font-weight: 900;
+        color: var(--white);
+      }
+      .c-as {
+        font-size: 9pt;
+        color: rgba(255, 255, 255, 0.38);
+        font-family: "IBM Plex Mono", monospace;
+      }
+
+      /* ═══ PAGE ═══ */
+      .page {
+        width: 794px;
+        min-height: 1123px;
+        margin: 0 auto;
+        background: var(--white);
+        position: relative;
+        page-break-after: always;
+        overflow: hidden;
+      }
+      .page::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(
+          90deg,
+          var(--pur-dd),
+          var(--pur),
+          var(--pur-l),
+          var(--gold-l),
+          var(--pur-l),
+          var(--pur-dd)
+        );
+      }
+
+      /* ═══ TOC ═══ */
+      .toc {
+        padding: 55px 65px 80px;
+      }
+      .toc-h {
+        text-align: center;
+        margin-bottom: 36px;
+        padding-top: 10px;
+      }
+      .toc-h h1 {
+        font-size: 26pt;
+        font-weight: 900;
+        color: var(--pur-dd);
+      }
+      .toc-line {
+        width: 70px;
+        height: 3px;
+        background: linear-gradient(90deg, var(--pur), var(--gold));
+        margin: 10px auto;
+        border-radius: 3px;
+      }
+      .toc-h p {
+        font-size: 9pt;
+        color: var(--pur);
+        font-family: "IBM Plex Mono", monospace;
+        letter-spacing: 2px;
+      }
+      .toc-sec {
+        font-size: 9.5pt;
+        font-weight: 700;
+        color: var(--pur-d);
+        letter-spacing: 2px;
+        border-bottom: 1.5px solid var(--pur-p);
+        padding-bottom: 5px;
+        margin: 20px 0 8px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .toc-sec::before {
+        content: "◆";
+        color: var(--gold);
+        font-size: 8pt;
+      }
+      .toc-i {
+        display: flex;
+        align-items: center;
+        padding: 5px 0;
+        border-bottom: 1px dotted var(--rule);
+        gap: 10px;
+      }
+      .toc-n {
+        background: var(--pur-dd);
+        color: var(--gold-l);
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 8pt;
+        font-weight: 700;
+        padding: 2px 7px;
+        border-radius: 3px;
+        min-width: 34px;
+        text-align: center;
+      }
+      .toc-t {
+        flex: 1;
+        font-size: 11pt;
+        font-weight: 600;
+        color: var(--ink-s);
+        margin-right: 10px;
+      }
+      .toc-d {
+        flex: 1;
+        border-bottom: 1px dotted #ccc;
+        margin: 0 6px;
+      }
+      .toc-p {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 10pt;
+        font-weight: 700;
+        color: var(--pur);
+      }
+
+      /* ═══ CONTENT ═══ */
+      .cp {
+        padding: 48px 65px 80px;
+      }
+      .pg-hdr {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 28px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid var(--rule);
+        position: relative;
+      }
+      .pg-hdr::after {
+        content: "";
+        position: absolute;
+        bottom: -1px;
+        right: 0;
+        width: 60px;
+        height: 1.5px;
+        background: var(--gold);
+      }
+      .pg-ch {
+        font-size: 8.5pt;
+        color: var(--pur-d);
+        font-weight: 700;
+        letter-spacing: 1px;
+      }
+      .pg-br {
+        font-size: 8.5pt;
+        color: #94a3b8;
+        font-family: "IBM Plex Mono", monospace;
+      }
+
+      /* Chapter opener */
+      .ch-op {
+        background: linear-gradient(
+          135deg,
+          var(--pur-dd),
+          var(--pur-d),
+          var(--pur)
+        );
+        border-radius: 6px;
+        padding: 28px 30px;
+        margin-bottom: 26px;
+        position: relative;
+        overflow: hidden;
+      }
+      .ch-op::before {
+        content: "";
+        position: absolute;
+        top: -50px;
+        left: -50px;
+        width: 180px;
+        height: 180px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.04);
+      }
+      .ch-op::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--gold-l),
+          var(--pur-l),
+          transparent
+        );
+      }
+      .ch-num {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 8.5pt;
+        color: var(--pur-l);
+        letter-spacing: 3px;
+        margin-bottom: 7px;
+      }
+      .ch-title {
+        font-size: 22pt;
+        font-weight: 900;
+        color: var(--white);
+        line-height: 1.2;
+        margin-bottom: 10px;
+      }
+      .ch-sub {
+        font-size: 11pt;
+        color: rgba(255, 255, 255, 0.68);
+        line-height: 1.85;
+      }
+
+      h2.sec {
+        font-size: 15pt;
+        font-weight: 900;
+        color: var(--pur-dd);
+        margin: 24px 0 11px;
+        padding-bottom: 6px;
+        border-bottom: 2px solid var(--pur-p);
+        position: relative;
+      }
+      h2.sec::after {
+        content: "";
+        position: absolute;
+        bottom: -2px;
+        right: 0;
+        width: 55px;
+        height: 2px;
+        background: var(--gold);
+      }
+      h3.sub {
+        font-size: 12.5pt;
+        font-weight: 700;
+        color: var(--pur-d);
+        margin: 18px 0 8px;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+      }
+      h3.sub::before {
+        content: "◆";
+        color: var(--gold);
+        font-size: 9pt;
+      }
+      p.body {
+        font-size: 11pt;
+        line-height: 1.9;
+        color: #2d1b4e;
+        margin-bottom: 10px;
+      }
+
+      /* Boxes */
+      .def {
+        background: var(--pur-p);
+        border-right: 5px solid var(--pur);
+        border-radius: 0 6px 6px 0;
+        padding: 14px 18px;
+        margin: 12px 0;
+        page-break-inside: avoid;
+      }
+      .def-t {
+        font-size: 10pt;
+        font-weight: 700;
+        color: var(--pur-d);
+        margin-bottom: 5px;
+      }
+      .note {
+        border-radius: 6px;
+        padding: 11px 16px;
+        margin: 11px 0;
+        display: flex;
+        align-items: flex-start;
+        gap: 9px;
+        page-break-inside: avoid;
+        font-size: 10.5pt;
+        line-height: 1.75;
+      }
+      .note.tip {
+        background: var(--green-p);
+        border: 1px solid #bbf7d0;
+        border-right: 4px solid var(--green);
+      }
+      .note.warn {
+        background: var(--gold-p);
+        border: 1px solid #fde68a;
+        border-right: 4px solid var(--gold);
+      }
+      .note.info {
+        background: var(--blue-p);
+        border: 1px solid #bfdbfe;
+        border-right: 4px solid var(--blue);
+      }
+      .note.err {
+        background: var(--red-p);
+        border: 1px solid #fecaca;
+        border-right: 4px solid var(--red);
+      }
+      .note.pur {
+        background: var(--pur-p);
+        border: 1px solid #c4b5fd;
+        border-right: 4px solid var(--pur);
+      }
+      .ni {
+        font-size: 14pt;
+        flex-shrink: 0;
+        margin-top: 1px;
+      }
+
+      /* Code */
+      .cw {
+        margin: 12px 0;
+        border-radius: 6px;
+        overflow: hidden;
+        page-break-inside: avoid;
+      }
+      .ch2 {
+        background: var(--ink);
+        padding: 7px 14px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+      }
+      .ch2::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 1.5px;
+        background: linear-gradient(
+          90deg,
+          var(--pur-dd),
+          var(--pur-l),
+          var(--gold-l),
+          var(--pur-dd)
+        );
+      }
+      .cl {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 8pt;
+        color: var(--gold-l);
+        font-weight: 700;
+        letter-spacing: 2px;
+      }
+      .cf {
+        font-size: 8pt;
+        color: rgba(255, 255, 255, 0.32);
+        font-family: "IBM Plex Mono", monospace;
+      }
+      .cb {
+        background: var(--cb);
+        padding: 14px 18px;
+        direction: ltr;
+        text-align: left;
+      }
+      .cb pre {
+        font-family: "IBM Plex Mono", "Courier New", monospace;
+        font-size: 9.5pt;
+        color: #cbd5e1;
+        line-height: 1.85;
+        white-space: pre;
+      }
+      .kw {
+        color: #93c5fd;
+        font-weight: 700;
+      }
+      .kw2 {
+        color: #c084fc;
+        font-weight: 700;
+      }
+      .tp {
+        color: #6ee7b7;
+      }
+      .fn {
+        color: #fde68a;
+      }
+      .str {
+        color: #fda4af;
+      }
+      .num {
+        color: #fb923c;
+      }
+      .cm {
+        color: #4b5563;
+        font-style: italic;
+      }
+      .pp {
+        color: #a5b4fc;
+        font-weight: 700;
+      }
+      .op {
+        color: #94a3b8;
+      }
+      .out {
+        color: #86efac;
+      }
+
+      /* Diagram */
+      .diag {
+        background: var(--white);
+        border: 1.5px solid var(--rule);
+        border-radius: 6px;
+        padding: 20px;
+        margin: 12px 0;
+        text-align: center;
+        page-break-inside: avoid;
+      }
+      .diag-t {
+        font-size: 9pt;
+        font-weight: 700;
+        color: var(--pur-d);
+        margin-bottom: 14px;
+        font-family: "IBM Plex Mono", monospace;
+        letter-spacing: 2px;
+      }
+
+      /* Layout */
+      .two {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+        margin: 11px 0;
+      }
+      .three {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 11px;
+        margin: 11px 0;
+      }
+      .card {
+        background: var(--slate);
+        border: 1.5px solid var(--rule);
+        border-radius: 6px;
+        padding: 13px;
+        page-break-inside: avoid;
+      }
+      .card.pur {
+        background: var(--pur-p);
+        border-color: #c4b5fd;
+      }
+      .card.gold {
+        background: var(--gold-p);
+        border-color: #fde68a;
+      }
+      .card.green {
+        background: var(--green-p);
+        border-color: #bbf7d0;
+      }
+      .card.red {
+        background: var(--red-p);
+        border-color: #fecaca;
+      }
+      .card.dark {
+        background: var(--ink-s);
+        border-color: rgba(124, 58, 237, 0.3);
+      }
+      .card-t {
+        font-size: 11pt;
+        font-weight: 700;
+        color: var(--pur-dd);
+        margin-bottom: 7px;
+      }
+      .card.dark .card-t {
+        color: var(--gold-l);
+      }
+      .chk {
+        display: flex;
+        gap: 8px;
+        align-items: flex-start;
+        margin: 5px 0;
+        font-size: 10.5pt;
+      }
+      .chki {
+        color: var(--pur);
+        font-size: 11pt;
+        margin-top: 3px;
+        flex-shrink: 0;
+      }
+      .steps {
+        margin: 10px 0;
+      }
+      .step {
+        display: flex;
+        gap: 11px;
+        align-items: flex-start;
+        margin-bottom: 8px;
+        page-break-inside: avoid;
+      }
+      .sn {
+        min-width: 28px;
+        height: 28px;
+        background: var(--pur);
+        color: var(--white);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10pt;
+        font-weight: 900;
+        flex-shrink: 0;
+        margin-top: 2px;
+      }
+      .sb {
+        flex: 1;
+      }
+      .st2 {
+        font-size: 11pt;
+        font-weight: 700;
+        color: var(--pur-dd);
+      }
+      .sd {
+        font-size: 10.5pt;
+        color: #475569;
+        line-height: 1.7;
+      }
+
+      /* Exercise/Assignment/Test */
+      .ex {
+        border: 2px solid var(--pur);
+        border-radius: 6px;
+        overflow: hidden;
+        margin: 10px 0;
+        page-break-inside: avoid;
+      }
+      .ex-hdr {
+        background: linear-gradient(135deg, var(--pur-dd), var(--pur));
+        padding: 8px 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .ex-t {
+        font-size: 11pt;
+        font-weight: 700;
+        color: var(--white);
+      }
+      .ex-meta {
+        font-size: 9pt;
+        color: var(--pur-l);
+        font-family: "IBM Plex Mono", monospace;
+      }
+      .ex-body {
+        padding: 13px 17px;
+      }
+      .diff {
+        display: inline-flex;
+        align-items: center;
+        padding: 2px 9px;
+        border-radius: 4px;
+        font-size: 8.5pt;
+        font-weight: 700;
+        margin-right: 5px;
+      }
+      .diff.e {
+        background: var(--green-p);
+        color: #065f46;
+      }
+      .diff.m {
+        background: var(--gold-p);
+        color: #92400e;
+      }
+      .diff.h {
+        background: var(--red-p);
+        color: #991b1b;
+      }
+
+      .test-box {
+        border: 2px solid var(--gold);
+        border-radius: 6px;
+        overflow: hidden;
+        margin: 14px 0;
+        page-break-inside: avoid;
+      }
+      .test-hdr {
+        background: linear-gradient(135deg, #78350f, var(--gold));
+        padding: 10px 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .test-t {
+        font-size: 12pt;
+        font-weight: 700;
+        color: var(--white);
+      }
+      .test-body {
+        padding: 14px 18px;
+        background: var(--gold-p);
+      }
+
+      .assign-box {
+        border: 2px solid var(--pur-l);
+        border-radius: 6px;
+        overflow: hidden;
+        margin: 12px 0;
+        page-break-inside: avoid;
+      }
+      .assign-hdr {
+        background: linear-gradient(135deg, var(--pur-d), var(--pur-l));
+        padding: 8px 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .assign-t {
+        font-size: 11pt;
+        font-weight: 700;
+        color: var(--white);
+      }
+      .assign-body {
+        padding: 12px 17px;
+        background: var(--pur-p);
+      }
+
+      .ans-box {
+        border: 2px solid var(--green);
+        border-radius: 6px;
+        overflow: hidden;
+        margin: 10px 0;
+        page-break-inside: avoid;
+      }
+      .ans-hdr {
+        background: var(--green);
+        padding: 7px 15px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .ans-t {
+        font-size: 11pt;
+        font-weight: 700;
+        color: var(--white);
+      }
+      .ans-body {
+        padding: 12px 17px;
+        background: var(--green-p);
+      }
+
+      /* Memory diagram */
+      .mem-cell {
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+        border: 1.5px solid var(--pur);
+        border-radius: 4px;
+        padding: 6px 10px;
+        background: var(--pur-p);
+        margin: 3px;
+        font-family: "IBM Plex Mono", monospace;
+      }
+      .mem-addr {
+        font-size: 7.5pt;
+        color: var(--pur-d);
+      }
+      .mem-val {
+        font-size: 11pt;
+        font-weight: 700;
+        color: var(--pur-dd);
+      }
+      .mem-lbl {
+        font-size: 7.5pt;
+        color: var(--gold);
+      }
+
+      /* Footer */
+      .pgf {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        border-top: 1px solid var(--rule);
+        padding: 10px 65px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: var(--white);
+      }
+      .pga {
+        font-size: 8.5pt;
+        color: var(--gold);
+        font-weight: 700;
+      }
+      .pgn {
+        font-size: 8.5pt;
+        color: #94a3b8;
+        font-family: "IBM Plex Mono", monospace;
+      }
+      hr.dv {
+        border: none;
+        border-top: 1px solid var(--rule);
+        margin: 16px 0;
+      }
+
+      .bc {
+        width: 794px;
+        min-height: 1123px;
+        margin: 0 auto;
+        background: var(--ink);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 60px;
+        position: relative;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ══════════════ COVER ══════════════ -->
+    <div class="cover">
+      <div class="c-mesh"></div>
+      <div class="c-glow1"></div>
+      <div class="c-glow2"></div>
+      <div class="c-stripe"></div>
+      <div class="c-inner">
+        <div class="c-brand">
+          <div class="c-logo">&lt;/&gt;</div>
+          <span class="c-bn">Aswany</span>
+          <span class="c-ser">ARABIC CS SERIES · VOL. V</span>
+        </div>
+        <div class="c-main">
+          <div class="c-badge">
+            ● FROM HARDWARE TO CODE — معمارية الحاسوب حتى البرمجة
+          </div>
+          <div class="c-t1">الدليل الشامل في</div>
+          <div class="c-t2">معمارية</div>
+          <div class="c-t3">الحاسوب</div>
+          <div class="c-t4">وأساسيات C++</div>
+          <div class="c-div"></div>
+          <p class="c-sub">
+            من فهم العتاد الصلب وكيف يعمل المعالج — حتى كتابة كودك الأول بلغة
+            C++، مروراً بالمتغيرات والمصفوفات والمؤشرات والبنى. كتاب يبني الأساس
+            الصحيح من الصفر.
+          </p>
+          <div class="c-pills">
+            <span class="c-pill gold">🖥️ Computer Architecture</span>
+            <span class="c-pill">⚡ CPU & Memory</span>
+            <span class="c-pill">🔢 Number Systems</span>
+            <span class="c-pill gold">💻 C++ Basics</span>
+            <span class="c-pill">📦 Variables & Types</span>
+            <span class="c-pill">🔁 Loops & Functions</span>
+            <span class="c-pill gold">📌 Pointers</span>
+            <span class="c-pill">🏗️ Structs</span>
+            <span class="c-pill">📐 Arrays</span>
+          </div>
+          <div class="c-stats">
+            <div class="c-stat">
+              <div class="c-sn">10</div>
+              <div class="c-sl">فصلاً</div>
+            </div>
+            <div class="c-stat">
+              <div class="c-sn">100+</div>
+              <div class="c-sl">مسألة</div>
+            </div>
+            <div class="c-stat">
+              <div class="c-sn">10</div>
+              <div class="c-sl">اختبار</div>
+            </div>
+            <div class="c-stat">
+              <div class="c-sn">C++</div>
+              <div class="c-sl">الكود</div>
+            </div>
+          </div>
+        </div>
+        <div class="c-auth">
+          <div class="c-al">AUTHOR — المؤلف</div>
+          <div class="c-an">Eng. Osman Taher</div>
+          <div class="c-as">✦ Aswany — Arabic Tech Books Series</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════ TOC ══════════════ -->
+    <div class="page">
+      <div class="toc">
+        <div class="toc-h">
+          <h1>فهرس المحتويات</h1>
+          <div class="toc-line"></div>
+          <p>TABLE OF CONTENTS</p>
+        </div>
+
+        <div class="toc-sec">الجزء الأول — معمارية الحاسوب</div>
+        <div class="toc-i">
+          <span class="toc-n">01</span
+          ><span class="toc-t">مكونات الحاسوب — Hardware Overview</span
+          ><span class="toc-d"></span><span class="toc-p">5</span>
+        </div>
+        <div class="toc-i">
+          <span class="toc-n">02</span
+          ><span class="toc-t">المعالج — CPU Architecture & Operation</span
+          ><span class="toc-d"></span><span class="toc-p">22</span>
+        </div>
+        <div class="toc-i">
+          <span class="toc-n">03</span
+          ><span class="toc-t">الذاكرة — Memory Hierarchy & Management</span
+          ><span class="toc-d"></span><span class="toc-p">40</span>
+        </div>
+        <div class="toc-i">
+          <span class="toc-n">04</span
+          ><span class="toc-t">أنظمة الأعداد — Number Systems & Binary</span
+          ><span class="toc-d"></span><span class="toc-p">58</span>
+        </div>
+
+        <div class="toc-sec">الجزء الثاني — أساسيات C++</div>
+        <div class="toc-i">
+          <span class="toc-n">05</span
+          ><span class="toc-t">مقدمة في C++ — أول برنامج وبيئة التطوير</span
+          ><span class="toc-d"></span><span class="toc-p">76</span>
+        </div>
+        <div class="toc-i">
+          <span class="toc-n">06</span
+          ><span class="toc-t"
+            >المتغيرات وأنواع البيانات — Variables & Data Types</span
+          ><span class="toc-d"></span><span class="toc-p">92</span>
+        </div>
+        <div class="toc-i">
+          <span class="toc-n">07</span
+          ><span class="toc-t"
+            >التحكم في التدفق — Control Flow (if/switch/loops)</span
+          ><span class="toc-d"></span><span class="toc-p">112</span>
+        </div>
+        <div class="toc-i">
+          <span class="toc-n">08</span
+          ><span class="toc-t">الدوال — Functions & Scope</span
+          ><span class="toc-d"></span><span class="toc-p">134</span>
+        </div>
+        <div class="toc-i">
+          <span class="toc-n">09</span
+          ><span class="toc-t">المصفوفات والنصوص — Arrays & Strings</span
+          ><span class="toc-d"></span><span class="toc-p">156</span>
+        </div>
+        <div class="toc-i">
+          <span class="toc-n">10</span
+          ><span class="toc-t">المؤشرات والبنى — Pointers & Structs</span
+          ><span class="toc-d"></span><span class="toc-p">180</span>
+        </div>
+
+        <div class="toc-sec">ملاحق</div>
+        <div class="toc-i">
+          <span class="toc-n">A</span
+          ><span class="toc-t">إجابات جميع التمارين والواجبات</span
+          ><span class="toc-d"></span><span class="toc-p">210</span>
+        </div>
+        <div class="toc-i">
+          <span class="toc-n">B</span
+          ><span class="toc-t">إجابات الاختبارات الفصلية</span
+          ><span class="toc-d"></span><span class="toc-p">240</span>
+        </div>
+        <div class="toc-i">
+          <span class="toc-n">C</span
+          ><span class="toc-t">جدول ASCII وجداول المرجع</span
+          ><span class="toc-d"></span><span class="toc-p">252</span>
+        </div>
+
+        <div
+          style="
+            margin-top: 28px;
+            background: var(--ink-s);
+            border-radius: 6px;
+            padding: 18px 22px;
+            position: relative;
+            overflow: hidden;
+          "
+        >
+          <div
+            style="
+              position: absolute;
+              top: 0;
+              left: 0;
+              right: 0;
+              height: 2px;
+              background: linear-gradient(
+                90deg,
+                var(--pur-dd),
+                var(--pur-l),
+                var(--gold-l),
+                var(--pur-dd)
+              );
+            "
+          ></div>
+          <div
+            style="
+              font-size: 11pt;
+              font-weight: 700;
+              color: var(--gold-l);
+              margin-bottom: 10px;
+            "
+          >
+            📌 كيف تستخدم هذا الكتاب؟
+          </div>
+          <div class="chk" style="color: rgba(255, 255, 255, 0.82)">
+            <span style="color: var(--gold-l)">✦</span
+            ><span
+              >الجزء الأول (فصول 1-4) يبني فهمك لكيفية عمل الحاسوب. لا تتجاوزه —
+              الأساس ضروري.</span
+            >
+          </div>
+          <div class="chk" style="color: rgba(255, 255, 255, 0.82)">
+            <span style="color: var(--gold-l)">✦</span
+            ><span
+              >كل فصل يحتوي على 10 مسائل مشروحة بالكامل — اقرأ الحل وافهم
+              المنطق.</span
+            >
+          </div>
+          <div class="chk" style="color: rgba(255, 255, 255, 0.82)">
+            <span style="color: var(--gold-l)">✦</span
+            ><span
+              >اختبار نهاية كل فصل (5 مسائل) — حله وحدك ثم قارن بالملاحق.</span
+            >
+          </div>
+          <div class="chk" style="color: rgba(255, 255, 255, 0.82)">
+            <span style="color: var(--gold-l)">✦</span
+            ><span
+              >الواجبات تتدرج من السهل للصعب — لا تنظر للإجابة إلا بعد
+              المحاولة.</span
+            >
+          </div>
+        </div>
+      </div>
+      <div class="pgf">
+        <span class="pga">Eng. Osman Taher — Aswany</span
+        ><span class="pgn">فهرس</span>
+      </div>
+    </div>
+
+    <!-- ══════════════ CH1: HARDWARE ══════════════ -->
+    <div class="page">
+      <div class="cp">
+        <div class="pg-hdr">
+          <span class="pg-ch">الفصل الأول ● مكونات الحاسوب</span
+          ><span class="pg-br">Aswany ✦ Eng. Osman Taher</span>
+        </div>
+        <div class="ch-op">
+          <div class="ch-num">CHAPTER 01 — HARDWARE OVERVIEW</div>
+          <div class="ch-title">مكونات الحاسوب<br />Hardware Components</div>
+          <div class="ch-sub">
+            قبل أن تكتب سطراً واحداً من الكود — لا بدّ أن تفهم الآلة التي
+            ستنفّذه. هذا الفصل يشرح كل مكوّن من مكونات الحاسوب ودوره الحقيقي.
+          </div>
+        </div>
+
+        <h2 class="sec">1.1 نظرة عامة على الحاسوب</h2>
+        <div class="def">
+          <div class="def-t">💡 تعريف الحاسوب</div>
+          <p class="body">
+            الحاسوب هو جهاز إلكتروني يقبل البيانات (Input)، ويعالجها
+            (Processing)، ويُخرج النتائج (Output)، ويمكنه تخزين البيانات
+            (Storage). كل هذا يحدث وفق تعليمات مبرمجة مسبقاً.
+          </p>
+        </div>
+
+        <div class="diag">
+          <div class="diag-t">
+            VON NEUMANN ARCHITECTURE — معمارية فون نيومان
+          </div>
+          <svg
+            width="560"
+            height="180"
+            viewBox="0 0 560 180"
+            style="direction: ltr; overflow: visible"
+          >
+            <!-- Input -->
+            <rect
+              x="5"
+              y="65"
+              width="90"
+              height="50"
+              rx="5"
+              fill="#F5F3FF"
+              stroke="#7C3AED"
+              stroke-width="2"
+            />
+            <text
+              x="50"
+              y="85"
+              text-anchor="middle"
+              font-family="Cairo"
+              font-size="9"
+              font-weight="700"
+              fill="#5B21B6"
+            >
+              وحدة
+            </text>
+            <text
+              x="50"
+              y="99"
+              text-anchor="middle"
+              font-family="Cairo"
+              font-size="9"
+              font-weight="700"
+              fill="#5B21B6"
+            >
+              الإدخال
+            </text>
+            <text
+              x="50"
+              y="112"
+              text-anchor="middle"
+              font-family="IBM Plex Mono"
+              font-size="7.5"
+              fill="#7C3AED"
+            >
+              Input Unit
+            </text>
+            <line
+              x1="95"
+              y1="90"
+              x2="115"
+              y2="90"
+              stroke="#7C3AED"
+              stroke-width="2"
+            />
+            <polygon points="112,86 120,90 112,94" fill="#7C3AED" />
+
+            <!-- CPU -->
+            <rect
+              x="120"
+              y="20"
+              width="200"
+              height="140"
+              rx="5"
+              fill="#0A0612"
+              stroke="#D97706"
+              stroke-width="2"
+            />
+            <text
+              x="220"
+              y="42"
+              text-anchor="middle"
+              font-family="IBM Plex Mono"
+              font-size="10"
+              font-weight="700"
+              fill="#FCD34D"
+            >
+              CPU — المعالج
+            </text>
+
+            <rect x="130" y="50" width="80" height="45" rx="4" fill="#3B0764" />
+            <text
+              x="170"
+              y="70"
+              text-anchor="middle"
+              font-family="Cairo"
+              font-size="8"
+              font-weight="700"
+              fill="#C4B5FD"
+            >
+              وحدة الحساب
+            </text>
+            <text
+              x="170"
+              y="82"
+              text-anchor="middle"
+              font-family="Cairo"
+              font-size="8"
+              font-weight="700"
+              fill="#C4B5FD"
+            >
+              والمنطق ALU
+            </text>
+            <text
+              x="170"
+              y="92"
+              text-anchor="middle"
+              font-family="IBM Plex Mono"
+              font-size="7"
+              fill="#7C3AED"
+            >
+              Arithmetic
+            </text>
+
+            <rect x="220" y="50" width="90" height="45" rx="4" fill="#3B0764" />
+            <text
+              x="265"
+              y="70"
+              text-anchor="middle"
+              font-family="Cairo"
+              font-size="8"
+              font-weight="700"
+              fill="#C4B5FD"
+            >
+              وحدة التحكم
+            </text>
+            <text
+              x="265"
+              y="82"
+              text-anchor="middle"
+              font-family="Cairo"
+              font-size="8"
+              font-weight="700"
+              fill="#C4B5FD"
+            >
+              CU
+            </text>
+            <text
+              x="265"
+              y="92"
+              text-anchor="middle"
+              font-family="IBM Plex Mono"
+              font-size="7"
+              fill="#7C3AED"
+            >
+              Control Unit
+            </text>
+
+            <rect
+              x="130"
+              y="105"
+              width="180"
+              height="35"
+              rx="4"
+              fill="#3B0764"
+            />
+            <text
+              x="220"
+              y="122"
+              text-anchor="middle"
+              font-family="Cairo"
+              font-size="8"
+              font-weight="700"
+              fill="#FDE68A"
+            >
+              ذاكرة التسجيلات — Registers
+            </text>
+            <text
+              x="220"
+              y="134"
+              text-anchor="middle"
+              font-family="IBM Plex Mono"
+              font-size="7"
+              fill="#D97706"
+            >
+              PC | IR | MAR | MDR | ACC
+            </text>
+
+            <!-- Arrows to/from CPU -->
+            <line
+              x1="320"
+              y1="90"
+              x2="340"
+              y2="90"
+              stroke="#7C3AED"
+              stroke-width="2"
+            />
+            <polygon points="337,86 345,90 337,94" fill="#7C3AED" />
+            <line
+              x1="345"
+              y1="90"
+              x2="325"
+              y2="90"
+              stroke="#059669"
+              stroke-width="1.5"
+              stroke-dasharray="4,2"
+            />
+
+            <!-- Output -->
+            <rect
+              x="345"
+              y="65"
+              width="90"
+              height="50"
+              rx="5"
+              fill="#ECFDF5"
+              stroke="#059669"
+              stroke-width="2"
+            />
+            <text
+              x="390"
+              y="85"
+              text-anchor="middle"
+              font-family="Cairo"
+              font-size="9"
+              font-weight="700"
+              fill="#065F46"
+            >
+              وحدة
+            </text>
+            <text
+              x="390"
+              y="99"
+              text-anchor="middle"
+              font-family="Cairo"
+              font-size="9"
+              font-weight="700"
+              fill="#065F46"
+            >
+              الإخراج
+            </text>
+            <text
+              x="390"
+              y="112"
+              text-anchor="middle"
+              font-family="IBM Plex Mono"
+              font-size="7.5"
+              fill="#059669"
+            >
+              Output Unit
+            </text>
+
+            <!-- Memory -->
+            <rect
+              x="455"
+              y="30"
+              width="100"
+              height="120"
+              rx="5"
+              fill="#FFFBEB"
+              stroke="#D97706"
+              stroke-width="2"
+            />
+            <text
+              x="505"
+              y="52"
+              text-anchor="middle"
+              font-family="Cairo"
+              font-size="9"
+              font-weight="700"
+              fill="#92400E"
+            >
+              الذاكرة
+            </text>
+            <text
+              x="505"
+              y="65"
+              text-anchor="middle"
+              font-family="IBM Plex Mono"
+              font-size="7.5"
+              fill="#D97706"
+            >
+              RAM / ROM
+            </text>
+            <rect
+              x="463"
+              y="75"
+              width="85"
+              height="12"
+              rx="2"
+              fill="#FDE68A"
+              stroke="#D97706"
+              stroke-width="1"
+            />
+            <rect
+              x="463"
+              y="92"
+              width="85"
+              height="12"
+              rx="2"
+              fill="#FDE68A"
+              stroke="#D97706"
+              stroke-width="1"
+            />
+            <rect
+              x="463"
+              y="109"
+              width="85"
+              height="12"
+              rx="2"
+              fill="#FDE68A"
+              stroke="#D97706"
+              stroke-width="1"
+            />
+            <rect
+              x="463"
+              y="126"
+              width="85"
+              height="12"
+              rx="2"
+              fill="#FDE68A"
+              stroke="#D97706"
+              stroke-width="1"
+            />
+            <text
+              x="505"
+              y="84"
+              text-anchor="middle"
+              font-family="IBM Plex Mono"
+              font-size="7"
+              fill="#78350F"
+            >
+              0x0000
+            </text>
+            <text
+              x="505"
+              y="101"
+              text-anchor="middle"
+              font-family="IBM Plex Mono"
+              font-size="7"
+              fill="#78350F"
+            >
+              0x0001
+            </text>
+            <text
+              x="505"
+              y="118"
+              text-anchor="middle"
+              font-family="IBM Plex Mono"
+              font-size="7"
+              fill="#78350F"
+            >
+              0x0002
+            </text>
+            <text
+              x="505"
+              y="135"
+              text-anchor="middle"
+              font-family="IBM Plex Mono"
+              font-size="7"
+              fill="#78350F"
+            >
+              ...
+            </text>
+
+            <!-- CPU <-> Memory -->
+            <line
+              x1="455"
+              y1="80"
+              x2="320"
+              y2="80"
+              stroke="#D97706"
+              stroke-width="1.5"
+              stroke-dasharray="4,2"
+            />
+            <text
+              x="387"
+              y="73"
+              text-anchor="middle"
+              font-family="Cairo"
+              font-size="7.5"
+              fill="#D97706"
+            >
+              ناقل البيانات
+            </text>
+
+            <!-- Labels -->
+            <text
+              x="50"
+              y="155"
+              text-anchor="middle"
+              font-family="Cairo"
+              font-size="8"
+              fill="#64748B"
+            >
+              لوحة مفاتيح/ماوس
+            </text>
+            <text
+              x="390"
+              y="155"
+              text-anchor="middle"
+              font-family="Cairo"
+              font-size="8"
+              fill="#64748B"
+            >
+              شاشة/طابعة
+            </text>
+          </svg>
+        </div>
+
+        <h2 class="sec">1.2 المكونات الرئيسية بالتفصيل</h2>
+
+        <h3 class="sub">وحدة المعالجة المركزية — CPU</h3>
+        <p class="body">
+          المعالج هو "عقل" الحاسوب. يُنفّذ التعليمات الواحدة تلو الأخرى بسرعة
+          هائلة. يُقاس أداؤه بـ <strong>الجيجاهرتز (GHz)</strong> — عدد دورات
+          العمل في الثانية.
+        </p>
+        <div class="three">
+          <div class="card pur">
+            <div class="card-t">وحدة الحساب والمنطق (ALU)</div>
+            <p style="font-size: 10pt; color: #374151">
+              تُنفّذ العمليات الحسابية (+، -، ×، ÷) والمنطقية (AND, OR, NOT). كل
+              ما يحدث في البرنامج يمر من هنا.
+            </p>
+          </div>
+          <div class="card gold">
+            <div class="card-t" style="color: #92400e">وحدة التحكم (CU)</div>
+            <p style="font-size: 10pt; color: #374151">
+              تقرأ التعليمات من الذاكرة وتفسّرها وتُوجّه بقية المكونات لتنفيذها.
+              هي "المايسترو" الذي ينسّق الكل.
+            </p>
+          </div>
+          <div class="card dark">
+            <div class="card-t">التسجيلات (Registers)</div>
+            <p style="font-size: 10pt; color: rgba(255, 255, 255, 0.8)">
+              ذاكرة صغيرة جداً داخل المعالج نفسه — أسرع نوع من الذاكرة. تخزّن
+              البيانات التي يعمل عليها المعالج حالياً.
+            </p>
+          </div>
+        </div>
+
+        <h3 class="sub">الذاكرة العشوائية — RAM</h3>
+        <p class="body">
+          ذاكرة مؤقتة تُستخدم أثناء تشغيل البرامج. سريعة، لكنها تُفقد محتواها
+          عند إيقاف التيار. كلما زادت سعتها، استطاع الحاسوب تشغيل برامج أكثر في
+          آنٍ واحد.
+        </p>
+        <div class="note info">
+          <span class="ni">📌</span
+          ><span
+            ><strong>مثال عملي:</strong> عندما تفتح ملف Word، يُنسخ الملف من
+            القرص الصلب (تخزين دائم) إلى RAM (ذاكرة مؤقتة) ليتمكن المعالج من
+            الوصول إليه بسرعة.</span
+          >
+        </div>
+
+        <h3 class="sub">التخزين الدائم — Storage</h3>
+        <div class="two">
+          <div class="card pur">
+            <div class="card-t">القرص الصلب HDD</div>
+            <p style="font-size: 10pt; color: #374151">
+              أقراص مغناطيسية دوّارة. سعة كبيرة، سعر منخفض، لكنه أبطأ من SSD.
+            </p>
+          </div>
+          <div class="card green">
+            <div class="card-t">محرك الحالة الصلبة SSD</div>
+            <p style="font-size: 10pt; color: #374151">
+              ذاكرة فلاش — لا أجزاء متحركة. أسرع بكثير من HDD، أكثر متانة، سعر
+              أعلى.
+            </p>
+          </div>
+        </div>
+
+        <h2 class="sec">1.3 مسائل مشروحة — الفصل الأول</h2>
+
+        <div class="ex">
+          <div class="ex-hdr">
+            <span class="ex-t">📝 مسألة 1: تحديد المكوّن المناسب</span
+            ><span class="ex-meta"
+              ><span class="diff e">سهل</span> SOLVED 1.1</span
+            >
+          </div>
+          <div class="ex-body">
+            <p class="body">
+              <strong>السؤال:</strong> حدّد المكوّن المسؤول عن كل عملية مما يلي:
+            </p>
+            <div class="chk">
+              <span class="chki">أ)</span>
+              <div>حساب 15 × 7 = 105</div>
+            </div>
+            <div class="chk">
+              <span class="chki">ب)</span>
+              <div>حفظ ملف مستند Word بعد الانتهاء</div>
+            </div>
+            <div class="chk">
+              <span class="chki">ج)</span>
+              <div>قراءة التعليمات من الذاكرة وتنفيذها</div>
+            </div>
+            <div class="chk">
+              <span class="chki">د)</span>
+              <div>عرض الصورة على الشاشة</div>
+            </div>
+            <hr class="dv" />
+            <div class="ans-box">
+              <div class="ans-hdr"><span class="ans-t">✅ الحل</span></div>
+              <div class="ans-body">
+                <div class="chk">
+                  <span class="chki">أ)</span>
+                  <div>
+                    <strong>ALU (وحدة الحساب والمنطق)</strong> — تنفّذ جميع
+                    العمليات الحسابية.
+                  </div>
+                </div>
+                <div class="chk">
+                  <span class="chki">ب)</span>
+                  <div>
+                    <strong>القرص الصلب HDD/SSD</strong> — التخزين الدائم
+                    للملفات.
+                  </div>
+                </div>
+                <div class="chk">
+                  <span class="chki">ج)</span>
+                  <div>
+                    <strong>وحدة التحكم CU</strong> — تقرأ التعليمات وتوجّه
+                    التنفيذ.
+                  </div>
+                </div>
+                <div class="chk">
+                  <span class="chki">د)</span>
+                  <div>
+                    <strong>وحدة الإخراج (بطاقة الرسومات + الشاشة)</strong>.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ex">
+          <div class="ex-hdr">
+            <span class="ex-t">📝 مسألة 2: حساب سعات الذاكرة</span
+            ><span class="ex-meta"
+              ><span class="diff e">سهل</span> SOLVED 1.2</span
+            >
+          </div>
+          <div class="ex-body">
+            <p class="body">
+              <strong>السؤال:</strong> حوّل الوحدات الآتية: أ) 4 GB = ؟ MB = ؟
+              KB = ؟ Byte | ب) 2048 MB = ؟ GB | ج) 1 TB = ؟ GB
+            </p>
+            <div class="ans-box">
+              <div class="ans-hdr"><span class="ans-t">✅ الحل</span></div>
+              <div class="ans-body">
+                <p class="body">
+                  <strong>القاعدة:</strong> 1 KB = 1024 Byte | 1 MB = 1024 KB |
+                  1 GB = 1024 MB | 1 TB = 1024 GB
+                </p>
+                <div class="chk">
+                  <span class="chki">أ)</span>
+                  <div>
+                    4 GB = 4 × 1024 = <strong>4,096 MB</strong> = 4,096 × 1024 =
+                    <strong>4,194,304 KB</strong> = × 1024 =
+                    <strong>4,294,967,296 Byte</strong>
+                  </div>
+                </div>
+                <div class="chk">
+                  <span class="chki">ب)</span>
+                  <div>2048 MB ÷ 1024 = <strong>2 GB</strong></div>
+                </div>
+                <div class="chk">
+                  <span class="chki">ج)</span>
+                  <div>1 TB = 1 × 1024 = <strong>1,024 GB</strong></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ex">
+          <div class="ex-hdr">
+            <span class="ex-t">📝 مسألة 3: تسلسل تنفيذ التعليمات</span
+            ><span class="ex-meta"
+              ><span class="diff m">متوسط</span> SOLVED 1.3</span
+            >
+          </div>
+          <div class="ex-body">
+            <p class="body">
+              <strong>السؤال:</strong> ما الخطوات التي يمرّ بها المعالج عند
+              تنفيذ التعليمة
+              <code
+                style="
+                  background: #f5f3ff;
+                  padding: 2px 5px;
+                  font-family: &quot;IBM Plex Mono&quot;, monospace;
+                "
+                >ADD R1, R2</code
+              >
+              (جمع محتوى تسجيلَين)؟
+            </p>
+            <div class="ans-box">
+              <div class="ans-hdr">
+                <span class="ans-t"
+                  >✅ الحل — دورة الجلب والتنفيذ (Fetch-Decode-Execute)</span
+                >
+              </div>
+              <div class="ans-body">
+                <div class="steps">
+                  <div class="step">
+                    <div class="sn">1</div>
+                    <div class="sb">
+                      <div class="st2">الجلب (Fetch)</div>
+                      <div class="sd">
+                        وحدة التحكم تقرأ التعليمة من العنوان المخزّن في PC
+                        (Program Counter) إلى IR (Instruction Register).
+                      </div>
+                    </div>
+                  </div>
+                  <div class="step">
+                    <div class="sn">2</div>
+                    <div class="sb">
+                      <div class="st2">فك الشفرة (Decode)</div>
+                      <div class="sd">
+                        CU تُحلّل التعليمة: "اجمع محتوى R1 وR2".
+                      </div>
+                    </div>
+                  </div>
+                  <div class="step">
+                    <div class="sn">3</div>
+                    <div class="sb">
+                      <div class="st2">التنفيذ (Execute)</div>
+                      <div class="sd">
+                        ALU تُجري عملية الجمع. النتيجة تُخزَّن في Accumulator أو
+                        R1.
+                      </div>
+                    </div>
+                  </div>
+                  <div class="step">
+                    <div class="sn">4</div>
+                    <div class="sb">
+                      <div class="st2">التخزين (Write Back)</div>
+                      <div class="sd">
+                        النتيجة تُكتب في التسجيل أو الذاكرة المحددة. PC يزيد
+                        للإشارة للتعليمة التالية.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ex">
+          <div class="ex-hdr">
+            <span class="ex-t">📝 مسألة 4: مقارنة أنواع الذاكرة</span
+            ><span class="ex-meta"
+              ><span class="diff e">سهل</span> SOLVED 1.4</span
+            >
+          </div>
+          <div class="ex-body">
+            <p class="body">
+              <strong>السؤال:</strong> رتّب أنواع الذاكرة الآتية من الأسرع
+              للأبطأ، مع ذكر سعتها النسبية: Cache L1، RAM، SSD، Registers، Cache
+              L2.
+            </p>
+            <div class="ans-box">
+              <div class="ans-hdr">
+                <span class="ans-t">✅ الحل — هرم الذاكرة</span>
+              </div>
+              <div class="ans-body">
+                <table
+                  style="
+                    width: 100%;
+                    border-collapse: collapse;
+                    font-size: 10pt;
+                    direction: rtl;
+                  "
+                >
+                  <tr style="background: var(--pur-dd); color: var(--gold-l)">
+                    <th style="padding: 6px 10px; text-align: right">
+                      الترتيب
+                    </th>
+                    <th style="padding: 6px 10px">النوع</th>
+                    <th style="padding: 6px 10px">السرعة</th>
+                    <th style="padding: 6px 10px">السعة النسبية</th>
+                    <th style="padding: 6px 10px">الموقع</th>
+                  </tr>
+                  <tr style="background: #f5f3ff">
+                    <td style="padding: 6px 10px">1 (الأسرع)</td>
+                    <td
+                      style="
+                        padding: 6px 10px;
+                        font-weight: 700;
+                        color: #5b21b6;
+                      "
+                    >
+                      Registers
+                    </td>
+                    <td style="padding: 6px 10px; color: #059669">
+                      أجزاء نانو ثانية
+                    </td>
+                    <td style="padding: 6px 10px">Bytes</td>
+                    <td style="padding: 6px 10px">داخل CPU</td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 6px 10px">2</td>
+                    <td style="padding: 6px 10px; font-weight: 700">
+                      Cache L1
+                    </td>
+                    <td style="padding: 6px 10px; color: #059669">
+                      ~1 نانو ثانية
+                    </td>
+                    <td style="padding: 6px 10px">32-64 KB</td>
+                    <td style="padding: 6px 10px">داخل CPU</td>
+                  </tr>
+                  <tr style="background: #f5f3ff">
+                    <td style="padding: 6px 10px">3</td>
+                    <td style="padding: 6px 10px; font-weight: 700">
+                      Cache L2
+                    </td>
+                    <td style="padding: 6px 10px; color: #d97706">
+                      ~5 نانو ثانية
+                    </td>
+                    <td style="padding: 6px 10px">256 KB - 1 MB</td>
+                    <td style="padding: 6px 10px">قرب CPU</td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 6px 10px">4</td>
+                    <td
+                      style="
+                        padding: 6px 10px;
+                        font-weight: 700;
+                        color: #1d4ed8;
+                      "
+                    >
+                      RAM
+                    </td>
+                    <td style="padding: 6px 10px; color: #d97706">
+                      ~100 نانو ثانية
+                    </td>
+                    <td style="padding: 6px 10px">4-64 GB</td>
+                    <td style="padding: 6px 10px">اللوحة الأم</td>
+                  </tr>
+                  <tr style="background: #f5f3ff">
+                    <td style="padding: 6px 10px">5 (الأبطأ)</td>
+                    <td
+                      style="
+                        padding: 6px 10px;
+                        font-weight: 700;
+                        color: #dc2626;
+                      "
+                    >
+                      SSD/HDD
+                    </td>
+                    <td style="padding: 6px 10px; color: #dc2626">
+                      ميكرو/ملي ثانية
+                    </td>
+                    <td style="padding: 6px 10px">256 GB - 4 TB</td>
+                    <td style="padding: 6px 10px">قرص منفصل</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ex">
+          <div class="ex-hdr">
+            <span class="ex-t">📝 مسألة 5: وحدات الإدخال والإخراج</span
+            ><span class="ex-meta"
+              ><span class="diff e">سهل</span> SOLVED 1.5</span
+            >
+          </div>
+          <div class="ex-body">
+            <p class="body">
+              <strong>السؤال:</strong> صنّف الأجهزة التالية إلى (إدخال / إخراج /
+              كليهما): لوحة المفاتيح، الشاشة، الميكروفون، مكبر الصوت، القرص
+              الصلب، كاميرا الويب، الطابعة، الماوس، لوحة اللمس.
+            </p>
+            <div class="ans-box">
+              <div class="ans-hdr"><span class="ans-t">✅ الحل</span></div>
+              <div class="ans-body">
+                <div class="three">
+                  <div>
+                    <strong style="color: var(--pur-d)">🖱️ إدخال فقط:</strong
+                    ><br />لوحة المفاتيح، الميكروفون، كاميرا الويب، الماوس، لوحة
+                    اللمس
+                  </div>
+                  <div>
+                    <strong style="color: var(--green)">🖨️ إخراج فقط:</strong
+                    ><br />الشاشة، مكبر الصوت، الطابعة
+                  </div>
+                  <div>
+                    <strong style="color: var(--gold)">💾 كليهما:</strong
+                    ><br />القرص الصلب (يقرأ ويكتب)، الشاشة اللمسية، بعض أجهزة
+                    USB
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ex">
+          <div class="ex-hdr">
+            <span class="ex-t">📝 مسائل 6-10: تمارين إضافية</span
+            ><span class="ex-meta"><span class="diff m">متوسط</span></span>
+          </div>
+          <div class="ex-body">
+            <div class="chk">
+              <span class="chki">6)</span>
+              <div>
+                ما الفرق بين RAM و ROM؟ أعطِ مثالاً على استخدام كل منهما.
+              </div>
+            </div>
+            <div class="chk">
+              <span class="chki">7)</span>
+              <div>
+                كيف يُحدد سرعة المعالج بالجيجاهرتز؟ ماذا يعني المعالج 3.5 GHz؟
+              </div>
+            </div>
+            <div class="chk">
+              <span class="chki">8)</span>
+              <div>
+                ما دور ناقل النظام (System Bus)؟ وما الفرق بين Data Bus وAddress
+                Bus؟
+              </div>
+            </div>
+            <div class="chk">
+              <span class="chki">9)</span>
+              <div>
+                ارسم مخططاً يوضّح رحلة ملف MP3 من القرص حتى يصل صوتاً لسماعتك.
+              </div>
+            </div>
+            <div class="chk">
+              <span class="chki">10)</span>
+              <div>
+                حاسوب لديه RAM سعة 8 GB ومعالج 2.4 GHz. اشرح كيف يعمل كلاهما
+                معاً عند فتح برنامج.
+              </div>
+            </div>
+            <div class="note warn">
+              <span class="ni">💡</span
+              ><span
+                >إجابات هذه المسائل موجودة في الملحق (أ) في نهاية الكتاب.</span
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="assign-box">
+          <div class="assign-hdr">
+            <span class="assign-t">📌 واجب الفصل الأول — متدرج</span
+            ><span class="assign-t" style="font-size: 9pt"
+              >إجاباته في الملحق (أ)</span
+            >
+          </div>
+          <div class="assign-body">
+            <div class="chk">
+              <span class="diff e">سهل</span>
+              <div>
+                <strong>و1:</strong> أنت تفتح متصفح إنترنت. اذكر 5 مكونات من
+                الحاسوب تشارك في هذه العملية مع دور كل منها.
+              </div>
+            </div>
+            <div class="chk">
+              <span class="diff e">سهل</span>
+              <div>
+                <strong>و2:</strong> حاسوب به 16 GB RAM يستخدم 12 GB. كم نسبة
+                الاستخدام؟ وكم GB متبقي؟
+              </div>
+            </div>
+            <div class="chk">
+              <span class="diff m">متوسط</span>
+              <div>
+                <strong>و3:</strong> قارن بين حاسوب مزوّد بـ Intel Core i3 (2
+                نواة، 2.4 GHz) وآخر بـ Intel Core i7 (8 أنوية، 3.6 GHz). أيهما
+                أفضل لبرامج المونتاج؟ لماذا؟
+              </div>
+            </div>
+            <div class="chk">
+              <span class="diff m">متوسط</span>
+              <div>
+                <strong>و4:</strong> شركة تريد شراء خوادم (Servers). ما الفرق
+                بين احتياجاتها وحاسوب المنزل في: RAM، التخزين، المعالج؟
+              </div>
+            </div>
+            <div class="chk">
+              <span class="diff h">صعب</span>
+              <div>
+                <strong>و5:</strong> ابحث عن مفهوم Cache Coherence. ما المشكلة
+                التي يحلّها في المعالجات متعددة الأنوية؟
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="test-box">
+          <div class="test-hdr">
+            <span class="test-t">📋 اختبار الفصل الأول</span
+            ><span style="font-size: 10pt; color: var(--gold-l)"
+              >زمن الاختبار: 45 دقيقة | الدرجة الكاملة: 50</span
+            >
+          </div>
+          <div class="test-body">
+            <div class="chk">
+              <span class="chki">س1</span>
+              <div>
+                (10 درجات) اشرح دورة الجلب والتنفيذ (Fetch-Decode-Execute) مع
+                مثال.
+              </div>
+            </div>
+            <div class="chk">
+              <span class="chki">س2</span>
+              <div>
+                (10 درجات) ارسم هرم الذاكرة مع ذكر خصائص كل مستوى (السرعة والسعة
+                والسعر النسبي).
+              </div>
+            </div>
+            <div class="chk">
+              <span class="chki">س3</span>
+              <div>
+                (10 درجات) ما الفرق بين وحدة التحكم (CU) ووحدة الحساب والمنطق
+                (ALU)؟ أعطِ مثالاً لعمل كل منهما.
+              </div>
+            </div>
+            <div class="chk">
+              <span class="chki">س4</span>
+              <div>
+                (10 درجات) حوّل: 2.5 TB = ؟ GB، و 8192 MB = ؟ GB، و 1 GB = ؟
+                Byte.
+              </div>
+            </div>
+            <div class="chk">
+              <span class="chki">س5</span>
+              <div>
+                (10 درجات) صنّف 10 أجهزة إدخال/إخراج مع ذكر نوع البيانات التي
+                يتعامل معها كل جهاز.
+              </div>
+            </div>
+            <div class="note pur">
+              <span class="ni">📌</span
+              ><span
+                >إجابات الاختبار موجودة في الملحق (ب) في نهاية الكتاب.</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pgf">
+        <span class="pga">Eng. Osman Taher — Aswany</span
+        ><span class="pgn">PAGE 05</span>
+      </div>
+    </div>
+
+    <!-- ══════════════ CH4: NUMBER SYSTEMS ══════════════ -->
+    <div class="page">
+      <div class="cp">
+        <div class="pg-hdr">
+          <span class="pg-ch">الفصل الرابع ● أنظمة الأعداد</span
+          ><span class="pg-br">Aswany ✦ Eng. Osman Taher</span>
+        </div>
+        <div class="ch-op">
+          <div class="ch-num">CHAPTER 04 — NUMBER SYSTEMS & BINARY</div>
+          <div class="ch-title">
+            أنظمة الأعداد<br />Number Systems & Binary Arithmetic
+          </div>
+          <div class="ch-sub">
+            الحاسوب يفهم لغة واحدة فقط: الصفر والواحد. هذا الفصل يشرح كيف نُحوّل
+            أي عدد إلى ثنائي، وكيف يخزّن الحاسوب البيانات في ذاكرته.
+          </div>
+        </div>
+
+        <h2 class="sec">4.1 أنظمة الأعداد الأربعة</h2>
+        <div class="two">
+          <table
+            style="width: 100%; border-collapse: collapse; font-size: 10pt"
+          >
+            <tr style="background: var(--pur-dd); color: var(--gold-l)">
+              <th style="padding: 7px 10px">النظام</th>
+              <th style="padding: 7px 10px">الأساس</th>
+              <th style="padding: 7px 10px">الأرقام المستخدمة</th>
+              <th style="padding: 7px 10px">مثال</th>
+            </tr>
+            <tr style="background: var(--pur-p)">
+              <td style="padding: 6px 10px; font-weight: 700">عشري Decimal</td>
+              <td style="padding: 6px 10px; text-align: center">10</td>
+              <td style="padding: 6px 10px">0-9</td>
+              <td
+                style="
+                  padding: 6px 10px;
+                  font-family: &quot;IBM Plex Mono&quot;, monospace;
+                "
+              >
+                255₁₀
+              </td>
+            </tr>
+            <tr>
+              <td style="padding: 6px 10px; font-weight: 700; color: #5b21b6">
+                ثنائي Binary
+              </td>
+              <td style="padding: 6px 10px; text-align: center">2</td>
+              <td style="padding: 6px 10px">0, 1</td>
+              <td
+                style="
+                  padding: 6px 10px;
+                  font-family: &quot;IBM Plex Mono&quot;, monospace;
+                "
+              >
+                11111111₂
+              </td>
+            </tr>
+            <tr style="background: var(--pur-p)">
+              <td style="padding: 6px 10px; font-weight: 700; color: #059669">
+                ثماني Octal
+              </td>
+              <td style="padding: 6px 10px; text-align: center">8</td>
+              <td style="padding: 6px 10px">0-7</td>
+              <td
+                style="
+                  padding: 6px 10px;
+                  font-family: &quot;IBM Plex Mono&quot;, monospace;
+                "
+              >
+                377₈
+              </td>
+            </tr>
+            <tr>
+              <td style="padding: 6px 10px; font-weight: 700; color: #d97706">
+                سداسي عشر Hex
+              </td>
+              <td style="padding: 6px 10px; text-align: center">16</td>
+              <td style="padding: 6px 10px">0-9, A-F</td>
+              <td
+                style="
+                  padding: 6px 10px;
+                  font-family: &quot;IBM Plex Mono&quot;, monospace;
+                "
+              >
+                FF₁₆
+              </td>
+            </tr>
+          </table>
+          <div class="card dark">
+            <div class="card-t">لماذا ثنائي؟</div>
+            <p
+              style="
+                font-size: 10pt;
+                color: rgba(255, 255, 255, 0.8);
+                line-height: 1.8;
+              "
+            >
+              الترانزستور (مفتاح إلكتروني) له حالتان فقط:<br />✦
+              <strong style="color: var(--gold-l)"
+                >1 = تيار موجود (مفتوح)</strong
+              ><br />✦
+              <strong style="color: var(--pur-l)">0 = لا تيار (مغلق)</strong
+              ><br /><br />ملايين الترانزستورات × حالتان = بيانات لا نهاية لها!
+            </p>
+          </div>
+        </div>
+
+        <h2 class="sec">4.2 التحويل بين الأنظمة</h2>
+        <div class="cw">
+          <div class="ch2">
+            <span class="cl">التحويلات الأساسية — مع أمثلة</span>
+          </div>
+          <div class="cb">
+            <pre>
+<span class="cm">══ تحويل عشري → ثنائي (بالقسمة على 2) ══</span>
+<span class="out">255 ÷ 2 = 127  باقي  1</span>
+<span class="out">127 ÷ 2 = 63   باقي  1</span>
+<span class="out">63  ÷ 2 = 31   باقي  1</span>
+<span class="out">31  ÷ 2 = 15   باقي  1</span>
+<span class="out">15  ÷ 2 = 7    باقي  1</span>
+<span class="out">7   ÷ 2 = 3    باقي  1</span>
+<span class="out">3   ÷ 2 = 1    باقي  1</span>
+<span class="out">1   ÷ 2 = 0    باقي  1</span>
+<span class="cm">↑ اقرأ البواقي من أسفل لأعلى: 11111111</span>
+<span class="fn">∴ 255₁₀ = 11111111₂</span>
+
+<span class="cm">══ تحويل ثنائي → عشري (الأوزان) ══</span>
+<span class="out">1011₂ = 1×2³ + 0×2² + 1×2¹ + 1×2⁰</span>
+<span class="out">       = 8   +  0   +  2   +  1</span>
+<span class="fn">       = 11₁₀</span>
+
+<span class="cm">══ تحويل عشري → سداسي عشر ══</span>
+<span class="out">255 ÷ 16 = 15  باقي  15 → F</span>
+<span class="out">15  ÷ 16 = 0   باقي  15 → F</span>
+<span class="fn">∴ 255₁₀ = FF₁₆  (لذلك الأبيض في CSS هو #FFFFFF)</span>
+
+<span class="cm">══ ثنائي → سداسي عشر (كل 4 بتات = رقم واحد) ══</span>
+<span class="out">1111 1111₂  →  F    F   ₁₆  =  FF₁₆</span>
+<span class="out">1010 0101₂  →  A    5   ₁₆  =  A5₁₆</span></pre>
+          </div>
+        </div>
+
+        <h2 class="sec">4.3 مسائل مشروحة — أنظمة الأعداد</h2>
+
+        <div class="ex">
+          <div class="ex-hdr">
+            <span class="ex-t">📝 مسألة 1: تحويل شامل</span
+            ><span class="ex-meta"
+              ><span class="diff e">سهل</span> SOLVED 4.1</span
+            >
+          </div>
+          <div class="ex-body">
+            <p class="body">
+              <strong>حوّل العدد 42₁₀ إلى: ثنائي، ثماني، سداسي عشر.</strong>
+            </p>
+            <div class="ans-box">
+              <div class="ans-hdr"><span class="ans-t">✅ الحل</span></div>
+              <div class="ans-body">
+                <div class="chk">
+                  <span class="chki">ثنائي:</span>
+                  <div>
+                    42÷2=21 ب0 | 21÷2=10 ب1 | 10÷2=5 ب0 | 5÷2=2 ب1 | 2÷2=1 ب0 |
+                    1÷2=0 ب1 → <strong>101010₂</strong>
+                  </div>
+                </div>
+                <div class="chk">
+                  <span class="chki">ثماني:</span>
+                  <div>
+                    42÷8=5 ب2 | 5÷8=0 ب5 → <strong>52₈</strong> أو: 101010₂ →
+                    101|010 → 5|2 → <strong>52₈</strong>
+                  </div>
+                </div>
+                <div class="chk">
+                  <span class="chki">سداسي:</span>
+                  <div>42÷16=2 ب10(=A) | 2÷16=0 ب2 → <strong>2A₁₆</strong></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ex">
+          <div class="ex-hdr">
+            <span class="ex-t">📝 مسائل 2-10: تمارين أنظمة الأعداد</span
+            ><span class="ex-meta"><span class="diff e">سهل→صعب</span></span>
+          </div>
+          <div class="ex-body">
+            <div class="chk">
+              <span class="chki">2)</span>
+              <div>حوّل 0xFF إلى عشري وثنائي. (تلميح: FF = F×16 + F)</div>
+            </div>
+            <div class="chk">
+              <span class="chki">3)</span>
+              <div>
+                ما الأعداد العشرية الموافقة لـ: 1000₂، 1010₂، 11001₂، 10000000₂؟
+              </div>
+            </div>
+            <div class="chk">
+              <span class="chki">4)</span>
+              <div>
+                حوّل الأعداد العشرية التالية للثنائي: 7، 15، 100، 200، 1024.
+              </div>
+            </div>
+            <div class="chk">
+              <span class="chki">5)</span>
+              <div>
+                لماذا يستخدم المبرمجون النظام السداسي عشر بدلاً من الثنائي في
+                كتابة عناوين الذاكرة؟
+              </div>
+            </div>
+            <div class="chk">
+              <span class="chki">6)</span>
+              <div>حوّل عنوان الذاكرة 0x1A2B إلى عشري وثنائي.</div>
+            </div>
+            <div class="chk">
+              <span class="chki">7)</span>
+              <div>
+                ما الفرق بين Bit وByte وNibble؟ كم Bit يتسع عدد 8-bit؟ ما أكبر
+                عدد يمكن تخزينه؟
+              </div>
+            </div>
+            <div class="chk">
+              <span class="chki">8)</span>
+              <div>لون الشاشة RGB(255, 128, 0) — اكتبه بالسداسي عشر.</div>
+            </div>
+            <div class="chk">
+              <span class="chki">9)</span>
+              <div>ما نتيجة 1111₂ + 0001₂ بالثنائي؟ وما يوازيها بالعشري؟</div>
+            </div>
+            <div class="chk">
+              <span class="chki">10)</span>
+              <div>
+                مساحة RAM هي 4 GB. كم عنوانًا ثنائيًا تحتاج للإشارة لكل بايت
+                فيها؟ (تلميح: log₂ للمساحة بالبايتات)
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="assign-box">
+          <div class="assign-hdr">
+            <span class="assign-t">📌 واجب الفصل الرابع</span
+            ><span class="assign-t" style="font-size: 9pt"
+              >إجاباته في الملحق (أ)</span
+            >
+          </div>
+          <div class="assign-body">
+            <div class="chk">
+              <span class="diff e">سهل</span>
+              <div>
+                <strong>و1:</strong> اكتب برنامجًا ورقيًا يحوّل أي عدد عشري بين
+                0-255 إلى ثنائي خطوة بخطوة.
+              </div>
+            </div>
+            <div class="chk">
+              <span class="diff m">متوسط</span>
+              <div>
+                <strong>و2:</strong> كيف يُمثّل الحاسوب الأعداد السالبة؟ ابحث عن
+                "Two's Complement" واشرحه مع مثال على -5 بـ 8 بتات.
+              </div>
+            </div>
+            <div class="chk">
+              <span class="diff m">متوسط</span>
+              <div>
+                <strong>و3:</strong> عنوان IP مثل 192.168.1.1 مكوّن من 4 أعداد
+                (8 بتات لكل منها). اكتب هذا العنوان ثنائياً كاملاً.
+              </div>
+            </div>
+            <div class="chk">
+              <span class="diff h">صعب</span>
+              <div>
+                <strong>و4:</strong> كيف يمثّل الحاسوب الكسور العشرية مثل 3.14؟
+                ابحث عن IEEE 754 وأشرح المكونات الثلاثة.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="test-box">
+          <div class="test-hdr">
+            <span class="test-t">📋 اختبار الفصل الرابع</span
+            ><span style="font-size: 10pt; color: var(--gold-l)"
+              >زمن الاختبار: 40 دقيقة | الدرجة: 50</span
+            >
+          </div>
+          <div class="test-body">
+            <div class="chk">
+              <span class="chki">س1</span>
+              <div>
+                (10) حوّل كل من: 173₁₀، 0xAB، 11010101₂ إلى بقية الأنظمة
+                الثلاثة.
+              </div>
+            </div>
+            <div class="chk">
+              <span class="chki">س2</span>
+              <div>
+                (10) ما أكبر عدد يمكن تخزينه في 8-bit؟ و16-bit؟ و32-bit؟ اشرح
+                المنطق الرياضي.
+              </div>
+            </div>
+            <div class="chk">
+              <span class="chki">س3</span>
+              <div>
+                (10) اجمع الأعداد الثنائية: 11010 + 10111. تحقق من صحتك
+                بتحويلهما للعشري أولاً.
+              </div>
+            </div>
+            <div class="chk">
+              <span class="chki">س4</span>
+              <div>
+                (10) كيف تُمثّل الحروف في الحاسوب؟ (ASCII) ما الكود الثنائي
+                للحرف 'A'؟
+              </div>
+            </div>
+            <div class="chk">
+              <span class="chki">س5</span>
+              <div>
+                (10) برنامج يستهلك 2.5 GB من الذاكرة. كم Byte هذا؟ كم Bit؟ اكتب
+                الإجابة بالأسلوب العلمي.
+              </div>
+            </div>
+            <div class="note pur">
+              <span class="ni">📌</span><span>الإجابات في الملحق (ب).</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pgf">
+        <span class="pga">Eng. Osman Taher — Aswany</span
+        ><span class="pgn">PAGE 58</span>
+      </div>
+    </div>
+
+    <!-- ══════════════ CH5: INTRO C++ ══════════════ -->
+    <div class="page">
+      <div class="cp">
+        <div class="pg-hdr">
+          <span class="pg-ch">الفصل الخامس ● مقدمة في C++</span
+          ><span class="pg-br">Aswany ✦ Eng. Osman Taher</span>
+        </div>
+        <div class="ch-op">
+          <div class="ch-num">CHAPTER 05 — INTRODUCTION TO C++</div>
+          <div class="ch-title">مقدمة في C++<br />أول برنامج وبيئة التطوير</div>
+          <div class="ch-sub">
+            الآن وقد فهمت كيف يعمل الحاسوب — حان وقت التكلّم بلغته. C++ هي الجسر
+            بين أفكارك والمعالج. نبدأ من أبسط برنامج ونبني عليه.
+          </div>
+        </div>
+
+        <h2 class="sec">5.1 لماذا C++؟</h2>
+        <div class="three">
+          <div class="card pur">
+            <div style="font-size: 22px; margin-bottom: 6px">⚡</div>
+            <div class="card-t">الأداء العالي</div>
+            <p style="font-size: 10pt; color: #374151">
+              أسرع لغة عالية المستوى. تُستخدم في أنظمة التشغيل وألعاب الفيديو
+              وبرامج الذكاء الاصطناعي.
+            </p>
+          </div>
+          <div class="card gold">
+            <div style="font-size: 22px; margin-bottom: 6px">🔧</div>
+            <div class="card-t" style="color: #92400e">التحكم الكامل</div>
+            <p style="font-size: 10pt; color: #374151">
+              تُمكّنك من التحكم في الذاكرة مباشرةً. تفهم بها ما يحدث فعلاً داخل
+              الحاسوب.
+            </p>
+          </div>
+          <div class="card dark">
+            <div style="font-size: 22px; margin-bottom: 6px">🌍</div>
+            <div class="card-t">الانتشار الواسع</div>
+            <p style="font-size: 10pt; color: rgba(255, 255, 255, 0.8)">
+              Windows، Linux، Chrome، Adobe Photoshop، MySQL — كلها مكتوبة
+              جزئياً بـ C++.
+            </p>
+          </div>
+        </div>
+
+        <h2 class="sec">5.2 أول برنامج — Hello World</h2>
+        <div class="cw">
+          <div class="ch2">
+            <span class="cl">C++ — أول برنامج</span
+            ><span class="cf">hello.cpp</span>
+          </div>
+          <div class="cb">
+            <pre>
+<span class="pp">#include</span> <span class="str">&lt;iostream&gt;</span>    <span class="cm">// مكتبة الإدخال والإخراج</span>
+<span class="kw">using namespace</span> std;    <span class="cm">// لاستخدام cout بدون std::</span>
+
+<span class="kw">int</span> <span class="fn">main</span>() {             <span class="cm">// نقطة البداية — كل برنامج يبدأ من هنا</span>
+
+    cout &lt;&lt; <span class="str">"مرحباً بالعالم!"</span> &lt;&lt; endl;
+    <span class="cm">//  ↑ أمر الطباعة    ↑ النص       ↑ سطر جديد</span>
+
+    cout &lt;&lt; <span class="str">"أنا أتعلم C++ مع Aswany"</span> &lt;&lt; endl;
+
+    <span class="kw">return</span> <span class="num">0</span>;             <span class="cm">// الإخبار بأن البرنامج انتهى بنجاح</span>
+}
+
+<span class="cm">/* الإخراج:
+   مرحباً بالعالم!
+   أنا أتعلم C++ مع Aswany
+*/</span></pre>
+          </div>
+        </div>
+
+        <div class="note pur">
+          <span class="ni">🔍</span
+          ><span
+            ><strong>تفسير كل سطر:</strong> السطر الأول يستورد مكتبة
+            الإدخال/إخراج. <code>#include</code> تعني "أدرج محتوى هذه المكتبة".
+            <code>main()</code> هي الدالة الرئيسية التي يبدأ منها التنفيذ.
+            <code>cout</code> = Console Output. <code>&lt;&lt;</code> = أرسل
+            البيانات للشاشة.</span
+          >
+        </div>
+
+        <h2 class="sec">5.3 بنية البرنامج</h2>
+        <div class="diag">
+          <div class="diag-t">STRUCTURE OF A C++ PROGRAM</div>
+          <svg
+            width="500"
+            height="160"
+            viewBox="0 0 500 160"
+            style="direction: ltr; overflow: visible"
+          >
+            <rect x="10" y="5" width="480" height="30" rx="4" fill="#3B0764" />
+            <text
+              x="250"
+              y="25"
+              text-anchor="middle"
+              font-family="IBM Plex Mono"
+              font-size="10"
+              fill="#A78BFA"
+            >
+              #include &lt;iostream&gt; — مرحلة المعالج القبلي (Preprocessor)
+            </text>
+
+            <rect x="10" y="42" width="480" height="25" rx="4" fill="#1E1B4B" />
+            <text
+              x="250"
+              y="58"
+              text-anchor="middle"
+              font-family="IBM Plex Mono"
+              font-size="10"
+              fill="#C4B5FD"
+            >
+              using namespace std; — مساحة الأسماء
+            </text>
+
+            <rect x="10" y="74" width="480" height="25" rx="4" fill="#0D9488" />
+            <text
+              x="250"
+              y="91"
+              text-anchor="middle"
+              font-family="IBM Plex Mono"
+              font-size="10"
+              font-weight="700"
+              fill="white"
+            >
+              int main() { — الدالة الرئيسية
+            </text>
+
+            <rect
+              x="30"
+              y="106"
+              width="440"
+              height="25"
+              rx="4"
+              fill="#1A2E1A"
+            />
+            <text
+              x="250"
+              y="123"
+              text-anchor="middle"
+              font-family="IBM Plex Mono"
+              font-size="10"
+              fill="#6EE7B7"
+            >
+              // جسم البرنامج — التعليمات هنا
+            </text>
+
+            <rect
+              x="10"
+              y="137"
+              width="480"
+              height="20"
+              rx="4"
+              fill="#0D9488"
+            />
+            <text
+              x="250"
+              y="151"
+              text-anchor="middle"
+              font-family="IBM Plex Mono"
+              font-size="10"
+              font-weight="700"
+              fill="white"
+            >
+              } — نهاية main
+            </text>
+          </svg>
+        </div>
+
+        <h2 class="sec">5.4 مسائل مشروحة — مقدمة C++</h2>
+        <div class="ex">
+          <div class="ex-hdr">
+            <span class="ex-t">📝 مسألة 1: برنامج المعلومات الشخصية</span
+            ><span class="ex-meta"
+              ><span class="diff e">سهل</span> SOLVED 5.1</span
+            >
+          </div>
+          <div class="ex-body">
+            <p class="body">
+              <strong>اكتب برنامجاً يطبع اسمك وعمرك وتخصصك بشكل منسّق.</strong>
+            </p>
+            <div class="cw">
+              <div class="ch2">
+                <span class="cl">C++ — الحل</span
+                ><span class="cf">my_info.cpp</span>
+              </div>
+              <div class="cb">
+                <pre>
+<span class="pp">#include</span> <span class="str">&lt;iostream&gt;</span>
+<span class="kw">using namespace</span> std;
+
+<span class="kw">int</span> <span class="fn">main</span>() {
+    cout &lt;&lt; <span class="str">"╔════════════════════════╗"</span> &lt;&lt; endl;
+    cout &lt;&lt; <span class="str">"║    بطاقة التعريف       ║"</span> &lt;&lt; endl;
+    cout &lt;&lt; <span class="str">"╠════════════════════════╣"</span> &lt;&lt; endl;
+    cout &lt;&lt; <span class="str">"║ الاسم     : أحمد محمد ║"</span> &lt;&lt; endl;
+    cout &lt;&lt; <span class="str">"║ العمر     : 20 سنة    ║"</span> &lt;&lt; endl;
+    cout &lt;&lt; <span class="str">"║ التخصص   : علوم حاسوب║"</span> &lt;&lt; endl;
+    cout &lt;&lt; <span class="str">"╚════════════════════════╝"</span> &lt;&lt; endl;
+    <span class="kw">return</span> <span class="num">0</span>;
+}</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ex">
+          <div class="ex-hdr">
+            <span class="ex-t">📝 مسائل 2-10: تمارين المقدمة</span
+            ><span class="ex-meta"><span class="diff e">سهل→متوسط</span></span>
+          </div>
+          <div class="ex-body">
+            <div class="chk">
+              <span class="chki">2)</span>
+              <div>
+                اكتب برنامجاً يطبع جدول الضرب من 1 إلى 5 بشكل منسّق (بدون
+                loops).
+              </div>
+            </div>
+            <div class="chk">
+              <span class="chki">3)</span>
+              <div>
+                ما الفرق بين
+                <code
+                  style="
+                    background: #f5f3ff;
+                    padding: 1px 5px;
+                    font-family: &quot;IBM Plex Mono&quot;, monospace;
+                  "
+                  >endl</code
+                >
+                و
+                <code
+                  style="
+                    background: #f5f3ff;
+                    padding: 1px 5px;
+                    font-family: &quot;IBM Plex Mono&quot;, monospace;
+                  "
+                  >"\n"</code
+                >؟ متى تستخدم كلاً منهما؟
+              </div>
+            </div>
+            <div class="chk">
+              <span class="chki">4)</span>
+              <div>
+                ما الخطأ في الكود التالي:
+                <code
+                  style="
+                    background: #fef2f2;
+                    padding: 1px 5px;
+                    font-family: &quot;IBM Plex Mono&quot;, monospace;
+                  "
+                  >cout &lt;&lt; "مرحبا"</code
+                >
+                (بدون ؛)؟ وكيف تصلحه؟
+              </div>
+            </div>
+            <div class="chk">
+              <span class="chki">5)</span>
+              <div>
+                ما فائدة تعليق الكود (Comments)؟ اكتب برنامجاً بتعليقات توضيحية
+                لكل سطر.
+              </div>
+            </div>
+            <div class="chk">
+              <span class="chki">6)</span>
+              <div>
+                اكتب برنامجاً يطبع مثلثاً من النجوم بـ 5 أسطر باستخدام
+                <code>cout</code> فقط.
+              </div>
+            </div>
+            <div class="chk">
+              <span class="chki">7)</span>
+              <div>
+                ما الفرق بين <code>/* ... */</code> و <code>//</code> للتعليقات؟
+              </div>
+            </div>
+            <div class="chk">
+              <span class="chki">8)</span>
+              <div>
+                ما مراحل تحويل كود C++ إلى برنامج قابل للتشغيل؟ (Compilation
+                Process)
+              </div>
+            </div>
+            <div class="chk">
+              <span class="chki">9)</span>
+              <div>
+                اكتب برنامجاً يطبع جميع أحرف ASCII من 65 إلى 90 مع قيمها العددية
+                (بدون loops).
+              </div>
+            </div>
+            <div class="chk">
+              <span class="chki">10)</span>
+              <div>
+                اشرح خطوات تنزيل وإعداد Visual Studio Code لكتابة C++ على
+                Windows.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="assign-box">
+          <div class="assign-hdr">
+            <span class="assign-t">📌 واجب الفصل الخامس</span
+            ><span class="assign-t" style="font-size: 9pt"
+              >إجاباته في الملحق (أ)</span
+            >
+          </div>
+          <div class="assign-body">
+            <div class="chk">
+              <span class="diff e">سهل</span>
+              <div>
+                <strong>و1:</strong> اكتب برنامجاً يطبع "شجرة الميلاد" بأشكال
+                النجوم والرموز.
+              </div>
+            </div>
+            <div class="chk">
+              <span class="diff m">متوسط</span>
+              <div>
+                <strong>و2:</strong> ما الفرق بين لغات مفسّرة (Python,
+                JavaScript) ومُصرَّفة (C++)؟ ما مزايا كل نهج؟
+              </div>
+            </div>
+            <div class="chk">
+              <span class="diff h">صعب</span>
+              <div>
+                <strong>و3:</strong> ابحث عن فرق .exe و .cpp و .obj في عملية
+                البناء. ما دور كل ملف؟
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pgf">
+        <span class="pga">Eng. Osman Taher — Aswany</span
+        ><span class="pgn">PAGE 76</span>
+      </div>
+    </div>
+
+    <!-- ══════════════ CH6: VARIABLES ══════════════ -->
+    <div class="page">
+      <div class="cp">
+        <div class="pg-hdr">
+          <span class="pg-ch">الفصل السادس ● المتغيرات وأنواع البيانات</span
+          ><span class="pg-br">Aswany ✦ Eng. Osman Taher</span>
+        </div>
+        <div class="ch-op">
+          <div class="ch-num">CHAPTER 06 — VARIABLES & DATA TYPES</div>
+          <div class="ch-title">
+            المتغيرات وأنواع البيانات<br />Variables & Data Types
+          </div>
+          <div class="ch-sub">
+            المتغير هو صندوق في ذاكرة الحاسوب يحمل قيمة. نوع البيانات يُحدد حجم
+            الصندوق وما يمكنه احتواؤه. هذا الفصل يربط بين ما تعلّمته عن الذاكرة
+            وكتابة الكود.
+          </div>
+        </div>
+
+        <h2 class="sec">6.1 جدول أنواع البيانات الأساسية</h2>
+        <table
+          style="
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 10pt;
+            direction: rtl;
+            margin: 12px 0;
+          "
+        >
+          <tr style="background: var(--pur-dd); color: var(--gold-l)">
+            <th style="padding: 8px 10px">النوع</th>
+            <th style="padding: 8px 10px">الحجم</th>
+            <th style="padding: 8px 10px">النطاق</th>
+            <th style="padding: 8px 10px">مثال</th>
+            <th style="padding: 8px 10px">الاستخدام</th>
+          </tr>
+          <tr style="background: var(--pur-p)">
+            <td
+              style="
+                padding: 6px 10px;
+                font-family: &quot;IBM Plex Mono&quot;, monospace;
+                font-weight: 700;
+                color: #5b21b6;
+              "
+            >
+              int
+            </td>
+            <td style="padding: 6px 10px; text-align: center">4 Bytes</td>
+            <td style="padding: 6px 10px">-2.1B إلى 2.1B</td>
+            <td
+              style="
+                padding: 6px 10px;
+                font-family: &quot;IBM Plex Mono&quot;, monospace;
+              "
+            >
+              int age = 20;
+            </td>
+            <td style="padding: 6px 10px">الأعداد الصحيحة</td>
+          </tr>
+          <tr>
+            <td
+              style="
+                padding: 6px 10px;
+                font-family: &quot;IBM Plex Mono&quot;, monospace;
+                font-weight: 700;
+                color: #059669;
+              "
+            >
+              double
+            </td>
+            <td style="padding: 6px 10px; text-align: center">8 Bytes</td>
+            <td style="padding: 6px 10px">±1.7 × 10³⁰⁸</td>
+            <td
+              style="
+                padding: 6px 10px;
+                font-family: &quot;IBM Plex Mono&quot;, monospace;
+              "
+            >
+              double pi = 3.14;
+            </td>
+            <td style="padding: 6px 10px">الكسور العشرية</td>
+          </tr>
+          <tr style="background: var(--pur-p)">
+            <td
+              style="
+                padding: 6px 10px;
+                font-family: &quot;IBM Plex Mono&quot;, monospace;
+                font-weight: 700;
+                color: #d97706;
+              "
+            >
+              char
+            </td>
+            <td style="padding: 6px 10px; text-align: center">1 Byte</td>
+            <td style="padding: 6px 10px">-128 إلى 127</td>
+            <td
+              style="
+                padding: 6px 10px;
+                font-family: &quot;IBM Plex Mono&quot;, monospace;
+              "
+            >
+              char c = 'A';
+            </td>
+            <td style="padding: 6px 10px">حرف واحد</td>
+          </tr>
+          <tr>
+            <td
+              style="
+                padding: 6px 10px;
+                font-family: &quot;IBM Plex Mono&quot;, monospace;
+                font-weight: 700;
+                color: #1d4ed8;
+              "
+            >
+              bool
+            </td>
+            <td style="padding: 6px 10px; text-align: center">1 Byte</td>
+            <td style="padding: 6px 10px">true / false</td>
+            <td
+              style="
+                padding: 6px 10px;
+                font-family: &quot;IBM Plex Mono&quot;, monospace;
+              "
+            >
+              bool on = true;
+            </td>
+            <td style="padding: 6px 10px">القيم المنطقية</td>
+          </tr>
+          <tr style="background: var(--pur-p)">
+            <td
+              style="
+                padding: 6px 10px;
+                font-family: &quot;IBM Plex Mono&quot;, monospace;
+                font-weight: 700;
+                color: #dc2626;
+              "
+            >
+              float
+            </td>
+            <td style="padding: 6px 10px; text-align: center">4 Bytes</td>
+            <td style="padding: 6px 10px">±3.4 × 10³⁸</td>
+            <td
+              style="
+                padding: 6px 10px;
+                font-family: &quot;IBM Plex Mono&quot;, monospace;
+              "
+            >
+              float f = 3.14f;
+            </td>
+            <td style="padding: 6px 10px">كسور (دقة أقل)</td>
+          </tr>
+          <tr>
+            <td
+              style="
+                padding: 6px 10px;
+                font-family: &quot;IBM Plex Mono&quot;, monospace;
+                font-weight: 700;
+              "
+            >
+              long long
+            </td>
+            <td style="padding: 6px 10px; text-align: center">8 Bytes</td>
+            <td style="padding: 6px 10px">±9.2 × 10¹⁸</td>
+            <td
+              style="
+                padding: 6px 10px;
+                font-family: &quot;IBM Plex Mono&quot;, monospace;
+              "
+            >
+              long long n = 5LL;
+            </td>
+            <td style="padding: 6px 10px">أعداد كبيرة جداً</td>
+          </tr>
+          <tr style="background: var(--pur-p)">
+            <td
+              style="
+                padding: 6px 10px;
+                font-family: &quot;IBM Plex Mono&quot;, monospace;
+                font-weight: 700;
+              "
+            >
+              string
+            </td>
+            <td style="padding: 6px 10px; text-align: center">متغير</td>
+            <td style="padding: 6px 10px">نص</td>
+            <td
+              style="
+                padding: 6px 10px;
+                font-family: &quot;IBM Plex Mono&quot;, monospace;
+              "
+            >
+              string s = "مرحبا";
+            </td>
+            <td style="padding: 6px 10px">سلاسل نصية</td>
+          </tr>
+        </table>
+
+        <h2 class="sec">6.2 المتغيرات في الذاكرة</h2>
+        <div class="note info">
+          <span class="ni">🖥️</span
+          ><span
+            >عندما تكتب <code>int age = 20;</code> يحجز الحاسوب 4 بايتات في الـ
+            RAM لتخزين القيمة 20 (= 00000000 00000000 00000000 00010100
+            بالثنائي). الاسم <code>age</code> هو رمز في برنامجك يُشير لعنوان تلك
+            البايتات.</span
+          >
+        </div>
+
+        <div class="diag">
+          <div class="diag-t">VARIABLES IN MEMORY</div>
+          <svg
+            width="500"
+            height="100"
+            viewBox="0 0 500 100"
+            style="direction: ltr; overflow: visible"
+          >
+            <!-- int age = 20 -->
+            <rect
+              x="10"
+              y="20"
+              width="120"
+              height="35"
+              rx="3"
+              fill="#3B0764"
+              stroke="#7C3AED"
+              stroke-width="1.5"
+            />
+            <text
+              x="70"
+              y="42"
+              text-anchor="middle"
+              font-family="IBM Plex Mono"
+              font-size="10"
+              font-weight="700"
+              fill="#FCD34D"
+            >
+              int age = 20
+            </text>
+            <text
+              x="70"
+              y="65"
+              text-anchor="middle"
+              font-family="Cairo"
+              font-size="9"
+              fill="#7C3AED"
+            >
+              4 Bytes عنوان 0x100
+            </text>
+
+            <!-- memory cells -->
+            <rect
+              x="160"
+              y="20"
+              width="28"
+              height="35"
+              rx="2"
+              fill="#1E1B4B"
+              stroke="#7C3AED"
+              stroke-width="1"
+            />
+            <text
+              x="174"
+              y="35"
+              text-anchor="middle"
+              font-family="IBM Plex Mono"
+              font-size="7"
+              fill="#A78BFA"
+            >
+              0x100
+            </text>
+            <text
+              x="174"
+              y="48"
+              text-anchor="middle"
+              font-family="IBM Plex Mono"
+              font-size="8"
+              font-weight="700"
+              fill="#6EE7B7"
+            >
+              00
+            </text>
+            <rect
+              x="189"
+              y="20"
+              width="28"
+              height="35"
+              rx="2"
+              fill="#1E1B4B"
+              stroke="#7C3AED"
+              stroke-width="1"
+            />
+            <text
+              x="203"
+              y="35"
+              text-anchor="middle"
+              font-family="IBM Plex Mono"
+              font-size="7"
+              fill="#A78BFA"
+            >
+              0x101
+            </text>
+            <text
+              x="203"
+              y="48"
+              text-anchor="middle"
+              font-family="IBM Plex Mono"
+              font-size="8"
+              font-weight="700"
+              fill="#6EE7B7"
+            >
+              00
+            </text>
+            <rect
+              x="218"
+              y="20"
+              width="28"
+              height="35"
+              rx="2"
+              fill="#1E1B4B"
+              stroke="#7C3AED"
+              stroke-width="1"
+            />
+            <text
+              x="232"
+              y="35"
+              text-anchor="middle"
+              font-family="IBM Plex Mono"
+              font-size="7"
+              fill="#A78BFA"
+            >
+              0x102
+            </text>
+            <text
+              x="232"
+              y="48"
+              text-anchor="middle"
+              font-family="IBM Plex Mono"
+              font-size="8"
+              font-weight="700"
+              fill="#6EE7B7"
+            >
+              00
+            </text>
+            <rect
+              x="247"
+              y="20"
+              width="28"
+              height="35"
+              rx="2"
+              fill="#3B0764"
+              stroke="#D97706"
+              stroke-width="2"
+            />
+            <text
+              x="261"
+              y="35"
+              text-anchor="middle"
+              font-family="IBM Plex Mono"
+              font-size="7"
+              fill="#FCD34D"
+            >
+              0x103
+            </text>
+            <text
+              x="261"
+              y="48"
+              text-anchor="middle"
+              font-family="IBM Plex Mono"
+              font-size="9"
+              font-weight="700"
+              fill="#FCD34D"
+            >
+              14
+            </text>
+
+            <text
+              x="213"
+              y="80"
+              text-anchor="middle"
+              font-family="Cairo"
+              font-size="8"
+              fill="#94A3B8"
+            >
+              ← 4 بايتات = 00 00 00 14₁₆ = 20₁₀
+            </text>
+
+            <!-- Arrow -->
+            <line
+              x1="130"
+              y1="37"
+              x2="157"
+              y2="37"
+              stroke="#D97706"
+              stroke-width="1.5"
+            />
+            <polygon points="154,33 162,37 154,41" fill="#D97706" />
+
+            <!-- double -->
+            <rect
+              x="310"
+              y="20"
+              width="130"
+              height="35"
+              rx="3"
+              fill="#14532D"
+              stroke="#059669"
+              stroke-width="1.5"
+            />
+            <text
+              x="375"
+              y="42"
+              text-anchor="middle"
+              font-family="IBM Plex Mono"
+              font-size="10"
+              font-weight="700"
+              fill="#6EE7B7"
+            >
+              double pi = 3.14
+            </text>
+            <text
+              x="375"
+              y="65"
+              text-anchor="middle"
+              font-family="Cairo"
+              font-size="9"
+              fill="#059669"
+            >
+              8 Bytes عنوان 0x200
+            </text>
+          </svg>
+        </div>
+
+        <h2 class="sec">6.3 مسائل مشروحة — المتغيرات</h2>
+        <div class="ex">
+          <div class="ex-hdr">
+            <span class="ex-t">📝 مسألة 1: حساب مساحة وحجم</span
+            ><span class="ex-meta"
+              ><span class="diff e">سهل</span> SOLVED 6.1</span
+            >
+          </div>
+          <div class="ex-body">
+            <p class="body">
+              <strong
+                >اكتب برنامجاً يحسب مساحة مستطيل (طول=7، عرض=4) ومحيطه.</strong
+              >
+            </p>
+            <div class="cw">
+              <div class="ch2">
+                <span class="cl">C++</span><span class="cf">rectangle.cpp</span>
+              </div>
+              <div class="cb">
+                <pre>
+<span class="pp">#include</span> <span class="str">&lt;iostream&gt;</span>
+<span class="kw">using namespace</span> std;
+
+<span class="kw">int</span> <span class="fn">main</span>() {
+    <span class="cm">// إعلان المتغيرات وتهيئتها</span>
+    <span class="kw">double</span> length   = <span class="num">7.0</span>;
+    <span class="kw">double</span> width    = <span class="num">4.0</span>;
+    <span class="kw">double</span> area     = length * width;        <span class="cm">// المساحة</span>
+    <span class="kw">double</span> perimeter = <span class="num">2</span> * (length + width); <span class="cm">// المحيط</span>
+
+    cout &lt;&lt; <span class="str">"الطول  : "</span> &lt;&lt; length    &lt;&lt; endl;
+    cout &lt;&lt; <span class="str">"العرض  : "</span> &lt;&lt; width     &lt;&lt; endl;
+    cout &lt;&lt; <span class="str">"المساحة: "</span> &lt;&lt; area      &lt;&lt; <span class="str">" وحدة²"</span> &lt;&lt; endl;
+    cout &lt;&lt; <span class="str">"المحيط : "</span> &lt;&lt; perimeter &lt;&lt; <span class="str">" وحدة"</span>  &lt;&lt; endl;
+
+    <span class="kw">return</span> <span class="num">0</span>;
+}
+<span class="cm">/* الإخراج:
+   الطول  : 7
+   العرض  : 4
+   المساحة: 28 وحدة²
+   المحيط : 22 وحدة
+*/</span></pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ex">
+          <div class="ex-hdr">
+            <span class="ex-t">📝 مسألة 2: الإدخال من المستخدم</span
+            ><span class="ex-meta"
+              ><span class="diff e">سهل</span> SOLVED 6.2</span
+            >
+          </div>
+          <div class="ex-body">
+            <p class="body">
+              <strong
+                >اكتب برنامجاً يطلب من المستخدم إدخال اسمه وعمره، ثم يحسب السنة
+                التي وُلد فيها.</strong
+              >
+            </p>
+            <div class="cw">
+              <div class="ch2">
+                <span class="cl">C++ — cin للإدخال</span
+                ><span class="cf">birth_year.cpp</span>
+              </div>
+              <div class="cb">
+                <pre>
+<span class="pp">#include</span> <span class="str">&lt;iostream&gt;</span>
+<span class="pp">#include</span> <span class="str">&lt;string&gt;</span>
+<span class="kw">using namespace</span> std;
+
+<span class="kw">int</span> <span class="fn">main</span>() {
+    <span class="kw">string</span> name;
+    <span class="kw">int</span>    age;
+    <span class="kw">int</span>    currentYear = <span class="num">2024</span>;
+
+    cout &lt;&lt; <span class="str">"أدخل اسمك: "</span>;
+    getline(cin, name);         <span class="cm">// قراءة اسم قد يحتوي مسافات</span>
+
+    cout &lt;&lt; <span class="str">"أدخل عمرك: "</span>;
+    cin  &gt;&gt; age;                <span class="cm">// قراءة عدد</span>
+
+    <span class="kw">int</span> birthYear = currentYear - age;
+
+    cout &lt;&lt; <span class="str">"\nأهلاً "</span> &lt;&lt; name &lt;&lt; <span class="str">"!\n"</span>;
+    cout &lt;&lt; <span class="str">"وُلدت تقريباً في عام: "</span> &lt;&lt; birthYear &lt;&lt; endl;
+    cout &lt;&lt; <span class="str">"بعد "</span> &lt;&lt; (<span class="num">2050</span> - currentYear)
+         &lt;&lt; <span class="str">" سنة ستكون في عام 2050!\n"</span>;
+
+    <span class="kw">return</span> <span class="num">0</span>;
+}</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ex">
+          <div class="ex-hdr">
+            <span class="ex-t">📝 مسألة 3: التحويلات والعمليات الحسابية</span
+            ><span class="ex-meta"
+              ><span class="diff m">متوسط</span> SOLVED 6.3</span
+            >
+          </div>
+          <div class="ex-body">
+            <p class="body">
+              <strong
+                >اكتب برنامجاً يحوّل درجة الحرارة من سيلزيوس لفهرنهايت
+                وكلفن.</strong
+              >
+            </p>
+            <div class="cw">
+              <div class="ch2">
+                <span class="cl">C++</span
+                ><span class="cf">temperature.cpp</span>
+              </div>
+              <div class="cb">
+                <pre>
+<span class="pp">#include</span> <span class="str">&lt;iostream&gt;</span>
+<span class="kw">using namespace</span> std;
+
+<span class="kw">int</span> <span class="fn">main</span>() {
+    <span class="kw">double</span> celsius;
+    cout &lt;&lt; <span class="str">"أدخل درجة الحرارة بالسيلزيوس: "</span>;
+    cin  &gt;&gt; celsius;
+
+    <span class="kw">double</span> fahrenheit = (celsius * <span class="num">9.0</span> / <span class="num">5.0</span>) + <span class="num">32</span>;
+    <span class="kw">double</span> kelvin     =  celsius + <span class="num">273.15</span>;
+
+    cout &lt;&lt; <span class="str">"\n"</span> &lt;&lt; celsius    &lt;&lt; <span class="str">"°C = "</span>
+         &lt;&lt; fahrenheit &lt;&lt; <span class="str">"°F = "</span>
+         &lt;&lt; kelvin     &lt;&lt; <span class="str">"K\n"</span>;
+
+    <span class="kw">if</span> (celsius &lt; <span class="num">0</span>)
+        cout &lt;&lt; <span class="str">"الحالة: تجمد ❄️\n"</span>;
+    <span class="kw">else if</span> (celsius &lt; <span class="num">100</span>)
+        cout &lt;&lt; <span class="str">"الحالة: سائل 💧\n"</span>;
+    <span class="kw">else</span>
+        cout &lt;&lt; <span class="str">"الحالة: بخار 🌫️\n"</span>;
+
+    <span class="kw">return</span> <span class="num">0</span>;
+}</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ex">
+          <div class="ex-hdr">
+            <span class="ex-t">📝 مسائل 4-10</span
+            ><span class="ex-meta"><span class="diff e">سهل→صعب</span></span>
+          </div>
+          <div class="ex-body">
+            <div class="chk">
+              <span class="chki">4)</span>
+              <div>
+                برنامج يطلب نصف قطر دائرة ويحسب محيطها ومساحتها (π = 3.14159).
+              </div>
+            </div>
+            <div class="chk">
+              <span class="chki">5)</span>
+              <div>
+                برنامج يطلب 3 درجات امتحان ويحسب المعدل والتقدير (A/B/C/D/F).
+              </div>
+            </div>
+            <div class="chk">
+              <span class="chki">6)</span>
+              <div>
+                ما الفرق بين <code>int x = 5/2</code> و<code
+                  >double x = 5.0/2</code
+                >؟ اشرح Integer Division.
+              </div>
+            </div>
+            <div class="chk">
+              <span class="chki">7)</span>
+              <div>
+                ما قيمة <code>x</code> بعد: <code>int x = 17 % 5</code>؟ ما
+                استخدامات عامل الباقي <code>%</code>؟
+              </div>
+            </div>
+            <div class="chk">
+              <span class="chki">8)</span>
+              <div>
+                برنامج يحوّل عدد ثوانٍ إلى (ساعات: دقائق: ثوانٍ). مثال: 3723
+                ثانية → 1:2:3.
+              </div>
+            </div>
+            <div class="chk">
+              <span class="chki">9)</span>
+              <div>
+                ما الفرق بين <code>++x</code> و<code>x++</code>؟ أعطِ مثالاً
+                يظهر الفرق.
+              </div>
+            </div>
+            <div class="chk">
+              <span class="chki">10)</span>
+              <div>
+                برنامج يحسب مبلغ ادخار: رأس المال × (1 + الفائدة)^السنوات.
+                استخدم <code>pow()</code> من <code>&lt;cmath&gt;</code>.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="assign-box">
+          <div class="assign-hdr">
+            <span class="assign-t">📌 واجب الفصل السادس</span
+            ><span class="assign-t" style="font-size: 9pt"
+              >إجاباته في الملحق (أ)</span
+            >
+          </div>
+          <div class="assign-body">
+            <div class="chk">
+              <span class="diff e">سهل</span>
+              <div>
+                <strong>و1:</strong> برنامج يحسب تكلفة طلاء غرفة: (2 × طول ×
+                ارتفاع + 2 × عرض × ارتفاع) × سعر اللتر ÷ 10. أدخل الأبعاد
+                والسعر.
+              </div>
+            </div>
+            <div class="chk">
+              <span class="diff m">متوسط</span>
+              <div>
+                <strong>و2:</strong> برنامج يحسب دفعات قرض شهرية باستخدام صيغة
+                الأقساط المتساوية.
+              </div>
+            </div>
+            <div class="chk">
+              <span class="diff m">متوسط</span>
+              <div>
+                <strong>و3:</strong> اشرح ماذا يحدث عند Overflow:
+                <code>int x = 2147483647; x++;</code> ما قيمة x؟ لماذا؟
+              </div>
+            </div>
+            <div class="chk">
+              <span class="diff h">صعب</span>
+              <div>
+                <strong>و4:</strong> ما الفرق بين
+                <code>const int X = 5</code> و<code>#define X 5</code>؟ أيهما
+                أفضل ولماذا؟
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pgf">
+        <span class="pga">Eng. Osman Taher — Aswany</span
+        ><span class="pgn">PAGE 92</span>
+      </div>
+    </div>
+
+    <!-- ══════════════ CH10: POINTERS & STRUCTS ══════════════ -->
+    <div class="page">
+      <div class="cp">
+        <div class="pg-hdr">
+          <span class="pg-ch">الفصل العاشر ● المؤشرات والبنى</span
+          ><span class="pg-br">Aswany ✦ Eng. Osman Taher</span>
+        </div>
+        <div class="ch-op">
+          <div class="ch-num">CHAPTER 10 — POINTERS & STRUCTS</div>
+          <div class="ch-title">المؤشرات والبنى<br />Pointers & Structs</div>
+          <div class="ch-sub">
+            المؤشرات هي أقوى وأخطر ميزة في C++. تُتيح التحكم المباشر في الذاكرة.
+            الكثيرون يخافون منها — هذا الفصل يجعلها واضحة تماماً.
+          </div>
+        </div>
+
+        <h2 class="sec">10.1 ما هو المؤشر؟</h2>
+        <div class="def">
+          <div class="def-t">💡 التعريف</div>
+          <p class="body">
+            المؤشر (Pointer) هو
+            <strong>متغير يحمل عنوان متغير آخر في الذاكرة</strong>. بدلاً من
+            تخزين قيمة، يُخزّن عنواناً (رقم البايت في الـ RAM).
+          </p>
+        </div>
+
+        <div class="diag">
+          <div class="diag-t">POINTER CONCEPT — تصوّر المؤشر</div>
+          <svg
+            width="520"
+            height="130"
+            viewBox="0 0 520 130"
+            style="direction: ltr; overflow: visible"
+          >
+            <!-- Variable age -->
+            <rect
+              x="20"
+              y="30"
+              width="120"
+              height="55"
+              rx="4"
+              fill="#3B0764"
+              stroke="#7C3AED"
+              stroke-width="2"
+            />
+            <text
+              x="80"
+              y="50"
+              text-anchor="middle"
+              font-family="IBM Plex Mono"
+              font-size="9"
+              fill="#A78BFA"
+            >
+              عنوان: 0x100
+            </text>
+            <text
+              x="80"
+              y="66"
+              text-anchor="middle"
+              font-family="IBM Plex Mono"
+              font-size="14"
+              font-weight="700"
+              fill="#FCD34D"
+            >
+              25
+            </text>
+            <text
+              x="80"
+              y="82"
+              text-anchor="middle"
+              font-family="Cairo"
+              font-size="9"
+              fill="#C4B5FD"
+            >
+              المتغير: age
+            </text>
+            <text
+              x="80"
+              y="100"
+              text-anchor="middle"
+              font-family="Cairo"
+              font-size="8"
+              fill="#64748B"
+            >
+              int age = 25;
+            </text>
+
+            <!-- Pointer ptr -->
+            <rect
+              x="250"
+              y="30"
+              width="150"
+              height="55"
+              rx="4"
+              fill="#14532D"
+              stroke="#059669"
+              stroke-width="2"
+            />
+            <text
+              x="325"
+              y="50"
+              text-anchor="middle"
+              font-family="IBM Plex Mono"
+              font-size="9"
+              fill="#86EFAC"
+            >
+              عنوان: 0x200
+            </text>
+            <text
+              x="325"
+              y="66"
+              text-anchor="middle"
+              font-family="IBM Plex Mono"
+              font-size="12"
+              font-weight="700"
+              fill="#FCD34D"
+            >
+              0x100
+            </text>
+            <text
+              x="325"
+              y="82"
+              text-anchor="middle"
+              font-family="Cairo"
+              font-size="9"
+              fill="#86EFAC"
+            >
+              المؤشر: ptr
+            </text>
+            <text
+              x="325"
+              y="100"
+              text-anchor="middle"
+              font-family="Cairo"
+              font-size="8"
+              fill="#64748B"
+            >
+              int* ptr = &amp;age;
+            </text>
+
+            <!-- Arrow from ptr to age -->
+            <line
+              x1="250"
+              y1="57"
+              x2="155"
+              y2="57"
+              stroke="#059669"
+              stroke-width="2"
+            />
+            <polygon points="158,53 150,57 158,61" fill="#059669" />
+            <text
+              x="203"
+              y="48"
+              text-anchor="middle"
+              font-family="Cairo"
+              font-size="9"
+              fill="#059669"
+            >
+              يشير إلى
+            </text>
+
+            <!-- Labels -->
+            <text
+              x="80"
+              y="118"
+              text-anchor="middle"
+              font-family="Cairo"
+              font-size="8.5"
+              font-weight="700"
+              fill="#7C3AED"
+            >
+              القيمة المخزّنة: 25
+            </text>
+            <text
+              x="325"
+              y="118"
+              text-anchor="middle"
+              font-family="Cairo"
+              font-size="8.5"
+              font-weight="700"
+              fill="#059669"
+            >
+              القيمة المخزّنة: عنوان age
+            </text>
+
+            <!-- RAM representation -->
+            <text
+              x="450"
+              y="35"
+              text-anchor="middle"
+              font-family="Cairo"
+              font-size="8.5"
+              font-weight="700"
+              fill="#64748B"
+            >
+              في الذاكرة:
+            </text>
+            <rect
+              x="430"
+              y="42"
+              width="80"
+              height="18"
+              rx="2"
+              fill="#3B0764"
+              stroke="#7C3AED"
+              stroke-width="1"
+            />
+            <text
+              x="470"
+              y="55"
+              text-anchor="middle"
+              font-family="IBM Plex Mono"
+              font-size="8"
+              fill="#FCD34D"
+            >
+              0x100: [25]
+            </text>
+            <rect
+              x="430"
+              y="63"
+              width="80"
+              height="18"
+              rx="2"
+              fill="#14532D"
+              stroke="#059669"
+              stroke-width="1"
+            />
+            <text
+              x="470"
+              y="76"
+              text-anchor="middle"
+              font-family="IBM Plex Mono"
+              font-size="7.5"
+              fill="#86EFAC"
+            >
+              0x200: [0x100]
+            </text>
+          </svg>
+        </div>
+
+        <h2 class="sec">10.2 عمليات المؤشر</h2>
+        <div class="cw">
+          <div class="ch2">
+            <span class="cl">C++ — Pointer Operations</span
+            ><span class="cf">pointers.cpp</span>
+          </div>
+          <div class="cb">
+            <pre>
+<span class="pp">#include</span> <span class="str">&lt;iostream&gt;</span>
+<span class="kw">using namespace</span> std;
+
+<span class="kw">int</span> <span class="fn">main</span>() {
+    <span class="kw">int</span> age = <span class="num">25</span>;         <span class="cm">// متغير عادي</span>
+    <span class="kw">int</span>* ptr = &amp;age;      <span class="cm">// مؤشر يحمل عنوان age</span>
+    <span class="cm">//        ↑ &amp; = عامل "عنوان" (Address-of operator)</span>
+
+    cout &lt;&lt; <span class="str">"قيمة age     : "</span> &lt;&lt; age   &lt;&lt; endl;  <span class="cm">// 25</span>
+    cout &lt;&lt; <span class="str">"عنوان age    : "</span> &lt;&lt; &amp;age  &lt;&lt; endl;  <span class="cm">// 0x...  (العنوان)</span>
+    cout &lt;&lt; <span class="str">"قيمة ptr     : "</span> &lt;&lt; ptr   &lt;&lt; endl;  <span class="cm">// 0x...  (نفس العنوان)</span>
+    cout &lt;&lt; <span class="str">"القيمة بالمؤشر: "</span> &lt;&lt; *ptr  &lt;&lt; endl;  <span class="cm">// 25</span>
+    <span class="cm">//                                ↑ * = عامل "إلغاء الإشارة" (Dereference)</span>
+
+    <span class="cm">// تعديل القيمة عبر المؤشر</span>
+    *ptr = <span class="num">30</span>;
+    cout &lt;&lt; <span class="str">"age بعد *ptr=30: "</span> &lt;&lt; age &lt;&lt; endl;  <span class="cm">// 30 — تغيّرت!</span>
+
+    <span class="cm">// حساب المؤشر (Pointer Arithmetic)</span>
+    <span class="kw">int</span> arr[] = {<span class="num">10</span>, <span class="num">20</span>, <span class="num">30</span>, <span class="num">40</span>, <span class="num">50</span>};
+    <span class="kw">int</span>* p = arr;              <span class="cm">// يشير للعنصر الأول</span>
+
+    cout &lt;&lt; <span class="str">"arr[0] = "</span> &lt;&lt; *p     &lt;&lt; endl;  <span class="cm">// 10</span>
+    cout &lt;&lt; <span class="str">"arr[1] = "</span> &lt;&lt; *(p+<span class="num">1</span>) &lt;&lt; endl;  <span class="cm">// 20</span>
+    cout &lt;&lt; <span class="str">"arr[2] = "</span> &lt;&lt; *(p+<span class="num">2</span>) &lt;&lt; endl;  <span class="cm">// 30</span>
+    <span class="cm">// p+1 يتقدم بـ sizeof(int) = 4 بايت في الذاكرة</span>
+
+    <span class="kw">return</span> <span class="num">0</span>;
+}</pre>
+          </div>
+        </div>
+
+        <h2 class="sec">10.3 البنى — Structs</h2>
+        <div class="def">
+          <div class="def-t">💡 البنية (Struct)</div>
+          <p class="body">
+            البنية هي طريقة لتجميع متغيرات متعلقة ببعضها تحت اسم واحد. مثلاً:
+            بيانات الطالب (اسم، رقم، درجة) في متغير واحد.
+          </p>
+        </div>
+
+        <div class="cw">
+          <div class="ch2">
+            <span class="cl">C++ — Structs</span
+            ><span class="cf">student_struct.cpp</span>
+          </div>
+          <div class="cb">
+            <pre>
+<span class="pp">#include</span> <span class="str">&lt;iostream&gt;</span>
+<span class="pp">#include</span> <span class="str">&lt;string&gt;</span>
+<span class="kw">using namespace</span> std;
+
+<span class="cm">// تعريف البنية</span>
+<span class="kw">struct</span> <span class="tp">Student</span> {
+    <span class="kw">string</span> name;
+    <span class="kw">int</span>    id;
+    <span class="kw">double</span> grade;
+    <span class="kw">string</span> department;
+};
+
+<span class="cm">// دالة لطباعة بيانات الطالب</span>
+<span class="kw">void</span> <span class="fn">printStudent</span>(<span class="kw">const</span> <span class="tp">Student</span>&amp; s) {
+    cout &lt;&lt; <span class="str">"┌──────────────────────┐\n"</span>;
+    cout &lt;&lt; <span class="str">"│ الاسم  : "</span> &lt;&lt; s.name       &lt;&lt; <span class="str">"\n"</span>;
+    cout &lt;&lt; <span class="str">"│ الرقم  : "</span> &lt;&lt; s.id         &lt;&lt; <span class="str">"\n"</span>;
+    cout &lt;&lt; <span class="str">"│ الدرجة : "</span> &lt;&lt; s.grade      &lt;&lt; <span class="str">"%\n"</span>;
+    cout &lt;&lt; <span class="str">"│ القسم  : "</span> &lt;&lt; s.department &lt;&lt; <span class="str">"\n"</span>;
+    cout &lt;&lt; <span class="str">"│ التقدير: "</span>;
+
+    <span class="kw">if</span>      (s.grade &gt;= <span class="num">90</span>) cout &lt;&lt; <span class="str">"A — ممتاز\n"</span>;
+    <span class="kw">else if</span> (s.grade &gt;= <span class="num">80</span>) cout &lt;&lt; <span class="str">"B — جيد جداً\n"</span>;
+    <span class="kw">else if</span> (s.grade &gt;= <span class="num">70</span>) cout &lt;&lt; <span class="str">"C — جيد\n"</span>;
+    <span class="kw">else if</span> (s.grade &gt;= <span class="num">60</span>) cout &lt;&lt; <span class="str">"D — مقبول\n"</span>;
+    <span class="kw">else</span>                    cout &lt;&lt; <span class="str">"F — راسب\n"</span>;
+
+    cout &lt;&lt; <span class="str">"└──────────────────────┘\n"</span>;
+}
+
+<span class="kw">int</span> <span class="fn">main</span>() {
+    <span class="cm">// إنشاء بنية وتهيئتها</span>
+    <span class="tp">Student</span> s1 = {<span class="str">"أحمد محمد"</span>, <span class="num">2024001</span>, <span class="num">92.5</span>, <span class="str">"علوم حاسوب"</span>};
+    <span class="tp">Student</span> s2 = {<span class="str">"سارة علي"</span>,  <span class="num">2024002</span>, <span class="num">78.0</span>, <span class="str">"هندسة برمجيات"</span>};
+
+    <span class="fn">printStudent</span>(s1);
+    <span class="fn">printStudent</span>(s2);
+
+    <span class="cm">// تعديل حقل</span>
+    s1.grade = <span class="num">95.0</span>;
+    cout &lt;&lt; <span class="str">"درجة أحمد بعد التعديل: "</span> &lt;&lt; s1.grade &lt;&lt; endl;
+
+    <span class="cm">// مؤشر لبنية</span>
+    <span class="tp">Student</span>* ptr = &amp;s2;
+    cout &lt;&lt; <span class="str">"اسم s2 عبر المؤشر: "</span> &lt;&lt; ptr-&gt;name &lt;&lt; endl;
+    <span class="cm">//                                    ↑ -> تُستخدم مع المؤشرات للوصول للحقول</span>
+
+    <span class="kw">return</span> <span class="num">0</span>;
+}</pre>
+          </div>
+        </div>
+
+        <h2 class="sec">10.4 مسائل مشروحة — المؤشرات والبنى</h2>
+
+        <div class="ex">
+          <div class="ex-hdr">
+            <span class="ex-t">📝 مسألة 1: تبادل قيمتين بالمؤشرات</span
+            ><span class="ex-meta"
+              ><span class="diff m">متوسط</span> SOLVED 10.1</span
+            >
+          </div>
+          <div class="ex-body">
+            <p class="body">
+              <strong
+                >اكتب دالة تُبادل قيمتي متغيرين باستخدام مؤشرات (Swap).</strong
+              >
+            </p>
+            <div class="cw">
+              <div class="ch2">
+                <span class="cl">C++ — Swap using Pointers</span>
+              </div>
+              <div class="cb">
+                <pre>
+<span class="kw">void</span> <span class="fn">swap</span>(<span class="kw">int</span>* a, <span class="kw">int</span>* b) {
+    <span class="kw">int</span> temp = *a;   <span class="cm">// احفظ قيمة a</span>
+    *a = *b;          <span class="cm">// ضع قيمة b في a</span>
+    *b = temp;        <span class="cm">// ضع القيمة المحفوظة في b</span>
+}
+
+<span class="kw">int</span> <span class="fn">main</span>() {
+    <span class="kw">int</span> x = <span class="num">10</span>, y = <span class="num">20</span>;
+    cout &lt;&lt; <span class="str">"قبل: x="</span> &lt;&lt; x &lt;&lt; <span class="str">" y="</span> &lt;&lt; y &lt;&lt; endl; <span class="cm">// x=10 y=20</span>
+
+    <span class="fn">swap</span>(&amp;x, &amp;y);   <span class="cm">// نمرر العناوين لا القيم</span>
+
+    cout &lt;&lt; <span class="str">"بعد: x="</span> &lt;&lt; x &lt;&lt; <span class="str">" y="</span> &lt;&lt; y &lt;&lt; endl; <span class="cm">// x=20 y=10</span>
+    <span class="kw">return</span> <span class="num">0</span>;
+}</pre>
+              </div>
+            </div>
+            <div class="note info">
+              <span class="ni">💡</span
+              ><span
+                >لو مررنا القيم مباشرة (بدون &amp;) لما تغيّرت القيم الأصلية.
+                المؤشرات تُمكّننا من التعديل المباشر في الذاكرة.</span
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="ex">
+          <div class="ex-hdr">
+            <span class="ex-t">📝 مسألة 2: مصفوفة بنى — نظام مكتبة</span
+            ><span class="ex-meta"
+              ><span class="diff m">متوسط</span> SOLVED 10.2</span
+            >
+          </div>
+          <div class="ex-body">
+            <p class="body">
+              <strong
+                >اصنع بنية Book وأنشئ مصفوفة من 3 كتب، ثم ابحث عن كتاب
+                بعنوانه.</strong
+              >
+            </p>
+            <div class="cw">
+              <div class="ch2">
+                <span class="cl">C++ — Struct Array</span
+                ><span class="cf">library.cpp</span>
+              </div>
+              <div class="cb">
+                <pre>
+<span class="pp">#include</span> <span class="str">&lt;iostream&gt;</span>
+<span class="pp">#include</span> <span class="str">&lt;string&gt;</span>
+<span class="kw">using namespace</span> std;
+
+<span class="kw">struct</span> <span class="tp">Book</span> {
+    <span class="kw">string</span> title;
+    <span class="kw">string</span> author;
+    <span class="kw">double</span> price;
+    <span class="kw">int</span>    year;
+    <span class="kw">bool</span>   available;
+};
+
+<span class="kw">void</span> <span class="fn">printBook</span>(<span class="kw">const</span> <span class="tp">Book</span>&amp; b) {
+    cout &lt;&lt; <span class="str">"📚 "</span> &lt;&lt; b.title &lt;&lt; <span class="str">" | "</span> &lt;&lt; b.author
+         &lt;&lt; <span class="str">" | "</span> &lt;&lt; b.price &lt;&lt; <span class="str">" ج.م | "</span>
+         &lt;&lt; b.year  &lt;&lt; <span class="str">" | "</span>
+         &lt;&lt; (b.available ? <span class="str">"✅ متاح"</span> : <span class="str">"❌ مُستعار"</span>) &lt;&lt; endl;
+}
+
+<span class="kw">int</span> <span class="fn">main</span>() {
+    <span class="tp">Book</span> library[<span class="num">3</span>] = {
+        {<span class="str">"البرمجة بلغة C++"</span>,    <span class="str">"Stroustrup"</span>, <span class="num">250.0</span>, <span class="num">2020</span>, <span class="kw">true</span>},
+        {<span class="str">"خوارزميات الترتيب"</span>,   <span class="str">"Knuth"</span>,      <span class="num">180.0</span>, <span class="num">2018</span>, <span class="kw">false</span>},
+        {<span class="str">"بنى البيانات"</span>,        <span class="str">"Sedgewick"</span>, <span class="num">220.0</span>, <span class="num">2021</span>, <span class="kw">true</span>}
+    };
+
+    cout &lt;&lt; <span class="str">"═══ قائمة الكتب ═══\n"</span>;
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; <span class="num">3</span>; i++)
+        <span class="fn">printBook</span>(library[i]);
+
+    <span class="cm">// البحث عن كتاب</span>
+    <span class="kw">string</span> search;
+    cout &lt;&lt; <span class="str">"\nأدخل اسم كتاب للبحث: "</span>;
+    getline(cin, search);
+
+    <span class="kw">bool</span> found = <span class="kw">false</span>;
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; <span class="num">3</span>; i++) {
+        <span class="kw">if</span> (library[i].title == search) {
+            cout &lt;&lt; <span class="str">"✅ وُجد:\n"</span>;
+            <span class="fn">printBook</span>(library[i]);
+            found = <span class="kw">true</span>;
+            <span class="kw">break</span>;
+        }
+    }
+    <span class="kw">if</span> (!found) cout &lt;&lt; <span class="str">"❌ الكتاب غير موجود.\n"</span>;
+
+    <span class="kw">return</span> <span class="num">0</span>;
+}</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ex">
+          <div class="ex-hdr">
+            <span class="ex-t">📝 مسائل 3-10</span
+            ><span class="ex-meta"><span class="diff e">سهل→صعب</span></span>
+          </div>
+          <div class="ex-body">
+            <div class="chk">
+              <span class="chki">3)</span>
+              <div>
+                ما الفرق بين <code>*ptr</code> و<code>&amp;var</code>؟ أعطِ
+                مثالاً يوضّح كلاً منهما.
+              </div>
+            </div>
+            <div class="chk">
+              <span class="chki">4)</span>
+              <div>
+                اكتب دالة تُحسب مجموع عناصر مصفوفة باستخدام المؤشرات (بدون []).
+              </div>
+            </div>
+            <div class="chk">
+              <span class="chki">5)</span>
+              <div>
+                ما الفرق بين
+                <code>ptr-&gt;field</code> و<code>(*ptr).field</code>؟ متى
+                يُستخدم كل منهما؟
+              </div>
+            </div>
+            <div class="chk">
+              <span class="chki">6)</span>
+              <div>
+                اصنع بنية Point (x, y) ودالة distance() تحسب المسافة بين نقطتين.
+              </div>
+            </div>
+            <div class="chk">
+              <span class="chki">7)</span>
+              <div>
+                اكتب برنامجاً يُنشئ مصفوفة مؤشرات لـ 5 أعداد صحيحة ويُدخل لها
+                القيم ديناميكياً بـ new.
+              </div>
+            </div>
+            <div class="chk">
+              <span class="chki">8)</span>
+              <div>
+                ما الـ Null Pointer؟ كيف تتحقق منه؟ ما الخطر من استخدام مؤشر غير
+                مُهيَّأ؟
+              </div>
+            </div>
+            <div class="chk">
+              <span class="chki">9)</span>
+              <div>
+                اصنع بنية Employee (اسم، راتب، قسم) ومصفوفة من 5 موظفين. أوجد من
+                يملك أعلى راتب.
+              </div>
+            </div>
+            <div class="chk">
+              <span class="chki">10)</span>
+              <div>
+                ما الفرق بين تمرير المتغير بالقيمة (by value) وبالمرجع (by
+                reference) وبالمؤشر (by pointer)؟ أعطِ مثالاً لكل منها.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="assign-box">
+          <div class="assign-hdr">
+            <span class="assign-t">📌 واجب الفصل العاشر</span
+            ><span class="assign-t" style="font-size: 9pt"
+              >إجاباته في الملحق (أ)</span
+            >
+          </div>
+          <div class="assign-body">
+            <div class="chk">
+              <span class="diff e">سهل</span>
+              <div>
+                <strong>و1:</strong> اكتب برنامجاً يُنشئ متغيرًا ديناميكياً بـ
+                <code>new</code>، يُعدّل قيمته عبر مؤشر، ثم يُحرر الذاكرة بـ
+                <code>delete</code>.
+              </div>
+            </div>
+            <div class="chk">
+              <span class="diff m">متوسط</span>
+              <div>
+                <strong>و2:</strong> اصنع نظاماً لإدارة طلاب باستخدام مصفوفة
+                بنى. العمليات: إضافة طالب، البحث بالرقم، حساب المعدل العام.
+              </div>
+            </div>
+            <div class="chk">
+              <span class="diff m">متوسط</span>
+              <div>
+                <strong>و3:</strong> اكتب دالة تُرتّب مصفوفة من البنى حسب حقل
+                معيّن (مثل الراتب تصاعدياً).
+              </div>
+            </div>
+            <div class="chk">
+              <span class="diff h">صعب</span>
+              <div>
+                <strong>و4:</strong> ما هي القائمة المتصلة (Linked List)؟ اصنع
+                بنية Node وابنِ قائمة متصلة بسيطة بالمؤشرات.
+              </div>
+            </div>
+            <div class="chk">
+              <span class="diff h">صعب</span>
+              <div>
+                <strong>و5 (مشروع الفصل):</strong> اصنع نظام إدارة مخزن يستخدم:
+                struct Product (اسم، سعر، كمية، باركود)، مصفوفة 10 منتجات، دوال:
+                إضافة منتج، بيع منتج (تُقلّل الكمية)، البحث بالباركود، طباعة
+                تقرير الأقل كمية.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="test-box">
+          <div class="test-hdr">
+            <span class="test-t">📋 اختبار الفصل العاشر — المؤشرات والبنى</span
+            ><span style="font-size: 10pt; color: var(--gold-l)"
+              >60 دقيقة | 50 درجة</span
+            >
+          </div>
+          <div class="test-body">
+            <div class="chk">
+              <span class="chki">س1</span>
+              <div>
+                (10) اشرح الفرق بين <code>int x</code> و<code>int* ptr</code> مع
+                رسم تمثيل في الذاكرة لكلٍّ منهما.
+              </div>
+            </div>
+            <div class="chk">
+              <span class="chki">س2</span>
+              <div>
+                (10) اكتب دالة <code>findMax(int* arr, int size)</code> تعيد
+                مؤشراً للعنصر الأكبر في المصفوفة.
+              </div>
+            </div>
+            <div class="chk">
+              <span class="chki">س3</span>
+              <div>
+                (10) عرّف بنية <code>Rectangle</code> (عرض، طول، لون) واكتب
+                دوال: area()، perimeter()، isSquare().
+              </div>
+            </div>
+            <div class="chk">
+              <span class="chki">س4</span>
+              <div>
+                (10) ما الخطأ في هذا الكود؟ <code>int* p; *p = 5;</code> كيف
+                تصلحه؟ ما Dangling Pointer؟
+              </div>
+            </div>
+            <div class="chk">
+              <span class="chki">س5</span>
+              <div>
+                (10) اصنع بنية <code>Matrix2x2</code> (4 عناصر) ودوال:
+                add(Matrix, Matrix)، multiply(Matrix, Matrix)، print().
+              </div>
+            </div>
+            <div class="note pur">
+              <span class="ni">📌</span><span>الإجابات في الملحق (ب).</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pgf">
+        <span class="pga">Eng. Osman Taher — Aswany</span
+        ><span class="pgn">PAGE 180</span>
+      </div>
+    </div>
+
+    <!-- ══════════════ APPENDIX A ══════════════ -->
+    <div class="page">
+      <div class="cp">
+        <div class="pg-hdr">
+          <span class="pg-ch">الملحق (أ) ● إجابات جميع التمارين والواجبات</span
+          ><span class="pg-br">Aswany ✦ Eng. Osman Taher</span>
+        </div>
+
+        <div
+          style="
+            background: var(--ink-s);
+            border-radius: 6px;
+            padding: 20px 24px;
+            margin-bottom: 22px;
+            position: relative;
+            overflow: hidden;
+          "
+        >
+          <div
+            style="
+              position: absolute;
+              top: 0;
+              left: 0;
+              right: 0;
+              height: 2px;
+              background: linear-gradient(
+                90deg,
+                var(--pur-dd),
+                var(--pur-l),
+                var(--gold-l),
+                var(--pur-dd)
+              );
+            "
+          ></div>
+          <div
+            style="
+              font-size: 16pt;
+              font-weight: 900;
+              color: var(--gold-l);
+              margin-bottom: 6px;
+            "
+          >
+            الملحق (أ)
+          </div>
+          <div style="font-size: 11pt; color: rgba(255, 255, 255, 0.7)">
+            إجابات جميع التمارين والواجبات — مرتبة حسب الفصول
+          </div>
+          <div class="note pur" style="margin-top: 10px">
+            <span class="ni">⚠️</span
+            ><span
+              >لا تنظر لهذا الملحق إلا بعد محاولة حل المسألة بنفسك. الفهم يأتي
+              من المحاولة والخطأ، لا من نقل الحل.</span
+            >
+          </div>
+        </div>
+
+        <h2 class="sec">إجابات واجبات الفصل الأول — مكونات الحاسوب</h2>
+        <div class="ans-box">
+          <div class="ans-hdr">
+            <span class="ans-t">✅ إجابة و1: مكونات فتح المتصفح</span>
+          </div>
+          <div class="ans-body">
+            <div class="chk">
+              <span class="chki">1)</span>
+              <div>
+                <strong>المعالج (CPU):</strong> ينفّذ تعليمات تشغيل المتصفح
+                ومعالجة HTML/CSS/JS
+              </div>
+            </div>
+            <div class="chk">
+              <span class="chki">2)</span>
+              <div>
+                <strong>RAM:</strong> تُحمَّل عليها ملفات المتصفح لسرعة الوصول
+              </div>
+            </div>
+            <div class="chk">
+              <span class="chki">3)</span>
+              <div>
+                <strong>بطاقة الشبكة:</strong> تستقبل البيانات من الإنترنت
+              </div>
+            </div>
+            <div class="chk">
+              <span class="chki">4)</span>
+              <div>
+                <strong>بطاقة الرسومات (GPU):</strong> تُعرض الصفحة على الشاشة
+              </div>
+            </div>
+            <div class="chk">
+              <span class="chki">5)</span>
+              <div>
+                <strong>القرص الصلب:</strong> يُخزّن ملفات المتصفح المؤقتة
+                (Cache)
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ans-box">
+          <div class="ans-hdr">
+            <span class="ans-t">✅ إجابة و2: حساب الذاكرة</span>
+          </div>
+          <div class="ans-body">
+            <p class="body">
+              نسبة الاستخدام = 12/16 × 100% = <strong>75%</strong> | الذاكرة
+              المتبقية = 16 - 12 = <strong>4 GB</strong>
+            </p>
+          </div>
+        </div>
+
+        <div class="ans-box">
+          <div class="ans-hdr">
+            <span class="ans-t">✅ إجابة و3: مقارنة المعالجات</span>
+          </div>
+          <div class="ans-body">
+            <p class="body">
+              <strong>الأفضل للمونتاج: Core i7</strong> — برامج المونتاج تستفيد
+              من الأنوية المتعددة (8 أنوية). المونتاج يحتاج معالجة متوازية
+              للفيديو، ترميز، تأثيرات — كل نواة تعمل على مهمة مختلفة. السرعة
+              العالية (3.6 GHz) تسرّع العمليات الحسابية الكثيفة.
+            </p>
+          </div>
+        </div>
+
+        <h2 class="sec">إجابات واجبات الفصل الرابع — أنظمة الأعداد</h2>
+        <div class="ans-box">
+          <div class="ans-hdr">
+            <span class="ans-t">✅ إجابة و2: Two's Complement</span>
+          </div>
+          <div class="ans-body">
+            <p class="body"><strong>-5 بـ 8 بتات:</strong></p>
+            <div class="steps">
+              <div class="step">
+                <div class="sn">1</div>
+                <div class="sb">
+                  <div class="st2">اكتب 5 بالثنائي:</div>
+                  <div class="sd">5 = 00000101</div>
+                </div>
+              </div>
+              <div class="step">
+                <div class="sn">2</div>
+                <div class="sb">
+                  <div class="st2">اعكس كل البتات (One's Complement):</div>
+                  <div class="sd">11111010</div>
+                </div>
+              </div>
+              <div class="step">
+                <div class="sn">3</div>
+                <div class="sb">
+                  <div class="st2">أضف 1:</div>
+                  <div class="sd">
+                    11111010 + 1 = <strong>11111011</strong> = -5 بالـ Two's
+                    Complement
+                  </div>
+                </div>
+              </div>
+            </div>
+            <p class="body">
+              <strong>التحقق:</strong> 11111011 + 00000101 = 100000000 (نتجاهل
+              البت الزائد) = 00000000 = 0 ✅
+            </p>
+          </div>
+        </div>
+
+        <div class="ans-box">
+          <div class="ans-hdr">
+            <span class="ans-t">✅ إجابة و3: عنوان IP ثنائياً</span>
+          </div>
+          <div class="ans-body">
+            <p class="body">192.168.1.1</p>
+            <div
+              style="
+                font-family: &quot;IBM Plex Mono&quot;, monospace;
+                font-size: 10pt;
+                line-height: 2;
+                background: #0a0612;
+                color: #86efac;
+                padding: 10px;
+                border-radius: 4px;
+                direction: ltr;
+              "
+            >
+              192 = 11000000<br />
+              168 = 10101000<br />
+              1 = 00000001<br />
+              1 = 00000001<br />
+              <span style="color: #fcd34d"
+                >الكامل: 11000000.10101000.00000001.00000001</span
+              >
+            </div>
+          </div>
+        </div>
+
+        <h2 class="sec">إجابات واجبات الفصل العاشر — المؤشرات والبنى</h2>
+        <div class="ans-box">
+          <div class="ans-hdr">
+            <span class="ans-t">✅ إجابة و5: مشروع نظام المخزن</span>
+          </div>
+          <div class="ans-body">
+            <div class="cw">
+              <div class="ch2">
+                <span class="cl">C++ — Inventory System</span
+                ><span class="cf">inventory.cpp</span>
+              </div>
+              <div class="cb">
+                <pre>
+<span class="pp">#include</span> <span class="str">&lt;iostream&gt;</span>
+<span class="pp">#include</span> <span class="str">&lt;string&gt;</span>
+<span class="kw">using namespace</span> std;
+
+<span class="kw">struct</span> <span class="tp">Product</span> {
+    <span class="kw">string</span> name;
+    <span class="kw">double</span> price;
+    <span class="kw">int</span>    quantity;
+    <span class="kw">string</span> barcode;
+};
+
+<span class="kw">int</span> productCount = <span class="num">0</span>;
+<span class="tp">Product</span> store[<span class="num">10</span>];
+
+<span class="kw">void</span> <span class="fn">addProduct</span>(<span class="kw">string</span> n, <span class="kw">double</span> p, <span class="kw">int</span> q, <span class="kw">string</span> b) {
+    <span class="kw">if</span> (productCount &lt; <span class="num">10</span>) {
+        store[productCount] = {n, p, q, b};
+        productCount++;
+        cout &lt;&lt; <span class="str">"✅ أُضيف: "</span> &lt;&lt; n &lt;&lt; endl;
+    }
+}
+
+<span class="kw">bool</span> <span class="fn">sellProduct</span>(<span class="kw">string</span> barcode, <span class="kw">int</span> qty) {
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; productCount; i++) {
+        <span class="kw">if</span> (store[i].barcode == barcode) {
+            <span class="kw">if</span> (store[i].quantity &gt;= qty) {
+                store[i].quantity -= qty;
+                cout &lt;&lt; <span class="str">"✅ بيع "</span> &lt;&lt; qty &lt;&lt; <span class="str">" من "</span> &lt;&lt; store[i].name &lt;&lt; endl;
+                <span class="kw">return true</span>;
+            }
+            cout &lt;&lt; <span class="str">"❌ الكمية غير كافية!\n"</span>;
+            <span class="kw">return false</span>;
+        }
+    }
+    cout &lt;&lt; <span class="str">"❌ الباركود غير موجود!\n"</span>;
+    <span class="kw">return false</span>;
+}
+
+<span class="kw">void</span> <span class="fn">lowStockReport</span>(<span class="kw">int</span> threshold) {
+    cout &lt;&lt; <span class="str">"═══ منتجات كمّيتها أقل من "</span> &lt;&lt; threshold &lt;&lt; <span class="str">" ═══\n"</span>;
+    <span class="kw">for</span> (<span class="kw">int</span> i = <span class="num">0</span>; i &lt; productCount; i++) {
+        <span class="kw">if</span> (store[i].quantity &lt; threshold) {
+            cout &lt;&lt; <span class="str">"⚠️ "</span> &lt;&lt; store[i].name
+                 &lt;&lt; <span class="str">" — كمية: "</span> &lt;&lt; store[i].quantity &lt;&lt; endl;
+        }
+    }
+}
+
+<span class="kw">int</span> <span class="fn">main</span>() {
+    <span class="fn">addProduct</span>(<span class="str">"حاسوب محمول"</span>, <span class="num">15000</span>, <span class="num">5</span>,  <span class="str">"BC001"</span>);
+    <span class="fn">addProduct</span>(<span class="str">"هاتف ذكي"</span>,   <span class="num">8000</span>,  <span class="num">12</span>, <span class="str">"BC002"</span>);
+    <span class="fn">addProduct</span>(<span class="str">"سماعات"</span>,      <span class="num">500</span>,   <span class="num">2</span>,  <span class="str">"BC003"</span>);
+
+    <span class="fn">sellProduct</span>(<span class="str">"BC001"</span>, <span class="num">3</span>);
+    <span class="fn">sellProduct</span>(<span class="str">"BC003"</span>, <span class="num">5</span>); <span class="cm">// ❌ كمية غير كافية</span>
+
+    <span class="fn">lowStockReport</span>(<span class="num">5</span>);
+    <span class="kw">return</span> <span class="num">0</span>;
+}</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pgf">
+        <span class="pga">Eng. Osman Taher — Aswany</span
+        ><span class="pgn">PAGE 210</span>
+      </div>
+    </div>
+
+    <!-- ══════════════ BACK COVER ══════════════ -->
+    <div class="bc">
+      <div class="c-mesh"></div>
+      <div class="c-glow1"></div>
+      <div class="c-glow2"></div>
+      <div
+        style="
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 4px;
+          background: linear-gradient(
+            90deg,
+            var(--pur-dd),
+            var(--pur-l),
+            var(--gold-l),
+            var(--pur-dd)
+          );
+        "
+      ></div>
+      <div class="c-stripe"></div>
+
+      <div
+        style="
+          position: relative;
+          z-index: 2;
+          max-width: 500px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 16px;
+        "
+      >
+        <div style="display: flex; align-items: center; gap: 12px">
+          <div class="c-logo">&lt;/&gt;</div>
+          <span class="c-bn">Aswany</span>
+        </div>
+        <div
+          style="
+            width: 50px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--pur), var(--gold));
+            border-radius: 2px;
+          "
+        ></div>
+        <div
+          style="
+            font-size: 24pt;
+            font-weight: 900;
+            color: white;
+            text-align: center;
+            line-height: 1.2;
+          "
+        >
+          معمارية الحاسوب<br /><span style="color: var(--gold-l)"
+            >وأساسيات C++</span
+          >
+        </div>
+        <div
+          style="
+            font-size: 11pt;
+            color: rgba(255, 255, 255, 0.45);
+            font-family: &quot;IBM Plex Mono&quot;, monospace;
+            letter-spacing: 1px;
+          "
+        >
+          Arabic Series Vol. V — From Hardware to Code
+        </div>
+        <div
+          style="
+            display: flex;
+            gap: 16px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+          "
+        >
+          <div
+            style="
+              background: rgba(255, 255, 255, 0.05);
+              border: 1px solid rgba(124, 58, 237, 0.3);
+              border-radius: 5px;
+              padding: 11px 18px;
+              text-align: center;
+            "
+          >
+            <div
+              style="font-size: 20pt; font-weight: 900; color: var(--gold-l)"
+            >
+              10
+            </div>
+            <div
+              style="
+                font-size: 8pt;
+                color: rgba(255, 255, 255, 0.35);
+                font-family: &quot;IBM Plex Mono&quot;, monospace;
+              "
+            >
+              فصلاً
+            </div>
+          </div>
+          <div
+            style="
+              background: rgba(255, 255, 255, 0.05);
+              border: 1px solid rgba(124, 58, 237, 0.3);
+              border-radius: 5px;
+              padding: 11px 18px;
+              text-align: center;
+            "
+          >
+            <div
+              style="font-size: 20pt; font-weight: 900; color: var(--gold-l)"
+            >
+              100+
+            </div>
+            <div
+              style="
+                font-size: 8pt;
+                color: rgba(255, 255, 255, 0.35);
+                font-family: &quot;IBM Plex Mono&quot;, monospace;
+              "
+            >
+              مسألة
+            </div>
+          </div>
+          <div
+            style="
+              background: rgba(255, 255, 255, 0.05);
+              border: 1px solid rgba(124, 58, 237, 0.3);
+              border-radius: 5px;
+              padding: 11px 18px;
+              text-align: center;
+            "
+          >
+            <div
+              style="font-size: 20pt; font-weight: 900; color: var(--gold-l)"
+            >
+              10
+            </div>
+            <div
+              style="
+                font-size: 8pt;
+                color: rgba(255, 255, 255, 0.35);
+                font-family: &quot;IBM Plex Mono&quot;, monospace;
+              "
+            >
+              اختباراً
+            </div>
+          </div>
+        </div>
+        <div
+          style="
+            border-top: 1px solid rgba(124, 58, 237, 0.3);
+            padding-top: 18px;
+            text-align: center;
+            width: 100%;
+            margin-top: 8px;
+          "
+        >
+          <div
+            style="
+              font-size: 8pt;
+              color: var(--gold-l);
+              font-family: &quot;IBM Plex Mono&quot;, monospace;
+              letter-spacing: 3px;
+              margin-bottom: 6px;
+            "
+          >
+            AUTHOR
+          </div>
+          <div style="font-size: 18pt; font-weight: 900; color: white">
+            Eng. Osman Taher
+          </div>
+          <div
+            style="
+              font-size: 9pt;
+              color: rgba(255, 255, 255, 0.3);
+              font-family: &quot;IBM Plex Mono&quot;, monospace;
+              margin-top: 4px;
+            "
+          >
+            ✦ Aswany — Arabic Tech Books Series
+          </div>
+        </div>
+        <div
+          style="
+            font-size: 8.5pt;
+            color: rgba(255, 255, 255, 0.18);
+            font-family: &quot;IBM Plex Mono&quot;, monospace;
+            margin-top: 8px;
+          "
+        >
+          © Aswany · All Rights Reserved
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

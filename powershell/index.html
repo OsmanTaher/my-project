@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PowerShell Profile Guide | Ultimate CLI Reference</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts (Inter & JetBrains Mono) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="arc/logo.svg" type="image/x-icon">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0b1120;
+            color: #f8fafc;
+        }
+        code, pre {
+            font-family: 'JetBrains Mono', monospace;
+            text-align: left;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #3b82f6;
+            border-radius: 4px;
+        }
+        .glass-card {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glass-card:hover {
+            border-color: rgba(59, 130, 246, 0.45);
+            box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.1);
+        }
+        .logo-glow {
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.35);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col custom-scrollbar relative">
+
+    <!-- Top Scroll Progress Bar -->
+    <div id="scrollProgress" class="fixed top-0 left-0 h-1 bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-500 z-50 transition-all duration-75" style="width: 0%"></div>
+
+    <!-- Header Navigation -->
+    <header class="sticky top-0 z-40 glass-card border-b border-slate-800 bg-slate-900/90 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <!-- Project Custom Distinctive Logo Icon -->
+                <div class="relative flex items-center justify-center w-11 h-11 rounded-xl bg-gradient-to-tr from-blue-700 via-indigo-600 to-cyan-500 text-white shadow-lg logo-glow border border-cyan-400/30">
+                    <i class="fa-solid fa-terminal text-lg"></i>
+                    <span class="absolute -top-1 -right-1 flex h-3 w-3">
+                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+                      <span class="relative inline-flex rounded-full h-3 w-3 bg-cyan-500"></span>
+                    </span>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg text-slate-100 flex items-center gap-2">
+                        PowerShell CLI Reference
+                        <span class="text-[10px] bg-blue-500/10 text-blue-400 border border-blue-500/20 px-2 py-0.5 rounded-full font-mono">v2.6</span>
+                    </h1>
+                    <p class="text-xs text-slate-400">Quick terminal reference & interactive command documentation</p>
+                </div>
+            </div>
+
+            <!-- GitHub Repo Link & Stats -->
+            <div class="flex items-center gap-3">
+                
+                <div class="hidden md:flex items-center gap-2 border-l border-slate-800 ml-2 pl-3">
+                    <span class="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center gap-1.5">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                        17 Active
+                    </span>
+                    <span class="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-slate-800 text-slate-400 border border-slate-700">
+                        21 Disabled
+                    </span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- Hero Section & Search -->
+        <div class="mb-10 text-center max-w-3xl mx-auto">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs mb-3 font-mono">
+                <i class="fa-solid fa-bolt"></i> PowerShell Command Cheat-Sheet
+            </div>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-200 to-cyan-400 mb-3">
+                PowerShell Profile & CLI Syntax Reference
+            </h2>
+            <p class="text-slate-400 text-xs sm:text-sm leading-relaxed mb-6">
+                Use this guide as a quick terminal reference to write commands directly with available options & syntax without verbose explanations.
+            </p>
+
+            <!-- Search Bar -->
+            <div class="relative max-w-xl mx-auto mb-4">
+                <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                <input type="text" id="searchInput" onkeyup="filterCommands()" 
+                       placeholder="Search by command, file or syntax (e.g. myip, ghp repo, link -i, nf)..." 
+                       class="w-full pl-11 pr-4 py-3 bg-slate-900/90 border border-slate-800 rounded-2xl text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all text-sm shadow-inner font-mono">
+            </div>
+
+            <!-- Repo Quick Banner Button -->
+            <div class="flex justify-center">
+                <a href="https://github.com/OsmanTaher/powershell" target="_blank" rel="noopener noreferrer"
+                   class="inline-flex items-center gap-2 text-xs text-blue-400 hover:text-blue-300 bg-blue-500/5 hover:bg-blue-500/10 px-4 py-2 rounded-xl border border-blue-500/20 transition-all">
+                    <i class="fa-brands fa-github text-sm"></i>
+                    <span>Browse source code & download profile scripts on GitHub: <strong class="underline font-mono">OsmanTaher/powershell</strong></span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="flex items-center justify-start md:justify-center gap-2 overflow-x-auto pb-4 mb-8 custom-scrollbar">
+            <button onclick="filterCategory('all')" class="tab-btn active px-4 py-2 rounded-xl text-xs sm:text-sm font-medium bg-blue-600 text-white shadow-lg shadow-blue-600/30 transition-all whitespace-nowrap">
+                <i class="fa-solid fa-list me-1.5"></i> All (38)
+            </button>
+            <button onclick="filterCategory('sys')" class="tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-medium bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all whitespace-nowrap">
+                <i class="fa-solid fa-desktop me-1.5 text-blue-400"></i> [1] System Tools
+            </button>
+            <button onclick="filterCategory('py')" class="tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-medium bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all whitespace-nowrap">
+                <i class="fa-brands fa-python me-1.5 text-amber-400"></i> [2] Python Scripts
+            </button>
+            <button onclick="filterCategory('dev')" class="tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-medium bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all whitespace-nowrap">
+                <i class="fa-solid fa-code me-1.5 text-emerald-400"></i> [3] Dev & Docker
+            </button>
+            <button onclick="filterCategory('apps')" class="tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-medium bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all whitespace-nowrap">
+                <i class="fa-solid fa-rocket me-1.5 text-purple-400"></i> [4] App Launchers
+            </button>
+            <button onclick="filterCategory('utils')" class="tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-medium bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all whitespace-nowrap">
+                <i class="fa-solid fa-folder-open me-1.5 text-cyan-400"></i> [5] File Utilities
+            </button>
+            <button onclick="filterCategory('custom')" class="tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-medium bg-slate-800 text-slate-300 hover:bg-slate-700 transition-all whitespace-nowrap">
+                <i class="fa-solid fa-globe me-1.5 text-rose-400"></i> [6] External & GitHub
+            </button>
+        </div>
+
+        <!-- Sections Wrapper -->
+        <div id="sectionsContainer" class="space-y-10">
+
+            <!-- SECTION 1 -->
+            <section class="category-section" data-cat="sys">
+                <div class="flex items-center justify-between mb-5 pb-2 border-b border-slate-800">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center font-bold text-sm border border-blue-500/20 font-mono">1</div>
+                        <h3 class="text-lg font-bold text-slate-100">System Tools</h3>
+                    </div>
+                    <span class="text-xs text-slate-400 bg-slate-900 px-3 py-1 rounded-full border border-slate-800">Source: <code class="text-blue-300">system.ps1</code></span>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="grid-sys"></div>
+            </section>
+
+            <!-- SECTION 2 -->
+            <section class="category-section" data-cat="py">
+                <div class="flex items-center justify-between mb-5 pb-2 border-b border-slate-800">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center font-bold text-sm border border-amber-500/20 font-mono">2</div>
+                        <h3 class="text-lg font-bold text-slate-100">Python Scripts</h3>
+                    </div>
+                    <span class="text-xs text-slate-400 bg-slate-900 px-3 py-1 rounded-full border border-slate-800">Source: <code class="text-amber-300">python.ps1</code></span>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="grid-py"></div>
+            </section>
+
+            <!-- SECTION 3 -->
+            <section class="category-section" data-cat="dev">
+                <div class="flex items-center justify-between mb-5 pb-2 border-b border-slate-800">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center font-bold text-sm border border-emerald-500/20 font-mono">3</div>
+                        <h3 class="text-lg font-bold text-slate-100">Development & Docker</h3>
+                    </div>
+                    <span class="text-xs text-slate-400 bg-slate-900 px-3 py-1 rounded-full border border-slate-800">Source: <code class="text-emerald-300">dev.ps1</code></span>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="grid-dev"></div>
+            </section>
+
+            <!-- SECTION 4 -->
+            <section class="category-section" data-cat="apps">
+                <div class="flex items-center justify-between mb-5 pb-2 border-b border-slate-800">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-purple-500/10 text-purple-400 flex items-center justify-center font-bold text-sm border border-purple-500/20 font-mono">4</div>
+                        <h3 class="text-lg font-bold text-slate-100">Quick Apps Launch</h3>
+                    </div>
+                    <span class="text-xs text-slate-400 bg-slate-900 px-3 py-1 rounded-full border border-slate-800">Source: <code class="text-purple-300">apps.ps1</code></span>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="grid-apps"></div>
+            </section>
+
+            <!-- SECTION 5 -->
+            <section class="category-section" data-cat="utils">
+                <div class="flex items-center justify-between mb-5 pb-2 border-b border-slate-800">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-cyan-500/10 text-cyan-400 flex items-center justify-center font-bold text-sm border border-cyan-500/20 font-mono">5</div>
+                        <h3 class="text-lg font-bold text-slate-100">File Utilities</h3>
+                    </div>
+                    <span class="text-xs text-slate-400 bg-slate-900 px-3 py-1 rounded-full border border-slate-800">Source: <code class="text-cyan-300">utils.ps1</code></span>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="grid-utils"></div>
+            </section>
+
+            <!-- SECTION 6 -->
+            <section class="category-section" data-cat="custom">
+                <div class="flex items-center justify-between mb-5 pb-2 border-b border-slate-800">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-rose-500/10 text-rose-400 flex items-center justify-center font-bold text-sm border border-rose-500/20 font-mono">6</div>
+                        <h3 class="text-lg font-bold text-slate-100">External Scripts & GitHub</h3>
+                    </div>
+                    <span class="text-xs text-slate-400 bg-slate-900 px-3 py-1 rounded-full border border-slate-800">Directory: <code class="text-rose-300">$HOME\PowerShell\ps\*.ps1</code></span>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="grid-custom"></div>
+            </section>
+
+        </div>
+
+    </main>
+
+    <!-- Modal for Showing Direct Code & Terminal Reference Syntax -->
+    <div id="codeModal" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-3xl overflow-hidden shadow-2xl flex flex-col max-h-[85vh]">
+            <div class="px-6 py-4 bg-slate-800/60 border-b border-slate-700/60 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-terminal text-blue-400"></i>
+                    <h4 id="modalTitle" class="font-bold text-slate-100 font-mono text-base">Command Name</h4>
+                </div>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-white transition-colors">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+            <div class="p-6 overflow-y-auto custom-scrollbar space-y-5">
+                <!-- Terminal Command Box -->
+                <div>
+                    <div class="flex items-center justify-between mb-1.5">
+                        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Terminal CLI Syntax</span>
+                        <span id="modalFileTag" class="text-[10px] font-mono text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/20">file.ps1</span>
+                    </div>
+                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-3 flex items-center justify-between font-mono text-emerald-400 text-xs sm:text-sm">
+                        <span id="modalTerminalSyntax">$ command @args</span>
+                        <button onclick="copyModalSyntax()" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 px-2 py-1 rounded transition-colors flex items-center gap-1">
+                            <i class="fa-regular fa-copy"></i> Copy Command
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Parameters & Options Cheat-Sheet -->
+                <div>
+                    <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2 block">Direct Usage Examples & Flags</span>
+                    <div id="modalUsageList" class="bg-slate-950/50 border border-slate-800 rounded-xl p-3 font-mono text-xs text-slate-300 space-y-1.5 overflow-x-auto"></div>
+                </div>
+
+                <!-- PowerShell Definition Code -->
+                <div>
+                    <div class="flex items-center justify-between mb-1.5">
+                        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Internal PS Function Source Code</span>
+                        <button onclick="copyModalCode()" class="text-xs bg-slate-800 hover:bg-slate-700 text-blue-400 border border-slate-700 px-2.5 py-1 rounded transition-colors flex items-center gap-1">
+                            <i class="fa-regular fa-copy"></i> Copy Code
+                        </button>
+                    </div>
+                    <pre id="modalCode" class="p-4 bg-slate-950 border border-slate-800 rounded-xl text-slate-300 text-xs font-mono overflow-x-auto text-left custom-scrollbar"></pre>
+                </div>
+            </div>
+            <div class="px-6 py-3 bg-slate-800/40 border-t border-slate-800/80 flex justify-between items-center">
+                <a href="https://github.com/OsmanTaher/powershell" target="_blank" class="text-xs text-slate-400 hover:text-blue-400 flex items-center gap-1">
+                    <i class="fa-brands fa-github"></i> Open Repository
+                </a>
+                <button onclick="closeModal()" class="px-4 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-medium transition-colors">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-5 left-5 bg-emerald-600 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 -translate-y-20 opacity-0 transition-all duration-300 z-50 pointer-events-none">
+        <i class="fa-solid fa-circle-check text-lg"></i>
+        <span id="toastMsg" class="text-sm font-medium">Copied to clipboard successfully!</span>
+    </div>
+
+    <!-- Footer with Specified Exact Format -->
+    <footer class="border-t border-slate-800 bg-slate-950/70 py-6 mt-12">
+        <div class="max-w-7xl mx-auto px-4 text-center font-mono text-slate-400 text-xs sm:text-sm tracking-wide">
+            &lt; Developed By &gt;
+            <a href="https://www.facebook.com/twshkndy.qlashy" target="_blank" rel="noopener noreferrer" 
+               class="text-blue-400 hover:text-blue-300 font-bold underline underline-offset-4 mx-1 transition-colors">
+               Osman
+            </a>
+            &lt; All Copy Rights Reserved @2026 &gt;
+        </div>
+    </footer>
+
+    <!-- JavaScript Data and Controller Logic -->
+    <script>
+        // Scroll Progress Bar Logic
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('scrollProgress').style.width = scrolled + '%';
+        });
+
+        // Exact Terminal CLI Cheat-sheet Dataset (English)
+        const commandsData = [
+            // ================= SECTION 1 =================
+            {
+                name: "clWin",
+                cat: "sys",
+                status: "active",
+                file: "system.ps1",
+                shortDesc: "Clean temporary files (Temp & Prefetch) immediately.",
+                terminalSyntax: "clWin",
+                params: ["clWin"],
+                code: `function clWin {
+    Remove-Item -Path "C:\\Windows\\Temp\\*" -Recurse -Force -ErrorAction SilentlyContinue
+    Remove-Item -Path "$env:USERPROFILE\\AppData\\Local\\Temp\\*" -Recurse -Force -ErrorAction SilentlyContinue
+    Remove-Item -Path "C:\\Windows\\Prefetch\\*" -Recurse -Force -ErrorAction SilentlyContinue
+}`
+            },
+            {
+                name: "myip",
+                cat: "sys",
+                status: "active",
+                file: "system.ps1",
+                shortDesc: "Display active local IPv4 addresses and WAN Public IP.",
+                terminalSyntax: "myip",
+                params: ["myip"],
+                code: `function myip {
+    $localIPs = Get-NetIPAddress -AddressFamily IPv4 |
+        Where-Object { $_.IPAddress -notlike "127.*" } |
+        Select-Object InterfaceAlias, IPAddress
+
+    $wanIP = try {
+        (Invoke-RestMethod -Uri "https://api.ipify.org" -TimeoutSec 3).Trim()
+    } catch {
+        "Offline / Unavailable"
+    }
+
+    $wanObj = [PSCustomObject]@{ InterfaceAlias = "WAN (Public)"; IPAddress = $wanIP }
+    ($localIPs + $wanObj) | Format-Table -AutoSize | Out-String | Write-Host -ForegroundColor Yellow
+}`
+            },
+            {
+                name: "clHis",
+                cat: "sys",
+                status: "disabled",
+                file: "system.ps1",
+                shortDesc: "Clear PowerShell PSReadLine history and Win+R MRU history.",
+                terminalSyntax: "clHis",
+                params: ["clHis"],
+                code: `# function clHis {
+#     Clear-History
+#     [Microsoft.PowerShell.PSConsoleReadLine]::ClearHistory()
+#     $psHistoryPath = (Get-PSReadLineOption).HistorySavePath
+#     if (Test-Path $psHistoryPath) { Remove-Item $psHistoryPath -Force -ErrorAction SilentlyContinue }
+#     Remove-Item -Path "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\RunMRU" -Recurse -Force -ErrorAction SilentlyContinue
+# }`
+            },
+            {
+                name: "envpath",
+                cat: "sys",
+                status: "disabled",
+                file: "system.ps1",
+                shortDesc: "Display and validate system PATH environment variables.",
+                terminalSyntax: "envpath",
+                params: ["envpath"],
+                code: `# function envpath {
+#     $i = 1
+#     $paths = $env:PATH -split ';' | Where-Object { $_ } | Select-Object -Unique | ForEach-Object {
+#         [PSCustomObject]@{ '#' = $i++; 'Exists' = Test-Path $_; 'Path' = $_ }
+#     }
+#     $paths | Format-Table -AutoSize | Out-String | Write-Host -ForegroundColor Yellow
+# }`
+            },
+            {
+                name: "blockurl",
+                cat: "sys",
+                status: "disabled",
+                file: "system.ps1",
+                shortDesc: "Open Windows hosts file in VS Code to block URLs.",
+                terminalSyntax: "blockurl",
+                params: ["blockurl"],
+                code: `# function blockurl {
+#     $hostsPath = "$env:windir\\System32\\drivers\\etc\\hosts"
+#     code $hostsPath
+# }`
+            },
+            {
+                name: "sysup",
+                cat: "sys",
+                status: "disabled",
+                file: "system.ps1",
+                shortDesc: "Update all winget packages and PowerShell modules.",
+                terminalSyntax: "sysup",
+                params: ["sysup"],
+                code: `# function sysup {
+#     winget upgrade --all --include-unknown
+#     Update-Module -ErrorAction SilentlyContinue
+# }`
+            },
+            {
+                name: "ports",
+                cat: "sys",
+                status: "disabled",
+                file: "system.ps1",
+                shortDesc: "Display active listening TCP network ports with process PIDs.",
+                terminalSyntax: "ports",
+                params: ["ports"],
+                code: `# function ports {
+#     Get-NetTCPConnection -State Listen | 
+#     Select-Object LocalAddress, LocalPort, @{N="PID"; E={$_.OwningProcess}} | 
+#     Sort-Object LocalPort -Unique
+# }`
+            },
+            {
+                name: "killport",
+                cat: "sys",
+                status: "disabled",
+                file: "system.ps1",
+                shortDesc: "Forcefully kill a process running on a specific port.",
+                terminalSyntax: "killport <PortNumber>",
+                params: ["killport 3000", "killport 8080", "killport 5000"],
+                code: `# function killport {
+#     param([int]$Port)
+#     $ProcessId = (Get-NetTCPConnection -LocalPort $Port -ErrorAction SilentlyContinue).OwningProcess
+#     if ($ProcessId) { Stop-Process -Id $ProcessId -Force }
+# }`
+            },
+
+            // ================= SECTION 2 =================
+            {
+                name: "snake",
+                cat: "py",
+                status: "active",
+                file: "python.ps1",
+                shortDesc: "Launch the Snake game terminal interface.",
+                terminalSyntax: "snake",
+                params: ["snake"],
+                code: `function snake { . "$HOME\\PowerShell\\ps\\python.ps1"; snake @args }`
+            },
+            {
+                name: "xo",
+                cat: "py",
+                status: "active",
+                file: "python.ps1",
+                shortDesc: "Launch Tic-Tac-Toe game => xo hard, ox computer.",
+                terminalSyntax: "xo [hard|computer]",
+                params: ["xo", "xo hard", "ox computer"],
+                code: `function xo { . "$HOME\\PowerShell\\ps\\python.ps1"; xo @args }`
+            },
+            {
+                name: "hangman",
+                cat: "py",
+                status: "active",
+                file: "python.ps1",
+                shortDesc: "Launch the Hangman word-guessing game.",
+                terminalSyntax: "hangman",
+                params: ["hangman"],
+                code: `function hangman { . "$HOME\\PowerShell\\ps\\python.ps1"; hangman @args }`
+            },
+            {
+                name: "helping",
+                cat: "py",
+                status: "active",
+                file: "python.ps1",
+                shortDesc: "Display custom-built CLI help guide.",
+                terminalSyntax: "helping",
+                params: ["helping"],
+                code: `function helping { . "$HOME\\PowerShell\\ps\\python.ps1"; helping @args }`
+            },
+            {
+                name: "sysinfo",
+                cat: "py",
+                status: "active",
+                file: "python.ps1",
+                shortDesc: "Display system performance metrics (CPU, RAM, DISK, NET).",
+                terminalSyntax: "sysinfo",
+                params: ["sysinfo"],
+                code: `function sysinfo { . "$HOME\\PowerShell\\ps\\python.ps1"; sysinfo @args }`
+            },
+            {
+                name: "note",
+                cat: "py",
+                status: "active",
+                file: "python.ps1",
+                shortDesc: "Display saved notes and tasks list.",
+                terminalSyntax: "note",
+                params: ["note"],
+                code: `function note { . "$HOME\\PowerShell\\ps\\python.ps1"; note @args }`
+            },
+            {
+                name: "done",
+                cat: "py",
+                status: "active",
+                file: "python.ps1",
+                shortDesc: "Complete a specific note => done <number>.",
+                terminalSyntax: "done <number>",
+                params: ["done 1", "done 3"],
+                code: `function done { . "$HOME\\PowerShell\\ps\\python.ps1"; done @args }`
+            },
+            {
+                name: "osman",
+                cat: "py",
+                status: "disabled",
+                file: "python.ps1",
+                shortDesc: "Display motivational quote with custom note.",
+                terminalSyntax: "osman",
+                params: ["osman"],
+                code: `# function osman { . "$HOME\\PowerShell\\ps\\python.ps1"; osman @args }`
+            },
+            {
+                name: "mdstyle",
+                cat: "py",
+                status: "disabled",
+                file: "python.ps1",
+                shortDesc: "Copy style.css to current directory to format README.",
+                terminalSyntax: "mdstyle",
+                params: ["mdstyle"],
+                code: `# function mdstyle { . "$HOME\\PowerShell\\ps\\python.ps1"; mdstyle @args }`
+            },
+            {
+                name: "split",
+                cat: "py",
+                status: "disabled",
+                file: "python.ps1",
+                shortDesc: "Split PDF file by page range => split <pdfName>.",
+                terminalSyntax: "split <pdfName>",
+                params: ["split document.pdf", "split file.pdf 1-5"],
+                code: `# function split { . "$HOME\\PowerShell\\ps\\python.ps1"; split @args }`
+            },
+            {
+                name: "remove",
+                cat: "py",
+                status: "disabled",
+                file: "python.ps1",
+                shortDesc: "Delete all files matching an extension => remove <ext>.",
+                terminalSyntax: "remove <fileExtension>",
+                params: ["remove .log", "remove .tmp"],
+                code: `# function remove { . "$HOME\\PowerShell\\ps\\python.ps1"; remove @args }`
+            },
+            {
+                name: "convert",
+                cat: "py",
+                status: "disabled",
+                file: "python.ps1",
+                shortDesc: "Convert PowerPoint presentations to PDF => convert <fileName>.",
+                terminalSyntax: "convert <fileName>",
+                params: ["convert presentation.pptx"],
+                code: `# function convert { . "$HOME\\PowerShell\\ps\\python.ps1"; convert @args }`
+            },
+            {
+                name: "test",
+                cat: "py",
+                status: "disabled",
+                file: "python.ps1",
+                shortDesc: "Empty function for testing purposes only.",
+                terminalSyntax: "test",
+                params: ["test"],
+                code: `# function test { . "$HOME\\PowerShell\\ps\\python.ps1"; test @args }`
+            },
+
+            // ================= SECTION 3 =================
+            {
+                name: "clCom",
+                cat: "dev",
+                status: "active",
+                file: "dev.ps1",
+                shortDesc: "Display stored Regex pattern for stripping comments & copy.",
+                terminalSyntax: "clCom",
+                params: ["clCom"],
+                code: `function clCom {
+    $regex = '(?<!https?:|:)\\//(?!\\s*(?:eslint|prettier|@ts-|ts-|stylelint|TODO|FIXME|NOTE|www|https?|node|bower|registry|open|git|img|dummy|help|snow|grunt|play|parcel|next|you|drive|api|local)).*|\\/\\*[\\s\\S]*?\\*\\/|\\{\\/\\*[\\s\\S]*?\\*\\/\\}'
+    Write-Output $regex
+    $regex | Set-Clipboard
+}`
+            },
+            {
+                name: "jwtsecret",
+                cat: "dev",
+                status: "disabled",
+                file: "dev.ps1",
+                shortDesc: "Generate a 64-character secret and copy to clipboard.",
+                terminalSyntax: "jwtsecret",
+                params: ["jwtsecret"],
+                code: `# function jwtsecret {
+#     python -c "import secrets; print(secrets.token_hex(32))" | Set-Clipboard
+# }`
+            },
+            {
+                name: "clWeb",
+                cat: "dev",
+                status: "disabled",
+                file: "dev.ps1",
+                shortDesc: "Delete node_modules and clean NPM/NPX cache globally.",
+                terminalSyntax: "clWeb",
+                params: ["clWeb"],
+                code: `# function clWeb {
+#     npm cache clean --force
+#     npx clear-npx-cache
+# }`
+            },
+            {
+                name: "cldoc",
+                cat: "dev",
+                status: "disabled",
+                file: "dev.ps1",
+                shortDesc: "Cleanup Docker containers, volumes, and resources.",
+                terminalSyntax: "cldoc",
+                params: ["cldoc"],
+                code: `# function cldoc {
+#     docker stop $(docker ps -a -q) 2>$null
+#     docker system prune -a --volumes -f
+# }`
+            },
+            {
+                name: "gpush",
+                cat: "dev",
+                status: "disabled",
+                file: "dev.ps1",
+                shortDesc: "Stage, commit, and push code => gpush <commit>.",
+                terminalSyntax: 'gpush "[commit_message]"',
+                params: ['gpush', 'gpush "feat: initial commit"'],
+                code: `# function gpush {
+#     param([string]$message = "Fast commit from terminal")
+#     git add .
+#     git commit -m $message
+#     git push
+# }`
+            },
+
+            // ================= SECTION 4 =================
+            {
+                name: "postman",
+                cat: "apps",
+                status: "active",
+                file: "apps.ps1",
+                shortDesc: "Launch Postman API desktop application.",
+                terminalSyntax: "postman",
+                params: ["postman"],
+                code: `function postman { Start-Process "C:\\Users\\lenov\\AppData\\Local\\Postman\\Postman.exe" }`
+            },
+            {
+                name: "ticktick",
+                cat: "apps",
+                status: "disabled",
+                file: "apps.ps1",
+                shortDesc: "Launch TickTick desktop application.",
+                terminalSyntax: "ticktick",
+                params: ["ticktick"],
+                code: `# function ticktick { Start-Process "C:\\Program Files (x86)\\TickTick\\TickTick.exe" }`
+            },
+            {
+                name: "docs",
+                cat: "apps",
+                status: "disabled",
+                file: "apps.ps1",
+                shortDesc: "Navigate directly to Documents directory.",
+                terminalSyntax: "docs",
+                params: ["docs"],
+                code: `# function docs { Start-Process "$HOME\\Documents" }`
+            },
+            {
+                name: "down",
+                cat: "apps",
+                status: "disabled",
+                file: "apps.ps1",
+                shortDesc: "Navigate directly to Downloads directory.",
+                terminalSyntax: "down",
+                params: ["down"],
+                code: `# function down { Start-Process "$HOME\\Downloads" }`
+            },
+            {
+                name: "proj",
+                cat: "apps",
+                status: "disabled",
+                file: "apps.ps1",
+                shortDesc: "Switch terminal path to current project directory.",
+                terminalSyntax: "proj",
+                params: ["proj"],
+                code: `# function proj { Set-Location "$HOME\\Desktop\\Files\\Projects" }`
+            },
+
+            // ================= SECTION 5 =================
+            {
+                name: "nf",
+                cat: "utils",
+                status: "active",
+                file: "utils.ps1",
+                shortDesc: "Create a new file (with ext) or directory (no ext) => nf <name>.",
+                terminalSyntax: "nf <name>",
+                params: ["nf index.js", "nf components", "nf server.ts router.ts"],
+                code: `function nf {
+    foreach ($item in $args) {
+        if ($item -match '[\\\\/:*?"<>|]') { continue }
+        if ([System.IO.Path]::HasExtension($item)) {
+            New-Item -ItemType File -Path $item -Force | Out-Null
+        } else {
+            New-Item -ItemType Directory -Path $item -Force | Out-Null
+        }
+    }
+}`
+            },
+            {
+                name: "open",
+                cat: "utils",
+                status: "active",
+                file: "utils.ps1",
+                shortDesc: "Open file or directory => open <name> || open <name.ext>.",
+                terminalSyntax: "open <target|name.ext>",
+                params: ["open README", "open index.html", "open ."],
+                code: `function open {
+    param([string]$target)
+    if (Test-Path $target) { cmd /c start "" "$target"; return }
+    $files = @(Get-ChildItem -Path ".\\$target.*" -File -ErrorAction SilentlyContinue)
+    if ($files.Count -eq 1) { cmd /c start "" "$($files[0].FullName)" }
+    elseif ($files.Count -gt 1) { $files | ForEach-Object { Write-Host " - $($_.Name)" } }
+    else { Write-Host "File '$target' not found." }
+}`
+            },
+
+            // ================= SECTION 6 =================
+            {
+                name: "create",
+                cat: "custom",
+                status: "active",
+                file: "create.ps1",
+                shortDesc: "Create a new GitHub repository with automated git commands.",
+                terminalSyntax: "create repo [name] [public|private]",
+                params: [
+                    "create repo my-app public",
+                    "create repo my-app private",
+                    "create repo"
+                ],
+                code: `function create {
+    if ($Args[0] -ne "repo") { return }
+    # GitHub CLI repo creation & automated initialization echoes:
+    # git init | git add README.md | git commit -m "first commit" ...
+}`
+            },
+            {
+                name: "delete",
+                cat: "custom",
+                status: "active",
+                file: "delete.ps1",
+                shortDesc: "Forcefully delete an existing GitHub repository.",
+                terminalSyntax: "delete repo <repo_name>",
+                params: ["delete repo old-project"],
+                code: `function delete {
+    if ($Args[0] -ne "repo") { return }
+    $repoName = $Args[1]
+    gh repo delete "OsmanTaher/$repoName" --yes
+}`
+            },
+            {
+                name: "repos",
+                cat: "custom",
+                status: "disabled",
+                file: "repos.ps1",
+                shortDesc: "List all GitHub repositories on account with formatting.",
+                terminalSyntax: "repos [-public] [-private]",
+                params: ["repos", "repos -public", "repos -private"],
+                code: `# function repos { param([switch]$public, [switch]$private) ... }`
+            },
+            {
+                name: "ghp",
+                cat: "custom",
+                status: "active",
+                file: "ghp.ps1",
+                shortDesc: "Open GitHub profile, settings, notifications or repos in browser.",
+                terminalSyntax: "ghp [target|username|repo [name] [setting|issue|prs]]",
+                params: [
+                    "ghp",
+                    "ghp repos",
+                    "ghp tokens",
+                    "ghp settings",
+                    "ghp vercel",
+                    "ghp repo my-app settings"
+                ],
+                code: `function ghp {
+    # Shortcuts: repos, stars, notif, settings, prs, issues, gists, tokens, projects
+    # repo handler: ghp repo [name] [action]
+}`
+            },
+            {
+                name: "link (Alias: l)",
+                cat: "custom",
+                status: "active",
+                file: "link.ps1",
+                shortDesc: "Quick links & tech docs launcher (supports Clipboard & Incognito).",
+                terminalSyntax: "link [target] [query|account_index] [-i]",
+                params: [
+                    "l yt react tutorial",
+                    "l next",
+                    "l tw",
+                    "l mail 1",
+                    "l drive 2",
+                    "l -i gpt",
+                    "l -i yt",
+                    "l (opens text in Clipboard)"
+                ],
+                code: `function link {
+    param([switch]$i)
+    # Reads clipboard if empty args
+    # Platforms: yt, gh, npm, so
+    # Docs: next, tw, ts, node, ex, mongo, pg, mdn
+    # Accounts: mail [num], drive [num]
+    # Incognito: link -i <target>
+}`
+            }
+        ];
+
+        // Render Cards function
+        function renderCards(dataToRender = commandsData) {
+            const categories = ['sys', 'py', 'dev', 'apps', 'utils', 'custom'];
+            
+            categories.forEach(cat => {
+                const grid = document.getElementById(`grid-${cat}`);
+                if (!grid) return;
+                grid.innerHTML = '';
+
+                const items = dataToRender.filter(item => item.cat === cat);
+
+                if (items.length === 0) {
+                    grid.innerHTML = `<div class="col-span-full py-6 text-center text-slate-500 text-xs font-mono">No matching commands found for this filter</div>`;
+                    return;
+                }
+
+                items.forEach(item => {
+                    const isActive = item.status === 'active';
+                    const badgeColor = isActive 
+                        ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' 
+                        : 'bg-amber-500/10 text-amber-400 border-amber-500/20';
+                    const badgeText = isActive ? 'Active' : 'Commented';
+
+                    const card = document.createElement('div');
+                    card.className = "glass-card rounded-xl p-4 transition-all flex flex-col justify-between group";
+                    card.innerHTML = `
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-[10px] font-mono text-slate-400 bg-slate-800 px-2 py-0.5 rounded border border-slate-700/60">${item.file}</span>
+                                    <h4 class="text-sm font-bold text-blue-400 font-mono group-hover:text-cyan-300 transition-colors">${item.name}</h4>
+                                </div>
+                                <span class="text-[9px] font-mono px-2 py-0.5 rounded border ${badgeColor}">${badgeText}</span>
+                            </div>
+
+                            <p class="text-slate-300 text-xs mb-3 font-sans">${item.shortDesc}</p>
+
+                            <!-- Terminal Syntax Box -->
+                            <div class="bg-slate-950/80 border border-slate-800 rounded-lg p-2.5 mb-3 flex items-center justify-between font-mono">
+                                <span class="text-xs text-emerald-400 overflow-x-auto truncate mr-2 font-bold">$ ${item.terminalSyntax}</span>
+                                <button onclick="copyToClipboard('${item.terminalSyntax.replace(/'/g, "\\'")}')" class="text-slate-400 hover:text-white text-[11px] bg-slate-800 hover:bg-slate-700 p-1 rounded transition-colors flex-shrink-0" title="Copy CLI Command">
+                                    <i class="fa-regular fa-copy"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between pt-2 border-t border-slate-800/80">
+                            <button onclick="openModal('${item.name}')" class="text-xs font-mono text-slate-400 hover:text-blue-400 flex items-center gap-1.5 transition-colors">
+                                <i class="fa-solid fa-code text-blue-400"></i> CLI Flags & Code
+                            </button>
+                            <span class="text-[10px] text-slate-500 font-mono">PS CLI Ref</span>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+            });
+        }
+
+        // Search Filter
+        function filterCommands() {
+            const query = document.getElementById('searchInput').value.toLowerCase().trim();
+            const filtered = commandsData.filter(cmd => 
+                cmd.name.toLowerCase().includes(query) ||
+                cmd.terminalSyntax.toLowerCase().includes(query) ||
+                cmd.shortDesc.toLowerCase().includes(query) ||
+                cmd.file.toLowerCase().includes(query) ||
+                cmd.params.some(p => p.toLowerCase().includes(query))
+            );
+            renderCards(filtered);
+        }
+
+        // Category Filter Tabs
+        function filterCategory(cat) {
+            const tabs = document.querySelectorAll('.tab-btn');
+            tabs.forEach(tab => {
+                tab.classList.remove('bg-blue-600', 'text-white', 'shadow-lg', 'shadow-blue-600/30');
+                tab.classList.add('bg-slate-800', 'text-slate-300');
+            });
+            event.currentTarget.classList.remove('bg-slate-800', 'text-slate-300');
+            event.currentTarget.classList.add('bg-blue-600', 'text-white', 'shadow-lg', 'shadow-blue-600/30');
+
+            const sections = document.querySelectorAll('.category-section');
+            sections.forEach(sec => {
+                if (cat === 'all' || sec.getAttribute('data-cat') === cat) {
+                    sec.style.display = 'block';
+                } else {
+                    sec.style.display = 'none';
+                }
+            });
+        }
+
+        // Modal Logic
+        let currentModalCode = "";
+        let currentModalSyntax = "";
+
+        function openModal(cmdName) {
+            const cmd = commandsData.find(c => c.name === cmdName);
+            if (!cmd) return;
+
+            document.getElementById('modalTitle').innerText = `Command: ${cmd.name}`;
+            document.getElementById('modalFileTag').innerText = cmd.file;
+            document.getElementById('modalTerminalSyntax').innerText = `$ ${cmd.terminalSyntax}`;
+            
+            // Render Parameters list
+            const usageList = document.getElementById('modalUsageList');
+            usageList.innerHTML = '';
+            cmd.params.forEach(p => {
+                const item = document.createElement('div');
+                item.className = "flex items-center justify-between text-slate-300 hover:text-white py-1 border-b border-slate-900 last:border-0";
+                item.innerHTML = `
+                    <span class="text-emerald-400 font-bold">$ ${p}</span>
+                    <button onclick="copyToClipboard('${p.replace(/'/g, "\\'")}')" class="text-[10px] bg-slate-800 hover:bg-slate-700 text-slate-300 px-2 py-0.5 rounded">Copy</button>
+                `;
+                usageList.appendChild(item);
+            });
+
+            document.getElementById('modalCode').innerText = cmd.code;
+            currentModalCode = cmd.code;
+            currentModalSyntax = cmd.terminalSyntax;
+
+            document.getElementById('codeModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('codeModal').classList.add('hidden');
+        }
+
+        // Copy Helper
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast("Copied to clipboard successfully!");
+            }).catch(() => {
+                const textArea = document.createElement("textarea");
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand("copy");
+                document.body.removeChild(textArea);
+                showToast("Copied to clipboard successfully!");
+            });
+        }
+
+        function copyModalCode() {
+            copyToClipboard(currentModalCode);
+        }
+
+        function copyModalSyntax() {
+            copyToClipboard(currentModalSyntax);
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMsg').innerText = msg;
+            toast.classList.remove('-translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('-translate-y-20', 'opacity-0');
+            }, 2000);
+        }
+
+        // Initial render on load
+        window.onload = function() {
+            renderCards();
+        };
+    </script>
+</body>
+</html>

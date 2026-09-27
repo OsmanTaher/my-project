@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="A Neo-Brutalist index of HTML projects and experiments."
+      content="A Neo-Brutalist directory and dynamic JSON router for opening every local HTML project and experiment."
     />
-    <title>Labs Projects</title>
+    <title>Labs Projects - Aswany Directory</title>
     <link rel="shortcut icon" href="/logo.webp" type="image/x-icon" />
 
     <style>
@@ -16,12 +16,16 @@
         --deep: #07273b;
         --surface: #0a3149;
         --surface-2: #0e3a54;
+        --surface-3: #134665;
         --teal: #2dd4bf;
+        --teal-dark: #14b8a6;
         --lime: #c7cd8e;
+        --coral: #f87171;
         --muted: #a9c0c8;
         --line: rgba(234, 247, 245, 0.18);
         --shadow: 6px 6px 0 #041925;
         --shadow-sm: 4px 4px 0 #041925;
+        --shadow-lg: 10px 10px 0 #041925;
         --radius: 16px;
       }
 
@@ -61,6 +65,10 @@
         text-decoration: none;
       }
 
+      button, input, select {
+        font-family: inherit;
+      }
+
       .page {
         width: min(1440px, calc(100% - 40px));
         margin: 0 auto;
@@ -73,10 +81,10 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 28px;
+        gap: 24px;
         padding: 16px 0;
-        background: rgba(7, 39, 59, 0.93);
-        border-bottom: 1px solid var(--line);
+        background: rgba(7, 39, 59, 0.94);
+        border-bottom: 2px solid var(--line);
         backdrop-filter: blur(14px);
         -webkit-backdrop-filter: blur(14px);
       }
@@ -92,12 +100,13 @@
       }
 
       .brand-logo {
-        width: 52px;
-        height: 52px;
+        width: 50px;
+        height: 50px;
         object-fit: contain;
         border: 3px solid var(--ink);
         background: var(--surface);
         box-shadow: var(--shadow-sm);
+        border-radius: 8px;
       }
 
       .brand-dot {
@@ -108,7 +117,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 28px;
+        gap: 24px;
         font-size: 0.86rem;
         font-weight: 900;
         letter-spacing: 0.08em;
@@ -139,78 +148,242 @@
 
       .nav-actions {
         display: flex;
+        align-items: center;
         gap: 10px;
       }
 
       .header-btn {
         border: 3px solid var(--ink);
         box-shadow: var(--shadow-sm);
-        min-height: 50px;
-        padding: 0 18px;
+        min-height: 46px;
+        padding: 0 16px;
         display: inline-flex;
         align-items: center;
         justify-content: center;
+        gap: 6px;
         font-weight: 950;
+        font-size: 0.85rem;
         letter-spacing: 0.06em;
         text-transform: uppercase;
+        cursor: pointer;
+        border-radius: 8px;
         transition:
           transform 0.14s ease,
-          box-shadow 0.14s ease;
+          box-shadow 0.14s ease,
+          background-color 0.14s ease;
       }
 
       .header-btn:hover {
-        transform: translate(3px, 3px);
-        box-shadow: 1px 1px 0 var(--ink);
+        transform: translate(2px, 2px);
+        box-shadow: 2px 2px 0 var(--ink);
       }
 
+      .header-btn.json-btn {
+        background: var(--surface-2);
+        color: var(--teal);
+      }
       .header-btn.labs {
         background: var(--lime);
+        color: var(--deep);
       }
       .header-btn.whatsapp {
         background: var(--teal);
+        color: var(--deep);
       }
 
       .hero {
-        padding: 86px 0 58px;
+        padding: 60px 0 40px;
         text-align: center;
+      }
+
+      .hero-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 14px;
+        margin-bottom: 18px;
+        background: var(--surface-2);
+        border: 2px solid var(--teal);
+        border-radius: 999px;
+        font-size: 0.8rem;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--teal);
+        box-shadow: var(--shadow-sm);
       }
 
       .hero h1 {
         margin: 0;
         font-family: Georgia, "Times New Roman", serif;
-        font-size: clamp(3.5rem, 7vw, 7rem);
-        line-height: 0.95;
-        letter-spacing: -0.065em;
+        font-size: clamp(2.8rem, 6.5vw, 6.2rem);
+        line-height: 0.98;
+        letter-spacing: -0.05em;
         text-wrap: balance;
       }
 
       .hero p {
         max-width: 760px;
-        margin: 20px auto 0;
+        margin: 18px auto 0;
         color: var(--muted);
         font-family: "Courier New", Courier, monospace;
-        font-size: 1rem;
+        font-size: 0.98rem;
         line-height: 1.65;
       }
 
-      .project-count {
-        font-weight: 950;
+      .toolbar {
+        background: var(--surface);
+        border: 3px solid var(--ink);
+        border-radius: var(--radius);
+        padding: 22px;
+        box-shadow: var(--shadow);
+        margin-bottom: 45px;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+      }
+
+      .toolbar-top {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+
+      .search-box {
+        flex: 1;
+        min-width: 260px;
+        position: relative;
+        display: flex;
+        align-items: center;
+      }
+
+      .search-icon {
+        position: absolute;
+        left: 16px;
+        font-size: 1.1rem;
+        color: var(--teal);
+        pointer-events: none;
+      }
+
+      .search-input {
+        width: 100%;
+        height: 50px;
+        padding: 0 45px 0 46px;
+        background: var(--deep);
+        border: 2px solid var(--ink);
+        border-radius: 10px;
+        color: var(--ink);
+        font-size: 0.95rem;
+        font-weight: 600;
+        outline: none;
+        transition: border-color 0.2s, box-shadow 0.2s;
+      }
+
+      .search-input:focus {
+        border-color: var(--teal);
+        box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.25);
+      }
+
+      .clear-search {
+        position: absolute;
+        right: 14px;
+        background: transparent;
+        border: none;
+        color: var(--muted);
+        cursor: pointer;
+        font-size: 1.2rem;
+        display: none;
+      }
+
+      .toolbar-controls {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      .sort-select {
+        height: 50px;
+        padding: 0 16px;
+        background: var(--surface-2);
+        color: var(--ink);
+        border: 2px solid var(--ink);
+        border-radius: 10px;
+        font-weight: 800;
+        font-size: 0.85rem;
+        cursor: pointer;
+        outline: none;
+      }
+
+      .category-filters {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        border-top: 1px dashed var(--line);
+        padding-top: 16px;
+      }
+
+      .filter-chip {
+        background: var(--surface-2);
+        color: var(--muted);
+        border: 2px solid var(--line);
+        padding: 7px 14px;
+        border-radius: 999px;
+        font-size: 0.78rem;
+        font-weight: 800;
+        letter-spacing: 0.04em;
         text-transform: uppercase;
-        letter-spacing: 0.08em;
-        font-size: 0.8rem;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.15s ease;
+      }
+
+      .filter-chip:hover {
+        border-color: var(--teal);
+        color: var(--ink);
+      }
+
+      .filter-chip.active {
+        background: var(--teal);
+        color: var(--deep);
+        border-color: var(--ink);
+        box-shadow: 2px 2px 0 var(--ink);
+      }
+
+      .status-summary {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 24px;
+        font-family: "Courier New", Courier, monospace;
+        font-size: 0.88rem;
+        color: var(--muted);
+      }
+
+      .counter-pill {
+        background: var(--surface-2);
+        color: var(--teal);
+        padding: 4px 10px;
+        border: 1px solid var(--teal);
+        border-radius: 6px;
+        font-weight: 900;
       }
 
       .grid {
         display: grid;
         grid-template-columns: repeat(4, minmax(0, 1fr));
-        gap: 28px;
+        gap: 26px;
         padding-bottom: 90px;
       }
 
       .project-card {
         display: flex;
         flex-direction: column;
-        min-height: 360px;
+        min-height: 380px;
         border: 3px solid var(--ink);
         border-radius: var(--radius);
         background: var(--surface);
@@ -219,11 +392,12 @@
         transition:
           transform 0.16s ease,
           box-shadow 0.16s ease;
+        position: relative;
       }
 
       .project-card:hover {
-        transform: translate(-2px, -2px);
-        box-shadow: 10px 10px 0 var(--ink);
+        transform: translate(-3px, -3px);
+        box-shadow: var(--shadow-lg);
       }
 
       .file-strip {
@@ -231,8 +405,8 @@
         align-items: center;
         justify-content: space-between;
         gap: 12px;
-        min-height: 64px;
-        padding: 0 18px;
+        min-height: 56px;
+        padding: 0 16px;
         border-bottom: 3px solid var(--ink);
         background: var(--surface-2);
         color: var(--ink);
@@ -242,122 +416,344 @@
       }
 
       .file-type {
-        padding: 5px 9px;
+        padding: 4px 8px;
         border: 2px solid var(--ink);
         background: var(--teal);
-        color: var(--ink);
+        color: var(--deep);
+        font-size: 0.72rem;
+        font-weight: 950;
+        border-radius: 4px;
         box-shadow: 2px 2px 0 #041925;
       }
 
       .file-count {
         opacity: 0.85;
+        font-size: 0.8rem;
       }
 
       .card-content {
         display: flex;
         flex: 1;
         flex-direction: column;
-        padding: 22px 20px 20px;
+        padding: 20px 18px 18px;
+      }
+
+      .card-header-meta {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 8px;
+        gap: 8px;
       }
 
       .folder-name {
         color: var(--teal);
         font-size: 0.76rem;
         font-weight: 950;
-        letter-spacing: 0.09em;
+        letter-spacing: 0.08em;
         text-transform: uppercase;
-        margin-bottom: 7px;
-        word-break: break-word;
+        word-break: break-all;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .category-tag {
+        font-size: 0.68rem;
+        font-weight: 800;
+        padding: 2px 8px;
+        border-radius: 4px;
+        background: rgba(199, 205, 142, 0.18);
+        color: var(--lime);
+        border: 1px solid rgba(199, 205, 142, 0.4);
+        text-transform: uppercase;
       }
 
       .project-card h2 {
-        margin: 0;
-        font-size: clamp(1.3rem, 1.8vw, 1.7rem);
-        line-height: 1.05;
-        letter-spacing: -0.04em;
+        margin: 6px 0 0;
+        font-size: 1.35rem;
+        line-height: 1.15;
+        letter-spacing: -0.03em;
         word-break: break-word;
       }
 
       .project-card p {
-        margin: 16px 0 22px;
+        margin: 12px 0 18px;
         color: var(--muted);
         font-family: "Courier New", Courier, monospace;
-        font-size: 0.9rem;
+        font-size: 0.86rem;
         line-height: 1.55;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
       }
 
       .card-footer {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 12px;
+        gap: 10px;
         margin-top: auto;
-        padding-top: 16px;
+        padding-top: 14px;
         border-top: 2px dashed var(--line);
       }
 
+      .path-wrapper {
+        display: flex;
+        flex-direction: column;
+        max-width: 58%;
+        gap: 2px;
+      }
+
       .path {
-        max-width: 55%;
-        color: rgba(169, 192, 200, 0.72);
+        color: rgba(169, 192, 200, 0.85);
         font-family: "Courier New", Courier, monospace;
-        font-size: 0.73rem;
-        line-height: 1.3;
+        font-size: 0.72rem;
+        line-height: 1.25;
         overflow-wrap: anywhere;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .copy-path-btn {
+        background: transparent;
+        border: none;
+        color: var(--teal);
+        font-size: 0.7rem;
+        font-family: "Courier New", Courier, monospace;
+        cursor: pointer;
+        padding: 0;
+        text-align: left;
+        display: inline-flex;
+        align-items: center;
+        gap: 3px;
+      }
+
+      .copy-path-btn:hover {
+        text-decoration: underline;
+      }
+
+      .action-btns {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .preview-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 38px;
+        border: 2px solid var(--ink);
+        background: var(--surface-2);
+        color: var(--ink);
+        border-radius: 6px;
+        box-shadow: 2px 2px 0 #041925;
+        cursor: pointer;
+        font-size: 0.95rem;
+        transition: transform 0.12s ease;
+      }
+
+      .preview-btn:hover {
+        transform: translate(1px, 1px);
+        background: var(--surface-3);
       }
 
       .open-btn {
         flex: 0 0 auto;
         display: inline-flex;
         align-items: center;
-        gap: 8px;
-        min-height: 44px;
-        padding: 0 15px;
-        border: 3px solid var(--ink);
+        gap: 6px;
+        min-height: 38px;
+        padding: 0 14px;
+        border: 2px solid var(--ink);
         background: var(--teal);
-        box-shadow: var(--shadow-sm);
+        color: var(--deep);
+        box-shadow: 2px 2px 0 #041925;
         font-weight: 950;
+        font-size: 0.82rem;
         text-transform: uppercase;
-        letter-spacing: 0.07em;
+        letter-spacing: 0.05em;
+        border-radius: 6px;
         transition:
           transform 0.14s ease,
           box-shadow 0.14s ease;
       }
 
       .open-btn:hover {
-        transform: translate(3px, 3px);
-        box-shadow: 1px 1px 0 var(--ink);
+        transform: translate(2px, 2px);
+        box-shadow: 1px 1px 0 #041925;
       }
 
-      .empty {
-        display: none;
+      .empty-state {
         grid-column: 1 / -1;
         padding: 60px 20px;
         text-align: center;
         border: 3px solid var(--ink);
-        background: var(--lime);
+        background: var(--surface);
+        border-radius: var(--radius);
         box-shadow: var(--shadow);
-        font-weight: 950;
-        text-transform: uppercase;
+      }
+
+      .empty-state h3 {
+        font-size: 1.5rem;
+        margin: 0 0 10px;
+        color: var(--lime);
+      }
+
+      .empty-state p {
+        color: var(--muted);
+        font-family: "Courier New", Courier, monospace;
+      }
+
+      /* Modal and Drawer Styles */
+      .modal-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(4, 25, 37, 0.85);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        z-index: 2000;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+
+      .modal-backdrop.open {
+        display: flex;
+      }
+
+      .modal-box {
+        background: var(--surface);
+        border: 3px solid var(--ink);
+        box-shadow: var(--shadow-lg);
+        border-radius: var(--radius);
+        width: min(900px, 95vw);
+        max-height: 90vh;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      .modal-header {
+        background: var(--surface-2);
+        padding: 16px 20px;
+        border-bottom: 3px solid var(--ink);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .modal-title {
+        font-size: 1.2rem;
+        font-weight: 900;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .modal-close {
+        background: var(--coral);
+        color: var(--deep);
+        border: 2px solid var(--ink);
+        width: 34px;
+        height: 34px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 900;
+        box-shadow: 2px 2px 0 #041925;
+      }
+
+      .modal-body {
+        padding: 20px;
+        overflow-y: auto;
+        flex: 1;
+      }
+
+      .modal-json-pre {
+        background: var(--deep);
+        border: 2px solid var(--line);
+        border-radius: 8px;
+        padding: 16px;
+        color: var(--lime);
+        font-family: "Courier New", Courier, monospace;
+        font-size: 0.85rem;
+        max-height: 55vh;
+        overflow: auto;
+      }
+
+      .modal-footer {
+        padding: 14px 20px;
+        border-top: 2px dashed var(--line);
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+      }
+
+      /* Live Preview Iframe Drawer */
+      .preview-modal-box {
+        width: min(1200px, 96vw);
+        height: 90vh;
+      }
+
+      .preview-iframe-wrapper {
+        flex: 1;
+        width: 100%;
+        background: #fff;
+        position: relative;
+      }
+
+      .preview-iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+      }
+
+      /* Toast Notification */
+      .toast {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        background: var(--teal);
+        color: var(--deep);
+        border: 3px solid var(--ink);
+        box-shadow: var(--shadow-sm);
+        padding: 12px 20px;
+        font-weight: 900;
+        border-radius: 8px;
+        z-index: 3000;
+        transform: translateY(120%);
+        transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        font-family: "Courier New", Courier, monospace;
+      }
+
+      .toast.visible {
+        transform: translateY(0);
       }
 
       footer {
         border-top: 3px solid var(--line);
-        padding: 24px 0 36px;
+        padding: 30px 0 45px;
         display: flex;
         justify-content: space-between;
+        align-items: center;
         gap: 16px;
         font-family: "Courier New", Courier, monospace;
-        font-size: 0.82rem;
+        font-size: 0.85rem;
         font-weight: 800;
       }
 
       .scroll-progress {
         position: fixed;
-        left: 22px;
-        bottom: 22px;
+        left: 24px;
+        bottom: 24px;
         z-index: 1100;
-        width: 56px;
-        height: 56px;
+        width: 54px;
+        height: 54px;
         display: grid;
         place-items: center;
         padding: 3px;
@@ -390,82 +786,46 @@
         line-height: 1;
       }
 
-      .scroll-progress:focus-visible {
-        outline: 3px solid var(--teal);
-        outline-offset: 4px;
-      }
-
-      @media (max-width: 1150px) {
+      @media (max-width: 1200px) {
         .grid {
           grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 860px) {
+        .page {
+          width: min(100% - 30px, 720px);
         }
         .nav-links {
           display: none;
         }
-      }
-
-      @media (max-width: 820px) {
-        .page {
-          width: min(100% - 28px, 680px);
-        }
-        .navbar {
-          align-items: flex-start;
-        }
-        .nav-actions {
-          flex-direction: column;
-        }
-        .header-btn {
-          min-height: 44px;
-          padding: 0 13px;
-        }
-        .hero {
-          padding-top: 80px;
-        }
         .grid {
           grid-template-columns: repeat(2, minmax(0, 1fr));
-          gap: 20px;
+          gap: 18px;
         }
       }
 
       @media (max-width: 580px) {
         .page {
-          width: min(100% - 20px, 480px);
+          width: min(100% - 22px, 480px);
+        }
+        .navbar {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 14px;
         }
         .brand {
-          font-size: 1.25rem;
+          justify-content: center;
         }
-        .brand-logo {
-          width: 44px;
-          height: 44px;
+        .nav-actions {
+          justify-content: center;
         }
         .grid {
           grid-template-columns: 1fr;
         }
-        .hero h1 {
-          font-size: clamp(3rem, 17vw, 5rem);
-        }
-        .hero p {
-          font-size: 0.9rem;
-        }
         footer {
           flex-direction: column;
-        }
-        .scroll-progress {
-          left: 14px;
-          bottom: 14px;
-          width: 50px;
-          height: 50px;
-        }
-      }
-
-      @media (prefers-reduced-motion: reduce) {
-        html {
-          scroll-behavior: auto;
-        }
-        *,
-        *::before,
-        *::after {
-          transition: none !important;
+          text-align: center;
         }
       }
     </style>
@@ -475,1027 +835,97 @@
     <div class="page">
       <header class="navbar">
         <a class="brand" href="https://aswany.me/" aria-label="Aswany home">
-          <img class="brand-logo" src="/logo.webp" alt="Aswany logo" />
+          <img class="brand-logo" src="/logo.webp" alt="Logo" onerror="this.src='https://placehold.co/100x100/0a3149/2dd4bf?text=AL'" />
           <span>ASWANY<span class="brand-dot">.</span></span>
         </a>
 
+
+
         <nav class="nav-links" aria-label="Primary navigation">
-          <a href="https://aswany.me/">Home</a>
-          <a href="https://aswany.me/#skills">Skills</a>
-          <a href="https://aswany.me/#projects">Projects</a>
+          <a href="https://aswany.me/"></a>
+          <a href="https://aswany.me#about">Skills</a>
+          <a href="https://aswany.me#skills">Skills</a>
+          <a href="https://aswany.me#projects">Projects</a>
           <a href="https://aswany.me/certifications">Certifications</a>
-          <a href="https://aswany.me/#contact">Contact</a>
           <a href="https://aswany.me/labs">Labs</a>
         </nav>
 
         <div class="nav-actions">
-          <a
-            class="header-btn labs"
-            href="tg://resolve?phone=201080859921"
-            target="_blank"
-            rel="noopener noreferrer"
-            >Telegram</a
-          >
+          <button class="header-btn json-btn" id="viewJsonBtn" type="button" title="View routing projects.json">
+            <span>{ }</span> JSON Config
+          </button>
           <a
             class="header-btn whatsapp"
             id="contact"
             href="https://wa.me/+201080859921"
             target="_blank"
             rel="noopener noreferrer"
-            >WhatsApp</a
           >
+            WhatsApp
+          </a>
         </div>
       </header>
 
       <main id="labs">
         <section class="hero">
-          <h1><span class="accent">✦</span> Labs Projects</h1>
+          <div class="hero-tag">
+            <span>⚡</span> Local Workspace Directory
+          </div>
+          <h1><span class="brand-dot">✦</span> Labs Projects</h1>
           <p>
-            A Neo-Brutalist directory for opening every HTML project and
-            experiment directly from this page.
+            An interactive Neo-Brutalist directory dynamically driven by a JSON routing manifest.
+            Instant search, category tagging, path copying, and direct execution for every experiment.
           </p>
         </section>
 
-        <section id="projects" aria-label="Projects">
+        <section class="toolbar" aria-label="Projects Filter and Search Toolbar">
+          <div class="toolbar-top">
+            <div class="search-box">
+              <span class="search-icon">🔍</span>
+              <input
+                type="text"
+                id="searchInput"
+                class="search-input"
+                placeholder="Search projects by name, folder, tag, or path... (Press '/' to focus)"
+                aria-label="Search projects"
+              />
+              <button class="clear-search" id="clearSearchBtn" aria-label="Clear search">✕</button>
+            </div>
+
+            <div class="toolbar-controls">
+              <select id="sortSelect" class="sort-select" aria-label="Sort projects">
+                <option value="default">Default Order</option>
+                <option value="name-asc">Name (A → Z)</option>
+                <option value="name-desc">Name (Z → A)</option>
+                <option value="folder">Folder Name</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="category-filters" id="categoryFilters" role="radiogroup" aria-label="Category Filters">
+            <button class="filter-chip active" data-category="all" type="button">All Projects</button>
+            <button class="filter-chip" data-category="cs" type="button">💻 Computer Science & DSA</button>
+            <button class="filter-chip" data-category="games" type="button">🎮 Games & Arcades</button>
+            <button class="filter-chip" data-category="tools" type="button">🛠️ Utilities & Tools</button>
+            <button class="filter-chip" data-category="islamic" type="button">🌙 Islamic Apps</button>
+          </div>
+        </section>
+
+        <section id="projects" aria-label="Project Cards">
+          <div class="status-summary">
+            <div>
+              Showing <span id="visibleCount" class="counter-pill">0</span> of <span id="totalCount">0</span> entry points
+            </div>
+            <div id="filterIndicator">Active filter: <strong style="color:var(--teal)">All</strong></div>
+          </div>
+
           <div class="grid" id="projectGrid">
-            <article class="project-card">
-              <div class="file-strip">
-                <span class="file-type">HTML</span>
-                <span class="file-count">#01</span>
-              </div>
-              <div class="card-content">
-                <div class="folder-name">algorithms</div>
-                <h2>index.html</h2>
-                <p>
-                  A practical web project demonstrating development concepts
-                  through clean interfaces and functionality.
-                </p>
-                <div class="card-footer">
-                  <span class="path">/algorithms/index.html</span>
-                  <a
-                    class="open-btn"
-                    href="algorithms/index.html"
-                    aria-label="Open algorithms/index.html"
-                  >
-                    Open <span aria-hidden="true">↗</span>
-                  </a>
-                </div>
-              </div>
-            </article>
-
-            <article class="project-card">
-              <div class="file-strip">
-                <span class="file-type">HTML</span>
-                <span class="file-count">#02</span>
-              </div>
-              <div class="card-content">
-                <div class="folder-name">algorithms</div>
-                <h2>part1.html</h2>
-                <p>
-                  A practical web project demonstrating development concepts
-                  through clean interfaces and functionality.
-                </p>
-                <div class="card-footer">
-                  <span class="path">/algorithms/part1.html</span>
-                  <a
-                    class="open-btn"
-                    href="algorithms/part1.html"
-                    aria-label="Open algorithms/part1.html"
-                  >
-                    Open <span aria-hidden="true">↗</span>
-                  </a>
-                </div>
-              </div>
-            </article>
-
-            <article class="project-card">
-              <div class="file-strip">
-                <span class="file-type">HTML</span>
-                <span class="file-count">#03</span>
-              </div>
-              <div class="card-content">
-                <div class="folder-name">algorithms</div>
-                <h2>part2.html</h2>
-                <p>
-                  A practical web project demonstrating development concepts
-                  through clean interfaces and functionality.
-                </p>
-                <div class="card-footer">
-                  <span class="path">/algorithms/part2.html</span>
-                  <a
-                    class="open-btn"
-                    href="algorithms/part2.html"
-                    aria-label="Open algorithms/part2.html"
-                  >
-                    Open <span aria-hidden="true">↗</span>
-                  </a>
-                </div>
-              </div>
-            </article>
-
-            <article class="project-card">
-              <div class="file-strip">
-                <span class="file-type">HTML</span>
-                <span class="file-count">#04</span>
-              </div>
-              <div class="card-content">
-                <div class="folder-name">BrickBreaker</div>
-                <h2>index.html</h2>
-                <p>
-                  A practical web project demonstrating development concepts
-                  through clean interfaces and functionality.
-                </p>
-                <div class="card-footer">
-                  <span class="path">/BrickBreaker/index.html</span>
-                  <a
-                    class="open-btn"
-                    href="BrickBreaker/index.html"
-                    aria-label="Open BrickBreaker/index.html"
-                  >
-                    Open <span aria-hidden="true">↗</span>
-                  </a>
-                </div>
-              </div>
-            </article>
-
-            <article class="project-card">
-              <div class="file-strip">
-                <span class="file-type">HTML</span>
-                <span class="file-count">#05</span>
-              </div>
-              <div class="card-content">
-                <div class="folder-name">c++</div>
-                <h2>index.html</h2>
-                <p>
-                  A practical web project demonstrating development concepts
-                  through clean interfaces and functionality.
-                </p>
-                <div class="card-footer">
-                  <span class="path">/c++/index.html</span>
-                  <a
-                    class="open-btn"
-                    href="c++/index.html"
-                    aria-label="Open c++/index.html"
-                  >
-                    Open <span aria-hidden="true">↗</span>
-                  </a>
-                </div>
-              </div>
-            </article>
-
-            <article class="project-card">
-              <div class="file-strip">
-                <span class="file-type">HTML</span>
-                <span class="file-count">#06</span>
-              </div>
-              <div class="card-content">
-                <div class="folder-name">calc</div>
-                <h2>index.html</h2>
-                <p>
-                  A practical web project demonstrating development concepts
-                  through clean interfaces and functionality.
-                </p>
-                <div class="card-footer">
-                  <span class="path">/calc/index.html</span>
-                  <a
-                    class="open-btn"
-                    href="calc/index.html"
-                    aria-label="Open calc/index.html"
-                  >
-                    Open <span aria-hidden="true">↗</span>
-                  </a>
-                </div>
-              </div>
-            </article>
-
-            <article class="project-card">
-              <div class="file-strip">
-                <span class="file-type">HTML</span>
-                <span class="file-count">#07</span>
-              </div>
-              <div class="card-content">
-                <div class="folder-name">CPlusPlus</div>
-                <h2>index.html</h2>
-                <p>
-                  A practical web project demonstrating development concepts
-                  through clean interfaces and functionality.
-                </p>
-                <div class="card-footer">
-                  <span class="path">/CPlusPlus/index.html</span>
-                  <a
-                    class="open-btn"
-                    href="CPlusPlus/index.html"
-                    aria-label="Open CPlusPlus/index.html"
-                  >
-                    Open <span aria-hidden="true">↗</span>
-                  </a>
-                </div>
-              </div>
-            </article>
-
-            <article class="project-card">
-              <div class="file-strip">
-                <span class="file-type">HTML</span>
-                <span class="file-count">#08</span>
-              </div>
-              <div class="card-content">
-                <div class="folder-name">DSA</div>
-                <h2>index.html</h2>
-                <p>
-                  A practical web project demonstrating development concepts
-                  through clean interfaces and functionality.
-                </p>
-                <div class="card-footer">
-                  <span class="path">/DSA/index.html</span>
-                  <a
-                    class="open-btn"
-                    href="DSA/index.html"
-                    aria-label="Open DSA/index.html"
-                  >
-                    Open <span aria-hidden="true">↗</span>
-                  </a>
-                </div>
-              </div>
-            </article>
-
-            <article class="project-card">
-              <div class="file-strip">
-                <span class="file-type">HTML</span>
-                <span class="file-count">#09</span>
-              </div>
-              <div class="card-content">
-                <div class="folder-name">DSA</div>
-                <h2>part1.html</h2>
-                <p>
-                  A practical web project demonstrating development concepts
-                  through clean interfaces and functionality.
-                </p>
-                <div class="card-footer">
-                  <span class="path">/DSA/part1.html</span>
-                  <a
-                    class="open-btn"
-                    href="DSA/part1.html"
-                    aria-label="Open DSA/part1.html"
-                  >
-                    Open <span aria-hidden="true">↗</span>
-                  </a>
-                </div>
-              </div>
-            </article>
-
-            <article class="project-card">
-              <div class="file-strip">
-                <span class="file-type">HTML</span>
-                <span class="file-count">#10</span>
-              </div>
-              <div class="card-content">
-                <div class="folder-name">DSA</div>
-                <h2>part2.html</h2>
-                <p>
-                  A practical web project demonstrating development concepts
-                  through clean interfaces and functionality.
-                </p>
-                <div class="card-footer">
-                  <span class="path">/DSA/part2.html</span>
-                  <a
-                    class="open-btn"
-                    href="DSA/part2.html"
-                    aria-label="Open DSA/part2.html"
-                  >
-                    Open <span aria-hidden="true">↗</span>
-                  </a>
-                </div>
-              </div>
-            </article>
-
-            <article class="project-card">
-              <div class="file-strip">
-                <span class="file-type">HTML</span>
-                <span class="file-count">#11</span>
-              </div>
-              <div class="card-content">
-                <div class="folder-name">editImage</div>
-                <h2>index.html</h2>
-                <p>
-                  A practical web project demonstrating development concepts
-                  through clean interfaces and functionality.
-                </p>
-                <div class="card-footer">
-                  <span class="path">/editImage/index.html</span>
-                  <a
-                    class="open-btn"
-                    href="editImage/index.html"
-                    aria-label="Open editImage/index.html"
-                  >
-                    Open <span aria-hidden="true">↗</span>
-                  </a>
-                </div>
-              </div>
-            </article>
-
-            <article class="project-card">
-              <div class="file-strip">
-                <span class="file-type">HTML</span>
-                <span class="file-count">#12</span>
-              </div>
-              <div class="card-content">
-                <div class="folder-name">extractColor</div>
-                <h2>extractColor.html</h2>
-                <p>
-                  A practical web project demonstrating development concepts
-                  through clean interfaces and functionality.
-                </p>
-                <div class="card-footer">
-                  <span class="path">/extractColor/extractColor.html</span>
-                  <a
-                    class="open-btn"
-                    href="extractColor/extractColor.html"
-                    aria-label="Open extractColor/extractColor.html"
-                  >
-                    Open <span aria-hidden="true">↗</span>
-                  </a>
-                </div>
-              </div>
-            </article>
-
-            <article class="project-card">
-              <div class="file-strip">
-                <span class="file-type">HTML</span>
-                <span class="file-count">#13</span>
-              </div>
-              <div class="card-content">
-                <div class="folder-name">fastWrite</div>
-                <h2>index.html</h2>
-                <p>
-                  A practical web project demonstrating development concepts
-                  through clean interfaces and functionality.
-                </p>
-                <div class="card-footer">
-                  <span class="path">/fastWrite/index.html</span>
-                  <a
-                    class="open-btn"
-                    href="fastWrite/index.html"
-                    aria-label="Open fastWrite/index.html"
-                  >
-                    Open <span aria-hidden="true">↗</span>
-                  </a>
-                </div>
-              </div>
-            </article>
-
-            <article class="project-card">
-              <div class="file-strip">
-                <span class="file-type">HTML</span>
-                <span class="file-count">#14</span>
-              </div>
-              <div class="card-content">
-                <div class="folder-name">github</div>
-                <h2>index.html</h2>
-                <p>
-                  A practical web project demonstrating development concepts
-                  through clean interfaces and functionality.
-                </p>
-                <div class="card-footer">
-                  <span class="path">/github/index.html</span>
-                  <a
-                    class="open-btn"
-                    href="github/index.html"
-                    aria-label="Open github/index.html"
-                  >
-                    Open <span aria-hidden="true">↗</span>
-                  </a>
-                </div>
-              </div>
-            </article>
-
-            <article class="project-card">
-              <div class="file-strip">
-                <span class="file-type">HTML</span>
-                <span class="file-count">#15</span>
-              </div>
-              <div class="card-content">
-                <div class="folder-name">goldenCalc</div>
-                <h2>index.html</h2>
-                <p>
-                  A practical web project demonstrating development concepts
-                  through clean interfaces and functionality.
-                </p>
-                <div class="card-footer">
-                  <span class="path">/goldenCalc/index.html</span>
-                  <a
-                    class="open-btn"
-                    href="goldenCalc/index.html"
-                    aria-label="Open goldenCalc/index.html"
-                  >
-                    Open <span aria-hidden="true">↗</span>
-                  </a>
-                </div>
-              </div>
-            </article>
-
-            <article class="project-card">
-              <div class="file-strip">
-                <span class="file-type">HTML</span>
-                <span class="file-count">#16</span>
-              </div>
-              <div class="card-content">
-                <div class="folder-name">id</div>
-                <h2>index.html</h2>
-                <p>
-                  A practical web project demonstrating development concepts
-                  through clean interfaces and functionality.
-                </p>
-                <div class="card-footer">
-                  <span class="path">/id/index.html</span>
-                  <a
-                    class="open-btn"
-                    href="id/index.html"
-                    aria-label="Open id/index.html"
-                  >
-                    Open <span aria-hidden="true">↗</span>
-                  </a>
-                </div>
-              </div>
-            </article>
-
-            <article class="project-card">
-              <div class="file-strip">
-                <span class="file-type">HTML</span>
-                <span class="file-count">#17</span>
-              </div>
-              <div class="card-content">
-                <div class="folder-name">javaScript</div>
-                <h2>index.html</h2>
-                <p>
-                  A practical web project demonstrating development concepts
-                  through clean interfaces and functionality.
-                </p>
-                <div class="card-footer">
-                  <span class="path">/javaScript/index.html</span>
-                  <a
-                    class="open-btn"
-                    href="javaScript/index.html"
-                    aria-label="Open javaScript/index.html"
-                  >
-                    Open <span aria-hidden="true">↗</span>
-                  </a>
-                </div>
-              </div>
-            </article>
-
-            <article class="project-card">
-              <div class="file-strip">
-                <span class="file-type">HTML</span>
-                <span class="file-count">#18</span>
-              </div>
-              <div class="card-content">
-                <div class="folder-name">markdown</div>
-                <h2>mark.html</h2>
-                <p>
-                  A practical web project demonstrating development concepts
-                  through clean interfaces and functionality.
-                </p>
-                <div class="card-footer">
-                  <span class="path">/markdown/mark.html</span>
-                  <a
-                    class="open-btn"
-                    href="markdown/mark.html"
-                    aria-label="Open markdown/mark.html"
-                  >
-                    Open <span aria-hidden="true">↗</span>
-                  </a>
-                </div>
-              </div>
-            </article>
-
-            <article class="project-card">
-              <div class="file-strip">
-                <span class="file-type">HTML</span>
-                <span class="file-count">#19</span>
-              </div>
-              <div class="card-content">
-                <div class="folder-name">MazeEscape</div>
-                <h2>index.html</h2>
-                <p>
-                  A practical web project demonstrating development concepts
-                  through clean interfaces and functionality.
-                </p>
-                <div class="card-footer">
-                  <span class="path">/MazeEscape/index.html</span>
-                  <a
-                    class="open-btn"
-                    href="MazeEscape/index.html"
-                    aria-label="Open MazeEscape/index.html"
-                  >
-                    Open <span aria-hidden="true">↗</span>
-                  </a>
-                </div>
-              </div>
-            </article>
-
-            <article class="project-card">
-              <div class="file-strip">
-                <span class="file-type">HTML</span>
-                <span class="file-count">#20</span>
-              </div>
-              <div class="card-content">
-                <div class="folder-name">memory-game</div>
-                <h2>index.html</h2>
-                <p>
-                  A practical web project demonstrating development concepts
-                  through clean interfaces and functionality.
-                </p>
-                <div class="card-footer">
-                  <span class="path">/memory-game/index.html</span>
-                  <a
-                    class="open-btn"
-                    href="memory-game/index.html"
-                    aria-label="Open memory-game/index.html"
-                  >
-                    Open <span aria-hidden="true">↗</span>
-                  </a>
-                </div>
-              </div>
-            </article>
-
-            <article class="project-card">
-              <div class="file-strip">
-                <span class="file-type">HTML</span>
-                <span class="file-count">#21</span>
-              </div>
-              <div class="card-content">
-                <div class="folder-name">mockData</div>
-                <h2>index.html</h2>
-                <p>
-                  A practical web project demonstrating development concepts
-                  through clean interfaces and functionality.
-                </p>
-                <div class="card-footer">
-                  <span class="path">/mockData/index.html</span>
-                  <a
-                    class="open-btn"
-                    href="mockData/index.html"
-                    aria-label="Open mockData/index.html"
-                  >
-                    Open <span aria-hidden="true">↗</span>
-                  </a>
-                </div>
-              </div>
-            </article>
-
-            <article class="project-card">
-              <div class="file-strip">
-                <span class="file-type">HTML</span>
-                <span class="file-count">#22</span>
-              </div>
-              <div class="card-content">
-                <div class="folder-name">oop</div>
-                <h2>index.html</h2>
-                <p>
-                  A practical web project demonstrating development concepts
-                  through clean interfaces and functionality.
-                </p>
-                <div class="card-footer">
-                  <span class="path">/oop/index.html</span>
-                  <a
-                    class="open-btn"
-                    href="oop/index.html"
-                    aria-label="Open oop/index.html"
-                  >
-                    Open <span aria-hidden="true">↗</span>
-                  </a>
-                </div>
-              </div>
-            </article>
-
-            <article class="project-card">
-              <div class="file-strip">
-                <span class="file-type">HTML</span>
-                <span class="file-count">#23</span>
-              </div>
-              <div class="card-content">
-                <div class="folder-name">passwordGen</div>
-                <h2>index.html</h2>
-                <p>
-                  A practical web project demonstrating development concepts
-                  through clean interfaces and functionality.
-                </p>
-                <div class="card-footer">
-                  <span class="path">/passwordGen/index.html</span>
-                  <a
-                    class="open-btn"
-                    href="passwordGen/index.html"
-                    aria-label="Open passwordGen/index.html"
-                  >
-                    Open <span aria-hidden="true">↗</span>
-                  </a>
-                </div>
-              </div>
-            </article>
-
-            <article class="project-card">
-              <div class="file-strip">
-                <span class="file-type">HTML</span>
-                <span class="file-count">#24</span>
-              </div>
-              <div class="card-content">
-                <div class="folder-name">periodicTable</div>
-                <h2>index.html</h2>
-                <p>
-                  A practical web project demonstrating development concepts
-                  through clean interfaces and functionality.
-                </p>
-                <div class="card-footer">
-                  <span class="path">/periodicTable/index.html</span>
-                  <a
-                    class="open-btn"
-                    href="periodicTable/index.html"
-                    aria-label="Open periodicTable/index.html"
-                  >
-                    Open <span aria-hidden="true">↗</span>
-                  </a>
-                </div>
-              </div>
-            </article>
-
-            <article class="project-card">
-              <div class="file-strip">
-                <span class="file-type">HTML</span>
-                <span class="file-count">#25</span>
-              </div>
-              <div class="card-content">
-                <div class="folder-name">powershell</div>
-                <h2>index.html</h2>
-                <p>
-                  A practical web project demonstrating development concepts
-                  through clean interfaces and functionality.
-                </p>
-                <div class="card-footer">
-                  <span class="path">/powershell/index.html</span>
-                  <a
-                    class="open-btn"
-                    href="powershell/index.html"
-                    aria-label="Open powershell/index.html"
-                  >
-                    Open <span aria-hidden="true">↗</span>
-                  </a>
-                </div>
-              </div>
-            </article>
-
-            <article class="project-card">
-              <div class="file-strip">
-                <span class="file-type">HTML</span>
-                <span class="file-count">#26</span>
-              </div>
-              <div class="card-content">
-                <div class="folder-name">qr</div>
-                <h2>index.html</h2>
-                <p>
-                  A practical web project demonstrating development concepts
-                  through clean interfaces and functionality.
-                </p>
-                <div class="card-footer">
-                  <span class="path">/qr/index.html</span>
-                  <a
-                    class="open-btn"
-                    href="qr/index.html"
-                    aria-label="Open qr/index.html"
-                  >
-                    Open <span aria-hidden="true">↗</span>
-                  </a>
-                </div>
-              </div>
-            </article>
-
-            <article class="project-card">
-              <div class="file-strip">
-                <span class="file-type">HTML</span>
-                <span class="file-count">#27</span>
-              </div>
-              <div class="card-content">
-                <div class="folder-name">quran</div>
-                <h2>index.html</h2>
-                <p>
-                  A practical web project demonstrating development concepts
-                  through clean interfaces and functionality.
-                </p>
-                <div class="card-footer">
-                  <span class="path">/quran/index.html</span>
-                  <a
-                    class="open-btn"
-                    href="quran/index.html"
-                    aria-label="Open quran/index.html"
-                  >
-                    Open <span aria-hidden="true">↗</span>
-                  </a>
-                </div>
-              </div>
-            </article>
-
-            <article class="project-card">
-              <div class="file-strip">
-                <span class="file-type">HTML</span>
-                <span class="file-count">#28</span>
-              </div>
-              <div class="card-content">
-                <div class="folder-name">search</div>
-                <h2>index.html</h2>
-                <p>
-                  A practical web project demonstrating development concepts
-                  through clean interfaces and functionality.
-                </p>
-                <div class="card-footer">
-                  <span class="path">/search/index.html</span>
-                  <a
-                    class="open-btn"
-                    href="search/index.html"
-                    aria-label="Open search/index.html"
-                  >
-                    Open <span aria-hidden="true">↗</span>
-                  </a>
-                </div>
-              </div>
-            </article>
-
-            <article class="project-card">
-              <div class="file-strip">
-                <span class="file-type">HTML</span>
-                <span class="file-count">#29</span>
-              </div>
-              <div class="card-content">
-                <div class="folder-name">snakeClassic</div>
-                <h2>index.html</h2>
-                <p>
-                  A practical web project demonstrating development concepts
-                  through clean interfaces and functionality.
-                </p>
-                <div class="card-footer">
-                  <span class="path">/snakeClassic/index.html</span>
-                  <a
-                    class="open-btn"
-                    href="snakeClassic/index.html"
-                    aria-label="Open snakeClassic/index.html"
-                  >
-                    Open <span aria-hidden="true">↗</span>
-                  </a>
-                </div>
-              </div>
-            </article>
-
-            <article class="project-card">
-              <div class="file-strip">
-                <span class="file-type">HTML</span>
-                <span class="file-count">#30</span>
-              </div>
-              <div class="card-content">
-                <div class="folder-name">studyProgress</div>
-                <h2>index.html</h2>
-                <p>
-                  A practical web project demonstrating development concepts
-                  through clean interfaces and functionality.
-                </p>
-                <div class="card-footer">
-                  <span class="path">/studyProgress/index.html</span>
-                  <a
-                    class="open-btn"
-                    href="studyProgress/index.html"
-                    aria-label="Open studyProgress/index.html"
-                  >
-                    Open <span aria-hidden="true">↗</span>
-                  </a>
-                </div>
-              </div>
-            </article>
-
-            <article class="project-card">
-              <div class="file-strip">
-                <span class="file-type">HTML</span>
-                <span class="file-count">#31</span>
-              </div>
-              <div class="card-content">
-                <div class="folder-name">tampletePDF</div>
-                <h2>index.html</h2>
-                <p>
-                  A practical web project demonstrating development concepts
-                  through clean interfaces and functionality.
-                </p>
-                <div class="card-footer">
-                  <span class="path">/tampletePDF/index.html</span>
-                  <a
-                    class="open-btn"
-                    href="tampletePDF/index.html"
-                    aria-label="Open tampletePDF/index.html"
-                  >
-                    Open <span aria-hidden="true">↗</span>
-                  </a>
-                </div>
-              </div>
-            </article>
-
-            <article class="project-card">
-              <div class="file-strip">
-                <span class="file-type">HTML</span>
-                <span class="file-count">#32</span>
-              </div>
-              <div class="card-content">
-                <div class="folder-name">tampletePDF</div>
-                <h2>bigDark1.html</h2>
-                <p>
-                  A practical web project demonstrating development concepts
-                  through clean interfaces and functionality.
-                </p>
-                <div class="card-footer">
-                  <span class="path">/tampletePDF/bigDark1.html</span>
-                  <a
-                    class="open-btn"
-                    href="tampletePDF/bigDark1.html"
-                    aria-label="Open tampletePDF/bigDark1.html"
-                  >
-                    Open <span aria-hidden="true">↗</span>
-                  </a>
-                </div>
-              </div>
-            </article>
-
-            <article class="project-card">
-              <div class="file-strip">
-                <span class="file-type">HTML</span>
-                <span class="file-count">#33</span>
-              </div>
-              <div class="card-content">
-                <div class="folder-name">tampletePDF</div>
-                <h2>bigScreen.html</h2>
-                <p>
-                  A practical web project demonstrating development concepts
-                  through clean interfaces and functionality.
-                </p>
-                <div class="card-footer">
-                  <span class="path">/tampletePDF/bigScreen.html</span>
-                  <a
-                    class="open-btn"
-                    href="tampletePDF/bigScreen.html"
-                    aria-label="Open tampletePDF/bigScreen.html"
-                  >
-                    Open <span aria-hidden="true">↗</span>
-                  </a>
-                </div>
-              </div>
-            </article>
-
-            <article class="project-card">
-              <div class="file-strip">
-                <span class="file-type">HTML</span>
-                <span class="file-count">#34</span>
-              </div>
-              <div class="card-content">
-                <div class="folder-name">tampletePDF</div>
-                <h2>phone.html</h2>
-                <p>
-                  A practical web project demonstrating development concepts
-                  through clean interfaces and functionality.
-                </p>
-                <div class="card-footer">
-                  <span class="path">/tampletePDF/phone.html</span>
-                  <a
-                    class="open-btn"
-                    href="tampletePDF/phone.html"
-                    aria-label="Open tampletePDF/phone.html"
-                  >
-                    Open <span aria-hidden="true">↗</span>
-                  </a>
-                </div>
-              </div>
-            </article>
-
-            <article class="project-card">
-              <div class="file-strip">
-                <span class="file-type">HTML</span>
-                <span class="file-count">#35</span>
-              </div>
-              <div class="card-content">
-                <div class="folder-name">ToDo</div>
-                <h2>index.html</h2>
-                <p>
-                  A practical web project demonstrating development concepts
-                  through clean interfaces and functionality.
-                </p>
-                <div class="card-footer">
-                  <span class="path">/ToDo/index.html</span>
-                  <a
-                    class="open-btn"
-                    href="ToDo/index.html"
-                    aria-label="Open ToDo/index.html"
-                  >
-                    Open <span aria-hidden="true">↗</span>
-                  </a>
-                </div>
-              </div>
-            </article>
-
-            <article class="project-card">
-              <div class="file-strip">
-                <span class="file-type">HTML</span>
-                <span class="file-count">#36</span>
-              </div>
-              <div class="card-content">
-                <div class="folder-name">UML</div>
-                <h2>index.html</h2>
-                <p>
-                  A practical web project demonstrating development concepts
-                  through clean interfaces and functionality.
-                </p>
-                <div class="card-footer">
-                  <span class="path">/UML/index.html</span>
-                  <a
-                    class="open-btn"
-                    href="UML/index.html"
-                    aria-label="Open UML/index.html"
-                  >
-                    Open <span aria-hidden="true">↗</span>
-                  </a>
-                </div>
-              </div>
-            </article>
-
-            <article class="project-card">
-              <div class="file-strip">
-                <span class="file-type">HTML</span>
-                <span class="file-count">#37</span>
-              </div>
-              <div class="card-content">
-                <div class="folder-name">Umrah</div>
-                <h2>index.html</h2>
-                <p>
-                  A practical web project demonstrating development concepts
-                  through clean interfaces and functionality.
-                </p>
-                <div class="card-footer">
-                  <span class="path">/Umrah/index.html</span>
-                  <a
-                    class="open-btn"
-                    href="Umrah/index.html"
-                    aria-label="Open Umrah/index.html"
-                  >
-                    Open <span aria-hidden="true">↗</span>
-                  </a>
-                </div>
-              </div>
-            </article>
-
-            <article class="project-card">
-              <div class="file-strip">
-                <span class="file-type">HTML</span>
-                <span class="file-count">#38</span>
-              </div>
-              <div class="card-content">
-                <div class="folder-name">xo</div>
-                <h2>index.html</h2>
-                <p>
-                  A practical web project demonstrating development concepts
-                  through clean interfaces and functionality.
-                </p>
-                <div class="card-footer">
-                  <span class="path">/xo/index.html</span>
-                  <a
-                    class="open-btn"
-                    href="xo/index.html"
-                    aria-label="Open xo/index.html"
-                  >
-                    Open <span aria-hidden="true">↗</span>
-                  </a>
-                </div>
-              </div>
-            </article>
-
-            <article class="project-card">
-              <div class="file-strip">
-                <span class="file-type">HTML</span>
-                <span class="file-count">#39</span>
-              </div>
-              <div class="card-content">
-                <div class="folder-name">zakat</div>
-                <h2>index.html</h2>
-                <p>
-                  A practical web project demonstrating development concepts
-                  through clean interfaces and functionality.
-                </p>
-                <div class="card-footer">
-                  <span class="path">/zakat/index.html</span>
-                  <a
-                    class="open-btn"
-                    href="zakat/index.html"
-                    aria-label="Open zakat/index.html"
-                  >
-                    Open <span aria-hidden="true">↗</span>
-                  </a>
-                </div>
-              </div>
-            </article>
+            <!-- Dynamic project cards will be populated here by JavaScript -->
           </div>
         </section>
       </main>
 
+      <!-- Back to top button -->
       <button
         class="scroll-progress"
         id="scrollProgress"
@@ -1506,19 +936,786 @@
         <span class="scroll-progress-inner" aria-hidden="true">↑</span>
       </button>
 
+      <!-- JSON Manifest Modal -->
+      <div class="modal-backdrop" id="jsonModal" role="dialog" aria-modal="true" aria-labelledby="jsonModalTitle">
+        <div class="modal-box">
+          <div class="modal-header">
+            <div class="modal-title" id="jsonModalTitle">
+              <span>{ }</span> projects.json Manifest & Router
+            </div>
+            <button class="modal-close" id="closeJsonModal" aria-label="Close modal">✕</button>
+          </div>
+          <div class="modal-body">
+            <p style="margin-top:0; color:var(--muted); font-size:0.9rem;">
+              This JSON structure directs and powers the internal routes, folder paths, metadata, and categories across the entire project suite.
+            </p>
+            <pre class="modal-json-pre" id="jsonDisplayCode"></pre>
+          </div>
+          <div class="modal-footer">
+            <button class="header-btn" id="copyJsonBtn" type="button">📋 Copy JSON</button>
+            <button class="header-btn labs" id="downloadJsonBtn" type="button">💾 Download projects.json</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Project Preview Modal -->
+      <div class="modal-backdrop" id="previewModal" role="dialog" aria-modal="true" aria-labelledby="previewModalTitle">
+        <div class="modal-box preview-modal-box">
+          <div class="modal-header">
+            <div class="modal-title" id="previewModalTitle">
+              <span>🚀</span> Preview: <span id="previewModalPath">/</span>
+            </div>
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <a class="header-btn labs" id="previewExternalLink" href="#" target="_blank" rel="noopener noreferrer">
+                Open Fullscreen ↗
+              </a>
+              <button class="modal-close" id="closePreviewModal" aria-label="Close preview">✕</button>
+            </div>
+          </div>
+          <div class="preview-iframe-wrapper">
+            <iframe id="previewIframe" class="preview-iframe" title="Project live preview" sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
+          </div>
+        </div>
+      </div>
+
+      <!-- Custom Toast notification -->
+      <!-- <div class="toast" id="toastMessage" role="status" aria-live="polite">
+        Path copied to clipboard!
+      </div> -->
+
       <footer>
-        <span>Built for learning, experiments, and fast browsing.</span>
+        <span>Built for learning, experiments, and fast local directory routing.</span>
         <span>© 2026 Aswany Labs</span>
       </footer>
     </div>
 
-    <script>
-      const scrollProgress = document.getElementById("scrollProgress");
+    <!--
+      This embedded JSON configuration mirrors `projects.json`.
+      It provides instant offline availability while also being fetchable directly via fetch('./projects.json').
+    -->
+    <script id="projects-json-data" type="application/json">
+    [
+      {
+        "id": "algorithms-index",
+        "folder": "algorithms",
+        "file": "index.html",
+        "path": "algorithms/index.html",
+        "title": "Algorithms Hub",
+        "category": "cs",
+        "categoryLabel": "Computer Science",
+        "tag": "DSA",
+        "description": "Interactive visualizer and central hub for classical algorithms, sorting routines, and search mechanics.",
+        "icon": "⚡"
+      },
+      {
+        "id": "algorithms-part1",
+        "folder": "algorithms",
+        "file": "part1.html",
+        "path": "algorithms/part1.html",
+        "title": "Algorithms - Part 1",
+        "category": "cs",
+        "categoryLabel": "Computer Science",
+        "tag": "DSA",
+        "description": "Part one study on divide-and-conquer, recursion trees, and sorting algorithm complexities.",
+        "icon": "📊"
+      },
+      {
+        "id": "algorithms-part2",
+        "folder": "algorithms",
+        "file": "part2.html",
+        "path": "algorithms/part2.html",
+        "title": "Algorithms - Part 2",
+        "category": "cs",
+        "categoryLabel": "Computer Science",
+        "tag": "DSA",
+        "description": "Part two deep dive into graph traversal (BFS/DFS), greedy methods, and dynamic programming.",
+        "icon": "🔀"
+      },
+      {
+        "id": "brickBreaker",
+        "folder": "brickBreaker",
+        "file": "index.html",
+        "path": "brickBreaker/index.html",
+        "title": "Brick Breaker Arcade",
+        "category": "games",
+        "categoryLabel": "Games & Fun",
+        "tag": "Canvas Game",
+        "description": "Retro-style paddle and bounce game built with HTML5 Canvas physics, levels, and brick collision.",
+        "icon": "🧱"
+      },
+      {
+        "id": "cpp",
+        "folder": "c++",
+        "file": "index.html",
+        "path": "c++/index.html",
+        "title": "C++ Labs & Notes",
+        "category": "cs",
+        "categoryLabel": "Computer Science",
+        "tag": "Language",
+        "description": "Core C++ language fundamentals, pointer arithmetic, memory management, and structured paradigms.",
+        "icon": "⚙️"
+      },
+      {
+        "id": "calc",
+        "folder": "calc",
+        "file": "index.html",
+        "path": "calc/index.html",
+        "title": "Standard Calculator",
+        "category": "tools",
+        "categoryLabel": "Tools & Utilities",
+        "tag": "Utility",
+        "description": "Responsive everyday calculator app with clean keyboard support and instant operation calculation.",
+        "icon": "🧮"
+      },
+      {
+        "id": "cPlusPlus",
+        "folder": "cPlusPlus",
+        "file": "index.html",
+        "path": "cPlusPlus/index.html",
+        "title": "Modern C++ Workshop",
+        "category": "cs",
+        "categoryLabel": "Computer Science",
+        "tag": "Modern C++",
+        "description": "Modern C++ features exploration including STL containers, lambdas, smart pointers, and templates.",
+        "icon": "💡"
+      },
+      {
+        "id": "dsa-index",
+        "folder": "dsa",
+        "file": "index.html",
+        "path": "dsa/index.html",
+        "title": "Data Structures & Algos",
+        "category": "cs",
+        "categoryLabel": "Computer Science",
+        "tag": "Structures",
+        "description": "Interactive data structures laboratory featuring linked lists, binary heaps, queues, and balanced trees.",
+        "icon": "🌳"
+      },
+      {
+        "id": "dsa-part1",
+        "folder": "dsa",
+        "file": "part1.html",
+        "path": "dsa/part1.html",
+        "title": "DSA - Part 1",
+        "category": "cs",
+        "categoryLabel": "Computer Science",
+        "tag": "Linear Data",
+        "description": "Linear data structures: dynamic arrays, singly & doubly linked lists, stacks, and evaluation queues.",
+        "icon": "📑"
+      },
+      {
+        "id": "dsa-part2",
+        "folder": "dsa",
+        "file": "part2.html",
+        "path": "dsa/part2.html",
+        "title": "DSA - Part 2",
+        "category": "cs",
+        "categoryLabel": "Computer Science",
+        "tag": "Non-Linear",
+        "description": "Non-linear hierarchies: Binary Search Trees, AVL balance, Hash Maps, and graph structures.",
+        "icon": "🕸️"
+      },
+      {
+        "id": "editImage",
+        "folder": "editImage",
+        "file": "index.html",
+        "path": "editImage/index.html",
+        "title": "Image Editor Studio",
+        "category": "tools",
+        "categoryLabel": "Tools & Utilities",
+        "tag": "Media Tool",
+        "description": "In-browser photo adjustments: live brightness, contrast, blur filters, rotation, and high-res export.",
+        "icon": "🎨"
+      },
+      {
+        "id": "extractColor",
+        "folder": "extractColor",
+        "file": "index.html",
+        "path": "extractColor/index.html",
+        "title": "Color Extractor",
+        "category": "tools",
+        "categoryLabel": "Tools & Utilities",
+        "tag": "Design Tool",
+        "description": "Extract dominant hues from any photo, generate harmonious color palettes, and copy HEX codes.",
+        "icon": "🧪"
+      },
+      {
+        "id": "fastWrite",
+        "folder": "fastWrite",
+        "file": "index.html",
+        "path": "fastWrite/index.html",
+        "title": "Fast Write Typing Test",
+        "category": "tools",
+        "categoryLabel": "Tools & Utilities",
+        "tag": "Typing",
+        "description": "Real-time typing speed benchmark measuring Words Per Minute (WPM), accuracy, and keystroke metrics.",
+        "icon": "⌨️"
+      },
+      {
+        "id": "github",
+        "folder": "github",
+        "file": "index.html",
+        "path": "github/index.html",
+        "title": "GitHub Explorer",
+        "category": "tools",
+        "categoryLabel": "Tools & Utilities",
+        "tag": "API Client",
+        "description": "Inspect public GitHub repositories, stars, forks, commit history, and user profile statistics.",
+        "icon": "🐙"
+      },
+      {
+        "id": "goldenCalc",
+        "folder": "goldenCalc",
+        "file": "index.html",
+        "path": "goldenCalc/index.html",
+        "title": "Golden Ratio Calculator",
+        "category": "tools",
+        "categoryLabel": "Tools & Utilities",
+        "tag": "Math & Design",
+        "description": "Compute divine proportions, phi-based typography scales, grid ratios, and layout geometry.",
+        "icon": "✨"
+      },
+      {
+        "id": "id",
+        "folder": "id",
+        "file": "index.html",
+        "path": "id/index.html",
+        "title": "ID & Badge Generator",
+        "category": "tools",
+        "categoryLabel": "Tools & Utilities",
+        "tag": "Generator",
+        "description": "Dynamic ID card creator with custom user avatars, serial generation, and instant preview card rendering.",
+        "icon": "🪪"
+      },
+      {
+        "id": "javaScript",
+        "folder": "javaScript",
+        "file": "index.html",
+        "path": "javaScript/index.html",
+        "title": "JavaScript Sandbox",
+        "category": "cs",
+        "categoryLabel": "Computer Science",
+        "tag": "Frontend",
+        "description": "Interactive ES6+ experiments exploring closures, promises, DOM manipulation, and modern web APIs.",
+        "icon": "💛"
+      },
+      {
+        "id": "markdown",
+        "folder": "markdown",
+        "file": "index.html",
+        "path": "markdown/index.html",
+        "title": "Markdown Live Editor",
+        "category": "tools",
+        "categoryLabel": "Tools & Utilities",
+        "tag": "Editor",
+        "description": "Split-pane markdown writer with live preview, syntax formatting, and markdown-to-HTML conversion.",
+        "icon": "📝"
+      },
+      {
+        "id": "mazeEscape",
+        "folder": "mazeEscape",
+        "file": "index.html",
+        "path": "mazeEscape/index.html",
+        "title": "Maze Escape",
+        "category": "games",
+        "categoryLabel": "Games & Fun",
+        "tag": "Puzzle Game",
+        "description": "Procedural labyrinth exploration game featuring keyboard & touch navigation to find the exit.",
+        "icon": "🌀"
+      },
+      {
+        "id": "memory-game",
+        "folder": "memory-game",
+        "file": "index.html",
+        "path": "memory-game/index.html",
+        "title": "Memory Match Game",
+        "category": "games",
+        "categoryLabel": "Games & Fun",
+        "tag": "Card Game",
+        "description": "Card-flipping cognitive challenge with move counters, timer, and smooth 3D flip card animations.",
+        "icon": "🃏"
+      },
+      {
+        "id": "mockData",
+        "folder": "mockData",
+        "file": "index.html",
+        "path": "mockData/index.html",
+        "title": "Mock Data Generator",
+        "category": "tools",
+        "categoryLabel": "Tools & Utilities",
+        "tag": "Developer Tool",
+        "description": "Quickly generate dummy users, JSON datasets, dates, and test values for UI prototyping.",
+        "icon": "🗄️"
+      },
+      {
+        "id": "oop",
+        "folder": "oop",
+        "file": "index.html",
+        "path": "oop/index.html",
+        "title": "OOP Principles Visualizer",
+        "category": "cs",
+        "categoryLabel": "Computer Science",
+        "tag": "Architecture",
+        "description": "Interactive illustrations of Encapsulation, Abstraction, Inheritance, and Polymorphism in action.",
+        "icon": "🧩"
+      },
+      {
+        "id": "passwordGen",
+        "folder": "passwordGen",
+        "file": "index.html",
+        "path": "passwordGen/index.html",
+        "title": "Secure Password Gen",
+        "category": "tools",
+        "categoryLabel": "Tools & Utilities",
+        "tag": "Security",
+        "description": "Cryptographically strong password maker with entropy evaluation, custom symbols, and 1-click copy.",
+        "icon": "🔐"
+      },
+      {
+        "id": "periodicTable",
+        "folder": "periodicTable",
+        "file": "index.html",
+        "path": "periodicTable/index.html",
+        "title": "Interactive Periodic Table",
+        "category": "tools",
+        "categoryLabel": "Tools & Utilities",
+        "tag": "Science",
+        "description": "Dynamic chemical element reference grid with atomic weights, group classifications, and details modal.",
+        "icon": "🔬"
+      },
+      {
+        "id": "powershell",
+        "folder": "powershell",
+        "file": "index.html",
+        "path": "powershell/index.html",
+        "title": "PowerShell Cheatsheet",
+        "category": "cs",
+        "categoryLabel": "Computer Science",
+        "tag": "DevOps / CLI",
+        "description": "Curated collection of practical PowerShell cmdlets, automation scripts, and administrative recipes.",
+        "icon": "💻"
+      },
+      {
+        "id": "qr",
+        "folder": "qr",
+        "file": "index.html",
+        "path": "qr/index.html",
+        "title": "QR Code Studio",
+        "category": "tools",
+        "categoryLabel": "Tools & Utilities",
+        "tag": "Generator",
+        "description": "Instant QR code generator for URLs, WiFi networks, vCards, with PNG export and live styling.",
+        "icon": "🏁"
+      },
+      {
+        "id": "quran",
+        "folder": "quran",
+        "file": "index.html",
+        "path": "quran/index.html",
+        "title": "Quran Audio & Reader",
+        "category": "islamic",
+        "categoryLabel": "Islamic",
+        "tag": "Quran",
+        "description": "Beautiful, accessible Quranic text reading interface with audio recitation player and Surah index.",
+        "icon": "📖"
+      },
+      {
+        "id": "search",
+        "folder": "search",
+        "file": "index.html",
+        "path": "search/index.html",
+        "title": "Instant Search Engine",
+        "category": "tools",
+        "categoryLabel": "Tools & Utilities",
+        "tag": "Algorithms",
+        "description": "Fast indexed search engine prototype with fuzzy matching, auto-suggestions, and highlighting.",
+        "icon": "🔍"
+      },
+      {
+        "id": "snakeClassic",
+        "folder": "snakeClassic",
+        "file": "index.html",
+        "path": "snakeClassic/index.html",
+        "title": "Classic Snake Arcade",
+        "category": "games",
+        "categoryLabel": "Games & Fun",
+        "tag": "Arcade Game",
+        "description": "Nostalgic retro snake game with score tracking, apple feeding, speed scaling, and mobile controls.",
+        "icon": "🐍"
+      },
+      {
+        "id": "todo",
+        "folder": "todo",
+        "file": "index.html",
+        "path": "todo/index.html",
+        "title": "Todo Productivity",
+        "category": "tools",
+        "categoryLabel": "Tools & Utilities",
+        "tag": "Productivity",
+        "description": "Intuitive task management app with category labels, local storage persistence, and completion filtering.",
+        "icon": "✅"
+      },
+      {
+        "id": "uml",
+        "folder": "uml",
+        "file": "index.html",
+        "path": "uml/index.html",
+        "title": "UML Diagram Studio",
+        "category": "cs",
+        "categoryLabel": "Computer Science",
+        "tag": "Architecture",
+        "description": "Tool for crafting class diagrams, sequence flows, and system architecture blueprints effortlessly.",
+        "icon": "📐"
+      },
+      {
+        "id": "umrah",
+        "folder": "umrah",
+        "file": "index.html",
+        "path": "umrah/index.html",
+        "title": "Umrah Companion",
+        "category": "islamic",
+        "categoryLabel": "Islamic",
+        "tag": "Guide & Dua",
+        "description": "Comprehensive step-by-step guide, ritual checklists, supplications (Duas), and Umrah tips.",
+        "icon": "🕋"
+      },
+      {
+        "id": "xo",
+        "folder": "xo",
+        "file": "index.html",
+        "path": "xo/index.html",
+        "title": "XO (Tic-Tac-Toe)",
+        "category": "games",
+        "categoryLabel": "Games & Fun",
+        "tag": "Two-Player",
+        "description": "Classic 2-player Tic-Tac-Toe with win streak tracking, score boards, and smart AI mode.",
+        "icon": "❌"
+      },
+      {
+        "id": "zakat",
+        "folder": "zakat",
+        "file": "index.html",
+        "path": "zakat/index.html",
+        "title": "Zakat Calculator",
+        "category": "islamic",
+        "categoryLabel": "Islamic",
+        "tag": "Finance",
+        "description": "Accurate Islamic wealth calculator for cash, gold, silver, investments, and business nisab limits.",
+        "icon": "🪙"
+      }
+    ]
+    </script>
 
+    <script>
+      /**
+       * Application State & Data Loading
+       */
+      let projectsData = [];
+      let currentFilter = "all";
+      let currentSort = "default";
+      let searchQuery = "";
+
+      // DOM Elements
+      const projectGrid = document.getElementById("projectGrid");
+      const searchInput = document.getElementById("searchInput");
+      const clearSearchBtn = document.getElementById("clearSearchBtn");
+      const sortSelect = document.getElementById("sortSelect");
+      const categoryFilters = document.getElementById("categoryFilters");
+      const visibleCountEl = document.getElementById("visibleCount");
+      const totalCountEl = document.getElementById("totalCount");
+      const filterIndicator = document.getElementById("filterIndicator");
+      const scrollProgress = document.getElementById("scrollProgress");
+      const toastMessage = document.getElementById("toastMessage");
+
+      // Modals
+      const jsonModal = document.getElementById("jsonModal");
+      const viewJsonBtn = document.getElementById("viewJsonBtn");
+      const closeJsonModal = document.getElementById("closeJsonModal");
+      const jsonDisplayCode = document.getElementById("jsonDisplayCode");
+      const copyJsonBtn = document.getElementById("copyJsonBtn");
+      const downloadJsonBtn = document.getElementById("downloadJsonBtn");
+
+      const previewModal = document.getElementById("previewModal");
+      const previewModalPath = document.getElementById("previewModalPath");
+      const previewIframe = document.getElementById("previewIframe");
+      const previewExternalLink = document.getElementById("previewExternalLink");
+      const closePreviewModal = document.getElementById("closePreviewModal");
+
+      /**
+       * Attempt to fetch projects.json asynchronously.
+       * If opened from local file system without a web server (file:///),
+       * fall back safely to the embedded JSON schema.
+       */
+      async function initializeProjects() {
+        try {
+          const response = await fetch("./projects.json", { cache: "no-store" });
+          if (!response.ok) {
+            throw new Error(`HTTP Error: ${response.status}`);
+          }
+          projectsData = await response.json();
+          console.info("[Router] Successfully loaded from external projects.json");
+        } catch (error) {
+          console.warn("[Router] Falling back to embedded projects JSON schema:", error.message);
+          const rawEmbedded = document.getElementById("projects-json-data").textContent;
+          projectsData = JSON.parse(rawEmbedded);
+        }
+
+        totalCountEl.textContent = projectsData.length;
+        renderProjects();
+      }
+
+      function getFilteredProjects() {
+        let results = [...projectsData];
+
+        // Filter by category
+        if (currentFilter !== "all") {
+          results = results.filter((p) => p.category === currentFilter);
+        }
+
+        // Filter by search query
+        if (searchQuery.trim() !== "") {
+          const q = searchQuery.toLowerCase().trim();
+          results = results.filter(
+            (p) =>
+              p.title.toLowerCase().includes(q) ||
+              p.folder.toLowerCase().includes(q) ||
+              p.file.toLowerCase().includes(q) ||
+              p.path.toLowerCase().includes(q) ||
+              (p.tag && p.tag.toLowerCase().includes(q)) ||
+              (p.description && p.description.toLowerCase().includes(q))
+          );
+        }
+
+        // Apply Sorting
+        if (currentSort === "name-asc") {
+          results.sort((a, b) => a.title.localeCompare(b.title));
+        } else if (currentSort === "name-desc") {
+          results.sort((a, b) => b.title.localeCompare(a.title));
+        } else if (currentSort === "folder") {
+          results.sort((a, b) => a.folder.localeCompare(b.folder));
+        }
+
+        return results;
+      }
+
+      function renderProjects() {
+        const filtered = getFilteredProjects();
+        visibleCountEl.textContent = filtered.length;
+
+        if (filtered.length === 0) {
+          projectGrid.innerHTML = `
+            <div class="empty-state">
+              <h3>No matching projects found</h3>
+              <p>Try searching for a different term or clearing your category filters.</p>
+              <button class="header-btn labs" style="margin-top:14px;" onclick="resetFilters()">Reset All Filters</button>
+            </div>
+          `;
+          return;
+        }
+
+        projectGrid.innerHTML = filtered
+          .map((project, index) => {
+            const padIndex = String(index + 1).padStart(2, "0");
+            const safePath = escapeHtml(project.path);
+            const safeFolder = escapeHtml(project.folder);
+            const safeFile = escapeHtml(project.file);
+            const safeTitle = escapeHtml(project.title);
+            const safeDesc = escapeHtml(project.description || "A practical web project.");
+            const safeTag = escapeHtml(project.tag || "Web");
+            const icon = project.icon || "📂";
+
+            return `
+              <article class="project-card" data-id="${escapeHtml(project.id)}">
+                <div class="file-strip">
+                  <span class="file-type">${escapeHtml(project.file.split('.').pop().toUpperCase())}</span>
+                  <span class="file-count">#${padIndex}</span>
+                </div>
+                <div class="card-content">
+                  <div class="card-header-meta">
+                    <span class="folder-name">${icon} ${safeFolder}</span>
+                    <span class="category-tag">${safeTag}</span>
+                  </div>
+                  <h2>${safeTitle}</h2>
+                  <p title="${safeDesc}">${safeDesc}</p>
+                  <div class="card-footer">
+                    <div class="path-wrapper">
+                      <span class="path" title="/${safePath}">/${safePath}</span>
+                      <button class="copy-path-btn" type="button" onclick="copyPathToClipboard('${safePath}')" title="Copy relative path">
+                        <span>📋</span> copy path
+                      </button>
+                    </div>
+                    <div class="action-btns">
+                      <button class="preview-btn" type="button" onclick="openLivePreview('${safePath}', '${safeTitle}')" title="Live Preview" aria-label="Live Preview of ${safeTitle}">
+                        👁️
+                      </button>
+                      <a class="open-btn" href="${safePath}" target="_blank" rel="noopener noreferrer" aria-label="Open ${safeTitle}">
+                        Open <span aria-hidden="true">↗</span>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </article>
+            `;
+          })
+          .join("");
+      }
+
+      function escapeHtml(string) {
+        if (!string) return "";
+        return String(string)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
+
+      function showToast(text) {
+        toastMessage.textContent = text;
+        toastMessage.classList.add("visible");
+        clearTimeout(toastMessage._timer);
+        toastMessage._timer = setTimeout(() => {
+          toastMessage.classList.remove("visible");
+        }, 2200);
+      }
+
+      function copyPathToClipboard(text) {
+        const temp = document.createElement("textarea");
+        temp.value = text;
+        temp.style.position = "fixed";
+        temp.style.left = "-9999px";
+        document.body.appendChild(temp);
+        temp.select();
+        try {
+          document.execCommand("copy");
+          showToast(`Copied: /${text}`);
+        } catch (e) {
+          showToast(`Path: ${text}`);
+        }
+        document.body.removeChild(temp);
+      }
+
+      function resetFilters() {
+        searchQuery = "";
+        searchInput.value = "";
+        clearSearchBtn.style.display = "none";
+        currentFilter = "all";
+        currentSort = "default";
+        sortSelect.value = "default";
+
+        document.querySelectorAll(".filter-chip").forEach((btn) => {
+          btn.classList.toggle("active", btn.dataset.category === "all");
+        });
+
+        filterIndicator.innerHTML = `Active filter: <strong style="color:var(--teal)">All</strong>`;
+        renderProjects();
+      }
+
+      function openLivePreview(path, title) {
+        previewModalPath.textContent = `/${path}`;
+        previewExternalLink.href = path;
+        previewIframe.src = path;
+        previewModal.classList.add("open");
+        document.body.style.overflow = "hidden";
+      }
+
+      function closePreview() {
+        previewModal.classList.remove("open");
+        previewIframe.src = "about:blank";
+        document.body.style.overflow = "";
+      }
+
+      closePreviewModal.addEventListener("click", closePreview);
+      previewModal.addEventListener("click", (e) => {
+        if (e.target === previewModal) closePreview();
+      });
+
+      // View & Download projects.json
+      viewJsonBtn.addEventListener("click", () => {
+        const prettyJson = JSON.stringify(projectsData, null, 2);
+        jsonDisplayCode.textContent = prettyJson;
+        jsonModal.classList.add("open");
+        document.body.style.overflow = "hidden";
+      });
+
+      closeJsonModal.addEventListener("click", () => {
+        jsonModal.classList.remove("open");
+        document.body.style.overflow = "";
+      });
+
+      jsonModal.addEventListener("click", (e) => {
+        if (e.target === jsonModal) {
+          jsonModal.classList.remove("open");
+          document.body.style.overflow = "";
+        }
+      });
+
+      copyJsonBtn.addEventListener("click", () => {
+        const prettyJson = JSON.stringify(projectsData, null, 2);
+        const temp = document.createElement("textarea");
+        temp.value = prettyJson;
+        temp.style.position = "fixed";
+        temp.style.left = "-9999px";
+        document.body.appendChild(temp);
+        temp.select();
+        document.execCommand("copy");
+        document.body.removeChild(temp);
+        showToast("projects.json copied to clipboard!");
+      });
+
+      downloadJsonBtn.addEventListener("click", () => {
+        const prettyJson = JSON.stringify(projectsData, null, 2);
+        const blob = new Blob([prettyJson], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "projects.json";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        showToast("Downloaded projects.json!");
+      });
+
+      // Search input handler
+      searchInput.addEventListener("input", (e) => {
+        searchQuery = e.target.value;
+        clearSearchBtn.style.display = searchQuery ? "block" : "none";
+        renderProjects();
+      });
+
+      clearSearchBtn.addEventListener("click", () => {
+        searchInput.value = "";
+        searchQuery = "";
+        clearSearchBtn.style.display = "none";
+        searchInput.focus();
+        renderProjects();
+      });
+
+      // Sort selection handler
+      sortSelect.addEventListener("change", (e) => {
+        currentSort = e.target.value;
+        renderProjects();
+      });
+
+      // Filter chips handler
+      categoryFilters.addEventListener("click", (e) => {
+        const chip = e.target.closest(".filter-chip");
+        if (!chip) return;
+
+        document.querySelectorAll(".filter-chip").forEach((btn) => btn.classList.remove("active"));
+        chip.classList.add("active");
+
+        currentFilter = chip.dataset.category;
+        const label = chip.textContent.trim();
+        filterIndicator.innerHTML = `Active filter: <strong style="color:var(--teal)">${label}</strong>`;
+        renderProjects();
+      });
+
+      // Scroll to top with progress circle
       function updateScrollProgress() {
         const scrollTop = window.scrollY;
-        const scrollable =
-          document.documentElement.scrollHeight - window.innerHeight;
+        const scrollable = document.documentElement.scrollHeight - window.innerHeight;
         const progress = scrollable > 0 ? scrollTop / scrollable : 0;
         scrollProgress.style.setProperty("--progress", `${progress * 360}deg`);
       }
@@ -1527,11 +1724,28 @@
         window.scrollTo({ top: 0, behavior: "smooth" });
       });
 
-      window.addEventListener("scroll", updateScrollProgress, {
-        passive: true,
-      });
+      window.addEventListener("scroll", updateScrollProgress, { passive: true });
       window.addEventListener("resize", updateScrollProgress);
-      updateScrollProgress();
+
+      // Keyboard shortcuts
+      window.addEventListener("keydown", (e) => {
+        if (e.key === "/" && document.activeElement !== searchInput) {
+          e.preventDefault();
+          searchInput.focus();
+        } else if (e.key === "Escape") {
+          if (previewModal.classList.contains("open")) closePreview();
+          if (jsonModal.classList.contains("open")) {
+            jsonModal.classList.remove("open");
+            document.body.style.overflow = "";
+          }
+        }
+      });
+
+      // Initialize application on DOM ready
+      document.addEventListener("DOMContentLoaded", () => {
+        initializeProjects();
+        updateScrollProgress();
+      });
     </script>
   </body>
 </html>

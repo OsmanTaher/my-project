@@ -8,7 +8,7 @@
       content="A Neo-Brutalist directory and dynamic JSON router for opening every local HTML project and experiment."
     />
     <title>Labs Projects - Aswany Directory</title>
-    <link rel="icon" type="image/webp" href="/logo.webp" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
 
     <style>
       :root {
@@ -1533,14 +1533,6 @@
         "previewExternalLink",
       );
       const closePreviewModal = document.getElementById("closePreviewModal");
-
-      document
-        .querySelectorAll('img[src*="logo.webp"], link[href*="logo.webp"]')
-        .forEach((el) => {
-          if (el.tagName === "IMG") el.src = "/logo.webp";
-          if (el.tagName === "LINK") el.href = "/logo.webp";
-        });
-
       /**
        * Attempt to fetch projects.json asynchronously.
        * If opened from local file system without a web server (file:///),

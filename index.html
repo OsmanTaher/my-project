@@ -8,7 +8,7 @@
       content="A Neo-Brutalist directory and dynamic JSON router for opening every local HTML project and experiment."
     />
     <title>Labs Projects - Aswany Directory</title>
-    <link rel="shortcut icon" href="/logo.webp" type="image/x-icon" />
+    <link rel="icon" type="image/webp" href="/logo.webp" />
 
     <style>
       :root {
@@ -65,7 +65,9 @@
         text-decoration: none;
       }
 
-      button, input, select {
+      button,
+      input,
+      select {
         font-family: inherit;
       }
 
@@ -277,7 +279,9 @@
         font-size: 0.95rem;
         font-weight: 600;
         outline: none;
-        transition: border-color 0.2s, box-shadow 0.2s;
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s;
       }
 
       .search-input:focus {
@@ -835,11 +839,16 @@
     <div class="page">
       <header class="navbar">
         <a class="brand" href="https://aswany.me/" aria-label="Aswany home">
-          <img class="brand-logo" src="/logo.webp" alt="Logo" onerror="this.src='https://placehold.co/100x100/0a3149/2dd4bf?text=AL'" />
+          <img
+            class="brand-logo"
+            src="/logo.webp"
+            alt="Logo"
+            onerror="
+              this.src = 'https://placehold.co/100x100/0a3149/2dd4bf?text=AL'
+            "
+          />
           <span>ASWANY<span class="brand-dot">.</span></span>
         </a>
-
-
 
         <nav class="nav-links" aria-label="Primary navigation">
           <a href="https://aswany.me/"></a>
@@ -851,7 +860,12 @@
         </nav>
 
         <div class="nav-actions">
-          <button class="header-btn json-btn" id="viewJsonBtn" type="button" title="View routing projects.json">
+          <button
+            class="header-btn json-btn"
+            id="viewJsonBtn"
+            type="button"
+            title="View routing projects.json"
+          >
             <span>{ }</span> JSON Config
           </button>
           <a
@@ -868,17 +882,19 @@
 
       <main id="labs">
         <section class="hero">
-          <div class="hero-tag">
-            <span>⚡</span> Local Workspace Directory
-          </div>
+          <div class="hero-tag"><span>⚡</span> Local Workspace Directory</div>
           <h1><span class="brand-dot">✦</span> Labs Projects</h1>
           <p>
-            An interactive Neo-Brutalist directory dynamically driven by a JSON routing manifest.
-            Instant search, category tagging, path copying, and direct execution for every experiment.
+            An interactive Neo-Brutalist directory dynamically driven by a JSON
+            routing manifest. Instant search, category tagging, path copying,
+            and direct execution for every experiment.
           </p>
         </section>
 
-        <section class="toolbar" aria-label="Projects Filter and Search Toolbar">
+        <section
+          class="toolbar"
+          aria-label="Projects Filter and Search Toolbar"
+        >
           <div class="toolbar-top">
             <div class="search-box">
               <span class="search-icon">🔍</span>
@@ -889,11 +905,21 @@
                 placeholder="Search projects by name, folder, tag, or path... (Press '/' to focus)"
                 aria-label="Search projects"
               />
-              <button class="clear-search" id="clearSearchBtn" aria-label="Clear search">✕</button>
+              <button
+                class="clear-search"
+                id="clearSearchBtn"
+                aria-label="Clear search"
+              >
+                ✕
+              </button>
             </div>
 
             <div class="toolbar-controls">
-              <select id="sortSelect" class="sort-select" aria-label="Sort projects">
+              <select
+                id="sortSelect"
+                class="sort-select"
+                aria-label="Sort projects"
+              >
                 <option value="default">Default Order</option>
                 <option value="name-asc">Name (A → Z)</option>
                 <option value="name-desc">Name (Z → A)</option>
@@ -902,21 +928,43 @@
             </div>
           </div>
 
-          <div class="category-filters" id="categoryFilters" role="radiogroup" aria-label="Category Filters">
-            <button class="filter-chip active" data-category="all" type="button">All Projects</button>
-            <button class="filter-chip" data-category="cs" type="button">💻 Computer Science & DSA</button>
-            <button class="filter-chip" data-category="games" type="button">🎮 Games & Arcades</button>
-            <button class="filter-chip" data-category="tools" type="button">🛠️ Utilities & Tools</button>
-            <button class="filter-chip" data-category="islamic" type="button">🌙 Islamic Apps</button>
+          <div
+            class="category-filters"
+            id="categoryFilters"
+            role="radiogroup"
+            aria-label="Category Filters"
+          >
+            <button
+              class="filter-chip active"
+              data-category="all"
+              type="button"
+            >
+              All Projects
+            </button>
+            <button class="filter-chip" data-category="cs" type="button">
+              💻 Computer Science & DSA
+            </button>
+            <button class="filter-chip" data-category="games" type="button">
+              🎮 Games & Arcades
+            </button>
+            <button class="filter-chip" data-category="tools" type="button">
+              🛠️ Utilities & Tools
+            </button>
+            <button class="filter-chip" data-category="islamic" type="button">
+              🌙 Islamic Apps
+            </button>
           </div>
         </section>
 
         <section id="projects" aria-label="Project Cards">
           <div class="status-summary">
             <div>
-              Showing <span id="visibleCount" class="counter-pill">0</span> of <span id="totalCount">0</span> entry points
+              Showing <span id="visibleCount" class="counter-pill">0</span> of
+              <span id="totalCount">0</span> entry points
             </div>
-            <div id="filterIndicator">Active filter: <strong style="color:var(--teal)">All</strong></div>
+            <div id="filterIndicator">
+              Active filter: <strong style="color: var(--teal)">All</strong>
+            </div>
           </div>
 
           <div class="grid" id="projectGrid">
@@ -937,43 +985,83 @@
       </button>
 
       <!-- JSON Manifest Modal -->
-      <div class="modal-backdrop" id="jsonModal" role="dialog" aria-modal="true" aria-labelledby="jsonModalTitle">
+      <div
+        class="modal-backdrop"
+        id="jsonModal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="jsonModalTitle"
+      >
         <div class="modal-box">
           <div class="modal-header">
             <div class="modal-title" id="jsonModalTitle">
               <span>{ }</span> projects.json Manifest & Router
             </div>
-            <button class="modal-close" id="closeJsonModal" aria-label="Close modal">✕</button>
+            <button
+              class="modal-close"
+              id="closeJsonModal"
+              aria-label="Close modal"
+            >
+              ✕
+            </button>
           </div>
           <div class="modal-body">
-            <p style="margin-top:0; color:var(--muted); font-size:0.9rem;">
-              This JSON structure directs and powers the internal routes, folder paths, metadata, and categories across the entire project suite.
+            <p style="margin-top: 0; color: var(--muted); font-size: 0.9rem">
+              This JSON structure directs and powers the internal routes, folder
+              paths, metadata, and categories across the entire project suite.
             </p>
             <pre class="modal-json-pre" id="jsonDisplayCode"></pre>
           </div>
           <div class="modal-footer">
-            <button class="header-btn" id="copyJsonBtn" type="button">📋 Copy JSON</button>
-            <button class="header-btn labs" id="downloadJsonBtn" type="button">💾 Download projects.json</button>
+            <button class="header-btn" id="copyJsonBtn" type="button">
+              📋 Copy JSON
+            </button>
+            <button class="header-btn labs" id="downloadJsonBtn" type="button">
+              💾 Download projects.json
+            </button>
           </div>
         </div>
       </div>
 
       <!-- Live Project Preview Modal -->
-      <div class="modal-backdrop" id="previewModal" role="dialog" aria-modal="true" aria-labelledby="previewModalTitle">
+      <div
+        class="modal-backdrop"
+        id="previewModal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="previewModalTitle"
+      >
         <div class="modal-box preview-modal-box">
           <div class="modal-header">
             <div class="modal-title" id="previewModalTitle">
               <span>🚀</span> Preview: <span id="previewModalPath">/</span>
             </div>
-            <div style="display: flex; gap: 8px; align-items: center;">
-              <a class="header-btn labs" id="previewExternalLink" href="#" target="_blank" rel="noopener noreferrer">
+            <div style="display: flex; gap: 8px; align-items: center">
+              <a
+                class="header-btn labs"
+                id="previewExternalLink"
+                href="#"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 Open Fullscreen ↗
               </a>
-              <button class="modal-close" id="closePreviewModal" aria-label="Close preview">✕</button>
+              <button
+                class="modal-close"
+                id="closePreviewModal"
+                aria-label="Close preview"
+              >
+                ✕
+              </button>
             </div>
           </div>
           <div class="preview-iframe-wrapper">
-            <iframe id="previewIframe" class="preview-iframe" title="Project live preview" sandbox="allow-scripts allow-same-origin allow-forms"></iframe>
+            <iframe
+              id="previewIframe"
+              class="preview-iframe"
+              title="Project live preview"
+              sandbox="allow-scripts allow-same-origin allow-forms"
+            ></iframe>
           </div>
         </div>
       </div>
@@ -984,7 +1072,10 @@
       </div> -->
 
       <footer>
-        <span>Built for learning, experiments, and fast local directory routing.</span>
+        <span
+          >Built for learning, experiments, and fast local directory
+          routing.</span
+        >
         <span>© 2026 Aswany Labs</span>
       </footer>
     </div>
@@ -994,416 +1085,416 @@
       It provides instant offline availability while also being fetchable directly via fetch('./projects.json').
     -->
     <script id="projects-json-data" type="application/json">
-    [
-      {
-        "id": "algorithms-index",
-        "folder": "algorithms",
-        "file": "index.html",
-        "path": "algorithms/index.html",
-        "title": "Algorithms Hub",
-        "category": "cs",
-        "categoryLabel": "Computer Science",
-        "tag": "DSA",
-        "description": "Interactive visualizer and central hub for classical algorithms, sorting routines, and search mechanics.",
-        "icon": "⚡"
-      },
-      {
-        "id": "algorithms-part1",
-        "folder": "algorithms",
-        "file": "part1.html",
-        "path": "algorithms/part1.html",
-        "title": "Algorithms - Part 1",
-        "category": "cs",
-        "categoryLabel": "Computer Science",
-        "tag": "DSA",
-        "description": "Part one study on divide-and-conquer, recursion trees, and sorting algorithm complexities.",
-        "icon": "📊"
-      },
-      {
-        "id": "algorithms-part2",
-        "folder": "algorithms",
-        "file": "part2.html",
-        "path": "algorithms/part2.html",
-        "title": "Algorithms - Part 2",
-        "category": "cs",
-        "categoryLabel": "Computer Science",
-        "tag": "DSA",
-        "description": "Part two deep dive into graph traversal (BFS/DFS), greedy methods, and dynamic programming.",
-        "icon": "🔀"
-      },
-      {
-        "id": "brickBreaker",
-        "folder": "brickBreaker",
-        "file": "index.html",
-        "path": "brickBreaker/index.html",
-        "title": "Brick Breaker Arcade",
-        "category": "games",
-        "categoryLabel": "Games & Fun",
-        "tag": "Canvas Game",
-        "description": "Retro-style paddle and bounce game built with HTML5 Canvas physics, levels, and brick collision.",
-        "icon": "🧱"
-      },
-      {
-        "id": "cpp",
-        "folder": "c++",
-        "file": "index.html",
-        "path": "c++/index.html",
-        "title": "C++ Labs & Notes",
-        "category": "cs",
-        "categoryLabel": "Computer Science",
-        "tag": "Language",
-        "description": "Core C++ language fundamentals, pointer arithmetic, memory management, and structured paradigms.",
-        "icon": "⚙️"
-      },
-      {
-        "id": "calc",
-        "folder": "calc",
-        "file": "index.html",
-        "path": "calc/index.html",
-        "title": "Standard Calculator",
-        "category": "tools",
-        "categoryLabel": "Tools & Utilities",
-        "tag": "Utility",
-        "description": "Responsive everyday calculator app with clean keyboard support and instant operation calculation.",
-        "icon": "🧮"
-      },
-      {
-        "id": "cPlusPlus",
-        "folder": "cPlusPlus",
-        "file": "index.html",
-        "path": "cPlusPlus/index.html",
-        "title": "Modern C++ Workshop",
-        "category": "cs",
-        "categoryLabel": "Computer Science",
-        "tag": "Modern C++",
-        "description": "Modern C++ features exploration including STL containers, lambdas, smart pointers, and templates.",
-        "icon": "💡"
-      },
-      {
-        "id": "dsa-index",
-        "folder": "dsa",
-        "file": "index.html",
-        "path": "dsa/index.html",
-        "title": "Data Structures & Algos",
-        "category": "cs",
-        "categoryLabel": "Computer Science",
-        "tag": "Structures",
-        "description": "Interactive data structures laboratory featuring linked lists, binary heaps, queues, and balanced trees.",
-        "icon": "🌳"
-      },
-      {
-        "id": "dsa-part1",
-        "folder": "dsa",
-        "file": "part1.html",
-        "path": "dsa/part1.html",
-        "title": "DSA - Part 1",
-        "category": "cs",
-        "categoryLabel": "Computer Science",
-        "tag": "Linear Data",
-        "description": "Linear data structures: dynamic arrays, singly & doubly linked lists, stacks, and evaluation queues.",
-        "icon": "📑"
-      },
-      {
-        "id": "dsa-part2",
-        "folder": "dsa",
-        "file": "part2.html",
-        "path": "dsa/part2.html",
-        "title": "DSA - Part 2",
-        "category": "cs",
-        "categoryLabel": "Computer Science",
-        "tag": "Non-Linear",
-        "description": "Non-linear hierarchies: Binary Search Trees, AVL balance, Hash Maps, and graph structures.",
-        "icon": "🕸️"
-      },
-      {
-        "id": "editImage",
-        "folder": "editImage",
-        "file": "index.html",
-        "path": "editImage/index.html",
-        "title": "Image Editor Studio",
-        "category": "tools",
-        "categoryLabel": "Tools & Utilities",
-        "tag": "Media Tool",
-        "description": "In-browser photo adjustments: live brightness, contrast, blur filters, rotation, and high-res export.",
-        "icon": "🎨"
-      },
-      {
-        "id": "extractColor",
-        "folder": "extractColor",
-        "file": "index.html",
-        "path": "extractColor/index.html",
-        "title": "Color Extractor",
-        "category": "tools",
-        "categoryLabel": "Tools & Utilities",
-        "tag": "Design Tool",
-        "description": "Extract dominant hues from any photo, generate harmonious color palettes, and copy HEX codes.",
-        "icon": "🧪"
-      },
-      {
-        "id": "fastWrite",
-        "folder": "fastWrite",
-        "file": "index.html",
-        "path": "fastWrite/index.html",
-        "title": "Fast Write Typing Test",
-        "category": "tools",
-        "categoryLabel": "Tools & Utilities",
-        "tag": "Typing",
-        "description": "Real-time typing speed benchmark measuring Words Per Minute (WPM), accuracy, and keystroke metrics.",
-        "icon": "⌨️"
-      },
-      {
-        "id": "github",
-        "folder": "github",
-        "file": "index.html",
-        "path": "github/index.html",
-        "title": "GitHub Explorer",
-        "category": "tools",
-        "categoryLabel": "Tools & Utilities",
-        "tag": "API Client",
-        "description": "Inspect public GitHub repositories, stars, forks, commit history, and user profile statistics.",
-        "icon": "🐙"
-      },
-      {
-        "id": "goldenCalc",
-        "folder": "goldenCalc",
-        "file": "index.html",
-        "path": "goldenCalc/index.html",
-        "title": "Golden Ratio Calculator",
-        "category": "tools",
-        "categoryLabel": "Tools & Utilities",
-        "tag": "Math & Design",
-        "description": "Compute divine proportions, phi-based typography scales, grid ratios, and layout geometry.",
-        "icon": "✨"
-      },
-      {
-        "id": "id",
-        "folder": "id",
-        "file": "index.html",
-        "path": "id/index.html",
-        "title": "ID & Badge Generator",
-        "category": "tools",
-        "categoryLabel": "Tools & Utilities",
-        "tag": "Generator",
-        "description": "Dynamic ID card creator with custom user avatars, serial generation, and instant preview card rendering.",
-        "icon": "🪪"
-      },
-      {
-        "id": "javaScript",
-        "folder": "javaScript",
-        "file": "index.html",
-        "path": "javaScript/index.html",
-        "title": "JavaScript Sandbox",
-        "category": "cs",
-        "categoryLabel": "Computer Science",
-        "tag": "Frontend",
-        "description": "Interactive ES6+ experiments exploring closures, promises, DOM manipulation, and modern web APIs.",
-        "icon": "💛"
-      },
-      {
-        "id": "markdown",
-        "folder": "markdown",
-        "file": "index.html",
-        "path": "markdown/index.html",
-        "title": "Markdown Live Editor",
-        "category": "tools",
-        "categoryLabel": "Tools & Utilities",
-        "tag": "Editor",
-        "description": "Split-pane markdown writer with live preview, syntax formatting, and markdown-to-HTML conversion.",
-        "icon": "📝"
-      },
-      {
-        "id": "mazeEscape",
-        "folder": "mazeEscape",
-        "file": "index.html",
-        "path": "mazeEscape/index.html",
-        "title": "Maze Escape",
-        "category": "games",
-        "categoryLabel": "Games & Fun",
-        "tag": "Puzzle Game",
-        "description": "Procedural labyrinth exploration game featuring keyboard & touch navigation to find the exit.",
-        "icon": "🌀"
-      },
-      {
-        "id": "memory-game",
-        "folder": "memory-game",
-        "file": "index.html",
-        "path": "memory-game/index.html",
-        "title": "Memory Match Game",
-        "category": "games",
-        "categoryLabel": "Games & Fun",
-        "tag": "Card Game",
-        "description": "Card-flipping cognitive challenge with move counters, timer, and smooth 3D flip card animations.",
-        "icon": "🃏"
-      },
-      {
-        "id": "mockData",
-        "folder": "mockData",
-        "file": "index.html",
-        "path": "mockData/index.html",
-        "title": "Mock Data Generator",
-        "category": "tools",
-        "categoryLabel": "Tools & Utilities",
-        "tag": "Developer Tool",
-        "description": "Quickly generate dummy users, JSON datasets, dates, and test values for UI prototyping.",
-        "icon": "🗄️"
-      },
-      {
-        "id": "oop",
-        "folder": "oop",
-        "file": "index.html",
-        "path": "oop/index.html",
-        "title": "OOP Principles Visualizer",
-        "category": "cs",
-        "categoryLabel": "Computer Science",
-        "tag": "Architecture",
-        "description": "Interactive illustrations of Encapsulation, Abstraction, Inheritance, and Polymorphism in action.",
-        "icon": "🧩"
-      },
-      {
-        "id": "passwordGen",
-        "folder": "passwordGen",
-        "file": "index.html",
-        "path": "passwordGen/index.html",
-        "title": "Secure Password Gen",
-        "category": "tools",
-        "categoryLabel": "Tools & Utilities",
-        "tag": "Security",
-        "description": "Cryptographically strong password maker with entropy evaluation, custom symbols, and 1-click copy.",
-        "icon": "🔐"
-      },
-      {
-        "id": "periodicTable",
-        "folder": "periodicTable",
-        "file": "index.html",
-        "path": "periodicTable/index.html",
-        "title": "Interactive Periodic Table",
-        "category": "tools",
-        "categoryLabel": "Tools & Utilities",
-        "tag": "Science",
-        "description": "Dynamic chemical element reference grid with atomic weights, group classifications, and details modal.",
-        "icon": "🔬"
-      },
-      {
-        "id": "powershell",
-        "folder": "powershell",
-        "file": "index.html",
-        "path": "powershell/index.html",
-        "title": "PowerShell Cheatsheet",
-        "category": "cs",
-        "categoryLabel": "Computer Science",
-        "tag": "DevOps / CLI",
-        "description": "Curated collection of practical PowerShell cmdlets, automation scripts, and administrative recipes.",
-        "icon": "💻"
-      },
-      {
-        "id": "qr",
-        "folder": "qr",
-        "file": "index.html",
-        "path": "qr/index.html",
-        "title": "QR Code Studio",
-        "category": "tools",
-        "categoryLabel": "Tools & Utilities",
-        "tag": "Generator",
-        "description": "Instant QR code generator for URLs, WiFi networks, vCards, with PNG export and live styling.",
-        "icon": "🏁"
-      },
-      {
-        "id": "quran",
-        "folder": "quran",
-        "file": "index.html",
-        "path": "quran/index.html",
-        "title": "Quran Audio & Reader",
-        "category": "islamic",
-        "categoryLabel": "Islamic",
-        "tag": "Quran",
-        "description": "Beautiful, accessible Quranic text reading interface with audio recitation player and Surah index.",
-        "icon": "📖"
-      },
-      {
-        "id": "search",
-        "folder": "search",
-        "file": "index.html",
-        "path": "search/index.html",
-        "title": "Instant Search Engine",
-        "category": "tools",
-        "categoryLabel": "Tools & Utilities",
-        "tag": "Algorithms",
-        "description": "Fast indexed search engine prototype with fuzzy matching, auto-suggestions, and highlighting.",
-        "icon": "🔍"
-      },
-      {
-        "id": "snakeClassic",
-        "folder": "snakeClassic",
-        "file": "index.html",
-        "path": "snakeClassic/index.html",
-        "title": "Classic Snake Arcade",
-        "category": "games",
-        "categoryLabel": "Games & Fun",
-        "tag": "Arcade Game",
-        "description": "Nostalgic retro snake game with score tracking, apple feeding, speed scaling, and mobile controls.",
-        "icon": "🐍"
-      },
-      {
-        "id": "todo",
-        "folder": "todo",
-        "file": "index.html",
-        "path": "todo/index.html",
-        "title": "Todo Productivity",
-        "category": "tools",
-        "categoryLabel": "Tools & Utilities",
-        "tag": "Productivity",
-        "description": "Intuitive task management app with category labels, local storage persistence, and completion filtering.",
-        "icon": "✅"
-      },
-      {
-        "id": "uml",
-        "folder": "uml",
-        "file": "index.html",
-        "path": "uml/index.html",
-        "title": "UML Diagram Studio",
-        "category": "cs",
-        "categoryLabel": "Computer Science",
-        "tag": "Architecture",
-        "description": "Tool for crafting class diagrams, sequence flows, and system architecture blueprints effortlessly.",
-        "icon": "📐"
-      },
-      {
-        "id": "umrah",
-        "folder": "umrah",
-        "file": "index.html",
-        "path": "umrah/index.html",
-        "title": "Umrah Companion",
-        "category": "islamic",
-        "categoryLabel": "Islamic",
-        "tag": "Guide & Dua",
-        "description": "Comprehensive step-by-step guide, ritual checklists, supplications (Duas), and Umrah tips.",
-        "icon": "🕋"
-      },
-      {
-        "id": "xo",
-        "folder": "xo",
-        "file": "index.html",
-        "path": "xo/index.html",
-        "title": "XO (Tic-Tac-Toe)",
-        "category": "games",
-        "categoryLabel": "Games & Fun",
-        "tag": "Two-Player",
-        "description": "Classic 2-player Tic-Tac-Toe with win streak tracking, score boards, and smart AI mode.",
-        "icon": "❌"
-      },
-      {
-        "id": "zakat",
-        "folder": "zakat",
-        "file": "index.html",
-        "path": "zakat/index.html",
-        "title": "Zakat Calculator",
-        "category": "islamic",
-        "categoryLabel": "Islamic",
-        "tag": "Finance",
-        "description": "Accurate Islamic wealth calculator for cash, gold, silver, investments, and business nisab limits.",
-        "icon": "🪙"
-      }
-    ]
+      [
+        {
+          "id": "algorithms-index",
+          "folder": "algorithms",
+          "file": "index.html",
+          "path": "algorithms/index.html",
+          "title": "Algorithms Hub",
+          "category": "cs",
+          "categoryLabel": "Computer Science",
+          "tag": "DSA",
+          "description": "Interactive visualizer and central hub for classical algorithms, sorting routines, and search mechanics.",
+          "icon": "⚡"
+        },
+        {
+          "id": "algorithms-part1",
+          "folder": "algorithms",
+          "file": "part1.html",
+          "path": "algorithms/part1.html",
+          "title": "Algorithms - Part 1",
+          "category": "cs",
+          "categoryLabel": "Computer Science",
+          "tag": "DSA",
+          "description": "Part one study on divide-and-conquer, recursion trees, and sorting algorithm complexities.",
+          "icon": "📊"
+        },
+        {
+          "id": "algorithms-part2",
+          "folder": "algorithms",
+          "file": "part2.html",
+          "path": "algorithms/part2.html",
+          "title": "Algorithms - Part 2",
+          "category": "cs",
+          "categoryLabel": "Computer Science",
+          "tag": "DSA",
+          "description": "Part two deep dive into graph traversal (BFS/DFS), greedy methods, and dynamic programming.",
+          "icon": "🔀"
+        },
+        {
+          "id": "brickBreaker",
+          "folder": "brickBreaker",
+          "file": "index.html",
+          "path": "brickBreaker/index.html",
+          "title": "Brick Breaker Arcade",
+          "category": "games",
+          "categoryLabel": "Games & Fun",
+          "tag": "Canvas Game",
+          "description": "Retro-style paddle and bounce game built with HTML5 Canvas physics, levels, and brick collision.",
+          "icon": "🧱"
+        },
+        {
+          "id": "cpp",
+          "folder": "c++",
+          "file": "index.html",
+          "path": "c++/index.html",
+          "title": "C++ Labs & Notes",
+          "category": "cs",
+          "categoryLabel": "Computer Science",
+          "tag": "Language",
+          "description": "Core C++ language fundamentals, pointer arithmetic, memory management, and structured paradigms.",
+          "icon": "⚙️"
+        },
+        {
+          "id": "calc",
+          "folder": "calc",
+          "file": "index.html",
+          "path": "calc/index.html",
+          "title": "Standard Calculator",
+          "category": "tools",
+          "categoryLabel": "Tools & Utilities",
+          "tag": "Utility",
+          "description": "Responsive everyday calculator app with clean keyboard support and instant operation calculation.",
+          "icon": "🧮"
+        },
+        {
+          "id": "cPlusPlus",
+          "folder": "cPlusPlus",
+          "file": "index.html",
+          "path": "cPlusPlus/index.html",
+          "title": "Modern C++ Workshop",
+          "category": "cs",
+          "categoryLabel": "Computer Science",
+          "tag": "Modern C++",
+          "description": "Modern C++ features exploration including STL containers, lambdas, smart pointers, and templates.",
+          "icon": "💡"
+        },
+        {
+          "id": "dsa-index",
+          "folder": "dsa",
+          "file": "index.html",
+          "path": "dsa/index.html",
+          "title": "Data Structures & Algos",
+          "category": "cs",
+          "categoryLabel": "Computer Science",
+          "tag": "Structures",
+          "description": "Interactive data structures laboratory featuring linked lists, binary heaps, queues, and balanced trees.",
+          "icon": "🌳"
+        },
+        {
+          "id": "dsa-part1",
+          "folder": "dsa",
+          "file": "part1.html",
+          "path": "dsa/part1.html",
+          "title": "DSA - Part 1",
+          "category": "cs",
+          "categoryLabel": "Computer Science",
+          "tag": "Linear Data",
+          "description": "Linear data structures: dynamic arrays, singly & doubly linked lists, stacks, and evaluation queues.",
+          "icon": "📑"
+        },
+        {
+          "id": "dsa-part2",
+          "folder": "dsa",
+          "file": "part2.html",
+          "path": "dsa/part2.html",
+          "title": "DSA - Part 2",
+          "category": "cs",
+          "categoryLabel": "Computer Science",
+          "tag": "Non-Linear",
+          "description": "Non-linear hierarchies: Binary Search Trees, AVL balance, Hash Maps, and graph structures.",
+          "icon": "🕸️"
+        },
+        {
+          "id": "editImage",
+          "folder": "editImage",
+          "file": "index.html",
+          "path": "editImage/index.html",
+          "title": "Image Editor Studio",
+          "category": "tools",
+          "categoryLabel": "Tools & Utilities",
+          "tag": "Media Tool",
+          "description": "In-browser photo adjustments: live brightness, contrast, blur filters, rotation, and high-res export.",
+          "icon": "🎨"
+        },
+        {
+          "id": "extractColor",
+          "folder": "extractColor",
+          "file": "index.html",
+          "path": "extractColor/index.html",
+          "title": "Color Extractor",
+          "category": "tools",
+          "categoryLabel": "Tools & Utilities",
+          "tag": "Design Tool",
+          "description": "Extract dominant hues from any photo, generate harmonious color palettes, and copy HEX codes.",
+          "icon": "🧪"
+        },
+        {
+          "id": "fastWrite",
+          "folder": "fastWrite",
+          "file": "index.html",
+          "path": "fastWrite/index.html",
+          "title": "Fast Write Typing Test",
+          "category": "tools",
+          "categoryLabel": "Tools & Utilities",
+          "tag": "Typing",
+          "description": "Real-time typing speed benchmark measuring Words Per Minute (WPM), accuracy, and keystroke metrics.",
+          "icon": "⌨️"
+        },
+        {
+          "id": "github",
+          "folder": "github",
+          "file": "index.html",
+          "path": "github/index.html",
+          "title": "GitHub Explorer",
+          "category": "tools",
+          "categoryLabel": "Tools & Utilities",
+          "tag": "API Client",
+          "description": "Inspect public GitHub repositories, stars, forks, commit history, and user profile statistics.",
+          "icon": "🐙"
+        },
+        {
+          "id": "goldenCalc",
+          "folder": "goldenCalc",
+          "file": "index.html",
+          "path": "goldenCalc/index.html",
+          "title": "Golden Ratio Calculator",
+          "category": "tools",
+          "categoryLabel": "Tools & Utilities",
+          "tag": "Math & Design",
+          "description": "Compute divine proportions, phi-based typography scales, grid ratios, and layout geometry.",
+          "icon": "✨"
+        },
+        {
+          "id": "id",
+          "folder": "id",
+          "file": "index.html",
+          "path": "id/index.html",
+          "title": "ID & Badge Generator",
+          "category": "tools",
+          "categoryLabel": "Tools & Utilities",
+          "tag": "Generator",
+          "description": "Dynamic ID card creator with custom user avatars, serial generation, and instant preview card rendering.",
+          "icon": "🪪"
+        },
+        {
+          "id": "javaScript",
+          "folder": "javaScript",
+          "file": "index.html",
+          "path": "javaScript/index.html",
+          "title": "JavaScript Sandbox",
+          "category": "cs",
+          "categoryLabel": "Computer Science",
+          "tag": "Frontend",
+          "description": "Interactive ES6+ experiments exploring closures, promises, DOM manipulation, and modern web APIs.",
+          "icon": "💛"
+        },
+        {
+          "id": "markdown",
+          "folder": "markdown",
+          "file": "index.html",
+          "path": "markdown/index.html",
+          "title": "Markdown Live Editor",
+          "category": "tools",
+          "categoryLabel": "Tools & Utilities",
+          "tag": "Editor",
+          "description": "Split-pane markdown writer with live preview, syntax formatting, and markdown-to-HTML conversion.",
+          "icon": "📝"
+        },
+        {
+          "id": "mazeEscape",
+          "folder": "mazeEscape",
+          "file": "index.html",
+          "path": "mazeEscape/index.html",
+          "title": "Maze Escape",
+          "category": "games",
+          "categoryLabel": "Games & Fun",
+          "tag": "Puzzle Game",
+          "description": "Procedural labyrinth exploration game featuring keyboard & touch navigation to find the exit.",
+          "icon": "🌀"
+        },
+        {
+          "id": "memory-game",
+          "folder": "memory-game",
+          "file": "index.html",
+          "path": "memory-game/index.html",
+          "title": "Memory Match Game",
+          "category": "games",
+          "categoryLabel": "Games & Fun",
+          "tag": "Card Game",
+          "description": "Card-flipping cognitive challenge with move counters, timer, and smooth 3D flip card animations.",
+          "icon": "🃏"
+        },
+        {
+          "id": "mockData",
+          "folder": "mockData",
+          "file": "index.html",
+          "path": "mockData/index.html",
+          "title": "Mock Data Generator",
+          "category": "tools",
+          "categoryLabel": "Tools & Utilities",
+          "tag": "Developer Tool",
+          "description": "Quickly generate dummy users, JSON datasets, dates, and test values for UI prototyping.",
+          "icon": "🗄️"
+        },
+        {
+          "id": "oop",
+          "folder": "oop",
+          "file": "index.html",
+          "path": "oop/index.html",
+          "title": "OOP Principles Visualizer",
+          "category": "cs",
+          "categoryLabel": "Computer Science",
+          "tag": "Architecture",
+          "description": "Interactive illustrations of Encapsulation, Abstraction, Inheritance, and Polymorphism in action.",
+          "icon": "🧩"
+        },
+        {
+          "id": "passwordGen",
+          "folder": "passwordGen",
+          "file": "index.html",
+          "path": "passwordGen/index.html",
+          "title": "Secure Password Gen",
+          "category": "tools",
+          "categoryLabel": "Tools & Utilities",
+          "tag": "Security",
+          "description": "Cryptographically strong password maker with entropy evaluation, custom symbols, and 1-click copy.",
+          "icon": "🔐"
+        },
+        {
+          "id": "periodicTable",
+          "folder": "periodicTable",
+          "file": "index.html",
+          "path": "periodicTable/index.html",
+          "title": "Interactive Periodic Table",
+          "category": "tools",
+          "categoryLabel": "Tools & Utilities",
+          "tag": "Science",
+          "description": "Dynamic chemical element reference grid with atomic weights, group classifications, and details modal.",
+          "icon": "🔬"
+        },
+        {
+          "id": "powershell",
+          "folder": "powershell",
+          "file": "index.html",
+          "path": "powershell/index.html",
+          "title": "PowerShell Cheatsheet",
+          "category": "cs",
+          "categoryLabel": "Computer Science",
+          "tag": "DevOps / CLI",
+          "description": "Curated collection of practical PowerShell cmdlets, automation scripts, and administrative recipes.",
+          "icon": "💻"
+        },
+        {
+          "id": "qr",
+          "folder": "qr",
+          "file": "index.html",
+          "path": "qr/index.html",
+          "title": "QR Code Studio",
+          "category": "tools",
+          "categoryLabel": "Tools & Utilities",
+          "tag": "Generator",
+          "description": "Instant QR code generator for URLs, WiFi networks, vCards, with PNG export and live styling.",
+          "icon": "🏁"
+        },
+        {
+          "id": "quran",
+          "folder": "quran",
+          "file": "index.html",
+          "path": "quran/index.html",
+          "title": "Quran Audio & Reader",
+          "category": "islamic",
+          "categoryLabel": "Islamic",
+          "tag": "Quran",
+          "description": "Beautiful, accessible Quranic text reading interface with audio recitation player and Surah index.",
+          "icon": "📖"
+        },
+        {
+          "id": "search",
+          "folder": "search",
+          "file": "index.html",
+          "path": "search/index.html",
+          "title": "Instant Search Engine",
+          "category": "tools",
+          "categoryLabel": "Tools & Utilities",
+          "tag": "Algorithms",
+          "description": "Fast indexed search engine prototype with fuzzy matching, auto-suggestions, and highlighting.",
+          "icon": "🔍"
+        },
+        {
+          "id": "snakeClassic",
+          "folder": "snakeClassic",
+          "file": "index.html",
+          "path": "snakeClassic/index.html",
+          "title": "Classic Snake Arcade",
+          "category": "games",
+          "categoryLabel": "Games & Fun",
+          "tag": "Arcade Game",
+          "description": "Nostalgic retro snake game with score tracking, apple feeding, speed scaling, and mobile controls.",
+          "icon": "🐍"
+        },
+        {
+          "id": "todo",
+          "folder": "todo",
+          "file": "index.html",
+          "path": "todo/index.html",
+          "title": "Todo Productivity",
+          "category": "tools",
+          "categoryLabel": "Tools & Utilities",
+          "tag": "Productivity",
+          "description": "Intuitive task management app with category labels, local storage persistence, and completion filtering.",
+          "icon": "✅"
+        },
+        {
+          "id": "uml",
+          "folder": "uml",
+          "file": "index.html",
+          "path": "uml/index.html",
+          "title": "UML Diagram Studio",
+          "category": "cs",
+          "categoryLabel": "Computer Science",
+          "tag": "Architecture",
+          "description": "Tool for crafting class diagrams, sequence flows, and system architecture blueprints effortlessly.",
+          "icon": "📐"
+        },
+        {
+          "id": "umrah",
+          "folder": "umrah",
+          "file": "index.html",
+          "path": "umrah/index.html",
+          "title": "Umrah Companion",
+          "category": "islamic",
+          "categoryLabel": "Islamic",
+          "tag": "Guide & Dua",
+          "description": "Comprehensive step-by-step guide, ritual checklists, supplications (Duas), and Umrah tips.",
+          "icon": "🕋"
+        },
+        {
+          "id": "xo",
+          "folder": "xo",
+          "file": "index.html",
+          "path": "xo/index.html",
+          "title": "XO (Tic-Tac-Toe)",
+          "category": "games",
+          "categoryLabel": "Games & Fun",
+          "tag": "Two-Player",
+          "description": "Classic 2-player Tic-Tac-Toe with win streak tracking, score boards, and smart AI mode.",
+          "icon": "❌"
+        },
+        {
+          "id": "zakat",
+          "folder": "zakat",
+          "file": "index.html",
+          "path": "zakat/index.html",
+          "title": "Zakat Calculator",
+          "category": "islamic",
+          "categoryLabel": "Islamic",
+          "tag": "Finance",
+          "description": "Accurate Islamic wealth calculator for cash, gold, silver, investments, and business nisab limits.",
+          "icon": "🪙"
+        }
+      ]
     </script>
 
     <script>
@@ -1438,8 +1529,17 @@
       const previewModal = document.getElementById("previewModal");
       const previewModalPath = document.getElementById("previewModalPath");
       const previewIframe = document.getElementById("previewIframe");
-      const previewExternalLink = document.getElementById("previewExternalLink");
+      const previewExternalLink = document.getElementById(
+        "previewExternalLink",
+      );
       const closePreviewModal = document.getElementById("closePreviewModal");
+
+      document
+        .querySelectorAll('img[src*="logo.webp"], link[href*="logo.webp"]')
+        .forEach((el) => {
+          if (el.tagName === "IMG") el.src = "/logo.webp";
+          if (el.tagName === "LINK") el.href = "/logo.webp";
+        });
 
       /**
        * Attempt to fetch projects.json asynchronously.
@@ -1448,15 +1548,23 @@
        */
       async function initializeProjects() {
         try {
-          const response = await fetch("./projects.json", { cache: "no-store" });
+          const response = await fetch("./projects.json", {
+            cache: "no-store",
+          });
           if (!response.ok) {
             throw new Error(`HTTP Error: ${response.status}`);
           }
           projectsData = await response.json();
-          console.info("[Router] Successfully loaded from external projects.json");
+          console.info(
+            "[Router] Successfully loaded from external projects.json",
+          );
         } catch (error) {
-          console.warn("[Router] Falling back to embedded projects JSON schema:", error.message);
-          const rawEmbedded = document.getElementById("projects-json-data").textContent;
+          console.warn(
+            "[Router] Falling back to embedded projects JSON schema:",
+            error.message,
+          );
+          const rawEmbedded =
+            document.getElementById("projects-json-data").textContent;
           projectsData = JSON.parse(rawEmbedded);
         }
 
@@ -1482,7 +1590,7 @@
               p.file.toLowerCase().includes(q) ||
               p.path.toLowerCase().includes(q) ||
               (p.tag && p.tag.toLowerCase().includes(q)) ||
-              (p.description && p.description.toLowerCase().includes(q))
+              (p.description && p.description.toLowerCase().includes(q)),
           );
         }
 
@@ -1520,14 +1628,16 @@
             const safeFolder = escapeHtml(project.folder);
             const safeFile = escapeHtml(project.file);
             const safeTitle = escapeHtml(project.title);
-            const safeDesc = escapeHtml(project.description || "A practical web project.");
+            const safeDesc = escapeHtml(
+              project.description || "A practical web project.",
+            );
             const safeTag = escapeHtml(project.tag || "Web");
             const icon = project.icon || "📂";
 
             return `
               <article class="project-card" data-id="${escapeHtml(project.id)}">
                 <div class="file-strip">
-                  <span class="file-type">${escapeHtml(project.file.split('.').pop().toUpperCase())}</span>
+                  <span class="file-type">${escapeHtml(project.file.split(".").pop().toUpperCase())}</span>
                   <span class="file-count">#${padIndex}</span>
                 </div>
                 <div class="card-content">
@@ -1703,7 +1813,9 @@
         const chip = e.target.closest(".filter-chip");
         if (!chip) return;
 
-        document.querySelectorAll(".filter-chip").forEach((btn) => btn.classList.remove("active"));
+        document
+          .querySelectorAll(".filter-chip")
+          .forEach((btn) => btn.classList.remove("active"));
         chip.classList.add("active");
 
         currentFilter = chip.dataset.category;
@@ -1715,7 +1827,8 @@
       // Scroll to top with progress circle
       function updateScrollProgress() {
         const scrollTop = window.scrollY;
-        const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+        const scrollable =
+          document.documentElement.scrollHeight - window.innerHeight;
         const progress = scrollable > 0 ? scrollTop / scrollable : 0;
         scrollProgress.style.setProperty("--progress", `${progress * 360}deg`);
       }
@@ -1724,7 +1837,9 @@
         window.scrollTo({ top: 0, behavior: "smooth" });
       });
 
-      window.addEventListener("scroll", updateScrollProgress, { passive: true });
+      window.addEventListener("scroll", updateScrollProgress, {
+        passive: true,
+      });
       window.addEventListener("resize", updateScrollProgress);
 
       // Keyboard shortcuts
@@ -1746,6 +1861,25 @@
         initializeProjects();
         updateScrollProgress();
       });
+
+      (function cleanUrl() {
+        let path = window.location.pathname;
+
+        // إزالة index.html إذا كانت موجودة في نهاية المسار
+        if (path.endsWith("/index.html")) {
+          path = path.slice(0, -10); // تحويل /folder/index.html إلى /folder/
+        }
+        // إزالة امتداد .html من أي صفحة أخرى مثل part1.html
+        else if (path.endsWith(".html")) {
+          path = path.slice(0, -5); // تحويل /folder/part1.html إلى /folder/part1
+        }
+
+        // تحديث شريط العنوان فقط إذا تم تغيير المسار
+        if (path !== window.location.pathname) {
+          const newUrl = path + window.location.search + window.location.hash;
+          window.history.replaceState(null, "", newUrl);
+        }
+      })();
     </script>
   </body>
 </html>

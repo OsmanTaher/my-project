@@ -1,0 +1,374 @@
+[
+  {
+    "title": "github",
+    "image": "labs/github.webp",
+    "description": "Inspect public GitHub repositories, stars, forks, commit history, and user profile statistics.",
+    "stack": [
+      "HTML",
+      "CSS",
+      "JS"
+    ],
+    "liveUrl": "github",
+    "githubUrl": ""
+  },
+  {
+    "title": "portfolio",
+    "image": "labs/portfolio.webp",
+    "description": "A professional portfolio website showcasing nursing skills, medical certifications, and dedication to providing quality healthcare.",
+    "stack": [
+      "HTML",
+      "CSS",
+      "JS"
+    ],
+    "liveUrl": "portfolio",
+    "githubUrl": ""
+  },
+  {
+    "title": "todo",
+    "image": "labs/todo.webp",
+    "description": "Intuitive task management app with category labels, local storage persistence, and completion filtering.",
+    "stack": [
+      "HTML",
+      "CSS",
+      "JS"
+    ],
+    "liveUrl": "todo",
+    "githubUrl": ""
+  },
+  {
+    "title": "search",
+    "image": "labs/search.webp",
+    "description": "Fast indexed search engine prototype with fuzzy matching, auto-suggestions, and highlighting.",
+    "stack": [
+      "HTML",
+      "CSS",
+      "JS"
+    ],
+    "liveUrl": "search",
+    "githubUrl": ""
+  },
+  {
+    "title": "fastWrite",
+    "image": "labs/Fast Write.webp",
+    "description": "Real-time typing speed benchmark measuring Words Per Minute (WPM), accuracy, and keystroke metrics.",
+    "stack": [
+      "HTML",
+      "CSS",
+      "JS"
+    ],
+    "liveUrl": "fastWrite",
+    "githubUrl": ""
+  },
+  {
+    "title": "qr",
+    "image": "labs/QrCode.webp",
+    "description": "Instant QR code generator for URLs, WiFi networks, vCards, with PNG export and live styling.",
+    "stack": [
+      "HTML",
+      "CSS",
+      "JS"
+    ],
+    "liveUrl": "qr",
+    "githubUrl": ""
+  },
+  {
+    "title": "passwordGen",
+    "image": "labs/passwordGen.webp",
+    "description": "Cryptographically strong password maker with entropy evaluation, custom symbols, and 1-click copy.",
+    "stack": [
+      "HTML",
+      "CSS",
+      "JS"
+    ],
+    "liveUrl": "passwordGen",
+    "githubUrl": ""
+  },
+  {
+    "title": "editImage",
+    "image": "labs/Edit Image.webp",
+    "description": "In-browser photo adjustments: live brightness, contrast, blur filters, rotation, and high-res export.",
+    "stack": [
+      "HTML",
+      "CSS",
+      "JS"
+    ],
+    "liveUrl": "editImage",
+    "githubUrl": ""
+  },
+  {
+    "title": "extractColor",
+    "image": "labs/extractColor.webp",
+    "description": "Extract dominant hues from any photo, generate harmonious color palettes, and copy HEX codes.",
+    "stack": [
+      "HTML",
+      "CSS",
+      "JS"
+    ],
+    "liveUrl": "extractColor",
+    "githubUrl": ""
+  },
+  {
+    "title": "markdown",
+    "image": "labs/Markdown.webp",
+    "description": "Split-pane markdown writer with live preview, syntax formatting, and markdown-to-HTML conversion.",
+    "stack": [
+      "HTML",
+      "CSS",
+      "JS"
+    ],
+    "liveUrl": "markdown",
+    "githubUrl": ""
+  },
+  {
+    "title": "mockData",
+    "image": "labs/MockData.webp",
+    "description": "Quickly generate dummy users, JSON datasets, dates, and test values for UI prototyping.",
+    "stack": [
+      "HTML",
+      "CSS",
+      "JS"
+    ],
+    "liveUrl": "mockData",
+    "githubUrl": ""
+  },
+  {
+    "title": "calc",
+    "image": "labs/Calc.webp",
+    "description": "Responsive everyday calculator app with clean keyboard support and instant operation calculation.",
+    "stack": [
+      "HTML",
+      "CSS",
+      "JS"
+    ],
+    "liveUrl": "calc",
+    "githubUrl": ""
+  },
+  {
+    "title": "id",
+    "image": "labs/id.webp",
+    "description": "Dynamic ID card creator with custom user avatars, serial generation, and instant preview card rendering.",
+    "stack": [
+      "HTML",
+      "CSS",
+      "JS"
+    ],
+    "liveUrl": "id",
+    "githubUrl": ""
+  },
+  {
+    "title": "goldenCalc",
+    "image": "labs/goldenCalc.webp",
+    "description": "Compute divine proportions, phi-based typography scales, grid ratios, and layout geometry.",
+    "stack": [
+      "HTML",
+      "CSS",
+      "JS"
+    ],
+    "liveUrl": "goldenCalc",
+    "githubUrl": ""
+  },
+  {
+    "title": "zakat",
+    "image": "labs/zakat.webp",
+    "description": "Accurate Islamic wealth calculator for cash, gold, silver, investments, and business nisab limits.",
+    "stack": [
+      "HTML",
+      "CSS",
+      "JS"
+    ],
+    "liveUrl": "zakat",
+    "githubUrl": ""
+  },
+  {
+    "title": "periodicTable",
+    "image": "labs/periodicTable.webp",
+    "description": "Dynamic chemical element reference grid with atomic weights, group classifications, and details modal.",
+    "stack": [
+      "HTML",
+      "CSS",
+      "JS"
+    ],
+    "liveUrl": "periodicTable",
+    "githubUrl": ""
+  },
+  {
+    "title": "quran",
+    "image": "labs/quran.webp",
+    "description": "Beautiful, accessible Quranic text reading interface with audio recitation player and Surah index.",
+    "stack": [
+      "HTML",
+      "CSS",
+      "JS"
+    ],
+    "liveUrl": "quran",
+    "githubUrl": ""
+  },
+  {
+    "title": "umrah",
+    "image": "labs/umrah.webp",
+    "description": "Comprehensive step-by-step guide, ritual checklists, supplications (Duas), and Umrah tips.",
+    "stack": [
+      "HTML",
+      "CSS",
+      "JS"
+    ],
+    "liveUrl": "umrah",
+    "githubUrl": ""
+  },
+  {
+    "title": "snakeClassic",
+    "image": "labs/Snake.webp",
+    "description": "Nostalgic retro snake game with score tracking, apple feeding, speed scaling, and mobile controls.",
+    "stack": [
+      "HTML",
+      "CSS",
+      "JS"
+    ],
+    "liveUrl": "snakeClassic",
+    "githubUrl": ""
+  },
+  {
+    "title": "brickBreaker",
+    "image": "labs/BrickBreaker.webp",
+    "description": "Retro-style paddle and bounce game built with HTML5 Canvas physics, levels, and brick collision.",
+    "stack": [
+      "HTML",
+      "CSS",
+      "JS"
+    ],
+    "liveUrl": "brickBreaker",
+    "githubUrl": ""
+  },
+  {
+    "title": "memory-game",
+    "image": "labs/memoryGame.webp",
+    "description": "Card-flipping cognitive challenge with move counters, timer, and smooth 3D flip card animations.",
+    "stack": [
+      "HTML",
+      "CSS",
+      "JS"
+    ],
+    "liveUrl": "memory-game",
+    "githubUrl": ""
+  },
+  {
+    "title": "mazeEscape",
+    "image": "labs/mazeEscape.webp",
+    "description": "Procedural labyrinth exploration game featuring keyboard & touch navigation to find the exit.",
+    "stack": [
+      "HTML",
+      "CSS",
+      "JS"
+    ],
+    "liveUrl": "mazeEscape",
+    "githubUrl": ""
+  },
+  {
+    "title": "xo",
+    "image": "labs/XO.webp",
+    "description": "Classic 2-player Tic-Tac-Toe with win streak tracking, score boards, and smart AI mode.",
+    "stack": [
+      "HTML",
+      "CSS",
+      "JS"
+    ],
+    "liveUrl": "xo",
+    "githubUrl": ""
+  },
+  {
+    "title": "javaScript",
+    "image": "labs/javascript.webp",
+    "description": "Interactive ES6+ experiments exploring closures, promises, DOM manipulation, and modern web APIs.",
+    "stack": [
+      "HTML",
+      "CSS",
+      "JS"
+    ],
+    "liveUrl": "javaScript",
+    "githubUrl": ""
+  },
+  {
+    "title": "oop",
+    "image": "labs/oopC++.webp",
+    "description": "Interactive illustrations of Encapsulation, Abstraction, Inheritance, and Polymorphism in action.",
+    "stack": [
+      "HTML",
+      "CSS",
+      "JS"
+    ],
+    "liveUrl": "oop",
+    "githubUrl": ""
+  },
+  {
+    "title": "powershell",
+    "image": "labs/PowerShell.webp",
+    "description": "Curated collection of practical PowerShell cmdlets, automation scripts, and administrative recipes.",
+    "stack": [
+      "HTML",
+      "CSS",
+      "JS"
+    ],
+    "liveUrl": "powershell",
+    "githubUrl": ""
+  },
+  {
+    "title": "uml",
+    "image": "labs/uml.webp",
+    "description": "Tool for crafting class diagrams, sequence flows, and system architecture blueprints effortlessly.",
+    "stack": [
+      "HTML",
+      "CSS",
+      "JS"
+    ],
+    "liveUrl": "uml",
+    "githubUrl": ""
+  },
+  {
+    "title": "c++",
+    "image": "labs/c++.webp",
+    "description": "Core C++ language fundamentals, pointer arithmetic, memory management, and structured paradigms.",
+    "stack": [
+      "HTML",
+      "CSS",
+      "JS"
+    ],
+    "liveUrl": "c++",
+    "githubUrl": ""
+  },
+  {
+    "title": "Computer Architecture & C++ Basics",
+    "image": "labs/cPlusPlus.webp",
+    "description": "A comprehensive guide from hardware architecture and CPU mechanics to core C++ programming, pointers, and memory.",
+    "stack": [
+      "HTML",
+      "CSS",
+      "JS"
+    ],
+    "liveUrl": "cPlusPlus",
+    "githubUrl": ""
+  },
+  {
+    "title": "algorithms",
+    "image": "labs/algo1.webp",
+    "description": "Part one study on divide-and-conquer, recursion trees, and sorting algorithm complexities.",
+    "stack": [
+      "HTML",
+      "CSS",
+      "JS"
+    ],
+    "liveUrl": "algorithms/part1",
+    "githubUrl": ""
+  },
+  {
+    "title": "algorithms",
+    "image": "labs/algo2.webp",
+    "description": "Part two deep dive into graph traversal (BFS/DFS), greedy methods, and dynamic programming.",
+    "stack": [
+      "HTML",
+      "CSS",
+      "JS"
+    ],
+    "liveUrl": "algorithms/part2",
+    "githubUrl": ""
+  }
+]

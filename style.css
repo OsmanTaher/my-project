@@ -1,0 +1,463 @@
+:root {
+  --bg: #FAF9F1;
+  --text: #141414;
+  --muted: #5e5e5e;
+  --card-border: rgba(163, 163, 163, 0.55);
+  --soft-border: rgba(229, 229, 229, 0.9);
+  --card-bg: rgba(255, 255, 255, 0.70);
+  --white: #ffffff;
+  --accent: #E03D46;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.page-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main {
+  flex: 1;
+  padding: 3rem 0 5rem;
+}
+
+.container {
+  width: min(1400px, calc(100% - 2rem));
+  margin-inline: auto;
+}
+
+.back-row {
+  margin-bottom: 2rem;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 2px solid var(--text);
+  background: var(--bg);
+  padding: 0.5rem 1rem;
+  font: 700 0.75rem/1 "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  letter-spacing: 0.08em;
+  box-shadow: 2px 2px 0 var(--text);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.back-link:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 4px 4px 0 var(--text);
+}
+
+.back-link:active {
+  transform: translate(2px, 2px);
+  box-shadow: none;
+}
+
+.back-link svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.page-heading {
+  max-width: 48rem;
+  margin: 0 auto 3.5rem;
+  text-align: center;
+}
+
+.heading-title {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: clamp(2.25rem, 5vw, 3.75rem);
+  line-height: 1;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+}
+
+.heading-title h1 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+.heading-mark {
+  width: 0.75rem;
+  height: 0.75rem;
+  margin-top: -0.15rem;
+  border-radius: 2px;
+  background: var(--accent);
+}
+
+.page-heading p {
+  margin: 1rem auto 0;
+  max-width: 42rem;
+  color: var(--muted);
+  font: 500 0.8rem/1.65 "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  letter-spacing: -0.01em;
+}
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  align-items: stretch;
+}
+
+.project-card,
+.skeleton-card {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--card-border);
+  border-radius: 1rem;
+  background: var(--card-bg);
+}
+
+.project-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  opacity: 0;
+  transform: translateY(25px);
+  animation: card-in 450ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transition:
+    border-color 300ms ease,
+    box-shadow 300ms ease,
+    transform 300ms ease;
+  backdrop-filter: blur(2px);
+}
+
+.project-card:hover {
+  border-color: var(--text);
+  transform: translateY(-4px);
+  box-shadow: 4px 4px 0 var(--text);
+}
+
+.project-image {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  width: 100%;
+  overflow: hidden;
+  border-bottom: 1px solid var(--soft-border);
+  background: #f0f0f0;
+}
+
+.project-image img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  transition: transform 500ms ease;
+}
+
+.project-card:hover .project-image img {
+  transform: scale(1.05);
+}
+
+.project-image::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.2);
+  transition: opacity 300ms ease;
+  pointer-events: none;
+}
+
+.project-card:hover .project-image::after {
+  opacity: 0;
+}
+
+.project-content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1rem;
+}
+
+.project-title {
+  margin: 0;
+  color: var(--text);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.project-description {
+  margin: 0.5rem 0 0;
+  color: #4c4c4c;
+  font: 500 0.75rem/1.65 "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+}
+
+.project-footer {
+  margin-top: 1rem;
+}
+
+.stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+  margin-bottom: 0.625rem;
+}
+
+.stack-tag {
+  border: 1px solid #d4d4d4;
+  border-radius: 0.375rem;
+  background: var(--white);
+  padding: 0.125rem 0.5rem;
+  color: #4c4c4c;
+  font: 500 0.6875rem/1.35 "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-top: 0.625rem;
+  border-top: 1px solid #ededed;
+}
+
+.action-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  border: 1px solid #d4d4d4;
+  border-radius: 0.5rem;
+  background: var(--white);
+  padding: 0.375rem 0.75rem;
+  color: #2f2f2f;
+  font: 700 0.75rem/1.2 "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  transition:
+    transform 200ms ease,
+    border-color 200ms ease,
+    background 200ms ease,
+    color 200ms ease,
+    box-shadow 200ms ease;
+}
+
+.action-link:hover {
+  transform: translateY(-2px);
+  border-color: var(--text);
+  background: var(--text);
+  color: var(--white);
+  box-shadow: 2px 2px 0 var(--text);
+}
+
+.action-link.live:hover {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--white);
+}
+
+.action-link svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex: 0 0 auto;
+}
+
+.action-link.external svg {
+  width: 13px;
+  height: 13px;
+  stroke-width: 2.4;
+}
+
+.projects-grid.is-loading {
+  grid-template-columns: 1fr;
+}
+
+.skeleton-card {
+  min-height: 100%;
+  animation: pulse 1.6s ease-in-out infinite;
+}
+
+.skeleton-image {
+  aspect-ratio: 16 / 10;
+  background: #e6e6e6;
+}
+
+.skeleton-content {
+  padding: 1rem 1rem 0;
+}
+
+.skeleton-line {
+  border-radius: 0.4rem;
+  background: #e6e6e6;
+}
+
+.skeleton-title {
+  width: 75%;
+  height: 1.25rem;
+}
+
+.skeleton-text {
+  width: 100%;
+  height: 0.875rem;
+  margin-top: 0.625rem;
+}
+
+.skeleton-text.short {
+  width: 83%;
+  margin-top: 0.375rem;
+}
+
+.skeleton-footer {
+  padding: 0.75rem 1rem 1rem;
+}
+
+.skeleton-tags {
+  display: flex;
+  gap: 0.375rem;
+  margin-bottom: 0.625rem;
+}
+
+.skeleton-tag {
+  height: 1.25rem;
+}
+
+.skeleton-tag.one {
+  width: 3.5rem;
+}
+
+.skeleton-tag.two {
+  width: 4rem;
+}
+
+.skeleton-tag.three {
+  width: 3rem;
+}
+
+.skeleton-actions {
+  display: flex;
+  gap: 0.5rem;
+  padding-top: 0.625rem;
+  border-top: 1px solid #ececec;
+}
+
+.skeleton-button {
+  height: 1.75rem;
+}
+
+.skeleton-button.one {
+  width: 5rem;
+}
+
+.skeleton-button.two {
+  width: 4rem;
+}
+
+.status {
+  grid-column: 1 / -1;
+  padding: 2rem;
+  text-align: center;
+  color: var(--muted);
+  font: 600 0.8rem/1.5 "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.62; }
+}
+
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: translateY(25px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (min-width: 640px) {
+  .main {
+    padding: 4rem 0 5rem;
+  }
+
+  .container {
+    width: min(1400px, calc(100% - 3rem));
+  }
+
+  .projects-grid,
+  .projects-grid.is-loading {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.75rem;
+  }
+
+  .project-content,
+  .skeleton-content,
+  .skeleton-footer {
+    padding-inline: 1.25rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    width: min(1400px, calc(100% - 5rem));
+  }
+
+  .projects-grid,
+  .projects-grid.is-loading {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .main {
+    padding-top: 5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .project-card,
+  .project-card:hover,
+  .project-image img,
+  .project-image::after,
+  .back-link,
+  .action-link {
+    transition: none !important;
+    animation: none !important;
+    transform: none !important;
+  }
+}
